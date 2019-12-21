@@ -10,16 +10,16 @@ const settingsPath = path.join(appDir, SETTINGS_FILE);
 const initAppDir = () => fs.mkdirSync(appDir, {recursive: true});
 
 const loadSettings = () => {
-    initAppDir();
-    if (fs.existsSync(settingsPath)) {
-        return JSON.parse(fs.readFileSync(settingsPath));
-    }
-    return {};
+  initAppDir();
+  if (fs.existsSync(settingsPath)) {
+    return JSON.parse(fs.readFileSync(settingsPath));
+  }
+  return {};
 };
 
 const writeSettings = settings => {
-    initAppDir();
-    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+  initAppDir();
+  fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
 };
 
 const updateSettings = settings => writeSettings({...loadSettings(), ...settings});

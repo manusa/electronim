@@ -4,6 +4,7 @@
   "description": "Electron based multi IM client",
   "main": "src/index.js",
   "scripts": {
+    "pretest": "eslint --ignore-path .gitignore .",
     "start": "electron .",
     "test": "jest"
   },
@@ -24,7 +25,9 @@
   },
   "homepage": "https://github.com/manusa/electronim#readme",
   "devDependencies": {
-    "electron": "^7.1.6"
+    "electron": "^7.1.6",
+    "eslint": "^6.8.0",
+    "eslint-plugin-jest": "^23.1.1"
   },
   "dependencies": {
     "chrome-tabs": "^5.4.0",
