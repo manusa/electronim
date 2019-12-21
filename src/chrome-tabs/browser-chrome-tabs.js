@@ -11,6 +11,7 @@ const addTabs = tabs => {
         const activeTabId = activeTabMeta.id;
         const activeTabEl = chromeTabs.tabEls.find(tabEl => tabEl.dataset.tabId === activeTabId);
         chromeTabs.setCurrentTab(activeTabEl);
+        window.ipcRenderer.send('activateTab', {id: activeTabId});
     }
 };
 document.addEventListener('DOMContentLoaded', () => {
