@@ -7,9 +7,7 @@ const SETTINGS_FILE = 'settings.json';
 const appDir = path.join(HOME_DIR, APP_DIR);
 const settingsPath = path.join(appDir, SETTINGS_FILE);
 
-const initAppDir = () => {
-    fs.mkdirSync(appDir, {recursive: true});
-};
+const initAppDir = () => fs.mkdirSync(appDir, {recursive: true});
 
 const loadSettings = () => {
     initAppDir();
@@ -21,11 +19,9 @@ const loadSettings = () => {
 
 const writeSettings = settings => {
     initAppDir();
-    fs.writeFileSync(settingsPath, JSON.stringify(settings));
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
 };
 
-const updateSettings = settings => {
-    writeSettings({...loadSettings(), ...settings})
-};
+const updateSettings = settings => writeSettings({...loadSettings(), ...settings});
 
 module.exports = {loadSettings, updateSettings};

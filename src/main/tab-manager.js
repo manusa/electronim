@@ -1,26 +1,25 @@
 const {BrowserView} = require('electron');
-const settings = require('../settings/index');
+const settings = require('../settings');
 let activeTab = null;
-const tabs = [];
+const tabs = {};
 
-const addTab = ipcSender => ({id, title, url}) => {
-    ipcSender.send('addTab', {
-        id, title
+const addTabs = ipcSender => tabsMetadata => {
+    tabsMetadata.forEach(({id, url, active}) => {
+        const tab = new BrowserView();
+        tab.setAutoResize({width: true, height: true});
+        tab.webContents.loadURL(url);
+        tabs[id.toString()] = tab;
     });
-    const tab = new BrowserView();
-    tab.setAutoResize({width: true, height: true});
-    tab.webContents.loadURL(url);
-    tabs[id.toString()] = tab;
-    return tab;
+    ipcSender.send('addTabs', tabsMetadata);
 };
 
-const getTab = tabId => tabs[tabId.toString()];
+const getTab = tabId => tabId ? tabs[tabId.toString()] : null;
+
 const setActiveTab = tabId => {
     activeTab = tabId.toString();
     settings.updateSettings({activeTab});
 };
 
-
 module.exports = {
-    addTab, getTab, setActiveTab
+    addTabs, getTab, setActiveTab
 };

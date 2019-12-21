@@ -3,14 +3,19 @@ const tabManager = require('./tab-manager');
 const settings = require('../settings');
 const TABS_CONTAINER_HEIGHT = 46;
 
+const webPreferences = {
+    preload: `${__dirname}/preload.js`,
+    partition: 'persist:electronim'
+};
+
 let mainWindow;
 let tabContainer;
 
 const activateTab = tabId => {
-    if (tabManager.getTab(tabId)) {
+    const activeTab = tabManager.getTab(tabId.toString());
+    if (activeTab) {
         mainWindow.setBrowserView(tabContainer);
         tabManager.setActiveTab(tabId);
-        const activeTab = tabManager.getTab(tabId.toString());
         const {width, height} = mainWindow.getContentBounds();
         activeTab.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
         mainWindow.addBrowserView(activeTab);
@@ -18,11 +23,7 @@ const activateTab = tabId => {
 };
 
 const addTabContainer = () => {
-    tabContainer = new BrowserView({
-        webPreferences: {
-            preload: `${__dirname}/preload.js`
-        }
-    });
+    tabContainer = new BrowserView({webPreferences});
     mainWindow.addBrowserView(tabContainer);
     const {width} = mainWindow.getContentBounds();
     tabContainer.setBounds({x: 0, y: 0, width, height: TABS_CONTAINER_HEIGHT});
@@ -31,27 +32,28 @@ const addTabContainer = () => {
 };
 
 const initTabListener = () => {
-    ipc.on('tabsReady', (event, data) => {
-        const addTab = tabManager.addTab(event.sender);
+    ipc.on('tabsReady', event => {
         const currentSettings = settings.loadSettings();
-        currentSettings.tabs.forEach(addTab);
-        activateTab(currentSettings.activeTab);
+        const tabs = currentSettings.tabs.map(tab => ({...tab, active: tab.id === currentSettings.activeTab}));
+        tabManager.addTabs(event.sender)(tabs);
+        event.sender.send('activateTab', {tabId: currentSettings.activeTab});
     });
     ipc.on('activateTab', (event, data) => activateTab(data.id));
 };
 
 const init = () => {
+    const {width = 800, height = 600} = settings.loadSettings();
     mainWindow = new BrowserWindow({
-        width: 800, height: 600, resizable: true, maximizable: false,
-        webPreferences: {
-            webviewTag: true,
-            preload: `${__dirname}/preload.js`
-        }
+        width, height, resizable: true, maximizable: false, webPreferences
     });
-    // mainWindow.loadURL('file://' + __dirname + '/tab-panel/index.html');
-    mainWindow.on('ready-to-show', function () {
+    mainWindow.removeMenu();
+    mainWindow.on('ready-to-show', () => {
         mainWindow.show();
         mainWindow.focus();
+    });
+    mainWindow.on('resize', () => {
+        const [width, height] = mainWindow.getSize();
+        settings.updateSettings({width, height})
     });
     initTabListener();
     addTabContainer();

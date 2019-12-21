@@ -3,7 +3,4 @@ const main = require('./main');
 
 app.setName('ElectronIM');
 
-app.on('ready', function () {
-    const mainWindow = main.init();
-});
-
+app.on('ready', main.init);
