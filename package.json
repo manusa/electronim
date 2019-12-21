@@ -1,0 +1,33 @@
+{
+  "name": "electronim",
+  "version": "0.0.0",
+  "description": "Electron based multi IM client",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manusa/electronim.git"
+  },
+  "keywords": [
+    "electron",
+    "IM",
+    "chat",
+    "tabs"
+  ],
+  "author": "Marc Nuri marc@marcnuri.com",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/manusa/electronim/issues"
+  },
+  "homepage": "https://github.com/manusa/electronim#readme",
+  "devDependencies": {
+    "electron": "^7.1.6"
+  },
+  "dependencies": {
+    "chrome-tabs": "^5.4.0",
+    "draggabilly": "^2.2.0"
+  }
+}
