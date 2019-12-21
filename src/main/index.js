@@ -1,26 +1,20 @@
 const {BrowserWindow, BrowserView, ipcMain: ipc} = require('electron');
+const tabManager = require('./tab-manager');
+const settings = require('../settings');
 const TABS_CONTAINER_HEIGHT = 46;
 
 let mainWindow;
 let tabContainer;
 
-const tabs = {};
-const addTab = (ipcSender, {id, title, url}) => {
-    ipcSender.send('addTab', {
-        id, title
-    });
-    const tab = new BrowserView();
-    tab.setAutoResize({width: true, height: true});
-    tab.webContents.loadURL(url);
-    tabs[id.toString()] = tab;
-    return tab;
-};
 const activateTab = tabId => {
-    mainWindow.setBrowserView(tabContainer);
-    const activeTab = tabs[tabId.toString()];
-    const {width, height} = mainWindow.getContentBounds();
-    activeTab.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
-    mainWindow.addBrowserView(activeTab);
+    if (tabManager.getTab(tabId)) {
+        mainWindow.setBrowserView(tabContainer);
+        tabManager.setActiveTab(tabId);
+        const activeTab = tabManager.getTab(tabId.toString());
+        const {width, height} = mainWindow.getContentBounds();
+        activeTab.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
+        mainWindow.addBrowserView(activeTab);
+    }
 };
 
 const addTabContainer = () => {
@@ -38,17 +32,10 @@ const addTabContainer = () => {
 
 const initTabListener = () => {
     ipc.on('tabsReady', (event, data) => {
-        addTab(event.sender, {
-            id: 1,
-            title: 'GitHub',
-            url: 'https://github.com'
-        });
-        addTab(event.sender, {
-            id: 2,
-            title: 'Google',
-            url: 'https://google.com'
-        });
-        activateTab(2)
+        const addTab = tabManager.addTab(event.sender);
+        const currentSettings = settings.loadSettings();
+        currentSettings.tabs.forEach(addTab);
+        activateTab(currentSettings.activeTab);
     });
     ipc.on('activateTab', (event, data) => activateTab(data.id));
 };
@@ -70,6 +57,5 @@ const init = () => {
     addTabContainer();
     return mainWindow;
 };
-
 
 module.exports = {init};
