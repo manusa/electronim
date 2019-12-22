@@ -3,11 +3,20 @@
   "version": "0.0.0",
   "description": "Electron based multi IM client",
   "main": "src/index.js",
+  "bin": {
+    "elecgtronim": "bin.js"
+  },
   "scripts": {
     "pretest": "eslint --ignore-path .gitignore .",
     "start": "electron .",
     "test": "jest"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "public"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/manusa/electronim.git"
@@ -18,8 +27,17 @@
     "chat",
     "tabs"
   ],
-  "author": "Marc Nuri marc@marcnuri.com",
+  "author": {
+    "name": "Marc Nuri",
+    "url": "https://www.marcnuri.com"
+  },
   "license": "Apache-2.0",
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/manusa/electronim/issues"
   },
@@ -31,6 +49,7 @@
   },
   "dependencies": {
     "chrome-tabs": "^5.4.0",
-    "draggabilly": "^2.2.0"
+    "draggabilly": "^2.2.0",
+    "jest": "^24.9.0"
   }
 }

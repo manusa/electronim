@@ -40,13 +40,3 @@ $chromeTabs.addEventListener('activeTabChange', ({detail}) => {
 //     chromeTabs.removeTab(chromeTabs.activeTabEl);
 // });
 
-
-window.addEventListener('keydown', event => {
-  if (event.ctrlKey && event.key === 't') {
-    chromeTabs.addTab({
-      title: 'New Tab',
-      favicon: false
-    });
-  }
-});
-
