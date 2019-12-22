@@ -43,11 +43,11 @@
   },
   "homepage": "https://github.com/manusa/electronim#readme",
   "devDependencies": {
-    "electron": "^7.1.6",
     "eslint": "^6.8.0",
     "eslint-plugin-jest": "^23.1.1"
   },
   "dependencies": {
+    "electron": "^7.1.6",
     "chrome-tabs": "^5.4.0",
     "draggabilly": "^2.2.0",
     "jest": "^24.9.0"
