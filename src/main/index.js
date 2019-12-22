@@ -1,5 +1,5 @@
 const {BrowserWindow, BrowserView, ipcMain: ipc} = require('electron');
-const tabManager = require('./tab-manager');
+const tabManager = require('../tab-manager');
 const settings = require('../settings');
 const TABS_CONTAINER_HEIGHT = 46;
 
