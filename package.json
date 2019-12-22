@@ -16,7 +16,8 @@
     "access": "public"
   },
   "files": [
-    "public"
+    "bin.js",
+    "/src"
   ],
   "repository": {
     "type": "git",
