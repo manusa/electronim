@@ -3,9 +3,13 @@ const settings = require('../settings');
 let activeTab = null;
 const tabs = {};
 
+const webPreferences = {
+  preload: `${__dirname}/preload.js`
+};
+
 const addTabs = ipcSender => tabsMetadata => {
   tabsMetadata.forEach(({id, url}) => {
-    const tab = new BrowserView();
+    const tab = new BrowserView({webPreferences});
     tab.setAutoResize({width: true, height: true});
     tab.webContents.loadURL(url);
     tabs[id.toString()] = tab;

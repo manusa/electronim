@@ -48,6 +48,7 @@
     "electron": "^7.1.6",
     "chrome-tabs": "^5.4.0",
     "draggabilly": "^2.2.0",
+    "simple-spellchecker": "^1.0.0",
     "jest": "^24.9.0"
   }
 }
