@@ -17,7 +17,7 @@
   },
   "files": [
     "bin.js",
-    "/src"
+    "./src"
   ],
   "repository": {
     "type": "git",
