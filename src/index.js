@@ -1,6 +1,6 @@
 const {app} = require('electron');
 const main = require('./main');
 
-app.setName('ElectronIM');
+app.name = 'ElectronIM';
 
 app.on('ready', main.init);

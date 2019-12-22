@@ -37,6 +37,7 @@ const initTabListener = () => {
     const tabs = currentSettings.tabs.map(tab => ({...tab, active: tab.id === currentSettings.activeTab}));
     tabManager.addTabs(event.sender)(tabs);
     event.sender.send('activateTab', {tabId: currentSettings.activeTab});
+    tabManager.pollTabs(event.sender);
   });
   ipc.on('activateTab', (event, data) => activateTab(data.id));
 };

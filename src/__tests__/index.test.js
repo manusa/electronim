@@ -5,7 +5,6 @@ describe('Entrypoint test suite', () => {
     jest.resetModules();
     jest.mock('electron', () => ({
       app: {
-        setName: jest.fn(),
         on: jest.fn()
       }
     }));
@@ -20,8 +19,7 @@ describe('Entrypoint test suite', () => {
     // When
     require('../index');
     // Then
-    expect(app.setName).toHaveBeenCalledTimes(1);
-    expect(app.setName).toHaveBeenCalledWith('ElectronIM');
+    expect(app.name).toBe('ElectronIM');
     expect(app.on).toHaveBeenCalledTimes(1);
     expect(app.on). toHaveBeenCalledWith('ready', main.init);
   });

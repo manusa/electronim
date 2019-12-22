@@ -20,6 +20,29 @@ const setActiveTab = tabId => {
   settings.updateSettings({activeTab});
 };
 
+const extractFavicon = async browerView => {
+  let favicons = await browerView.webContents
+    .executeJavaScript('Array.from(document.querySelectorAll(\'link[rel="shortcut icon"]\')).map(el => el.href)');
+  if (favicons.length === 0) {
+    favicons = await browerView.webContents
+      .executeJavaScript('Array.from(document.querySelectorAll(\'link[rel*="icon"]\')).map(el => el.href)');
+  }
+  return favicons;
+};
+
+const pollTabs = ipcSender => {
+  setInterval(() => {
+    // eslint-disable-next-line no-console
+    Object.entries(tabs).forEach(async ([tabId, tabView]) => {
+      ipcSender.send('setTabTitle', {id: tabId, title: tabView.webContents.getTitle()});
+      const favicons = await extractFavicon(tabView);
+      if (favicons.length > 0) {
+        ipcSender.send('setTabFavicon', {id: tabId, favicon: favicons[0]});
+      }
+    });
+  }, 1000);
+};
+
 module.exports = {
-  addTabs, getTab, setActiveTab
+  addTabs, getTab, setActiveTab, pollTabs
 };
