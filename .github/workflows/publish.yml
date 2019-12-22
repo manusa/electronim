@@ -1,0 +1,30 @@
+name: Publish
+
+on:
+  push:
+    tags:
+    - '*'
+
+jobs:
+  build:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '13.x'
+      - name: Install
+        run: npm install
+      - name: Change Package version
+        run: |
+          VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\/v//')
+          echo New Version is $VERSION
+          npm version --no-git-tag-version ${VERSION}
+      - name: Publish
+        run: |
+          export NPM_TOKEN=${{ secrets.NPM_TOKEN }}
+          echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> .npmrc
+          npm publish
