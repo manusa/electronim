@@ -4,8 +4,7 @@
   "description": "Electron based multi IM client",
   "main": "src/index.js",
   "bin": {
-    "electron": "bin.js",
-    "elecgtronim": "bin.js"
+    "electronim": "bin.js"
   },
   "scripts": {
     "pretest": "eslint --ignore-path .gitignore .",
