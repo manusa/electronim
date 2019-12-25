@@ -1,5 +1,7 @@
-const {BrowserView, shell} = require('electron');
+const {BrowserView, Menu, MenuItem, shell} = require('electron');
 const settings = require('../settings');
+const {contextMenuHandler} = require('../spell-check');
+
 let activeTab = null;
 const tabs = {};
 
@@ -37,6 +39,19 @@ const handlePageFaviconUpdated = (browserView, ipcSender, tabId) => async (e, fa
   }
 };
 
+const handleContextMenu = browserView => (event, params) => {
+  const {webContents} = browserView;
+  const menu = new Menu();
+  const spellingSuggestions = contextMenuHandler(event, params, webContents);
+  if (spellingSuggestions.length > 0) {
+    spellingSuggestions.forEach(mi => menu.append(mi));
+    menu.append(new MenuItem({type: 'separator'}));
+  }
+  menu.append(new MenuItem({label: 'DevTools', click: () => webContents.openDevTools()}));
+  const {x, y} = params;
+  menu.popup({x, y});
+};
+
 const addTabs = ipcSender => tabsMetadata => {
   tabsMetadata.forEach(({id, url}) => {
     const tab = new BrowserView({webPreferences});
@@ -52,6 +67,8 @@ const addTabs = ipcSender => tabsMetadata => {
     tab.webContents.on('page-title-updated', handlePageTitleUpdatedForCurrentTab);
     const handlePageFaviconUpdatedForCurrentTab = handlePageFaviconUpdated(tab, ipcSender, id);
     tab.webContents.on('page-favicon-updated', handlePageFaviconUpdatedForCurrentTab);
+
+    tab.webContents.on('context-menu', handleContextMenu(tab));
 
     tabs[id.toString()] = tab;
   });
