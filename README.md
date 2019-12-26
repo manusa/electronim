@@ -9,3 +9,11 @@ Combine all your IM applications (or whatever you want) in a single browser (Ele
 - Multiplatform
 - Spellchecker
 - Supports any web based IM solution
+
+
+## Acknowledgements
+
+- [Electron](https://electronjs.org/)
+- [Chrome tabs](https://github.com/adamschwartz/chrome-tabs#readme)
+- [Draggabilly](https://github.com/desandro/draggabilly)
+- [Simple spell checker](https://github.com/jfmdev/simple-spellchecker)

@@ -1,7 +1,8 @@
-const {BrowserWindow, BrowserView, ipcMain: ipc} = require('electron');
+const {BrowserWindow, ipcMain: ipc} = require('electron');
+const {APP_EVENTS} = require('../constants');
+const {TABS_CONTAINER_HEIGHT, initTabContainer} = require('../chrome-tabs');
+const {loadSettings, updateSettings, openSettingsDialog} = require('../settings');
 const tabManager = require('../tab-manager');
-const settings = require('../settings');
-const TABS_CONTAINER_HEIGHT = 46;
 
 const webPreferences = {
   preload: `${__dirname}/preload.js`,
@@ -12,52 +13,62 @@ let mainWindow;
 let tabContainer;
 
 const activateTab = tabId => {
-  const activeTab = tabManager.getTab(tabId.toString());
+  const activeTab = tabManager.getTab(tabId);
   if (activeTab) {
+    const {width, height} = mainWindow.getContentBounds();
+    tabContainer.setBounds({x: 0, y: 0, width, height: TABS_CONTAINER_HEIGHT});
     mainWindow.setBrowserView(tabContainer);
     tabManager.setActiveTab(tabId);
-    const {width, height} = mainWindow.getContentBounds();
     activeTab.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
     mainWindow.addBrowserView(activeTab);
   }
 };
 
-const addTabContainer = () => {
-  tabContainer = new BrowserView({webPreferences});
-  mainWindow.addBrowserView(tabContainer);
-  const {width} = mainWindow.getContentBounds();
-  tabContainer.setBounds({x: 0, y: 0, width, height: TABS_CONTAINER_HEIGHT});
-  tabContainer.setAutoResize({width: true, horizontal: true});
-  return tabContainer.webContents.loadURL(`file://${__dirname}/../chrome-tabs/index.html`);
+const initTabListener = () => {
+  ipc.on(APP_EVENTS.tabsReady, event => {
+    const currentSettings = loadSettings();
+    const tabs = currentSettings.tabs.map(tab => ({...tab, active: tab.id === currentSettings.activeTab}));
+    if (tabs.length > 0) {
+      tabManager.addTabs(event.sender)(tabs);
+      event.sender.send(APP_EVENTS.activateTab, {tabId: currentSettings.activeTab});
+    } else {
+      openSettingsDialog(mainWindow);
+    }
+  });
+  ipc.on(APP_EVENTS.activateTab, (event, data) => activateTab(data.id));
 };
 
-const initTabListener = () => {
-  ipc.on('tabsReady', event => {
-    const currentSettings = settings.loadSettings();
-    const tabs = currentSettings.tabs.map(tab => ({...tab, active: tab.id === currentSettings.activeTab}));
-    tabManager.addTabs(event.sender)(tabs);
-    event.sender.send('activateTab', {tabId: currentSettings.activeTab});
-  });
-  ipc.on('activateTab', (event, data) => activateTab(data.id));
+const closeSettings = () => {
+  const settingsView = mainWindow.getBrowserView();
+  activateTab(tabManager.getActiveTab());
+  settingsView.destroy();
+};
+
+const handleSaveSettings = (event, {dictionaries}) => {
+  updateSettings({enabledDictionaries: [...dictionaries]});
+  tabManager.reload();
+  closeSettings();
+};
+
+const initSettingsListener = () => {
+  ipc.on(APP_EVENTS.settingsSave, handleSaveSettings);
+  ipc.on(APP_EVENTS.settingsCancel, closeSettings);
 };
 
 const init = () => {
-  const {width = 800, height = 600} = settings.loadSettings();
+  const {width = 800, height = 600} = loadSettings();
   mainWindow = new BrowserWindow({
     width, height, resizable: true, maximizable: false, webPreferences
   });
   mainWindow.removeMenu();
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show();
-    mainWindow.focus();
-  });
   mainWindow.on('resize', () => {
     const [currentWidth, currentHeight] = mainWindow.getSize();
-    settings.updateSettings({width: currentWidth, height: currentHeight});
+    updateSettings({width: currentWidth, height: currentHeight});
   });
   initTabListener();
-  addTabContainer();
+  initSettingsListener();
+  tabContainer = initTabContainer(mainWindow);
   return mainWindow;
 };
 
-module.exports = {init};
+module.exports = {APP_EVENTS, init};

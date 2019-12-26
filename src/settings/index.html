@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../../node_modules/bulma/css/bulma.min.css">
+        <link rel="stylesheet" href="./browser-settings.css">
+    </head>
+    <body>
+        <div class="settings container is-fluid">
+            <h1 class="title">Settings</h1>
+            <div class="container">
+                <form class="form">
+                    <div class="field">
+                        <label class="label">Tabs</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="New Tab">
+                        </div>
+                        <div class="tabs"></div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Dictionaries</label>
+                        <div class="settings__dictionaries container"></div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="settings__submit button is-link">Ok</button>
+                        </div>
+                        <div class="control">
+                            <button class="settings__cancel button is-link is-light">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script src="./browser-settings.js"></script>
+    </body>
+</html>

@@ -6,7 +6,7 @@ chromeTabs.init($chromeTabs);
 
 const getTab = tabId => chromeTabs.tabEls.find(tabEl => tabEl.dataset.tabId === tabId);
 
-const tabsReady = () => window.ipcRenderer.send('tabsReady', {});
+const tabsReady = () => ipcRenderer.send(APP_EVENTS.tabsReady, {});
 
 const addTabs = tabs => {
   tabs.forEach(({id, title = id, favicon = false}) => chromeTabs.addTab({id, title, favicon}));
@@ -15,7 +15,7 @@ const addTabs = tabs => {
     const activeTabId = activeTabMeta.id;
     const activeTabEl = getTab(activeTabId);
     chromeTabs.setCurrentTab(activeTabEl);
-    window.ipcRenderer.send('activateTab', {id: activeTabId});
+    ipcRenderer.send(APP_EVENTS.activateTab, {id: activeTabId});
   }
 };
 
@@ -38,13 +38,13 @@ const setTabFavicon = ({id, favicon}) => doForTab(id, tab =>
     element.removeAttribute('hidden', '');
   }));
 
-window.ipcRenderer.on('addTabs', (event, data) => addTabs(data));
-window.ipcRenderer.on('setTabTitle', (event, data) => setTabTitle(data));
-window.ipcRenderer.on('setTabFavicon', (event, data) => setTabFavicon(data));
+ipcRenderer.on(APP_EVENTS.addTabs, (event, data) => addTabs(data));
+ipcRenderer.on(APP_EVENTS.setTabTitle, (event, data) => setTabTitle(data));
+ipcRenderer.on(APP_EVENTS.setTabFavicon, (event, data) => setTabFavicon(data));
 document.addEventListener('DOMContentLoaded', tabsReady);
 
 $chromeTabs.addEventListener('activeTabChange', ({detail}) => {
-  window.ipcRenderer.send('activateTab', {id: detail.tabEl.dataset.tabId});
+  ipcRenderer.send(APP_EVENTS.activateTab, {id: detail.tabEl.dataset.tabId});
 });
 
 // $chromeTabs.addEventListener('tabAdd', ({ detail }) => console.log('Tab added', detail.tabEl));

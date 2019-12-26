@@ -1,4 +1,5 @@
 const {BrowserView, Menu, MenuItem, shell} = require('electron');
+const {APP_EVENTS} = require('../constants');
 const settings = require('../settings');
 const {contextMenuHandler} = require('../spell-check');
 
@@ -17,7 +18,7 @@ const handleRedirect = browserView => (e, url) => {
 };
 
 const handlePageTitleUpdated = (ipcSender, tabId) => (e, title) => {
-  ipcSender.send('setTabTitle', {id: tabId, title: title});
+  ipcSender.send(APP_EVENTS.setTabTitle, {id: tabId, title: title});
 };
 
 const extractFavicon = async browserView => {
@@ -35,7 +36,7 @@ const handlePageFaviconUpdated = (browserView, ipcSender, tabId) => async (e, fa
     favicons = await extractFavicon(browserView);
   }
   if (favicons.length > 0) {
-    ipcSender.send('setTabFavicon', {id: tabId, favicon: favicons[favicons.length - 1]});
+    ipcSender.send(APP_EVENTS.setTabFavicon, {id: tabId, favicon: favicons[favicons.length - 1]});
   }
 };
 
@@ -72,16 +73,20 @@ const addTabs = ipcSender => tabsMetadata => {
 
     tabs[id.toString()] = tab;
   });
-  ipcSender.send('addTabs', tabsMetadata);
+  ipcSender.send(APP_EVENTS.addTabs, tabsMetadata);
 };
 
 const getTab = tabId => (tabId ? tabs[tabId.toString()] : null);
+
+const getActiveTab = () => activeTab;
 
 const setActiveTab = tabId => {
   activeTab = tabId.toString();
   settings.updateSettings({activeTab});
 };
 
+const reload = () => Object.values(tabs).forEach(browserView => browserView.webContents.reload());
+
 module.exports = {
-  addTabs, getTab, setActiveTab
+  addTabs, getTab, getActiveTab, setActiveTab, reload
 };

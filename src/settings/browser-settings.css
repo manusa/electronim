@@ -1,0 +1,11 @@
+body {
+    margin:0;
+    padding-top:15px;
+}
+
+.settings__dictionaries {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-height: 100px;
+}

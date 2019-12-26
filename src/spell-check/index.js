@@ -1,28 +1,33 @@
 const simpleSpellChecker = require('simple-spellchecker');
+const {loadSettings} = require('../settings');
 
-let dictionary;
+const AVAILABLE_DICTIONARIES = [
+  'en-GB',
+  'en-US',
+  'es-ES',
+  'es-MX',
+  'fr-FR',
+  'it-IT'
+];
 
-simpleSpellChecker.getDictionary('en-US', (err, loadedDictionary) => {
-  dictionary = loadedDictionary;
-});
+const activeDictionaries = [];
 
-const getSuggestions = mispelled => {
-  const ret = [];
-  if (dictionary) {
-    ret.push(...dictionary.getSuggestions(mispelled));
-  }
-  return ret;
+const getEnabledDictionaries = () => loadSettings().enabledDictionaries;
+
+const loadDictionaries = () => {
+  getEnabledDictionaries().forEach(dictionaryKey =>
+    simpleSpellChecker.getDictionary(dictionaryKey, (err, loadedDictionary) => {
+      activeDictionaries.push(loadedDictionary);
+    })
+  );
 };
 
-const initSpellChecker = webFrame => {
-  webFrame.setSpellCheckProvider(navigator.language, {
-    spellCheck (words, callback) {
-      setTimeout(() => {
-        const misspelled = words.filter(x => !dictionary.spellCheck(x));
-        callback(misspelled);
-      }, 0);
-    }
-  });
+const getSuggestions = word => {
+  const ret = new Set();
+  activeDictionaries.map(dictionary => dictionary.checkAndSuggest(word))
+    .flatMap(({misspelled, suggestions}) => (misspelled ? suggestions : []))
+    .forEach(suggestion => ret.add(suggestion));
+  return Array.from(ret.values());
 };
 
 const contextMenuHandler = (event, {misspelledWord}, webContents) => {
@@ -41,6 +46,9 @@ const contextMenuHandler = (event, {misspelledWord}, webContents) => {
   return ret;
 };
 
+const getActiveDictionariesSnapshot = () => activeDictionaries;
+
+loadDictionaries();
 module.exports = {
-  initSpellChecker, contextMenuHandler
+  AVAILABLE_DICTIONARIES, contextMenuHandler, getEnabledDictionaries, getActiveDictionariesSnapshot
 };

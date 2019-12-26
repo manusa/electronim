@@ -41,13 +41,14 @@
   "homepage": "https://github.com/manusa/electronim#readme",
   "devDependencies": {
     "eslint": "^6.8.0",
-    "eslint-plugin-jest": "^23.1.1"
+    "eslint-plugin-jest": "^23.1.1",
+    "jest": "^24.9.0"
   },
   "dependencies": {
-    "electron": "^7.1.6",
+    "bulma": "^0.8.0",
     "chrome-tabs": "^5.4.0",
     "draggabilly": "^2.2.0",
-    "simple-spellchecker": "^1.0.0",
-    "jest": "^24.9.0"
+    "electron": "^7.1.6",
+    "simple-spellchecker": "^1.0.0"
   }
 }
