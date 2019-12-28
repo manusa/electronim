@@ -44,10 +44,26 @@ const closeSettings = () => {
   settingsView.destroy();
 };
 
-const handleSaveSettings = (event, {dictionaries}) => {
+const handleSaveSettings = (event, {tabs, dictionaries}) => {
+  const currentSettings = loadSettings();
+  const currentTabUrls = currentSettings.tabs.map(({url}) => url);
   updateSettings({enabledDictionaries: [...dictionaries]});
-  tabManager.reload();
-  closeSettings();
+  if (JSON.stringify(tabs.sort()) !== JSON.stringify(currentTabUrls.sort())) {
+    tabManager.removeAll();
+    const updatedTabs = [];
+    updatedTabs.push(...currentSettings.tabs.filter(tab => tabs.includes(tab.url)));
+    tabs.filter(url => !currentTabUrls.includes(url)).forEach(url => updatedTabs.push({id: url, url}));
+    updateSettings({tabs: [...updatedTabs]});
+    if (!updatedTabs.map(({id}) => id).includes(currentSettings.activeTab)) {
+      updateSettings({activeTab: updatedTabs[0].id});
+    }
+    const viewsToDestroy = [mainWindow.getBrowserView(), tabContainer];
+    tabContainer = initTabContainer(mainWindow);
+    viewsToDestroy.forEach(view => view.destroy());
+  } else {
+    closeSettings();
+    tabManager.reload();
+  }
 };
 
 const initSettingsListener = () => {

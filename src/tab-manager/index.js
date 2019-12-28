@@ -85,8 +85,13 @@ const setActiveTab = tabId => {
   settings.updateSettings({activeTab});
 };
 
+const removeAll = () => {
+  Object.values(tabs).forEach(browserView => browserView.destroy());
+  Object.keys(tabs).forEach(key => delete tabs[key]);
+};
+
 const reload = () => Object.values(tabs).forEach(browserView => browserView.webContents.reload());
 
 module.exports = {
-  addTabs, getTab, getActiveTab, setActiveTab, reload
+  addTabs, getTab, getActiveTab, setActiveTab, reload, removeAll
 };

@@ -2,12 +2,18 @@ const simpleSpellChecker = require('simple-spellchecker');
 const {loadSettings} = require('../settings');
 
 const AVAILABLE_DICTIONARIES = [
+  'de-DE',
   'en-GB',
   'en-US',
   'es-ES',
   'es-MX',
   'fr-FR',
-  'it-IT'
+  'it-IT',
+  'lt-LT',
+  'nl-NL',
+  'pl-PL',
+  'pt-BR',
+  'sv-SE'
 ];
 
 const activeDictionaries = [];
