@@ -123,9 +123,6 @@ const init = () => {
   settingsForm.addEventListener('submit', event => event.preventDefault());
 
   [initNewTab, initSpellCheckerSettings, initTabsSettings, initButtons].forEach(f => f.call(this, settings));
-
-
-
 };
 
 init();
