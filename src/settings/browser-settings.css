@@ -3,6 +3,19 @@ body {
     padding-top:15px;
 }
 
+.settings__tab {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+}
+
+.settings__tab .control{
+    flex: 1;
+}
+.settings__tab .icon {
+    cursor: pointer;
+}
+
 .settings__dictionaries {
     display: flex;
     flex-direction: column;

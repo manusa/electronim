@@ -21,7 +21,8 @@ const validateNewTab = ({target}) => {
 };
 
 
-const updateSaveButton = settings => {
+const updateSaveButton = () => {
+  const settings = document.querySelector('.settings');
   const newTabField = settings.querySelector('.settings__new-tab');
   const settingsForm = settings.querySelector('.form');
   const submit = settings.querySelector('.settings__submit');
@@ -38,11 +39,26 @@ const updateSaveButton = settings => {
     submit.setAttribute('disabled', 'true');
   }
 };
+
+const initTabsListener = tabs => {
+  const content = tabs.innerHTML;
+  tabs.innerHTML = '';
+  tabs.innerHTML = content;
+  tabs.querySelectorAll('.icon')
+    .forEach(icon => icon.addEventListener('click', ({target}) => {
+      target.closest('.settings__tab').remove();
+      updateSaveButton();
+    }));
+};
+
 const tabTemplate = url => `
-    <div class='field'>
+    <div class='field settings__tab'>
       <div class='control'>
           <input type='text' readonly class='input' name='tabs' value='${url}' />
       </div>
+        <span class='icon is-medium'>
+          <i class='fas fa-trash'></i>
+        </span>
     </div>
   `;
 
@@ -51,15 +67,16 @@ const initNewTab = settings => {
   const tabs = settings.querySelector('.settings__tabs');
   newTabField.addEventListener('input', event => {
     validateNewTab(event);
-    updateSaveButton(settings);
+    updateSaveButton();
   });
   newTabField.addEventListener('keypress', event => {
     if (event.code === 'Enter') {
       event.preventDefault();
       const {target} = event;
       tabs.innerHTML += tabTemplate(target.value);
+      initTabsListener(tabs);
       target.value = '';
-      updateSaveButton(settings);
+      updateSaveButton();
     }
   });
 };
@@ -67,6 +84,7 @@ const initNewTab = settings => {
 const initTabsSettings = settings => {
   const tabs = settings.querySelector('.settings__tabs');
   tabs.innerHTML = window.tabs.map(({url}) => url).map(tabTemplate).join('');
+  initTabsListener(tabs);
 };
 
 const initSpellCheckerSettings = settings => {

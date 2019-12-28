@@ -47,9 +47,10 @@ const closeSettings = () => {
 const saveSettings = (event, {tabs, dictionaries}) => {
   updateSettings({enabledDictionaries: [...dictionaries]});
   updateTabs(tabs);
-  mainWindow.removeBrowserView(mainWindow.getBrowserView());
+  const currentBrowserView = mainWindow.getBrowserView();
+  mainWindow.removeBrowserView(currentBrowserView);
   tabManager.removeAll();
-  const viewsToDestroy = [mainWindow.getBrowserView(), tabContainer];
+  const viewsToDestroy = [currentBrowserView, tabContainer];
   tabContainer = initTabContainer(mainWindow);
   viewsToDestroy.forEach(view => view.destroy());
 };
