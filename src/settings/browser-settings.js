@@ -20,6 +20,24 @@ const validateNewTab = ({target}) => {
   }
 };
 
+
+const updateSaveButton = settings => {
+  const newTabField = settings.querySelector('.settings__new-tab');
+  const settingsForm = settings.querySelector('.form');
+  const submit = settings.querySelector('.settings__submit');
+  let enabled = true;
+  if (newTabField.value.length > 0) {
+    enabled = false;
+  }
+  if (new FormData(settingsForm).getAll('tabs').length === 0) {
+    enabled = false;
+  }
+  if (enabled) {
+    submit.removeAttribute('disabled');
+  } else {
+    submit.setAttribute('disabled', 'true');
+  }
+};
 const tabTemplate = url => `
     <div class='field'>
       <div class='control'>
@@ -31,13 +49,17 @@ const tabTemplate = url => `
 const initNewTab = settings => {
   const newTabField = settings.querySelector('.settings__new-tab');
   const tabs = settings.querySelector('.settings__tabs');
-  newTabField.addEventListener('input', validateNewTab);
+  newTabField.addEventListener('input', event => {
+    validateNewTab(event);
+    updateSaveButton(settings);
+  });
   newTabField.addEventListener('keypress', event => {
     if (event.code === 'Enter') {
       event.preventDefault();
       const {target} = event;
       tabs.innerHTML += tabTemplate(target.value);
       target.value = '';
+      updateSaveButton(settings);
     }
   });
 };
@@ -60,15 +82,8 @@ const initSpellCheckerSettings = settings => {
     `).join('');
 };
 
-const init = () => {
-  const settings = document.querySelector('.settings');
+const initButtons = settings => {
   const settingsForm = settings.querySelector('.form');
-  settingsForm.addEventListener('keypress', event => (event.code === 'Enter' ? event.preventDefault() : true));
-  settingsForm.addEventListener('submit', event => event.preventDefault());
-
-  [initNewTab, initSpellCheckerSettings, initTabsSettings].forEach(f => f.call(this, settings));
-
-
   const submit = settings.querySelector('.settings__submit');
   submit.addEventListener('click', () => {
     const formData = new FormData(settingsForm);
@@ -77,9 +92,22 @@ const init = () => {
       dictionaries: formData.getAll('dictionaries')
     });
   });
+  updateSaveButton(settings);
 
   const cancel = settings.querySelector('.settings__cancel');
   cancel.addEventListener('click', () => ipcRenderer.send(APP_EVENTS.settingsCancel));
+};
+
+const init = () => {
+  const settings = document.querySelector('.settings');
+  const settingsForm = settings.querySelector('.form');
+  settingsForm.addEventListener('keypress', event => (event.code === 'Enter' ? event.preventDefault() : true));
+  settingsForm.addEventListener('submit', event => event.preventDefault());
+
+  [initNewTab, initSpellCheckerSettings, initTabsSettings, initButtons].forEach(f => f.call(this, settings));
+
+
+
 };
 
 init();
