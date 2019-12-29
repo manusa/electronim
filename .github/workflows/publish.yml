@@ -48,8 +48,9 @@ jobs:
       - name: Upload Release Asset
         run: |
           VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
+          RELEASE_ID=$(curl https://api.github.com/repos/manusa/electronim/releases/tags/$VERSION | jq -r ".id")
           curl \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/tar+gzip" \
-            --data-binary @"./dist/electronim-linux-x64.tar.gz" \
-            "https://uploads.github.com/repos/manusa/electronim/releases/tags/$VERSION/assets?name=electronim-linux-x64.tar.gz"
+            --data-binary "@dist/electronim-linux-x64.tar.gz" \
+            "https://uploads.github.com/repos/manusa/electronim/releases/$RELEASE_ID/assets?name=electronim-linux-x64.tar.gz"
