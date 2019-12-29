@@ -75,8 +75,8 @@ jobs:
         run: |
           set VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
           set RELEASE_ID=$(curl https://api.github.com/repos/manusa/electronim/releases/tags/$VERSION | jq -r ".id")
-          curl \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Content-Type: application/zip" \
-            --data-binary "@dist/electronim-win32-ia32.tar.gz" \
+          curl `
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" `
+            -H "Content-Type: application/zip" `
+            --data-binary "@dist/electronim-win32-ia32.zip" `
             "https://uploads.github.com/repos/manusa/electronim/releases/$RELEASE_ID/assets?name=electronim-win32-ia32.zip"
