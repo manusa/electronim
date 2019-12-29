@@ -6,7 +6,7 @@ on:
     - '*'
 
 jobs:
-  build:
+  npm:
     name: Publish
     runs-on: ubuntu-latest
     steps:
@@ -28,3 +28,28 @@ jobs:
           export NPM_TOKEN=${{ secrets.NPM_TOKEN }}
           echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> .npmrc
           npm publish
+  linux:
+    name: Linux Artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '13.x'
+      - name: Install
+        run: npm install
+      - name: Create artifact
+        run: |
+          npm run package-linux
+          cd dist
+          tar -czvf electronim-linux-x64.tar.gz electronim-linux-x64/
+      - name: Upload Release Asset
+        run: |
+          VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
+          curl \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/tar+gzip" \
+            --data-binary @"./dist/electronim-linux-x64.tar.gz" \
+            "https://uploads.github.com/repos/manusa/electronim/releases/tags/$VERSION/assets?name=electronim-linux-x64.tar.gz"

@@ -9,7 +9,10 @@
   "scripts": {
     "pretest": "eslint --ignore-path .gitignore .",
     "start": "electron .",
-    "test": "jest"
+    "test": "jest",
+    "package-linux": "electron-packager . electronim --overwrite --asar=true --platform=linux --arch=x64 --prune=true --out=dist",
+    "package-mac": "electron-packager . electronim --overwrite --asar=true --platform=darwin --arch=x64 --prune=true --out=dist",
+    "package-win": "electron-packager . electronim --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=dist --version-string.CompanyName=\"Marc Nuri\" --version-string.FileDescription=ElectronIM --version-string.ProductName=\"ElectronIM\""
   },
   "publishConfig": {
     "access": "public"
@@ -40,6 +43,7 @@
   },
   "homepage": "https://github.com/manusa/electronim#readme",
   "devDependencies": {
+    "electron-packager": "^14.1.1",
     "eslint": "^6.8.0",
     "eslint-plugin-jest": "^23.1.1",
     "jest": "^24.9.0"
