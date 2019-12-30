@@ -54,6 +54,32 @@ jobs:
             -H "Content-Type: application/tar+gzip" \
             --data-binary "@dist/electronim-linux-x64.tar.gz" \
             "https://uploads.github.com/repos/manusa/electronim/releases/$RELEASE_ID/assets?name=electronim-linux-x64.tar.gz"
+  macOS:
+    name: macOS Artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '13.x'
+      - name: Install
+        run: npm install
+      - name: Create artifact
+        run: |
+          npm run package-mac
+          cd dist
+          tar -czvf electronim-darwin-x64.tar.gz electronim-darwin-x64/
+      - name: Upload Release Asset
+        run: |
+          VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
+          RELEASE_ID=$(curl https://api.github.com/repos/manusa/electronim/releases/tags/$VERSION | jq -r ".id")
+          curl \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/tar+gzip" \
+            --data-binary "@dist/electronim-darwin-x64.tar.gz" \
+            "https://uploads.github.com/repos/manusa/electronim/releases/$RELEASE_ID/assets?name=electronim-darwin-x64.tar.gz"
   windows:
     name: Windows Artifact
     runs-on: windows-latest
