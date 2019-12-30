@@ -74,10 +74,8 @@ jobs:
       - name: Upload Release Asset
         run: |
           $VERSION = $Env:GITHUB_REF -replace 'refs/tags/',''
-          echo "Current version: $VERSION"
           $RELEASE_INFO = Invoke-WebRequest "https://api.github.com/repos/manusa/electronim/releases/tags/$VERSION" | ConvertFrom-Json
           $RELEASE_ID = $RELEASE_INFO.id
-          echo "Current release: $RELEASE_ID"
           curl `
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" `
             -H "Content-Type: application/zip" `

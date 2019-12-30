@@ -1,20 +1,14 @@
-const {BrowserView, Menu, MenuItem, shell} = require('electron');
+const {BrowserView, Menu, MenuItem} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const settings = require('../settings');
 const {contextMenuHandler} = require('../spell-check');
+const {handleRedirect} = require('./redirect');
 
 let activeTab = null;
 const tabs = {};
 
 const webPreferences = {
   preload: `${__dirname}/preload.js`
-};
-
-const handleRedirect = browserView => (e, url) => {
-  if (new URL(url).origin !== new URL(browserView.webContents.getURL()).origin) {
-    e.preventDefault();
-    shell.openExternal(url);
-  }
 };
 
 const handlePageTitleUpdated = (ipcSender, tabId) => (e, title) => {
