@@ -47,6 +47,10 @@ $chromeTabs.addEventListener('activeTabChange', ({detail}) => {
   ipcRenderer.send(APP_EVENTS.activateTab, {id: detail.tabEl.dataset.tabId});
 });
 
+$chromeTabs.addEventListener('tabReorder', () => {
+  ipcRenderer.send(APP_EVENTS.tabReorder, {tabIds: chromeTabs.tabEls.map(tabEl => tabEl.dataset.tabId)});
+});
+
 // $chromeTabs.addEventListener('tabAdd', ({ detail }) => console.log('Tab added', detail.tabEl));
 // $chromeTabs.addEventListener('tabRemove', ({ detail }) => console.log('Tab removed', detail.tabEl));
 

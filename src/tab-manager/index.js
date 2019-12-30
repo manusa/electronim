@@ -48,11 +48,9 @@ const handleContextMenu = browserView => (event, params) => {
 };
 
 const cleanUserAgent = browserView => {
-  browserView.webContents.setUserAgent(
-    browserView.webContents.getUserAgent()
-      .replace(/ElectronIM\/.*? /g, '')
-      .replace(/Electron\/.*? /g, '')
-  );
+  browserView.webContents.userAgent = browserView.webContents.userAgent
+    .replace(/ElectronIM\/.*? /g, '')
+    .replace(/Electron\/.*? /g, '');
 };
 
 const addTabs = ipcSender => tabsMetadata => {

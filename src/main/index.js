@@ -24,6 +24,14 @@ const activateTab = tabId => {
   }
 };
 
+const handleTabReorder = (event, {tabIds}) => {
+  const currentTabs = loadSettings().tabs.reduce((acc, tab) => {
+    acc[tab.id] = tab; return acc;
+  }, {});
+  const tabs = tabIds.map(tabId => currentTabs[tabId]);
+  updateSettings({tabs});
+};
+
 const initTabListener = () => {
   ipc.on(APP_EVENTS.tabsReady, event => {
     const currentSettings = loadSettings();
@@ -36,6 +44,7 @@ const initTabListener = () => {
     }
   });
   ipc.on(APP_EVENTS.activateTab, (event, data) => activateTab(data.id));
+  ipc.on(APP_EVENTS.tabReorder, handleTabReorder);
 };
 
 const closeSettings = () => {

@@ -5,7 +5,8 @@ const APP_EVENTS = {
   settingsSave: 'settingsSave',
   setTabFavicon: 'setTabFavicon',
   setTabTitle: 'setTabTitle',
-  tabsReady: 'tabsReady'
+  tabsReady: 'tabsReady',
+  tabReorder: 'tabReorder'
 };
 
 module.exports = {
