@@ -47,11 +47,20 @@ const handleContextMenu = browserView => (event, params) => {
   menu.popup({x, y});
 };
 
+const cleanUserAgent = browserView => {
+  browserView.webContents.setUserAgent(
+    browserView.webContents.getUserAgent()
+      .replace(/ElectronIM\/.*? /g, '')
+      .replace(/Electron\/.*? /g, '')
+  );
+};
+
 const addTabs = ipcSender => tabsMetadata => {
   tabsMetadata.forEach(({id, url}) => {
     const tab = new BrowserView({webPreferences});
     tab.setAutoResize({width: true, height: true});
 
+    cleanUserAgent(tab);
     tab.webContents.loadURL(url);
 
     const handleRedirectForCurrentUrl = handleRedirect(tab);
