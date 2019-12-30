@@ -57,5 +57,4 @@ describe('Tab Manager Redirect module test suite', () => {
       });
     });
   });
-
 });

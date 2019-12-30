@@ -1,14 +1,7 @@
 const {shell} = require('electron');
 
-const matchUrls = regexList => (browserViewUrl, url) => {
-  let ret = false;
-  regexList.forEach(regex => {
-    if (browserViewUrl.href.match(regex) || url.href.match(regex)) {
-      ret = true;
-    }
-  });
-  return ret;
-};
+const matchUrls = regexList => (browserViewUrl, url) =>
+  regexList.some(regex => browserViewUrl.href.match(regex) || url.href.match(regex));
 
 const isOAuth = matchUrls([
   /^https:\/\/.+\.google\.com\/o\/oauth2\/.*/,
@@ -17,8 +10,7 @@ const isOAuth = matchUrls([
   /^https:\/\/(.+\.)?github\.com\/login\/oauth.*/
 ]);
 
-const isSameOrigin = (browserViewUrl, url) =>
-  url.origin === browserViewUrl.origin;
+const isSameOrigin = (browserViewUrl, url) => url.origin === browserViewUrl.origin;
 
 const shouldOpenInExternalBrowser = (browserView, url) => {
   let ret = true;
