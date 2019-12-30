@@ -73,9 +73,10 @@ jobs:
           7z a electronim-win32-ia32.zip electronim-win32-ia32/
       - name: Upload Release Asset
         run: |
-          $VERSION = $GITHUB_REF -replace '/refs/tags/',''
+          $VERSION = $Env:GITHUB_REF -replace '/refs/tags/',''
           echo "Current version: $VERSION"
-          $RELEASE_ID = $(curl "https://api.github.com/repos/manusa/electronim/releases/tags/$VERSION" | jq -r ".id")
+          $RELEASE_INFO = Invoke-WebRequest "https://api.github.com/repos/manusa/electronim/releases/tags/$VERSION" | ConvertFrom-Json
+          $RELEASE_ID = $RELEASE_INFO.id
           echo "Current release: $RELEASE_ID"
           curl `
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" `
