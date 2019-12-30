@@ -20,7 +20,6 @@ const validateNewTab = ({target}) => {
   }
 };
 
-
 const updateSaveButton = () => {
   const settings = document.querySelector('.settings');
   const newTabField = settings.querySelector('.settings__new-tab');
@@ -110,7 +109,7 @@ const initButtons = settings => {
       dictionaries: formData.getAll('dictionaries')
     });
   });
-  updateSaveButton(settings);
+  updateSaveButton();
 
   const cancel = settings.querySelector('.settings__cancel');
   cancel.addEventListener('click', () => ipcRenderer.send(APP_EVENTS.settingsCancel));
