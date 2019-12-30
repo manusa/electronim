@@ -2,9 +2,12 @@ name: Tests
 
 on: [push]
 
+env:
+  SONAR_SCANNER_VERSION: 4.2.0.1873
+
 jobs:
-  build:
-    name: Build
+  tests:
+    name: Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,3 +22,16 @@ jobs:
         run: npm run pretest
       - name: Test
         run: npm test
+      - name: Download and install sonar-scanner
+        run: |
+          mkdir -p $HOME/.sonar \
+          && wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip -O sonar-scanner.zip \
+          && unzip sonar-scanner.zip -d $HOME/.sonar/ \
+          && rm sonar-scanner.zip
+      - name: SonarCloud
+        run: |
+          $HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux/bin/sonar-scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+          SONAR_SCANNER_OPTS: "-server"
