@@ -1,12 +1,35 @@
 # ElectronIM
+[![GitHub license](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/manusa/electronim/blob/master/LICENSE)
+[<img src="https://github.com/manusa/electronim/workflows/Tests/badge.svg" />](https://github.com/manusa/electronim/actions)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=manusa_electronim&metric=bugs)](https://sonarcloud.io/dashboard?id=manusa_electronim) 
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=manusa_electronim&metric=coverage)](https://sonarcloud.io/dashboard?id=manusa_electronim)
+[![npm](https://img.shields.io/npm/v/electronim)](https://www.npmjs.com/package/electronim)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/manusa/electronim?sort=semver)](https://github.com/manusa/electronim/releases/latest)
+
 
 Free/Libre open source Electron based multi instance messaging (IM) client.
 
-Combine all your IM applications (or whatever you want) in a single browser (Electron) window
+Combine all your IM applications (or whatever you want) in a single browser (Electron) window.
+
+## Quickstart
+
+Download the latest binary version for your platform:
+[releases](https://github.com/manusa/electronim/releases/latest)
+
+Or if you have Node installed in your system, you can try out ElectronIM by running one of the following commands:
+
+```
+npx electronim
+```
+
+```
+npm install -g electronim
+elecronim
+```
 
 ## Features
 
-- Multiplatform
+- Multi-platform
 - Spellchecker
 - Supports any web based IM solution
 
