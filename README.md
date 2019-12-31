@@ -7,7 +7,7 @@
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/manusa/electronim?sort=semver)](https://github.com/manusa/electronim/releases/latest)
 
 
-Free/Libre open source Electron based multi instance messaging (IM) client.
+Free/Libre open source Electron based multi instant messaging (IM) client.
 
 Combine all your IM applications (or whatever you want) in a single browser (Electron) window.
 
@@ -32,7 +32,18 @@ elecronim
 - Multi-platform
 - Spellchecker
 - Supports any web based IM solution
+- Drag-and-drop tab reordering
 
+## Screenshot
+
+![Screenshot](./docs/screenshot.png)
+
+## Motivation
+
+Inspired by [Rambox](https://github.com/ramboxapp/community-edition) and
+[Franz](https://github.com/meetfranz/franz), I created **ElectronIM** out of the necessity of
+having an all-in-one instant messaging app that didn't require registration and provided 
+spell checking for free.
 
 ## Acknowledgements
 
