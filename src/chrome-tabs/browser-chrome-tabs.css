@@ -1,0 +1,38 @@
+html {
+    overflow: hidden;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.tab-container {
+    display: flex;
+    background: #EEE;
+    align-items: center;
+    max-width: none;
+}
+
+.tab-container .chrome-tabs {
+    flex: 1;
+    background: #EEE;
+    padding: 10px 0;
+}
+
+.tab-container .chrome-tabs .chrome-tab-close {
+    display: none;
+}
+
+.tab-container .settings {
+    padding: 0 8px 0 0;
+}
+
+.tab-container .settings__button {
+    background: none;
+    border-color: transparent;
+}
+
+.tab-container .settings__button:hover {
+    border-color: #dbdbdb;
+}

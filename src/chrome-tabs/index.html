@@ -5,24 +5,22 @@
     <title>Tabs</title>
     <link rel="stylesheet" href="../../node_modules/chrome-tabs/css/chrome-tabs.css">
     <link rel="stylesheet" href="../../node_modules/chrome-tabs/css/chrome-tabs-dark-theme.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-        .chrome-tabs {
-            background: #EEE;
-            padding: 10px 0;
-        }
-        .chrome-tab-close {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="../../node_modules/bulma/css/bulma.min.css">
+    <link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="./browser-chrome-tabs.css">
 </head>
 <body>
-
-    <div class="chrome-tabs" style="--tab-content-margin: 9px">
-        <div class="chrome-tabs-content">
+    <div class="tab-container container">
+        <div class="chrome-tabs" style="--tab-content-margin: 9px">
+            <div class="chrome-tabs-content">
+            </div>
+        </div>
+        <div class="settings">
+            <button class="settings__button button">
+                <span class='icon'>
+                  <i class='fas fa-cog'></i>
+                </span>
+            </button>
         </div>
     </div>
     <script src="../../node_modules/draggabilly/dist/draggabilly.pkgd.min.js"></script>

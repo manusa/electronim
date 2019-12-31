@@ -44,6 +44,7 @@ const initTabListener = () => {
     }
   });
   ipc.on(APP_EVENTS.activateTab, (event, data) => activateTab(data.id));
+  ipc.on(APP_EVENTS.settingsOpenDialog, () => openSettingsDialog(mainWindow));
   ipc.on(APP_EVENTS.tabReorder, handleTabReorder);
 };
 
