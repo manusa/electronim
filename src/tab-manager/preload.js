@@ -1,5 +1,5 @@
 require('../main/preload');
 const {webFrame} = require('electron');
-const {initSpellChecker} = require('../spell-check/browser-spell-check');
+const {initSpellChecker} = require('./browser-spell-check');
 
 initSpellChecker(webFrame);
