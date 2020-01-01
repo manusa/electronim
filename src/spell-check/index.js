@@ -3,25 +3,25 @@ const {APP_EVENTS} = require('../constants');
 const {loadSettings} = require('../settings');
 
 const AVAILABLE_DICTIONARIES = [
-  // 'ca', //
-  // 'ca-valencia', //
+  'ca',
+  'ca-valencia',
   'de',
   'en-gb',
   'en-us',
   'es',
-  // 'eu', //
+  'eu',
   'fr',
-  // 'it', //
+  'it',
   'ka',
-  // 'lt', //
+  'lt',
   'nl',
-  // 'pl', //
-  // 'pt', //
-  // 'pt-br', //
+  'pl',
+  'pt',
+  'pt-br',
   'ru',
   'sv',
   'tr',
-  // 'uk' //
+  'uk'
 ];
 
 let fakeRendererWorker;

@@ -1,10 +1,10 @@
-const nspell = require('nspell');
+const Nodehun = require('nodehun');
 const {loadSettings} = require('../../settings');
 
 const dictionaries = [];
 
 const isMisspelled = word =>
-  dictionaries.every(dictionary => !dictionary.correct(word));
+  dictionaries.every(dictionary => !dictionary.spellSync(word));
 
 window.getMisspelled = words => {
   if (dictionaries.length === 0) {
@@ -15,7 +15,7 @@ window.getMisspelled = words => {
 
 window.getSuggestions = word => {
   const ret = new Set();
-  dictionaries.map(dictionary => dictionary.suggest(word))
+  dictionaries.map(dictionary => dictionary.suggestSync(word))
     .flatMap(suggestions => suggestions)
     .forEach(suggestion => ret.add(suggestion));
   return Array.from(ret.values()).sort().slice(0, 10);
@@ -33,8 +33,8 @@ window.reloadDictionaries = () => {
         // Error is ignored
       }
       if (dictionary) {
-        dictionary((err, dict) => {
-          dictionaries.push(nspell(dict));
+        dictionary((err, {aff, dic}) => {
+          dictionaries.push(new Nodehun(aff, dic));
         });
       }
     });

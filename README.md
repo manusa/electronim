@@ -52,4 +52,5 @@ spell checking for free.
 - [Chrome tabs](https://github.com/adamschwartz/chrome-tabs#readme)
 - [Draggabilly](https://github.com/desandro/draggabilly)
 - [Font Awesome Free](https://github.com/FortAwesome/Font-Awesome)
-- [nspell](https://github.com/wooorm/nspell)
+- [Nodehun](https://github.com/Wulf/nodehun/)
+- [Woorm's dictionary repo](https://github.com/wooorm/dictionaries)
