@@ -48,8 +48,8 @@ spell checking for free.
 ## Acknowledgements
 
 - [Electron](https://electronjs.org/)
+- [Bulma](https://github.com/jgthms/bulma)
 - [Chrome tabs](https://github.com/adamschwartz/chrome-tabs#readme)
 - [Draggabilly](https://github.com/desandro/draggabilly)
-- [Simple spell checker](https://github.com/jfmdev/simple-spellchecker)
-- [Bulma](https://github.com/jgthms/bulma)
 - [Font Awesome Free](https://github.com/FortAwesome/Font-Awesome)
+- [nspell](https://github.com/wooorm/nspell)

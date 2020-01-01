@@ -1,6 +1,7 @@
 const APP_EVENTS = {
   activateTab: 'activateTab',
   addTabs: 'addTabs',
+  dictionariesLoaded: 'dictionariesLoaded',
   settingsCancel: 'settingsCancel',
   settingsOpenDialog: 'settingsOpenDialog',
   settingsSave: 'settingsSave',

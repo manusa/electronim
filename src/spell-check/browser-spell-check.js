@@ -1,15 +1,20 @@
-const activeDictionaries = require('./').getActiveDictionariesSnapshot();
+/* eslint-disable no-undef */
+const {remote} = require('electron');
+
+const getActiveDictionaries = () => remote.getGlobal('dictionaries').activeDictionaries;
 
 const isMisspelled = word =>
-  activeDictionaries.every(dictionary => !dictionary.spellCheck(word));
+  getActiveDictionaries().every(dictionary => !dictionary.correct(word));
 
 const initSpellChecker = webFrame => {
   webFrame.setSpellCheckProvider(navigator.language, {
     spellCheck (words, callback) {
-      setTimeout(() => {
-        const misspelled = words.filter(isMisspelled);
-        callback(misspelled);
-      }, 0);
+      if (getActiveDictionaries().length > 0) {
+        setTimeout(() => {
+          const misspelled = words.filter(isMisspelled);
+          callback(misspelled);
+        }, 0);
+      }
     }
   });
 };
