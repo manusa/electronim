@@ -1,4 +1,4 @@
-const {BrowserWindow, ipcMain: ipc} = require('electron');
+const {BrowserWindow, app, ipcMain: ipc} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const {TABS_CONTAINER_HEIGHT, initTabContainer} = require('../chrome-tabs');
 const {loadSettings, updateSettings, updateTabs, openSettingsDialog} = require('../settings');
@@ -83,6 +83,7 @@ const init = () => {
     const [currentWidth, currentHeight] = mainWindow.getSize();
     updateSettings({width: currentWidth, height: currentHeight});
   });
+  mainWindow.on('closed', () => app.quit());
   initTabListener();
   initSettingsListener();
   tabContainer = initTabContainer(mainWindow);

@@ -3,28 +3,31 @@ const {APP_EVENTS} = require('../constants');
 const {loadSettings} = require('../settings');
 
 const AVAILABLE_DICTIONARIES = [
-  'ca', //
-  'ca-valencia', //
+  // 'ca', //
+  // 'ca-valencia', //
   'de',
   'en-gb',
   'en-us',
   'es',
-  'eu', //
+  // 'eu', //
   'fr',
-  'it',
+  // 'it', //
   'ka',
-  'lt',
+  // 'lt', //
   'nl',
-  'pl',
-  'pt',
-  'pt-br',
+  // 'pl', //
+  // 'pt', //
+  // 'pt-br', //
   'ru',
   'sv',
   'tr',
-  'uk'
+  // 'uk' //
 ];
 
 let fakeRendererWorker;
+
+const handleGetMisspelled = async (event, words) =>
+  await fakeRendererWorker.webContents.executeJavaScript(`getMisspelled(${JSON.stringify(words)})`);
 
 const getEnabledDictionaries = () => loadSettings().enabledDictionaries;
 
@@ -34,9 +37,9 @@ const loadDictionaries = () => {
       show: false,
       webPreferences: {nodeIntegration: true}
     });
+    ipcMain.handle(APP_EVENTS.dictionaryGetMisspelled, handleGetMisspelled);
   }
   fakeRendererWorker.loadURL(`file://${__dirname}/dictionary.renderer/index.html`);
-  fakeRendererWorker.webContents.openDevTools();
 };
 
 const contextMenuHandler = async (event, {misspelledWord}, webContents) => {
@@ -56,8 +59,6 @@ const contextMenuHandler = async (event, {misspelledWord}, webContents) => {
   return ret;
 };
 
-ipcMain.handle(APP_EVENTS.dictionaryGetMispelled, async (event, words) =>
-  await fakeRendererWorker.webContents.executeJavaScript(`getMisspelled(${JSON.stringify(words)})`));
 
 module.exports = {
   AVAILABLE_DICTIONARIES, contextMenuHandler, getEnabledDictionaries, loadDictionaries

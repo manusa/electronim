@@ -37,14 +37,14 @@ const handlePageFaviconUpdated = (browserView, ipcSender, tabId) => async (e, fa
 const handleContextMenu = browserView => async (event, params) => {
   const {webContents} = browserView;
   const menu = new Menu();
-  const {x, y} = params;
-  menu.popup({x, y});
+
   const spellingSuggestions = await contextMenuHandler(event, params, webContents);
   if (spellingSuggestions.length > 0) {
     spellingSuggestions.forEach(mi => menu.append(mi));
     menu.append(new MenuItem({type: 'separator'}));
   }
   menu.append(new MenuItem({label: 'DevTools', click: () => webContents.openDevTools()}));
+  const {x, y} = params;
   menu.popup({x, y});
 };
 

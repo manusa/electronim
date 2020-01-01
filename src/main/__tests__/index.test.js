@@ -30,6 +30,7 @@ describe('Main module test suite', () => {
       updateSettings: jest.fn()
     }));
     settingsModule = require('../../settings');
+    jest.mock('../../spell-check');
     jest.mock('../../tab-manager', () => ({}));
     main = require('../');
   });

@@ -26,7 +26,12 @@ window.reloadDictionaries = () => {
   const {enabledDictionaries} = loadSettings();
   enabledDictionaries
     .forEach(dictionaryKey => {
-      const dictionary = require(`dictionary-${dictionaryKey}`);
+      let dictionary;
+      try {
+        dictionary = require(`dictionary-${dictionaryKey}`);
+      } catch (error) {
+        // Error is ignored
+      }
       if (dictionary) {
         dictionary((err, dict) => {
           dictionaries.push(nspell(dict));
