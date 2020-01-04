@@ -28,7 +28,7 @@ window.reloadDictionaries = () => {
     .forEach(dictionaryKey => {
       let dictionary;
       try {
-        dictionary = require(`dictionary-${dictionaryKey}`);
+        dictionary = require(`dictionary-${dictionaryKey.toLowerCase()}`);
       } catch (error) {
         // Error is ignored
       }

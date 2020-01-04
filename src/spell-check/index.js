@@ -2,27 +2,65 @@ const {BrowserWindow, ipcMain} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const {loadSettings} = require('../settings');
 
-const AVAILABLE_DICTIONARIES = [
-  'ca',
-  'ca-valencia',
-  'de',
-  'en-gb',
-  'en-us',
-  'es',
-  'eu',
-  'fr',
-  'it',
-  'ka',
-  'lt',
-  'nl',
-  'pl',
-  'pt',
-  'pt-br',
-  'ru',
-  'sv',
-  'tr',
-  'uk'
-];
+const AVAILABLE_DICTIONARIES = {
+  ca: {
+    name: 'Catalan'
+  },
+  'ca-valencia': {
+    name: 'Valencian'
+  },
+  de: {
+    name: 'German'
+  },
+  'en-GB': {
+    name: 'English (GB)'
+  },
+  'en-US': {
+    name: 'English (US)'
+  },
+  es: {
+    name: 'Spanish'
+  },
+  eu: {
+    name: 'Basque'
+  },
+  fr: {
+    name: 'French'
+  },
+  it: {
+    name: 'Italian'
+  },
+  ka: {
+    name: 'Georgian'
+  },
+  lt: {
+    name: 'Lithuanian'
+  },
+  nl: {
+    name: 'Dutch'
+  },
+  pl: {
+    name: 'Polish'
+  },
+  pt: {
+    name: 'Portuguese'
+  },
+  'pt-BR': {
+    name: 'Portuguese (Brazil)'
+  },
+  ru: {
+    name: 'Russian'
+  },
+  sv: {
+    name: 'Swedish'
+  },
+  tr: {
+    name: 'Turkish'
+  },
+  uk: {
+    name: 'Ukrainian'
+  }
+};
 
 let fakeRendererWorker;
 

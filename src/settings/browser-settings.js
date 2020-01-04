@@ -89,11 +89,13 @@ const initTabsSettings = settings => {
 const initSpellCheckerSettings = settings => {
   const dictionaries = settings.querySelector('.settings__dictionaries');
   const {available, enabled} = window.dictionaries;
-  dictionaries.innerHTML = available.map(dict => `
+  dictionaries.innerHTML = Object.entries(available)
+    .sort(([, {name: name1}], [, {name: name2}]) => name1.localeCompare(name2))
+    .map(([key, {name}]) => `
       <div class='control'>
         <label class='checkbox'>
-            <input type='checkbox' name='dictionaries' value='${dict}' ${enabled.includes(dict) ? 'checked' : ''}>
-            ${dict}
+            <input type='checkbox' name='dictionaries' value='${key}' ${enabled.includes(key) ? 'checked' : ''}>
+            ${name}
         </label>
       </div>
     `).join('');
