@@ -79,7 +79,7 @@ jobs:
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/tar+gzip" \
             --data-binary "@dist/electronim-darwin-x64.tar.gz" \
-            "https://uploads.github.com/repos/manusa/electronim/releases/$RELEASE_ID/assets?name=electronim-darwin-x64.tar.gz"
+            "https://uploads.github.com/repos/manusa/electronim/releases/$RELEASE_ID/assets?name=electronim-macos-x64.tar.gz"
   windows:
     name: Windows Artifact
     runs-on: windows-latest
@@ -106,4 +106,4 @@ jobs:
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" `
             -H "Content-Type: application/zip" `
             --data-binary "@dist/electronim-win32-ia32.zip" `
-            "https://uploads.github.com/repos/manusa/electronim/releases/$RELEASE_ID/assets?name=electronim-win32-ia32.zip"
+            "https://uploads.github.com/repos/manusa/electronim/releases/$RELEASE_ID/assets?name=electronim-windows-ia32.zip"

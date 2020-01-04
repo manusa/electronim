@@ -26,6 +26,7 @@ npx electronim
 npm install -g electronim
 elecronim
 ```
+You can also follow our comprehensive [setup guide](docs/Setup.md).
 
 ## Features
 
