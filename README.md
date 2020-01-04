@@ -34,9 +34,9 @@ elecronim
 - Supports any web based IM solution
 - Drag-and-drop tab reordering
 
-## Screenshot
+## [Screenshot](docs/Screenshots.md)
 
-![Screenshot](./docs/screenshot.png)
+![Screenshot](docs/screenshots/main.png)
 
 ## Motivation
 
