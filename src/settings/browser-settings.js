@@ -1,5 +1,13 @@
 /* eslint-disable no-undef */
+const prependProtocol = url => {
+  if (url && !url.match(/^https?:\/\/.+/)) {
+    return `https://${url}`;
+  }
+  return url;
+};
+
 const validateUrl = url => {
+  url = prependProtocol(url);
   if (!url && !url.match(/^https?:\/\/.+/)) {
     return false;
   }
@@ -72,7 +80,7 @@ const initNewTab = settings => {
     if (event.code === 'Enter') {
       event.preventDefault();
       const {target} = event;
-      tabs.innerHTML += tabTemplate(target.value);
+      tabs.innerHTML += tabTemplate(prependProtocol(target.value));
       initTabsListener(tabs);
       target.value = '';
       updateSaveButton();
