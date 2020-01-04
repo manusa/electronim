@@ -40,6 +40,7 @@ const loadDictionaries = () => {
     ipcMain.handle(APP_EVENTS.dictionaryGetMisspelled, handleGetMisspelled);
   }
   fakeRendererWorker.loadURL(`file://${__dirname}/dictionary.renderer/index.html`);
+  fakeRendererWorker.webContents.openDevTools();
 };
 
 const contextMenuHandler = async (event, {misspelledWord}, webContents) => {

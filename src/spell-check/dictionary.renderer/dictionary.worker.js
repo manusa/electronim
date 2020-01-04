@@ -1,4 +1,6 @@
+const fs = require('fs');
 const Nodehun = require('nodehun');
+const path = require('path');
 const {loadSettings} = require('../../settings');
 
 const dictionaries = [];
@@ -26,16 +28,14 @@ window.reloadDictionaries = () => {
   const {enabledDictionaries} = loadSettings();
   enabledDictionaries
     .forEach(dictionaryKey => {
-      let dictionary;
-      try {
-        dictionary = require(`dictionary-${dictionaryKey}`);
-      } catch (error) {
-        // Error is ignored
-      }
-      if (dictionary) {
-        dictionary((err, {aff, dic}) => {
-          dictionaries.push(new Nodehun(aff, dic));
-        });
+      // let dictionary;
+      const dicPath = path.join(__dirname, '..', '..', 'third-party', 'hunspell-dictionaries', `${dictionaryKey}.dic`);
+      if (fs.existsSync(dicPath)) {
+        const aff = fs.readFileSync(
+          path.join(__dirname, '..', '..', 'third-party', 'hunspell-dictionaries', `${dictionaryKey}.aff`));
+        const dic = fs.readFileSync(dicPath);
+        console.log(`loading: ${dictionaryKey}`);
+        dictionaries.push(new Nodehun(aff, dic));
       }
     });
 };

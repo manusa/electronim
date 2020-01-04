@@ -1,0 +1,4495 @@
+SET UTF-8
+TRY '-                                                                 
+WORDCHARS -'`
+BREAK 1
+BREAK -
+#IGNORE  
+REP 5
+REP     
+REP           
+REP           
+REP          
+REP         
+SFX V Y 83
+SFX V        [^ ]   
+SFX V        [^ ]   
+SFX V          
+SFX V          
+SFX V      [^ ]   
+SFX V       [^ ]   
+SFX V          
+SFX V      [^ ]   
+SFX V       [^ ]   
+SFX V         
+SFX V         
+SFX V          
+SFX V           
+SFX V         [^ ]    
+SFX V         [^ ]    
+SFX V      [^ ]    
+SFX V        [^ ]    
+SFX V      [^ ]    
+SFX V        [^ ]    
+SFX V             
+SFX V             
+SFX V           
+SFX V            
+SFX V           
+SFX V            
+SFX V            
+SFX V            
+SFX V          
+SFX V         
+SFX V           
+SFX V         
+SFX V           
+SFX V         
+SFX V   0 [  ]  
+SFX V     [  ]  
+SFX V      [  ]  
+SFX V            
+SFX V            
+SFX V          
+SFX V         
+SFX V           
+SFX V         
+SFX V           
+SFX V         
+SFX V 0     [  ]  
+SFX V 0     [  ]  
+SFX V 0    [  ]  
+SFX V 0    [  ]  
+SFX V 0   [  ]  
+SFX V 0    [  ]  
+SFX V 0    [  ]  
+SFX V 0   [  ]  
+SFX V 0    [  ]  
+SFX V 0   [  ]  
+SFX V 0   [  ]  
+SFX V 0    [  ]  
+SFX V 0     [  ]  
+SFX V             
+SFX V             
+SFX V            
+SFX V            
+SFX V           
+SFX V            
+SFX V            
+SFX V           
+SFX V            
+SFX V           
+SFX V           
+SFX V            
+SFX V             
+SFX V             
+SFX V             
+SFX V            
+SFX V            
+SFX V           
+SFX V            
+SFX V            
+SFX V           
+SFX V            
+SFX V           
+SFX V           
+SFX V            
+SFX V             
+SFX U Y 13
+SFX U             
+SFX U             
+SFX U            
+SFX U            
+SFX U           
+SFX U            
+SFX U            
+SFX U           
+SFX U            
+SFX U           
+SFX U           
+SFX U            
+SFX U             
+SFX W Y 3
+SFX W      [^    ]   
+SFX W          
+SFX W          
+SFX a Y 235
+SFX a     [^    ]  
+SFX a     [^    ]  
+SFX a       
+SFX a      [^    ]  
+SFX a      [    ]  
+SFX a          
+SFX a          
+SFX a       [^ ]   
+SFX a             
+SFX a          
+SFX a     [^      ' ]  
+SFX a       
+SFX a      [^      ' ]  
+SFX a     ['       ]  
+SFX a      ['       ]  
+SFX a        [^ ]   
+SFX a          [^ ]   
+SFX a         [^ ]   
+SFX a        [^ ]   
+SFX a             
+SFX a               
+SFX a              
+SFX a             
+SFX a           
+SFX a             
+SFX a            
+SFX a           
+SFX a           
+SFX a             
+SFX a            
+SFX a           
+SFX a        [^ ]   
+SFX a          [^ ]   
+SFX a         [^ ]   
+SFX a        [^ ]   
+SFX a         [^  ]    
+SFX a           [^  ]    
+SFX a          [^  ]    
+SFX a         [^  ]    
+SFX a        [  ]    
+SFX a          [  ]    
+SFX a         [  ]    
+SFX a        [  ]    
+SFX a           
+SFX a             
+SFX a            
+SFX a           
+SFX a           
+SFX a             
+SFX a            
+SFX a           
+SFX a              
+SFX a                
+SFX a               
+SFX a              
+SFX a              
+SFX a                
+SFX a               
+SFX a              
+SFX a           
+SFX a             
+SFX a            
+SFX a           
+SFX a           
+SFX a            
+SFX a           
+SFX a           
+SFX a            
+SFX a           
+SFX a           
+SFX a            
+SFX a           
+SFX a              
+SFX a                
+SFX a               
+SFX a              
+SFX a                
+SFX a               
+SFX a              
+SFX a        [   ]   
+SFX a          [   ]   
+SFX a         [   ]   
+SFX a        [   ]   
+SFX a        [^ ]   
+SFX a          [^ ]   
+SFX a         [^ ]   
+SFX a        [^ ]   
+SFX a         [^ ]    
+SFX a           [^ ]    
+SFX a          [^ ]    
+SFX a         [^ ]    
+SFX a        [ ]    
+SFX a          [ ]    
+SFX a         [ ]    
+SFX a        [ ]    
+SFX a           
+SFX a             
+SFX a            
+SFX a           
+SFX a        [^   ]   
+SFX a          [^   ]   
+SFX a         [^   ]   
+SFX a        [^   ]   
+SFX a         [  ]   
+SFX a           [  ]   
+SFX a          [  ]   
+SFX a         [  ]   
+SFX a        [^ ][   ]   
+SFX a          [^ ][   ]   
+SFX a         [^ ][   ]   
+SFX a        [^ ][   ]   
+SFX a          
+SFX a           
+SFX a          
+SFX a         [ ]    
+SFX a           [ ]    
+SFX a          [ ]    
+SFX a         [ ]    
+SFX a         [^   ]    
+SFX a           [^   ]    
+SFX a          [^   ]    
+SFX a         [^   ]    
+SFX a         [^ ][  ]    
+SFX a           [^ ][  ]    
+SFX a          [^ ][  ]    
+SFX a         [^ ][  ]    
+SFX a            
+SFX a              
+SFX a            
+SFX a             
+SFX a            
+SFX a              
+SFX a            
+SFX a             
+SFX a            
+SFX a              
+SFX a            
+SFX a             
+SFX a            
+SFX a            
+SFX a             
+SFX a          
+SFX a            
+SFX a           
+SFX a          
+SFX a             
+SFX a               
+SFX a              
+SFX a             
+SFX a             
+SFX a               
+SFX a              
+SFX a             
+SFX a                
+SFX a                  
+SFX a                 
+SFX a                
+SFX a          
+SFX a            
+SFX a           
+SFX a          
+SFX a            
+SFX a          
+SFX a           
+SFX a          
+SFX a           
+SFX a          
+SFX a            
+SFX a          
+SFX a           
+SFX a          
+SFX a            
+SFX a          
+SFX a           
+SFX a          
+SFX a            
+SFX a          
+SFX a           
+SFX a          
+SFX a            
+SFX a          
+SFX a           
+SFX a          
+SFX a            
+SFX a            
+SFX a             
+SFX a            
+SFX a              
+SFX a         [^ ]    
+SFX a           [^ ]    
+SFX a         [^ ]    
+SFX a          [^ ]    
+SFX a                
+SFX a                  
+SFX a                
+SFX a                 
+SFX a        [^    ]    
+SFX a          [^    ]    
+SFX a         [^    ]    
+SFX a        [^    ]    
+SFX a                
+SFX a                  
+SFX a                 
+SFX a                
+SFX a        [          ]     
+SFX a          [          ]     
+SFX a         [          ]     
+SFX a           [^          ]     
+SFX a             [^          ]     
+SFX a           [^          ]     
+SFX a            [^          ]     
+SFX a        [           ][  ]    
+SFX a          [           ][  ]    
+SFX a         [           ][  ]    
+SFX a        [           ][  ]    
+SFX a           [^           ]     
+SFX a             [^           ]     
+SFX a            [^           ]     
+SFX a           [^           ]     
+SFX a           [^          ]     
+SFX a             [^          ]     
+SFX a            [^          ]     
+SFX a           [^          ]     
+SFX a         
+SFX a           
+SFX a           
+SFX a           
+SFX a 0       
+SFX a 0         
+SFX a 0         
+SFX a 0         
+SFX a         
+SFX a          
+SFX a           
+SFX a          
+SFX b Y 365
+SFX b   0 [^   ]  
+SFX b   0 [^  ]   
+SFX b       [  ]   
+SFX b   0 [^     ]   
+SFX b       [    ]   
+SFX b           
+SFX b            
+SFX b   0 [          ]   
+SFX b       [^          ]   
+SFX b     [^       '     ]  
+SFX b   0 [^  ]   
+SFX b         
+SFX b            
+SFX b     [          ]   
+SFX b        [  ]   
+SFX b             
+SFX b             
+SFX b        [^               ]   
+SFX b        [^             ]   
+SFX b     [             ]   
+SFX b          
+SFX b      [^  ]   
+SFX b     [^  ]   
+SFX b           
+SFX b           
+SFX b            
+SFX b           
+SFX b     [^ ]    
+SFX b           
+SFX b '     [^ ]'  
+SFX b     [      ]  
+SFX b 0   [  ] 
+SFX b 0    [  ] 
+SFX b 0   [  ] 
+SFX b        [^ ]   
+SFX b         [^ ]   
+SFX b         [^ ]   
+SFX b          [^ ]   
+SFX b         [^ ]   
+SFX b             
+SFX b              
+SFX b              
+SFX b               
+SFX b              
+SFX b           
+SFX b            
+SFX b            
+SFX b             
+SFX b            
+SFX b           
+SFX b            
+SFX b            
+SFX b             
+SFX b            
+SFX b              
+SFX b               
+SFX b               
+SFX b                
+SFX b               
+SFX b              
+SFX b               
+SFX b               
+SFX b                
+SFX b               
+SFX b           
+SFX b            
+SFX b            
+SFX b             
+SFX b            
+SFX b        [^ ]   
+SFX b         [^ ]   
+SFX b         [^ ]   
+SFX b          [^ ]   
+SFX b         [^ ]   
+SFX b        [  ]    
+SFX b         [  ]    
+SFX b         [  ]    
+SFX b          [  ]    
+SFX b         [  ]    
+SFX b         [^  ]    
+SFX b          [^  ]    
+SFX b          [^  ]    
+SFX b           [^  ]    
+SFX b          [^  ]    
+SFX b           
+SFX b            
+SFX b            
+SFX b             
+SFX b            
+SFX b           
+SFX b            
+SFX b            
+SFX b             
+SFX b            
+SFX b           
+SFX b            
+SFX b            
+SFX b             
+SFX b            
+SFX b           
+SFX b            
+SFX b            
+SFX b             
+SFX b            
+SFX b           
+SFX b            
+SFX b            
+SFX b             
+SFX b            
+SFX b              
+SFX b               
+SFX b               
+SFX b                
+SFX b               
+SFX b              
+SFX b               
+SFX b               
+SFX b                
+SFX b               
+SFX b        [   ]   
+SFX b         [   ]   
+SFX b         [   ]   
+SFX b          [   ]   
+SFX b         [   ]   
+SFX b        [^ ]   
+SFX b         [^ ]   
+SFX b         [^ ]   
+SFX b          [^ ]   
+SFX b         [^ ]   
+SFX b        [ ]    
+SFX b         [ ]    
+SFX b         [ ]    
+SFX b          [ ]    
+SFX b         [ ]    
+SFX b         [^ ]    
+SFX b          [^ ]    
+SFX b          [^ ]    
+SFX b           [^ ]    
+SFX b          [^ ]    
+SFX b           
+SFX b            
+SFX b            
+SFX b             
+SFX b            
+SFX b        [^   ]   
+SFX b         [^   ]   
+SFX b         [^   ]   
+SFX b          [^   ]   
+SFX b         [^   ]   
+SFX b         [  ]   
+SFX b          [  ]   
+SFX b          [  ]   
+SFX b           [  ]   
+SFX b          [  ]   
+SFX b        [^ ][   ]   
+SFX b         [^ ][   ]   
+SFX b         [^ ][   ]   
+SFX b          [^ ][   ]   
+SFX b         [^ ][   ]   
+SFX b          
+SFX b           
+SFX b           
+SFX b            
+SFX b           
+SFX b          
+SFX b           
+SFX b           
+SFX b            
+SFX b           
+SFX b          
+SFX b           
+SFX b           
+SFX b            
+SFX b           
+SFX b          [ ]    
+SFX b          [ ]    
+SFX b           [ ]    
+SFX b 0    [ ]    
+SFX b          [ ]    
+SFX b          [^   ]    
+SFX b          [^   ]    
+SFX b           [^   ]    
+SFX b          [^   ]    
+SFX b          [^ ][  ]    
+SFX b          [^ ][  ]    
+SFX b           [^ ][  ]    
+SFX b          [^ ][  ]    
+SFX b          
+SFX b           
+SFX b           
+SFX b            
+SFX b           
+SFX b             
+SFX b              
+SFX b              
+SFX b               
+SFX b              
+SFX b             
+SFX b              
+SFX b              
+SFX b               
+SFX b              
+SFX b                
+SFX b                 
+SFX b                 
+SFX b                  
+SFX b                 
+SFX b          
+SFX b           
+SFX b           
+SFX b            
+SFX b           
+SFX b          
+SFX b           
+SFX b           
+SFX b            
+SFX b           
+SFX b          
+SFX b           
+SFX b           
+SFX b            
+SFX b           
+SFX b          
+SFX b           
+SFX b           
+SFX b            
+SFX b           
+SFX b          
+SFX b           
+SFX b           
+SFX b            
+SFX b           
+SFX b             
+SFX b             
+SFX b              
+SFX b             
+SFX b         [^ ]    
+SFX b          [^ ]    
+SFX b          [^ ]    
+SFX b           [^ ]    
+SFX b          [^ ]    
+SFX b                
+SFX b                 
+SFX b                 
+SFX b                  
+SFX b                 
+SFX b        [^    ]    
+SFX b         [^    ]    
+SFX b         [^    ]    
+SFX b          [^    ]    
+SFX b         [^    ]    
+SFX b                
+SFX b                 
+SFX b                 
+SFX b                  
+SFX b                 
+SFX b           [^          ]     
+SFX b            [^          ]     
+SFX b            [^          ]     
+SFX b             [^          ]     
+SFX b            [^          ]     
+SFX b          [          ]     
+SFX b           [          ]     
+SFX b           [          ]     
+SFX b            [          ]     
+SFX b           [          ]     
+SFX b        [           ][  ]    
+SFX b         [           ][  ]    
+SFX b         [           ][  ]    
+SFX b          [           ][  ]    
+SFX b         [           ][  ]    
+SFX b           [^           ]     
+SFX b            [^           ]     
+SFX b            [^           ]     
+SFX b             [^           ]     
+SFX b            [^           ]     
+SFX b           [^          ]     
+SFX b            [^          ]     
+SFX b            [^          ]     
+SFX b             [^          ]     
+SFX b            [^          ]     
+SFX b            
+SFX b             
+SFX b             
+SFX b              
+SFX b             
+SFX b            
+SFX b             
+SFX b             
+SFX b              
+SFX b             
+SFX b            
+SFX b             
+SFX b             
+SFX b              
+SFX b             
+SFX b            
+SFX b             
+SFX b             
+SFX b              
+SFX b             
+SFX b      [^   ]  
+SFX b      [^  ]   
+SFX b      [  ]   
+SFX b      [^   ]   
+SFX b   0 [  ]   
+SFX b   0 [  ]    
+SFX b           
+SFX b      [  ]    
+SFX b      [^           ]   
+SFX b           
+SFX b       [^ ]    
+SFX b      [^ ]    
+SFX b            
+SFX b       [^ ]    
+SFX b           
+SFX b       [        ]   
+SFX b           
+SFX b           
+SFX b      [^ ]    
+SFX b      [^ ]    
+SFX b      [^  ]   
+SFX b      [^  ]  
+SFX b      [^  ]   
+SFX b      [  ]   
+SFX b            
+SFX b            
+SFX b       [^ ]    
+SFX b       [^ ]    
+SFX b       [^  ]   
+SFX b       [^  ]  
+SFX b       [^  ]   
+SFX b       [  ]   
+SFX b           
+SFX b           
+SFX b      [^ ]    
+SFX b      [^ ]    
+SFX b      [^  ]   
+SFX b      [^  ]  
+SFX b      [^  ]   
+SFX b      [  ]   
+SFX b      [^      ]  
+SFX b         
+SFX b      [^     ]  
+SFX b       [^     ]  
+SFX b      [^     ]  
+SFX b 0   [   ]  
+SFX b         
+SFX b 0   [^  ]   
+SFX b 0   [^ ]    
+SFX b 0   [^ ]     
+SFX b              
+SFX b      [       ]   
+SFX b 0   [^       ]   
+SFX b      [     ]  
+SFX b       [    ]  
+SFX b       [^ ]   
+SFX b          
+SFX b           
+SFX b      [     ]  
+SFX b     [^ ]  
+SFX b      [ ]  
+SFX b        
+SFX b         
+SFX b        
+SFX c Y 53
+SFX c        [^ ]   
+SFX c             
+SFX c           
+SFX c           
+SFX c        [^ ]   
+SFX c        [^  ]    
+SFX c        [  ]    
+SFX c           
+SFX c              
+SFX c              
+SFX c           
+SFX c           
+SFX c           
+SFX c           
+SFX c           
+SFX c              
+SFX c              
+SFX c        [   ]   
+SFX c        [^ ]   
+SFX c         [^ ]    
+SFX c        [ ]    
+SFX c           
+SFX c        [^  ]   
+SFX c         [  ]   
+SFX c        [^ ][  ]   
+SFX c          
+SFX c          
+SFX c          
+SFX c          
+SFX c         [ ]    
+SFX c         [^ ]    
+SFX c             
+SFX c             
+SFX c                
+SFX c          
+SFX c          
+SFX c          
+SFX c          
+SFX c          
+SFX c            
+SFX c         [^ ]    
+SFX c                
+SFX c        [^    ]    
+SFX c                
+SFX c           [^          ]     
+SFX c          [          ]     
+SFX c        [           ][  ]    
+SFX c           [^           ]     
+SFX c           [^          ]     
+SFX c            
+SFX c            
+SFX c            
+SFX c            
+SFX o Y 52
+SFX o       
+SFX o            
+SFX o            
+SFX o            
+SFX o            
+SFX o           
+SFX o            
+SFX o            
+SFX o            
+SFX o            
+SFX o            
+SFX o           
+SFX o       [^  ]   
+SFX o            
+SFX o            
+SFX o       [^ ]   
+SFX o        [ ]   
+SFX o        [^ ]    
+SFX o              
+SFX o            
+SFX o         
+SFX o                
+SFX o 0   [  ] 
+SFX o 0    [  ] 
+SFX o 0   [  ] 
+SFX o       
+SFX o            
+SFX o            
+SFX o            
+SFX o            
+SFX o            
+SFX o            
+SFX o            
+SFX o       [  ]   
+SFX o       [  ]   
+SFX o       [ ]   
+SFX o       [    ]   
+SFX o       [    ]   
+SFX o       [  ]   
+SFX o           
+SFX o           
+SFX o        
+SFX o         
+SFX o        
+SFX o        
+SFX o        
+SFX o        
+SFX o        
+SFX o   0   
+SFX o        
+SFX o         
+SFX o        
+SFX d Y 40
+SFX d     [^    ]  
+SFX d     [   ]  
+SFX d     [  ]  
+SFX d     ['       ]  
+SFX d        [^ ]   
+SFX d             
+SFX d           
+SFX d        [^ ]   
+SFX d            
+SFX d        [^ ]   
+SFX d         [^  ]    
+SFX d        [  ]    
+SFX d           
+SFX d           
+SFX d              
+SFX d              
+SFX d           
+SFX d           
+SFX d           
+SFX d           
+SFX d              
+SFX d              
+SFX d        [^ ]   
+SFX d         [^ ]    
+SFX d        [ ]    
+SFX d           
+SFX d        [^  ]   
+SFX d         [  ]   
+SFX d        [^ ][  ]   
+SFX d          
+SFX d         [ ]    
+SFX d             
+SFX d             
+SFX d                
+SFX d         [^   ]    
+SFX d         [^ ][  ]    
+SFX d          
+SFX d          
+SFX d          
+SFX d          
+SFX e Y 19
+SFX e       
+SFX e       
+SFX e         
+SFX e        
+SFX e 0   [^          ] 
+SFX e 0     [^               ] 
+SFX e 0     [^ ]  
+SFX e 0    [^              ] 
+SFX e 0   [^              ] 
+SFX e 0     [    ] 
+SFX e 0    [    ] 
+SFX e       
+SFX e         
+SFX e        
+SFX e       
+SFX e       
+SFX e         
+SFX e        
+SFX e       
+SFX f Y 24
+SFX f 0   [^              ] 
+SFX f 0    [^          ] 
+SFX f 0    [^          ] 
+SFX f 0     [^          ] 
+SFX f 0    [^          ] 
+SFX f 0   [    ] 
+SFX f       
+SFX f        
+SFX f        
+SFX f         
+SFX f        
+SFX f       
+SFX f        
+SFX f        
+SFX f         
+SFX f        
+SFX f       
+SFX f        
+SFX f        
+SFX f         
+SFX f        
+SFX f          
+SFX f         
+SFX f        
+SFX g Y 3
+SFX g 0   [^          ] 
+SFX g       
+SFX g       
+SFX h Y 4
+SFX h 0   [^                ] 
+SFX h      [   ]  
+SFX h      [  ]  
+SFX h     [  ]  
+SFX i Y 47
+SFX i       
+SFX i 0   [^ ][  ] 
+SFX i     [^          ].  
+SFX i      [          ]   
+SFX i      [          ]   
+SFX i      [          ]   
+SFX i      [          ]   
+SFX i      [          ]   
+SFX i      [          ]   
+SFX i 0 '  [^ ][  ] 
+SFX i 0   [     ] 
+SFX i 0 '  [  ]  
+SFX i 0   [^          ][    ] 
+SFX i 0    [          ]  
+SFX i 0    [          ]  
+SFX i 0    [          ]  
+SFX i       
+SFX i       
+SFX i        
+SFX i     [^  ]  
+SFX i          
+SFX i           
+SFX i     [^    ]  
+SFX i     [^    ]  
+SFX i      [^    ]  
+SFX i     [^    ]  
+SFX i     [    ]  
+SFX i     [    ]  
+SFX i      [    ]  
+SFX i     [    ]  
+SFX i       
+SFX i        
+SFX i     [^' ]  
+SFX i     [' ]  
+SFX i           
+SFX i           
+SFX i          
+SFX i            
+SFX i            
+SFX i          
+SFX i      [   ]  
+SFX i      [   ]  
+SFX i     [   ]  
+SFX i      [   ]  
+SFX i       [  ]  
+SFX i       [  ]  
+SFX i      [  ]  
+SFX j Y 65
+SFX j        
+SFX j        
+SFX j         
+SFX j        
+SFX j 0    [    ] 
+SFX j 0    [    ] 
+SFX j 0     [    ] 
+SFX j 0    [    ] 
+SFX j 0    [  ]  
+SFX j 0    [  ]  
+SFX j 0     [  ]  
+SFX j 0    [  ]  
+SFX j 0      
+SFX j 0      
+SFX j 0       
+SFX j 0      
+SFX j       
+SFX j           
+SFX j   0 [^ ]   
+SFX j       [^       ]   
+SFX j   0 [       ]   
+SFX j   0 [^  ]  
+SFX j        
+SFX j         
+SFX j        
+SFX j      [^     ]  
+SFX j      [^    ]  
+SFX j       [^    ]  
+SFX j      [^    ]  
+SFX j               
+SFX j        [^ ]     
+SFX j          
+SFX j             
+SFX j             
+SFX j        [^    ]   
+SFX j   0 [   ]  
+SFX j 0      
+SFX j      [    ]  
+SFX j       [    ]  
+SFX j      [    ]  
+SFX j      '  
+SFX j          
+SFX j      [ ]    
+SFX j    0 [^ ]    
+SFX j          
+SFX j     [^ ]   
+SFX j          
+SFX j     [^ ]   
+SFX j          
+SFX j    0     
+SFX j    0     
+SFX j          
+SFX j         
+SFX j        
+SFX j         
+SFX j          
+SFX j           
+SFX j        
+SFX j        
+SFX j         
+SFX j   0    
+SFX j    0    
+SFX j          
+SFX j           
+SFX j          
+SFX k Y 8
+SFX k       
+SFX k 0   [   ] 
+SFX k 0   [^ ]  
+SFX k         
+SFX k          
+SFX k          
+SFX k         
+SFX k          
+SFX l Y 39
+SFX l          [  ]    
+SFX l       [  ]    
+SFX l             
+SFX l          
+SFX l             
+SFX l          
+SFX l        [^ ]   
+SFX l            
+SFX l           
+SFX l 0       
+SFX l 0       
+SFX l                
+SFX l                 
+SFX l     [^  ]    
+SFX l         
+SFX l 0    [^'][  ] 
+SFX l 0    [^'][  ] 
+SFX l 0   [  ] 
+SFX l 0     '  
+SFX l 0     '  
+SFX l '      [^ ]'  
+SFX l '       [^ ]'  
+SFX l                  
+SFX l                  
+SFX l                    
+SFX l                   
+SFX l                  
+SFX l                  
+SFX l                  
+SFX l                    
+SFX l                   
+SFX l                  
+SFX l 0      
+SFX l 0       
+SFX l 0        
+SFX l 0   [   ]  
+SFX l 0     [   ]  
+SFX l 0    [   ]  
+SFX l 0   [   ]  
+SFX m Y 66
+SFX m           [  ]    
+SFX m           [  ]    
+SFX m            [  ]    
+SFX m           [  ]    
+SFX m              
+SFX m              
+SFX m               
+SFX m              
+SFX m         [^ ]   
+SFX m         [^ ]   
+SFX m          [^ ]   
+SFX m         [^ ]   
+SFX m             
+SFX m             
+SFX m              
+SFX m             
+SFX m            
+SFX m            
+SFX m             
+SFX m            
+SFX m                 
+SFX m                 
+SFX m                  
+SFX m                 
+SFX m                  
+SFX m                  
+SFX m                   
+SFX m                  
+SFX m      [^  ]    
+SFX m      [^  ]    
+SFX m       [^  ]    
+SFX m      [^  ]    
+SFX m 0    [^'][  ] 
+SFX m 0   [^'][  ] 
+SFX m 0     [^'][  ] 
+SFX m 0      [^'][  ] 
+SFX m 0     [^'][  ] 
+SFX m 0     '  
+SFX m 0    '  
+SFX m 0      '  
+SFX m 0       '  
+SFX m 0      '  
+SFX m '      [^ ]'  
+SFX m '     [^ ]'  
+SFX m '       [^ ]'  
+SFX m '        [^ ]'  
+SFX m '       [^ ]'  
+SFX m                  
+SFX m                   
+SFX m                   
+SFX m                    
+SFX m                   
+SFX m                  
+SFX m                   
+SFX m                   
+SFX m                    
+SFX m                   
+SFX m 0      
+SFX m 0       
+SFX m 0       
+SFX m 0        
+SFX m 0       
+SFX m 0    [   ]  
+SFX m 0    [   ]  
+SFX m 0     [   ]  
+SFX m 0    [   ]  
+SFX n Y 9
+SFX n          [  ]    
+SFX n             
+SFX n        [^ ]   
+SFX n            
+SFX n           
+SFX n                
+SFX n                 
+SFX n      [^  ]    
+SFX n 0   [    ]  
+SFX q Y 2
+SFX q 0      
+SFX q 0   [   ]  
+SFX p Y 182
+SFX p            
+SFX p           
+SFX p             
+SFX p           
+SFX p             
+SFX p               
+SFX p           
+SFX p           
+SFX p              
+SFX p            
+SFX p             
+SFX p           
+SFX p              
+SFX p              
+SFX p               
+SFX p              
+SFX p      [^ ]  
+SFX p        [^ ]  
+SFX p       [^ ]  
+SFX p        [^ ]  
+SFX p       [^ ]  
+SFX p         [^ ]  
+SFX p        [^ ]  
+SFX p        [^ ]  
+SFX p        [^ ]  
+SFX p         [^ ]  
+SFX p       [^ ]  
+SFX p        [^ ]  
+SFX p        [^ ]  
+SFX p        [^ ]  
+SFX p         [^ ]  
+SFX p        [^ ]  
+SFX p      [^  ]  
+SFX p       [^  ]  
+SFX p       [^  ]  
+SFX p         [^  ]  
+SFX p        [^  ]  
+SFX p       [^  ]  
+SFX p        [  ]  
+SFX p         [  ]  
+SFX p         [  ]  
+SFX p           [  ]  
+SFX p          [  ]  
+SFX p         [  ]  
+SFX p          
+SFX p          
+SFX p          
+SFX p          
+SFX p           
+SFX p          
+SFX p        [^  ]  
+SFX p        [^  ]  
+SFX p         [^  ]  
+SFX p        [^  ]  
+SFX p          [  ]  
+SFX p          [  ]  
+SFX p           [  ]  
+SFX p          [  ]  
+SFX p              
+SFX p              
+SFX p               
+SFX p              
+SFX p               
+SFX p                 
+SFX p              
+SFX p              
+SFX p                
+SFX p               
+SFX p               
+SFX p              
+SFX p                
+SFX p                
+SFX p                 
+SFX p                
+SFX p            [  ]   
+SFX p            [  ]   
+SFX p             [  ]   
+SFX p            [  ]   
+SFX p             [  ]   
+SFX p               [  ]   
+SFX p            [  ]   
+SFX p            [  ]   
+SFX p              [  ]   
+SFX p             [  ]   
+SFX p             [  ]   
+SFX p            [  ]   
+SFX p              [  ]   
+SFX p              [  ]   
+SFX p               [  ]   
+SFX p              [  ]   
+SFX p            
+SFX p            
+SFX p             
+SFX p            
+SFX p             
+SFX p               
+SFX p            
+SFX p            
+SFX p              
+SFX p             
+SFX p             
+SFX p            
+SFX p              
+SFX p              
+SFX p               
+SFX p              
+SFX p          
+SFX p          
+SFX p           
+SFX p          
+SFX p           
+SFX p             
+SFX p          
+SFX p          
+SFX p            
+SFX p           
+SFX p           
+SFX p          
+SFX p            
+SFX p            
+SFX p             
+SFX p            
+SFX p 0      [^             ] 
+SFX p 0      [^               ] 
+SFX p 0       [^             ] 
+SFX p 0      [^               ] 
+SFX p 0       [^             ] 
+SFX p 0         [^             ] 
+SFX p 0      [^               ] 
+SFX p 0      [^               ] 
+SFX p 0        [^             ] 
+SFX p 0       [^               ] 
+SFX p 0       [^             ] 
+SFX p 0      [^               ] 
+SFX p          
+SFX p          
+SFX p          
+SFX p          
+SFX p           
+SFX p          
+SFX p 0        [^             ] 
+SFX p 0        [^             ] 
+SFX p 0         [^             ] 
+SFX p 0        [^             ] 
+SFX p          
+SFX p          
+SFX p          
+SFX p          
+SFX p           
+SFX p          
+SFX p 0      [^ ][   ] 
+SFX p 0      [^ ][   ] 
+SFX p 0       [^ ][   ] 
+SFX p 0      [^ ][   ] 
+SFX p 0       [^ ][   ] 
+SFX p 0         [^ ][   ] 
+SFX p 0      [^ ][   ] 
+SFX p 0      [^ ][   ] 
+SFX p 0        [^ ][   ] 
+SFX p 0       [^ ][   ] 
+SFX p 0       [^ ][   ] 
+SFX p 0      [^ ][   ] 
+SFX p 0        [^ ][   ] 
+SFX p 0        [^ ][   ] 
+SFX p 0         [^ ][   ] 
+SFX p 0        [^ ][   ] 
+SFX p 0      [^ ]    
+SFX p 0      [^ ]    
+SFX p 0       [^ ]    
+SFX p 0      [^ ]    
+SFX p 0       [^ ]    
+SFX p 0         [^ ]    
+SFX p 0      [^ ]    
+SFX p 0      [^ ]    
+SFX p 0        [^ ]    
+SFX p 0       [^ ]    
+SFX p 0       [^ ]    
+SFX p 0      [^ ]    
+SFX p 0        [^ ]    
+SFX p 0        [^ ]    
+SFX p 0         [^ ]    
+SFX p 0        [^ ]    
+SFX A Y 401
+SFX A       [^ ]   
+SFX A       [^ ]   
+SFX A       [^ ]   
+SFX A      [        ]   
+SFX A        [    ]     
+SFX A         [    ]     
+SFX A        [    ]     
+SFX A          [    ]     
+SFX A          [    ]     
+SFX A          [    ]     
+SFX A        [  ]     
+SFX A          [  ]     
+SFX A          [  ]     
+SFX A      [  ]     
+SFX A        [  ]     
+SFX A        [  ]     
+SFX A       [  ]     
+SFX A        [  ]     
+SFX A       [  ]     
+SFX A         [  ]     
+SFX A         [  ]     
+SFX A         [  ]     
+SFX A       [  ]     
+SFX A         [  ]     
+SFX A         [  ]     
+SFX A              
+SFX A               
+SFX A              
+SFX A                
+SFX A                
+SFX A                
+SFX A              
+SFX A               
+SFX A                
+SFX A         [   ]     
+SFX A                
+SFX A                 
+SFX A                  
+SFX A           [   ]     
+SFX A                
+SFX A                 
+SFX A                  
+SFX A           [   ]     
+SFX A       [    ]    
+SFX A       [^  ]     
+SFX A        [  ]     
+SFX A         [^ ]     
+SFX A         [^ ]     
+SFX A              
+SFX A              
+SFX A                
+SFX A                
+SFX A                 
+SFX A             
+SFX A             
+SFX A          [   ]     
+SFX A        [  ]    
+SFX A        [  ]    
+SFX A        [^  ]     
+SFX A         [  ]     
+SFX A          [^ ]     
+SFX A          [^ ]     
+SFX A               
+SFX A               
+SFX A                 
+SFX A                 
+SFX A                  
+SFX A               
+SFX A              
+SFX A              
+SFX A           [   ]     
+SFX A       [  ]    
+SFX A         [  ]    
+SFX A         [^  ]     
+SFX A        [  ]     
+SFX A         [^ ]     
+SFX A         [^ ]     
+SFX A              
+SFX A              
+SFX A                
+SFX A                
+SFX A                 
+SFX A              
+SFX A               
+SFX A             
+SFX A          [   ]     
+SFX A         [  ]    
+SFX A         [  ]    
+SFX A          [  ]     
+SFX A           [^  ]     
+SFX A           [^ ]     
+SFX A           [^ ]     
+SFX A                
+SFX A                
+SFX A                  
+SFX A                  
+SFX A                   
+SFX A                
+SFX A               
+SFX A               
+SFX A            [   ]     
+SFX A         [  ]    
+SFX A         [  ]    
+SFX A          [  ]     
+SFX A           [^  ]     
+SFX A           [^ ]     
+SFX A           [^ ]     
+SFX A                
+SFX A                
+SFX A                  
+SFX A                  
+SFX A                   
+SFX A                
+SFX A               
+SFX A               
+SFX A            [   ]     
+SFX A         [  ]    
+SFX A         [  ]    
+SFX A          [  ]     
+SFX A         [^  ]     
+SFX A           [^ ]     
+SFX A           [^ ]     
+SFX A                
+SFX A                
+SFX A                  
+SFX A                  
+SFX A                   
+SFX A                
+SFX A                
+SFX A               
+SFX A            [   ]     
+SFX A       [    ]    
+SFX A        [  ]     
+SFX A       [^  ]     
+SFX A         [^ ]     
+SFX A              
+SFX A              
+SFX A               
+SFX A                
+SFX A               
+SFX A              
+SFX A                
+SFX A                
+SFX A                 
+SFX A               
+SFX A              
+SFX A             
+SFX A          [   ]     
+SFX A         [    ]    
+SFX A          [  ]     
+SFX A         [^  ]     
+SFX A           [^ ]     
+SFX A                
+SFX A                
+SFX A                 
+SFX A                  
+SFX A                 
+SFX A                
+SFX A                  
+SFX A                  
+SFX A                   
+SFX A              
+SFX A               
+SFX A               
+SFX A            [   ]     
+SFX A         [    ]    
+SFX A          [  ]     
+SFX A           [^  ]     
+SFX A           [^ ]     
+SFX A                
+SFX A                
+SFX A                 
+SFX A                  
+SFX A                 
+SFX A                  
+SFX A                  
+SFX A                   
+SFX A          [^   ]     
+SFX A              
+SFX A               
+SFX A               
+SFX A            [   ]     
+SFX A        [^ ]     
+SFX A                  
+SFX A              
+SFX A       [    ]    
+SFX A              
+SFX A         [^ ]     
+SFX A                
+SFX A        [     ]    
+SFX A       [   ]    
+SFX A          
+SFX A         
+SFX A           
+SFX A             
+SFX A         [    ]    
+SFX A          [     ]    
+SFX A         [       ]    
+SFX A             
+SFX A       [  ]    
+SFX A              
+SFX A         [^ ]     
+SFX A                
+SFX A        [    ]    
+SFX A       [   ]    
+SFX A            
+SFX A             
+SFX A             
+SFX A             
+SFX A              
+SFX A          [    ]    
+SFX A         [^     ]    
+SFX A       [^ ]    
+SFX A         [^ ]    
+SFX A         [^ ]    
+SFX A            
+SFX A             
+SFX A            
+SFX A              
+SFX A              
+SFX A              
+SFX A            
+SFX A             
+SFX A            
+SFX A              
+SFX A              
+SFX A              
+SFX A            
+SFX A              
+SFX A              
+SFX A           
+SFX A            
+SFX A           
+SFX A             
+SFX A             
+SFX A             
+SFX A           
+SFX A             
+SFX A             
+SFX A           
+SFX A          
+SFX A           
+SFX A           
+SFX A           
+SFX A             
+SFX A      [   ]   
+SFX A       [   ]   
+SFX A      [   ]   
+SFX A        [   ]   
+SFX A        [   ]   
+SFX A        [   ]   
+SFX A              
+SFX A              
+SFX A       [^ ]    
+SFX A            
+SFX A       [^ ]    
+SFX A           
+SFX A      [^ ]    
+SFX A      [  ]   
+SFX A             
+SFX A        [^ ]    
+SFX A        [  ]   
+SFX A             
+SFX A        [^ ]    
+SFX A        [  ]   
+SFX A        [^ ]    
+SFX A        [^ ]    
+SFX A        [^ ]    
+SFX A              
+SFX A              
+SFX A              
+SFX A            
+SFX A             
+SFX A            
+SFX A              
+SFX A              
+SFX A              
+SFX A        [  ]    
+SFX A         [  ]    
+SFX A        [  ]    
+SFX A          [  ]    
+SFX A          [  ]    
+SFX A          [  ]    
+SFX A              
+SFX A               
+SFX A              
+SFX A                
+SFX A                
+SFX A                
+SFX A       [  ]    
+SFX A              
+SFX A              
+SFX A        [  ]    
+SFX A          [  ]    
+SFX A          [  ]    
+SFX A              
+SFX A                
+SFX A                
+SFX A            
+SFX A            
+SFX A            
+SFX A             
+SFX A            
+SFX A              
+SFX A              
+SFX A              
+SFX A              
+SFX A              
+SFX A              
+SFX A              
+SFX A            
+SFX A              
+SFX A              
+SFX A        [     ]    
+SFX A              
+SFX A         [    ]    
+SFX A               
+SFX A        [    ]    
+SFX A               
+SFX A          [    ]    
+SFX A               
+SFX A          [    ]    
+SFX A               
+SFX A          [    ]    
+SFX A              
+SFX A              
+SFX A              
+SFX A       [  ]    
+SFX A             
+SFX A              
+SFX A        [    ]    
+SFX A               
+SFX A                
+SFX A          [    ]    
+SFX A               
+SFX A                
+SFX A          [    ]    
+SFX A         [^  ]     
+SFX A          [^  ]     
+SFX A         [^  ]     
+SFX A           [^  ]     
+SFX A           [^  ]     
+SFX A           [^  ]     
+SFX A           
+SFX A         [^  ]     
+SFX A           [^  ]     
+SFX A           [^  ]     
+SFX A        [  ]     
+SFX A         [  ]     
+SFX A        [  ]     
+SFX A          [  ]     
+SFX A          [  ]     
+SFX A          [  ]     
+SFX A      [  ]     
+SFX A        [  ]     
+SFX A        [  ]     
+SFX A      [  ]    
+SFX A       [  ]    
+SFX A      [  ]    
+SFX A        [  ]    
+SFX A        [  ]    
+SFX A        [  ]    
+SFX A      [  ]    
+SFX A        [  ]    
+SFX A        [  ]    
+SFX A                  
+SFX A                   
+SFX A                  
+SFX A                    
+SFX A                    
+SFX A                    
+SFX A                  
+SFX A                    
+SFX A                    
+SFX A               
+SFX A                
+SFX A               
+SFX A                 
+SFX A                 
+SFX A                 
+SFX A               
+SFX A                 
+SFX A                 
+SFX A         [   ]     
+SFX A          [   ]     
+SFX A         [   ]     
+SFX A           [   ]     
+SFX A           [   ]     
+SFX A           [   ]     
+SFX A         [   ]     
+SFX A           [   ]     
+SFX A           [   ]     
+SFX A '       '    
+SFX A '        '    
+SFX A '       '    
+SFX A '         '    
+SFX A '         '    
+SFX A '         '    
+SFX A '       '    
+SFX A '         '    
+SFX A '         '    
+SFX C Y 15
+SFX C     0 [         ]    
+SFX C       [      ]    
+SFX C        [         ]    
+SFX C         [      ]    
+SFX C        [         ]    
+SFX C         [      ]    
+SFX C            
+SFX C              
+SFX C              
+SFX C            
+SFX C              
+SFX C              
+SFX C           
+SFX C             
+SFX C             
+SFX E Y 12
+SFX E           
+SFX E             
+SFX E             
+SFX E            
+SFX E              
+SFX E              
+SFX E            
+SFX E              
+SFX E              
+SFX E           
+SFX E             
+SFX E             
+SFX G Y 6
+SFX G 0       
+SFX G 0        
+SFX G 0       
+SFX G 0         
+SFX G 0         
+SFX G 0         
+SFX I Y 80
+SFX I          
+SFX I          
+SFX I          
+SFX I      [     ]   
+SFX I       [    ]    
+SFX I      [     ]    
+SFX I      [   ]   
+SFX I             
+SFX I        [   ]    
+SFX I       [     ]    
+SFX I       [   ]   
+SFX I              
+SFX I       [   ]    
+SFX I      [     ]    
+SFX I      [   ]   
+SFX I              
+SFX I         [   ]    
+SFX I        [     ]    
+SFX I        [   ]   
+SFX I              
+SFX I         [   ]    
+SFX I        [     ]    
+SFX I        [   ]   
+SFX I              
+SFX I         [   ]    
+SFX I        [     ]    
+SFX I        [   ]   
+SFX I              
+SFX I       [   ]    
+SFX I      [     ]    
+SFX I      [   ]   
+SFX I                
+SFX I         [   ]    
+SFX I        [     ]    
+SFX I        [   ]   
+SFX I                
+SFX I         [   ]    
+SFX I        [     ]    
+SFX I        [   ]   
+SFX I     '  [   ]    
+SFX I     '   [   ]    
+SFX I     '  [   ]    
+SFX I     '    [   ]    
+SFX I     '    [   ]    
+SFX I     '    [   ]    
+SFX I        [     ]    
+SFX I         [     ]    
+SFX I        [     ]    
+SFX I          [     ]    
+SFX I          [     ]    
+SFX I          [     ]    
+SFX I             
+SFX I              
+SFX I             
+SFX I               
+SFX I               
+SFX I               
+SFX I            
+SFX I             
+SFX I            
+SFX I              
+SFX I              
+SFX I              
+SFX I      [^ ]    
+SFX I        [^ ]    
+SFX I        [^ ]    
+SFX I       [ ]    
+SFX I         [ ]    
+SFX I         [ ]    
+SFX I          
+SFX I           
+SFX I          
+SFX I            
+SFX I            
+SFX I            
+SFX I       [  ]    
+SFX I              
+SFX I          
+SFX I            
+SFX I            
+SFX K Y 145
+SFX K       [^  ]   
+SFX K       [^  ]   
+SFX K       [^  ]   
+SFX K      [      ]   
+SFX K              
+SFX K              
+SFX K              
+SFX K      0      
+SFX K                
+SFX K                
+SFX K                
+SFX K               
+SFX K            
+SFX K             
+SFX K            
+SFX K              
+SFX K              
+SFX K              
+SFX K            
+SFX K             
+SFX K            
+SFX K              
+SFX K              
+SFX K              
+SFX K                    
+SFX K                     
+SFX K                    
+SFX K                      
+SFX K                      
+SFX K                      
+SFX K                    
+SFX K                      
+SFX K                      
+SFX K                    
+SFX K                     
+SFX K                    
+SFX K                      
+SFX K                      
+SFX K                      
+SFX K                    
+SFX K                      
+SFX K                      
+SFX K                    
+SFX K                     
+SFX K                    
+SFX K                      
+SFX K                      
+SFX K                      
+SFX K                    
+SFX K                      
+SFX K                      
+SFX K                    
+SFX K                     
+SFX K                    
+SFX K                      
+SFX K                      
+SFX K                      
+SFX K                    
+SFX K                      
+SFX K                      
+SFX K        '  [   ]     
+SFX K        '   [   ]     
+SFX K        '  [   ]     
+SFX K        '    [   ]     
+SFX K        '    [   ]     
+SFX K        '    [   ]     
+SFX K        '  [   ]     
+SFX K        '   [   ]     
+SFX K        '  [   ]     
+SFX K        '    [   ]     
+SFX K        '    [   ]     
+SFX K        '    [   ]     
+SFX K        '  [   ]     
+SFX K        '   [   ]     
+SFX K        '  [   ]     
+SFX K        '    [   ]     
+SFX K        '    [   ]     
+SFX K        '    [   ]     
+SFX K           [    ]     
+SFX K            [    ]     
+SFX K           [    ]     
+SFX K             [    ]     
+SFX K             [    ]     
+SFX K             [    ]     
+SFX K      [    ]    
+SFX K        [    ]    
+SFX K        [    ]    
+SFX K           
+SFX K            
+SFX K             
+SFX K            
+SFX K             
+SFX K              
+SFX K           
+SFX K             
+SFX K             
+SFX K             
+SFX K              
+SFX K             
+SFX K               
+SFX K               
+SFX K               
+SFX K             
+SFX K               
+SFX K               
+SFX K            
+SFX K             
+SFX K            
+SFX K              
+SFX K              
+SFX K              
+SFX K       .     
+SFX K         .     
+SFX K         .     
+SFX K             
+SFX K              
+SFX K             
+SFX K               
+SFX K               
+SFX K               
+SFX K             
+SFX K               
+SFX K               
+SFX K                 
+SFX K                  
+SFX K                 
+SFX K                   
+SFX K                   
+SFX K                   
+SFX K                 
+SFX K                   
+SFX K                   
+SFX K               
+SFX K                
+SFX K               
+SFX K                 
+SFX K                 
+SFX K                 
+SFX K             
+SFX K             
+SFX K             
+SFX K            
+SFX K               
+SFX K                 
+SFX K                 
+SFX M Y 86
+SFX M       [^   ]   
+SFX M       [^   ]   
+SFX M       [^   ]   
+SFX M      [     ]   
+SFX M             
+SFX M              
+SFX M             
+SFX M               
+SFX M               
+SFX M               
+SFX M             
+SFX M               
+SFX M               
+SFX M           [^ ]     
+SFX M            [^ ]     
+SFX M           [^ ]     
+SFX M             [^ ]     
+SFX M             [^ ]     
+SFX M             [^ ]     
+SFX M           [^ ]     
+SFX M             [^ ]     
+SFX M             [^ ]     
+SFX M       [  ]   
+SFX M        [  ]   
+SFX M       [  ]   
+SFX M         [  ]   
+SFX M         [  ]   
+SFX M         [  ]   
+SFX M        [  ]   
+SFX M        [  ]   
+SFX M        [  ]   
+SFX M        [  ]   
+SFX M       [  ]   
+SFX M         [  ]   
+SFX M         [  ]   
+SFX M              
+SFX M               
+SFX M              
+SFX M                
+SFX M                
+SFX M                
+SFX M              
+SFX M                
+SFX M                
+SFX M                  
+SFX M                   
+SFX M                  
+SFX M                    
+SFX M                    
+SFX M                    
+SFX M                  
+SFX M                    
+SFX M                    
+SFX M       [  ]    
+SFX M        [  ]    
+SFX M       [  ]    
+SFX M         [  ]    
+SFX M         [  ]    
+SFX M         [  ]    
+SFX M       [  ]    
+SFX M            
+SFX M              
+SFX M              
+SFX M        [   ]    
+SFX M         [   ]    
+SFX M        [   ]    
+SFX M          [   ]    
+SFX M          [   ]    
+SFX M          [   ]    
+SFX M            
+SFX M            
+SFX M            
+SFX M       [^ ]    
+SFX M              
+SFX M        [   ]    
+SFX M          [   ]    
+SFX M          [   ]    
+SFX M       [  ]    
+SFX M      [  ]    
+SFX M       [  ]    
+SFX M        [  ]    
+SFX M       [  ]    
+SFX M               
+SFX M            
+SFX M              
+SFX M              
+SFX B Y 1267
+SFX B 0       
+SFX B 0       
+SFX B            
+SFX B         [^ ]   
+SFX B           [^ ]     
+SFX B         [^ ]   
+SFX B           [^ ]     
+SFX B         [^ ]   
+SFX B           [^ ]     
+SFX B         [^ ]   
+SFX B           [^ ]     
+SFX B         [^ ]   
+SFX B           [^ ]     
+SFX B         [^ ]   
+SFX B           [^ ]     
+SFX B        [        ]   
+SFX B          [        ]     
+SFX B        [        ]   
+SFX B          [        ]     
+SFX B          [    ]     
+SFX B            [    ]       
+SFX B          [    ]     
+SFX B            [    ]       
+SFX B           [    ]     
+SFX B             [    ]       
+SFX B            [    ]     
+SFX B              [    ]       
+SFX B            [    ]     
+SFX B              [    ]       
+SFX B            [    ]     
+SFX B              [    ]       
+SFX B            [    ]     
+SFX B              [    ]       
+SFX B            [    ]     
+SFX B              [    ]       
+SFX B            [    ]     
+SFX B              [    ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B        [  ]     
+SFX B          [  ]       
+SFX B        [  ]     
+SFX B          [  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B         [  ]     
+SFX B           [  ]       
+SFX B         [  ]     
+SFX B           [  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B           [  ]     
+SFX B             [  ]       
+SFX B           [  ]     
+SFX B             [  ]       
+SFX B           [  ]     
+SFX B             [  ]       
+SFX B           [  ]     
+SFX B             [  ]       
+SFX B           [  ]     
+SFX B             [  ]       
+SFX B           [  ]     
+SFX B             [  ]       
+SFX B         [  ]     
+SFX B           [  ]       
+SFX B         [  ]     
+SFX B           [  ]       
+SFX B           [  ]     
+SFX B             [  ]       
+SFX B           [  ]     
+SFX B             [  ]       
+SFX B           [  ]     
+SFX B             [  ]       
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                 
+SFX B                     
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                
+SFX B                    
+SFX B                 
+SFX B                     
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B           [   ]     
+SFX B             [   ]       
+SFX B           [   ]     
+SFX B             [   ]       
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B             [   ]     
+SFX B               [   ]       
+SFX B             [   ]     
+SFX B               [   ]       
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B                    
+SFX B                        
+SFX B             [   ]     
+SFX B               [   ]       
+SFX B         [    ]    
+SFX B           [    ]      
+SFX B         [    ]    
+SFX B           [    ]      
+SFX B         [^  ]     
+SFX B           [^  ]       
+SFX B         [^  ]     
+SFX B           [^  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B           [^ ]     
+SFX B             [^ ]       
+SFX B           [^ ]     
+SFX B             [^ ]       
+SFX B           [^ ]     
+SFX B             [^ ]       
+SFX B           [^ ]     
+SFX B             [^ ]       
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B            [   ]     
+SFX B              [   ]       
+SFX B            [   ]     
+SFX B              [   ]       
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B          [^  ]     
+SFX B            [^  ]       
+SFX B           [  ]     
+SFX B             [  ]       
+SFX B            [^ ]     
+SFX B              [^ ]       
+SFX B            [^ ]     
+SFX B              [^ ]       
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B                    
+SFX B                        
+SFX B                 
+SFX B                     
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B             [   ]     
+SFX B               [   ]       
+SFX B           [  ]    
+SFX B             [  ]      
+SFX B           [  ]    
+SFX B             [  ]      
+SFX B           [^  ]     
+SFX B             [^  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                     
+SFX B                         
+SFX B                  
+SFX B                      
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B              [   ]     
+SFX B                [   ]       
+SFX B           [  ]    
+SFX B             [  ]      
+SFX B           [  ]    
+SFX B             [  ]      
+SFX B           [  ]    
+SFX B             [  ]      
+SFX B           [  ]    
+SFX B             [  ]      
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                     
+SFX B                         
+SFX B                     
+SFX B                         
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B              [   ]     
+SFX B                [   ]       
+SFX B              [   ]     
+SFX B                [   ]       
+SFX B           [  ]    
+SFX B             [  ]      
+SFX B           [  ]    
+SFX B             [  ]      
+SFX B           [  ]    
+SFX B             [  ]      
+SFX B           [  ]    
+SFX B             [  ]      
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                     
+SFX B                         
+SFX B                     
+SFX B                         
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B              [   ]     
+SFX B                [   ]       
+SFX B              [   ]     
+SFX B                [   ]       
+SFX B           [  ]    
+SFX B             [  ]      
+SFX B           [  ]    
+SFX B             [  ]      
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B           [^  ]     
+SFX B             [^  ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                     
+SFX B                         
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                 
+SFX B                     
+SFX B              [   ]     
+SFX B                [   ]       
+SFX B         [    ]    
+SFX B           [    ]      
+SFX B         [    ]    
+SFX B           [    ]      
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B         [^  ]     
+SFX B           [^  ]       
+SFX B         [^  ]     
+SFX B           [^  ]       
+SFX B           [^ ]     
+SFX B             [^ ]       
+SFX B           [^ ]     
+SFX B             [^ ]       
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                 
+SFX B                     
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B                
+SFX B                    
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B                
+SFX B                    
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B            [   ]     
+SFX B              [   ]       
+SFX B            [   ]     
+SFX B              [   ]       
+SFX B           [    ]    
+SFX B             [    ]      
+SFX B           [    ]    
+SFX B             [    ]      
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B           [^  ]     
+SFX B             [^  ]       
+SFX B           [^  ]     
+SFX B             [^  ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                     
+SFX B                         
+SFX B                     
+SFX B                         
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B              [   ]     
+SFX B                [   ]       
+SFX B              [   ]     
+SFX B                [   ]       
+SFX B           [    ]    
+SFX B             [    ]      
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B             [^ ]     
+SFX B               [^ ]       
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B                    
+SFX B                        
+SFX B                   
+SFX B                       
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                     
+SFX B                         
+SFX B            [^   ]     
+SFX B              [^   ]       
+SFX B            [^   ]     
+SFX B              [^   ]       
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B              [   ]     
+SFX B                [   ]       
+SFX B          [^ ]     
+SFX B            [^ ]       
+SFX B          [^ ]     
+SFX B            [^ ]       
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B         [    ]    
+SFX B           [    ]      
+SFX B         [    ]    
+SFX B           [    ]      
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B           [^ ]     
+SFX B             [^ ]       
+SFX B           [^ ]     
+SFX B             [^ ]       
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B          [     ]    
+SFX B            [     ]      
+SFX B          [     ]    
+SFX B            [     ]      
+SFX B         [   ]    
+SFX B           [   ]      
+SFX B         [   ]    
+SFX B           [   ]      
+SFX B            
+SFX B                
+SFX B           
+SFX B               
+SFX B             
+SFX B                 
+SFX B             
+SFX B                 
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B           [    ]    
+SFX B             [    ]      
+SFX B            [     ]    
+SFX B              [     ]      
+SFX B           [       ]    
+SFX B             [       ]      
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B         [  ]    
+SFX B           [  ]      
+SFX B         [  ]    
+SFX B           [  ]      
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B           [^ ]     
+SFX B             [^ ]       
+SFX B           [^ ]     
+SFX B             [^ ]       
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B          [    ]    
+SFX B            [    ]      
+SFX B          [    ]    
+SFX B            [    ]      
+SFX B         [   ]    
+SFX B           [   ]      
+SFX B         [   ]    
+SFX B           [   ]      
+SFX B              
+SFX B                  
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B                
+SFX B                    
+SFX B            [    ]    
+SFX B              [    ]      
+SFX B           [^     ]    
+SFX B             [^     ]      
+SFX B         [^ ]    
+SFX B           [^ ]      
+SFX B         [^ ]    
+SFX B           [^ ]      
+SFX B           [^ ]    
+SFX B             [^ ]      
+SFX B           [^ ]    
+SFX B             [^ ]      
+SFX B           [^ ]    
+SFX B             [^ ]      
+SFX B              
+SFX B                  
+SFX B              
+SFX B                  
+SFX B               
+SFX B                   
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B              
+SFX B                  
+SFX B              
+SFX B                  
+SFX B               
+SFX B                   
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B              
+SFX B                  
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B             
+SFX B                 
+SFX B             
+SFX B                 
+SFX B              
+SFX B                  
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B             
+SFX B                 
+SFX B             
+SFX B                 
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B             
+SFX B                 
+SFX B             
+SFX B                 
+SFX B            
+SFX B                
+SFX B             
+SFX B                 
+SFX B             
+SFX B                 
+SFX B             
+SFX B                 
+SFX B             
+SFX B                 
+SFX B             
+SFX B                 
+SFX B               
+SFX B                   
+SFX B        [   ]   
+SFX B          [   ]     
+SFX B        [   ]   
+SFX B          [   ]     
+SFX B         [   ]   
+SFX B           [   ]     
+SFX B          [   ]   
+SFX B            [   ]     
+SFX B          [   ]   
+SFX B            [   ]     
+SFX B          [   ]   
+SFX B            [   ]     
+SFX B          [   ]   
+SFX B            [   ]     
+SFX B          [   ]   
+SFX B            [   ]     
+SFX B          [   ]   
+SFX B            [   ]     
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B         [^ ]    
+SFX B           [^ ]      
+SFX B              
+SFX B                  
+SFX B              
+SFX B                  
+SFX B         [^ ]    
+SFX B           [^ ]      
+SFX B         [^ ]    
+SFX B           [^ ]      
+SFX B             
+SFX B                 
+SFX B        [^ ]    
+SFX B          [^ ]      
+SFX B        [^ ]    
+SFX B          [^ ]      
+SFX B        [  ]   
+SFX B          [  ]     
+SFX B        [  ]   
+SFX B          [  ]     
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B          [^ ]    
+SFX B            [^ ]      
+SFX B          [^ ]    
+SFX B            [^ ]      
+SFX B          [  ]   
+SFX B            [  ]     
+SFX B          [  ]   
+SFX B            [  ]     
+SFX B               
+SFX B                   
+SFX B               
+SFX B                   
+SFX B          [^ ]    
+SFX B            [^ ]      
+SFX B          [  ]   
+SFX B            [  ]     
+SFX B          [^ ]    
+SFX B            [^ ]      
+SFX B          [^ ]    
+SFX B            [^ ]      
+SFX B          [^ ]    
+SFX B            [^ ]      
+SFX B          [^ ]    
+SFX B            [^ ]      
+SFX B          [^ ]    
+SFX B            [^ ]      
+SFX B          [^ ]    
+SFX B            [^ ]      
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B              
+SFX B                  
+SFX B              
+SFX B                  
+SFX B               
+SFX B                   
+SFX B              
+SFX B                  
+SFX B              
+SFX B                  
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B           [  ]    
+SFX B             [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B            [  ]    
+SFX B              [  ]      
+SFX B            [  ]    
+SFX B              [  ]      
+SFX B            [  ]    
+SFX B              [  ]      
+SFX B            [  ]    
+SFX B              [  ]      
+SFX B            [  ]    
+SFX B              [  ]      
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                 
+SFX B                     
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B         [  ]    
+SFX B           [  ]      
+SFX B         [  ]    
+SFX B           [  ]      
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B            [  ]    
+SFX B              [  ]      
+SFX B            [  ]    
+SFX B              [  ]      
+SFX B            [  ]    
+SFX B              [  ]      
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B              
+SFX B                  
+SFX B              
+SFX B                  
+SFX B              
+SFX B                  
+SFX B              
+SFX B                  
+SFX B              
+SFX B                  
+SFX B               
+SFX B                   
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B              
+SFX B                  
+SFX B              
+SFX B                  
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B          [     ]    
+SFX B            [     ]      
+SFX B          [     ]    
+SFX B            [     ]      
+SFX B                
+SFX B                    
+SFX B           [    ]    
+SFX B             [    ]      
+SFX B                 
+SFX B                     
+SFX B            [    ]    
+SFX B              [    ]      
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B            [    ]    
+SFX B              [    ]      
+SFX B            [    ]    
+SFX B              [    ]      
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B            [    ]    
+SFX B              [    ]      
+SFX B            [    ]    
+SFX B              [    ]      
+SFX B                 
+SFX B                     
+SFX B            [    ]    
+SFX B              [    ]      
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B         [  ]    
+SFX B           [  ]      
+SFX B               
+SFX B                   
+SFX B                
+SFX B                    
+SFX B                
+SFX B                    
+SFX B          [    ]    
+SFX B            [    ]      
+SFX B          [    ]    
+SFX B            [    ]      
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B                  
+SFX B                      
+SFX B                  
+SFX B                      
+SFX B            [    ]    
+SFX B              [    ]      
+SFX B            [    ]    
+SFX B              [    ]      
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B                  
+SFX B                      
+SFX B            [    ]    
+SFX B              [    ]      
+SFX B           [^  ]     
+SFX B             [^  ]       
+SFX B           [^  ]     
+SFX B             [^  ]       
+SFX B            [^  ]     
+SFX B              [^  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B             
+SFX B                 
+SFX B           [^  ]     
+SFX B             [^  ]       
+SFX B           [^  ]     
+SFX B             [^  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B             [^  ]     
+SFX B               [^  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B           [  ]     
+SFX B             [  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B            [  ]     
+SFX B              [  ]       
+SFX B        [  ]     
+SFX B          [  ]       
+SFX B        [  ]     
+SFX B          [  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B          [  ]     
+SFX B            [  ]       
+SFX B        [  ]    
+SFX B          [  ]      
+SFX B        [  ]    
+SFX B          [  ]      
+SFX B         [  ]    
+SFX B           [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B        [  ]    
+SFX B          [  ]      
+SFX B        [  ]    
+SFX B          [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B          [  ]    
+SFX B            [  ]      
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                     
+SFX B                         
+SFX B                      
+SFX B                          
+SFX B                      
+SFX B                          
+SFX B                      
+SFX B                          
+SFX B                      
+SFX B                          
+SFX B                      
+SFX B                          
+SFX B                      
+SFX B                          
+SFX B                    
+SFX B                        
+SFX B                    
+SFX B                        
+SFX B                      
+SFX B                          
+SFX B                      
+SFX B                          
+SFX B                      
+SFX B                          
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B                  
+SFX B                      
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B                 
+SFX B                     
+SFX B                 
+SFX B                     
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B                   
+SFX B                       
+SFX B           [   ]     
+SFX B             [   ]       
+SFX B           [   ]     
+SFX B             [   ]       
+SFX B            [   ]     
+SFX B              [   ]       
+SFX B             [   ]     
+SFX B               [   ]       
+SFX B             [   ]     
+SFX B               [   ]       
+SFX B             [   ]     
+SFX B               [   ]       
+SFX B             [   ]     
+SFX B               [   ]       
+SFX B             [   ]     
+SFX B               [   ]       
+SFX B             [   ]     
+SFX B               [   ]       
+SFX B           [   ]     
+SFX B             [   ]       
+SFX B           [   ]     
+SFX B             [   ]       
+SFX B             [   ]     
+SFX B               [   ]       
+SFX B             [   ]     
+SFX B               [   ]       
+SFX B             [   ]     
+SFX B               [   ]       
+SFX B '         '    
+SFX B '           '      
+SFX B '         '    
+SFX B '           '      
+SFX B '          '    
+SFX B '            '      
+SFX B '           '    
+SFX B '             '      
+SFX B '           '    
+SFX B '             '      
+SFX B '           '    
+SFX B '             '      
+SFX B '           '    
+SFX B '             '      
+SFX B '           '    
+SFX B '             '      
+SFX B '           '    
+SFX B '             '      
+SFX B '         '    
+SFX B '           '      
+SFX B '         '    
+SFX B '           '      
+SFX B '           '    
+SFX B '             '      
+SFX B '           '    
+SFX B '             '      
+SFX B '           '    
+SFX B '             '      
+SFX D Y 52
+SFX D        [         ]    
+SFX D          [         ]      
+SFX D         [      ]    
+SFX D           [      ]      
+SFX D          [         ]    
+SFX D            [         ]      
+SFX D          [         ]    
+SFX D            [         ]      
+SFX D           [      ]    
+SFX D             [      ]      
+SFX D           [      ]    
+SFX D             [      ]      
+SFX D          [         ]    
+SFX D            [         ]      
+SFX D          [         ]    
+SFX D            [         ]      
+SFX D           [      ]    
+SFX D             [      ]      
+SFX D           [      ]    
+SFX D             [      ]      
+SFX D              
+SFX D                  
+SFX D                
+SFX D                    
+SFX D                
+SFX D                    
+SFX D                
+SFX D                    
+SFX D                
+SFX D                    
+SFX D              
+SFX D                  
+SFX D                
+SFX D                    
+SFX D                
+SFX D                    
+SFX D                
+SFX D                    
+SFX D                
+SFX D                    
+SFX D             
+SFX D                 
+SFX D             
+SFX D                 
+SFX D               
+SFX D                   
+SFX D               
+SFX D                   
+SFX D               
+SFX D                   
+SFX D               
+SFX D                   
+SFX F Y 40
+SFX F             
+SFX F                 
+SFX F             
+SFX F                 
+SFX F               
+SFX F                   
+SFX F               
+SFX F                   
+SFX F               
+SFX F                   
+SFX F              
+SFX F                  
+SFX F              
+SFX F                  
+SFX F                
+SFX F                    
+SFX F                
+SFX F                    
+SFX F                
+SFX F                    
+SFX F              
+SFX F                  
+SFX F              
+SFX F                  
+SFX F                
+SFX F                    
+SFX F                
+SFX F                    
+SFX F                
+SFX F                    
+SFX F             
+SFX F                 
+SFX F             
+SFX F                 
+SFX F               
+SFX F                   
+SFX F               
+SFX F                   
+SFX F               
+SFX F                   
+SFX H Y 18
+SFX H 0         
+SFX H              
+SFX H 0         
+SFX H              
+SFX H 0          
+SFX H               
+SFX H 0           
+SFX H                
+SFX H 0           
+SFX H                
+SFX H 0           
+SFX H                
+SFX H 0           
+SFX H                
+SFX H 0           
+SFX H                
+SFX H 0           
+SFX H                
+SFX J Y 261
+SFX J 0       
+SFX J 0       
+SFX J            
+SFX J            
+SFX J                
+SFX J            
+SFX J                
+SFX J            
+SFX J                
+SFX J            
+SFX J                
+SFX J            
+SFX J                
+SFX J            
+SFX J                
+SFX J        [     ]   
+SFX J          [     ]     
+SFX J        [     ]   
+SFX J          [     ]     
+SFX J         [    ]    
+SFX J           [    ]      
+SFX J         [    ]    
+SFX J           [    ]      
+SFX J        [     ]    
+SFX J          [     ]      
+SFX J        [     ]    
+SFX J          [     ]      
+SFX J        [   ]   
+SFX J          [   ]     
+SFX J        [   ]   
+SFX J          [   ]     
+SFX J               
+SFX J                   
+SFX J          [   ]    
+SFX J            [   ]      
+SFX J         [     ]    
+SFX J           [     ]      
+SFX J         [   ]   
+SFX J           [   ]     
+SFX J                
+SFX J                    
+SFX J           [   ]    
+SFX J             [   ]      
+SFX J          [     ]    
+SFX J            [     ]      
+SFX J          [   ]   
+SFX J            [   ]     
+SFX J                
+SFX J                    
+SFX J                
+SFX J                    
+SFX J           [   ]    
+SFX J             [   ]      
+SFX J           [   ]    
+SFX J             [   ]      
+SFX J          [     ]    
+SFX J            [     ]      
+SFX J          [     ]    
+SFX J            [     ]      
+SFX J          [   ]   
+SFX J            [   ]     
+SFX J          [   ]   
+SFX J            [   ]     
+SFX J                
+SFX J                    
+SFX J                
+SFX J                    
+SFX J           [   ]    
+SFX J             [   ]      
+SFX J           [   ]    
+SFX J             [   ]      
+SFX J          [     ]    
+SFX J            [     ]      
+SFX J          [     ]    
+SFX J            [     ]      
+SFX J          [   ]   
+SFX J            [   ]     
+SFX J          [   ]   
+SFX J            [   ]     
+SFX J                
+SFX J                    
+SFX J           [   ]    
+SFX J             [   ]      
+SFX J          [     ]    
+SFX J            [     ]      
+SFX J          [   ]   
+SFX J            [   ]     
+SFX J                
+SFX J                    
+SFX J                
+SFX J                    
+SFX J         [   ]    
+SFX J           [   ]      
+SFX J         [   ]    
+SFX J           [   ]      
+SFX J        [     ]    
+SFX J          [     ]      
+SFX J        [     ]    
+SFX J          [     ]      
+SFX J        [   ]   
+SFX J          [   ]     
+SFX J        [   ]   
+SFX J          [   ]     
+SFX J                  
+SFX J                      
+SFX J                  
+SFX J                      
+SFX J           [   ]    
+SFX J             [   ]      
+SFX J           [   ]    
+SFX J             [   ]      
+SFX J          [     ]    
+SFX J            [     ]      
+SFX J          [     ]    
+SFX J            [     ]      
+SFX J          [   ]   
+SFX J            [   ]     
+SFX J          [   ]   
+SFX J            [   ]     
+SFX J                  
+SFX J                      
+SFX J                  
+SFX J                      
+SFX J           [   ]    
+SFX J             [   ]      
+SFX J           [   ]    
+SFX J             [   ]      
+SFX J          [     ]    
+SFX J            [     ]      
+SFX J          [     ]    
+SFX J            [     ]      
+SFX J          [   ]   
+SFX J            [   ]     
+SFX J          [   ]   
+SFX J            [   ]     
+SFX J     '    [   ]    
+SFX J       '    [   ]      
+SFX J     '    [   ]    
+SFX J       '    [   ]      
+SFX J     '     [   ]    
+SFX J       '     [   ]      
+SFX J     '      [   ]    
+SFX J       '      [   ]      
+SFX J     '      [   ]    
+SFX J       '      [   ]      
+SFX J     '      [   ]    
+SFX J       '      [   ]      
+SFX J     '      [   ]    
+SFX J       '      [   ]      
+SFX J     '      [   ]    
+SFX J       '      [   ]      
+SFX J     '      [   ]    
+SFX J       '      [   ]      
+SFX J          [     ]    
+SFX J            [     ]      
+SFX J          [     ]    
+SFX J            [     ]      
+SFX J           [     ]    
+SFX J             [     ]      
+SFX J            [     ]    
+SFX J              [     ]      
+SFX J            [     ]    
+SFX J              [     ]      
+SFX J            [     ]    
+SFX J              [     ]      
+SFX J            [     ]    
+SFX J              [     ]      
+SFX J            [     ]    
+SFX J              [     ]      
+SFX J            [     ]    
+SFX J              [     ]      
+SFX J               
+SFX J                   
+SFX J               
+SFX J                   
+SFX J                
+SFX J                    
+SFX J                 
+SFX J                     
+SFX J                 
+SFX J                     
+SFX J                 
+SFX J                     
+SFX J                 
+SFX J                     
+SFX J                 
+SFX J                     
+SFX J                 
+SFX J                     
+SFX J              
+SFX J                  
+SFX J              
+SFX J                  
+SFX J               
+SFX J                   
+SFX J                
+SFX J                    
+SFX J                
+SFX J                    
+SFX J                
+SFX J                    
+SFX J                
+SFX J                    
+SFX J                
+SFX J                    
+SFX J                
+SFX J                    
+SFX J        [^ ]    
+SFX J          [^ ]      
+SFX J        [^ ]    
+SFX J          [^ ]      
+SFX J          [^ ]    
+SFX J            [^ ]      
+SFX J          [^ ]    
+SFX J            [^ ]      
+SFX J          [^ ]    
+SFX J            [^ ]      
+SFX J          [^ ]    
+SFX J            [^ ]      
+SFX J         [ ]    
+SFX J           [ ]      
+SFX J         [ ]    
+SFX J           [ ]      
+SFX J           [ ]    
+SFX J             [ ]      
+SFX J           [ ]    
+SFX J             [ ]      
+SFX J           [ ]    
+SFX J             [ ]      
+SFX J            
+SFX J                
+SFX J            
+SFX J                
+SFX J             
+SFX J                 
+SFX J              
+SFX J                  
+SFX J              
+SFX J                  
+SFX J              
+SFX J                  
+SFX J              
+SFX J                  
+SFX J              
+SFX J                  
+SFX J              
+SFX J                  
+SFX J         [  ]    
+SFX J           [  ]      
+SFX J                
+SFX J                    
+SFX J            
+SFX J                
+SFX J            
+SFX J                
+SFX J              
+SFX J                  
+SFX J              
+SFX J                  
+SFX J              
+SFX J                  
+SFX L Y 467
+SFX L 0       
+SFX L 0       
+SFX L            
+SFX L         [^  ]   
+SFX L           [^  ]     
+SFX L         [^  ]   
+SFX L           [^  ]     
+SFX L         [^  ]   
+SFX L           [^  ]     
+SFX L         [^  ]   
+SFX L           [^  ]     
+SFX L         [^  ]   
+SFX L           [^  ]     
+SFX L         [^  ]   
+SFX L           [^  ]     
+SFX L        [      ]   
+SFX L          [      ]     
+SFX L        [      ]   
+SFX L          [      ]     
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L              
+SFX L                  
+SFX L                  
+SFX L                      
+SFX L                  
+SFX L                      
+SFX L                  
+SFX L                      
+SFX L                  
+SFX L                      
+SFX L                  
+SFX L                      
+SFX L                  
+SFX L                      
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L              
+SFX L                  
+SFX L              
+SFX L                  
+SFX L               
+SFX L                   
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L              
+SFX L                  
+SFX L              
+SFX L                  
+SFX L               
+SFX L                   
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                      
+SFX L                          
+SFX L                      
+SFX L                          
+SFX L                       
+SFX L                           
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                      
+SFX L                          
+SFX L                      
+SFX L                          
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                      
+SFX L                          
+SFX L                      
+SFX L                          
+SFX L                       
+SFX L                           
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                      
+SFX L                          
+SFX L                      
+SFX L                          
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                      
+SFX L                          
+SFX L                      
+SFX L                          
+SFX L                       
+SFX L                           
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                      
+SFX L                          
+SFX L                      
+SFX L                          
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                      
+SFX L                          
+SFX L                      
+SFX L                          
+SFX L                       
+SFX L                           
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                      
+SFX L                          
+SFX L                      
+SFX L                          
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L                        
+SFX L                            
+SFX L        '    [   ]     
+SFX L          '    [   ]       
+SFX L        '    [   ]     
+SFX L          '    [   ]       
+SFX L        '     [   ]     
+SFX L          '     [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '    [   ]     
+SFX L          '    [   ]       
+SFX L        '    [   ]     
+SFX L          '    [   ]       
+SFX L        '     [   ]     
+SFX L          '     [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '    [   ]     
+SFX L          '    [   ]       
+SFX L        '    [   ]     
+SFX L          '    [   ]       
+SFX L        '     [   ]     
+SFX L          '     [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L        '      [   ]     
+SFX L          '      [   ]       
+SFX L             [    ]     
+SFX L               [    ]       
+SFX L             [    ]     
+SFX L               [    ]       
+SFX L              [    ]     
+SFX L                [    ]       
+SFX L               [    ]     
+SFX L                 [    ]       
+SFX L               [    ]     
+SFX L                 [    ]       
+SFX L               [    ]     
+SFX L                 [    ]       
+SFX L               [    ]     
+SFX L                 [    ]       
+SFX L               [    ]     
+SFX L                 [    ]       
+SFX L               [    ]     
+SFX L                 [    ]       
+SFX L        [    ]    
+SFX L          [    ]      
+SFX L        [    ]    
+SFX L          [    ]      
+SFX L          [    ]    
+SFX L            [    ]      
+SFX L          [    ]    
+SFX L            [    ]      
+SFX L          [    ]    
+SFX L            [    ]      
+SFX L          [    ]    
+SFX L            [    ]      
+SFX L             
+SFX L                 
+SFX L              
+SFX L                  
+SFX L              
+SFX L                  
+SFX L               
+SFX L                   
+SFX L              
+SFX L                  
+SFX L              
+SFX L                  
+SFX L               
+SFX L                   
+SFX L               
+SFX L                   
+SFX L                
+SFX L                    
+SFX L             
+SFX L                 
+SFX L             
+SFX L                 
+SFX L               
+SFX L                   
+SFX L               
+SFX L                   
+SFX L               
+SFX L                   
+SFX L               
+SFX L                   
+SFX L               
+SFX L                   
+SFX L               
+SFX L                   
+SFX L                
+SFX L                    
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L               
+SFX L                   
+SFX L               
+SFX L                   
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L              
+SFX L                  
+SFX L              
+SFX L                  
+SFX L               
+SFX L                   
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L                
+SFX L                    
+SFX L         .     
+SFX L           .       
+SFX L           .     
+SFX L             .       
+SFX L           .     
+SFX L             .       
+SFX L           .     
+SFX L             .       
+SFX L           .     
+SFX L             .       
+SFX L               
+SFX L                   
+SFX L               
+SFX L                   
+SFX L                
+SFX L                    
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L               
+SFX L                   
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L                   
+SFX L                       
+SFX L                   
+SFX L                       
+SFX L                    
+SFX L                        
+SFX L                     
+SFX L                         
+SFX L                     
+SFX L                         
+SFX L                     
+SFX L                         
+SFX L                     
+SFX L                         
+SFX L                     
+SFX L                         
+SFX L                     
+SFX L                         
+SFX L                   
+SFX L                       
+SFX L                   
+SFX L                       
+SFX L                     
+SFX L                         
+SFX L                     
+SFX L                         
+SFX L                     
+SFX L                         
+SFX L                 
+SFX L                     
+SFX L                 
+SFX L                     
+SFX L                  
+SFX L                      
+SFX L                   
+SFX L                       
+SFX L                   
+SFX L                       
+SFX L                   
+SFX L                       
+SFX L                   
+SFX L                       
+SFX L                   
+SFX L                       
+SFX L                   
+SFX L                       
+SFX L               
+SFX L                   
+SFX L               
+SFX L                   
+SFX L               
+SFX L                   
+SFX L               
+SFX L                   
+SFX L               
+SFX L                   
+SFX L               
+SFX L                   
+SFX L              
+SFX L                  
+SFX L              
+SFX L                  
+SFX L                 
+SFX L                     
+SFX L                   
+SFX L                       
+SFX L                   
+SFX L                       
+SFX L                   
+SFX L                       
+SFX L                   
+SFX L                       
+SFX N Y 281
+SFX N 0       
+SFX N 0       
+SFX N            
+SFX N         [^   ]   
+SFX N           [^   ]     
+SFX N         [^   ]   
+SFX N           [^   ]     
+SFX N         [^   ]   
+SFX N           [^   ]     
+SFX N         [^   ]   
+SFX N           [^   ]     
+SFX N         [^   ]   
+SFX N           [^   ]     
+SFX N         [^   ]   
+SFX N           [^   ]     
+SFX N        [     ]   
+SFX N          [     ]     
+SFX N        [     ]   
+SFX N          [     ]     
+SFX N               
+SFX N                   
+SFX N               
+SFX N                   
+SFX N                
+SFX N                    
+SFX N                 
+SFX N                     
+SFX N                 
+SFX N                     
+SFX N                 
+SFX N                     
+SFX N                 
+SFX N                     
+SFX N                 
+SFX N                     
+SFX N                 
+SFX N                     
+SFX N               
+SFX N                   
+SFX N               
+SFX N                   
+SFX N                 
+SFX N                     
+SFX N                 
+SFX N                     
+SFX N                 
+SFX N                     
+SFX N             [^ ]     
+SFX N               [^ ]       
+SFX N             [^ ]     
+SFX N               [^ ]       
+SFX N              [^ ]     
+SFX N                [^ ]       
+SFX N               [^ ]     
+SFX N                 [^ ]       
+SFX N               [^ ]     
+SFX N                 [^ ]       
+SFX N               [^ ]     
+SFX N                 [^ ]       
+SFX N               [^ ]     
+SFX N                 [^ ]       
+SFX N               [^ ]     
+SFX N                 [^ ]       
+SFX N               [^ ]     
+SFX N                 [^ ]       
+SFX N             [^ ]     
+SFX N               [^ ]       
+SFX N             [^ ]     
+SFX N               [^ ]       
+SFX N               [^ ]     
+SFX N                 [^ ]       
+SFX N               [^ ]     
+SFX N                 [^ ]       
+SFX N               [^ ]     
+SFX N                 [^ ]       
+SFX N         [  ]   
+SFX N           [  ]     
+SFX N         [  ]   
+SFX N           [  ]     
+SFX N          [  ]   
+SFX N            [  ]     
+SFX N           [  ]   
+SFX N             [  ]     
+SFX N           [  ]   
+SFX N             [  ]     
+SFX N           [  ]   
+SFX N             [  ]     
+SFX N           [  ]   
+SFX N             [  ]     
+SFX N           [  ]   
+SFX N             [  ]     
+SFX N           [  ]   
+SFX N             [  ]     
+SFX N          [  ]   
+SFX N            [  ]     
+SFX N          [  ]   
+SFX N            [  ]     
+SFX N          [  ]   
+SFX N            [  ]     
+SFX N          [  ]   
+SFX N            [  ]     
+SFX N          [  ]   
+SFX N            [  ]     
+SFX N          [  ]   
+SFX N            [  ]     
+SFX N          [  ]   
+SFX N            [  ]     
+SFX N          [  ]   
+SFX N            [  ]     
+SFX N         [  ]   
+SFX N           [  ]     
+SFX N         [  ]   
+SFX N           [  ]     
+SFX N           [  ]   
+SFX N             [  ]     
+SFX N           [  ]   
+SFX N             [  ]     
+SFX N           [  ]   
+SFX N             [  ]     
+SFX N                
+SFX N                    
+SFX N                
+SFX N                    
+SFX N                 
+SFX N                     
+SFX N                  
+SFX N                      
+SFX N                  
+SFX N                      
+SFX N                  
+SFX N                      
+SFX N                  
+SFX N                      
+SFX N                  
+SFX N                      
+SFX N                  
+SFX N                      
+SFX N                
+SFX N                    
+SFX N                  
+SFX N                      
+SFX N                  
+SFX N                      
+SFX N                  
+SFX N                      
+SFX N                  
+SFX N                      
+SFX N                    
+SFX N                        
+SFX N                    
+SFX N                        
+SFX N                     
+SFX N                         
+SFX N                      
+SFX N                          
+SFX N                      
+SFX N                          
+SFX N                      
+SFX N                          
+SFX N                      
+SFX N                          
+SFX N                      
+SFX N                          
+SFX N                      
+SFX N                          
+SFX N                    
+SFX N                        
+SFX N                    
+SFX N                        
+SFX N                      
+SFX N                          
+SFX N                      
+SFX N                          
+SFX N                      
+SFX N                          
+SFX N         [  ]    
+SFX N           [  ]      
+SFX N         [  ]    
+SFX N           [  ]      
+SFX N          [  ]    
+SFX N            [  ]      
+SFX N           [  ]    
+SFX N             [  ]      
+SFX N           [  ]    
+SFX N             [  ]      
+SFX N           [  ]    
+SFX N             [  ]      
+SFX N           [  ]    
+SFX N             [  ]      
+SFX N           [  ]    
+SFX N             [  ]      
+SFX N           [  ]    
+SFX N             [  ]      
+SFX N         [  ]    
+SFX N           [  ]      
+SFX N              
+SFX N                  
+SFX N              
+SFX N                  
+SFX N                
+SFX N                    
+SFX N                
+SFX N                    
+SFX N                
+SFX N                    
+SFX N          [   ]    
+SFX N            [   ]      
+SFX N          [   ]    
+SFX N            [   ]      
+SFX N           [   ]    
+SFX N             [   ]      
+SFX N            [   ]    
+SFX N              [   ]      
+SFX N            [   ]    
+SFX N              [   ]      
+SFX N            [   ]    
+SFX N              [   ]      
+SFX N            [   ]    
+SFX N              [   ]      
+SFX N            [   ]    
+SFX N              [   ]      
+SFX N            [   ]    
+SFX N              [   ]      
+SFX N              
+SFX N                  
+SFX N              
+SFX N                  
+SFX N              
+SFX N                  
+SFX N              
+SFX N                  
+SFX N              
+SFX N                  
+SFX N              
+SFX N                  
+SFX N         [^ ]    
+SFX N           [^ ]      
+SFX N         [^ ]    
+SFX N           [^ ]      
+SFX N                
+SFX N                    
+SFX N                
+SFX N                    
+SFX N          [   ]    
+SFX N            [   ]      
+SFX N          [   ]    
+SFX N            [   ]      
+SFX N            [   ]    
+SFX N              [   ]      
+SFX N            [   ]    
+SFX N              [   ]      
+SFX N            [   ]    
+SFX N              [   ]      
+SFX N         [  ]    
+SFX N           [  ]      
+SFX N        [  ]    
+SFX N          [  ]      
+SFX N        [  ]    
+SFX N          [  ]      
+SFX N         [  ]    
+SFX N           [  ]      
+SFX N          [  ]    
+SFX N            [  ]      
+SFX N          [  ]    
+SFX N            [  ]      
+SFX N         [  ]    
+SFX N           [  ]      
+SFX N         [  ]    
+SFX N           [  ]      
+SFX N                 
+SFX N                     
+SFX N              
+SFX N                  
+SFX N                
+SFX N                    
+SFX N                
+SFX N                    
+SFX N                
+SFX N                    
+SFX N                
+SFX N                    
+PFX Z Y 1
+PFX Z 0    . 
+PFX Y Y 1
+PFX Y 0     . 
+PFX X Y 1
+PFX X       

@@ -1,0 +1,6893 @@
+SET ISO8859-1
+
+TRY aeroinsctldumpbgfvhz  j q  xy  kwAEROINSCTLDUMPBGFVHZ  J Q  XY  KW
+
+REP 20
+REP  s az
+REP az  s
+REP cc x
+REP  s ez
+REP ez  s
+REP g e hue
+REP g i hui
+REP hue g e
+REP hui g i
+REP  s iz
+REP  o ido
+REP ke que
+REP ki qui
+REP ll y
+REP mb nv
+REP nv mb
+REP seci cesi
+REP x cc
+REP y ll
+REP v monos vay monos
+
+MAP 5
+MAP a A 
+MAP e E 
+MAP i I 
+MAP o O 
+MAP u  U  
+PFX a Y 2
+PFX a 0 a [^aeiou]
+PFX a 0 an [aeiou]
+
+PFX b Y 1
+PFX b 0 ante .
+
+PFX c Y 2
+PFX c 0 anti [^r]
+PFX c 0 antir r
+
+PFX d Y 2
+PFX d 0 auto [^r]
+PFX d 0 autor r
+
+PFX e Y 2
+PFX e 0 bi [^r]
+PFX e 0 bir r
+
+PFX f Y 6
+PFX f 0 con [^abehilopru]
+PFX f 0 con ll
+PFX f 0 com pb
+PFX f 0 co [aehiou]
+PFX f 0 co l[^l]
+PFX f 0 cor r
+
+PFX g Y 3
+PFX g 0 de [^er]
+PFX g 0 d e
+PFX g 0 der r
+
+PFX h Y 2
+PFX h 0 des [^s]
+PFX h 0 de s
+
+PFX i Y 2
+PFX i 0 em [bp]
+PFX i 0 en [^bp]
+
+PFX j Y 2
+PFX j 0 entre [^r]
+PFX j 0 entrer r
+
+PFX k Y 4
+PFX k 0 i l
+PFX k 0 im [bp]
+PFX k 0 in [^blpr]
+PFX k 0 ir r
+
+PFX l Y 1
+PFX l 0 inter .
+
+PFX m Y 2
+PFX m 0 micro [^r]
+PFX m 0 micror r
+
+PFX n Y 3
+PFX n 0 pr e
+PFX n 0 pre [^er]
+PFX n 0 prer r
+
+PFX o Y 2
+PFX o 0 pro [^r]
+PFX o 0 pror r
+
+PFX p Y 2
+PFX p 0 r e
+PFX p 0 re .
+
+PFX q Y 3
+PFX q 0 sem i
+PFX q 0 semi [^ir]
+PFX q 0 semir r
+
+PFX r Y 3
+PFX r 0 sobr e
+PFX r 0 sobre [^r]
+PFX r 0 sobrer r
+
+PFX s Y 1
+PFX s 0 sub .
+
+PFX t Y 1
+PFX t 0 super .
+
+PFX u Y 8
+PFX u e tran es
+PFX u 0 tran s
+PFX u 0 trans [^es]
+PFX u e trans e[^s]
+PFX u e tra es
+PFX u 0 tra s
+PFX u 0 tras [^es]
+PFX u e tras e[^s]
+
+SFX A Y 18
+SFX A r ci n ar
+SFX A r ciones ar
+SFX A er ici n [^cn]er
+SFX A er iciones [^cn]er
+SFX A er ici n [^e]cer
+SFX A er iciones [^e]cer
+SFX A ecer ici n ecer
+SFX A ecer iciones ecer
+SFX A er ici n [^o]ner
+SFX A er iciones [^o]ner
+SFX A ner sici n oner
+SFX A ner siciones oner
+SFX A r ci n [^c]ir
+SFX A r ciones [^c]ir
+SFX A r ci n [^u]cir
+SFX A r ciones [^u]cir
+SFX A ir ci n ucir
+SFX A ir ciones ucir
+
+SFX B Y 6
+SFX B r dura [ai ]r
+SFX B r duras [ai ]r
+SFX B r dura [^s]er
+SFX B r duras [^s]er
+SFX B er idura ser
+SFX B er iduras ser
+
+SFX C Y 14
+SFX C r je ar
+SFX C r jes ar
+SFX C 0 je a
+SFX C 0 jes a
+SFX C 0 aje [^aei]r
+SFX C 0 ajes [^aei]r
+SFX C 0 aje l
+SFX C 0 ajes l
+SFX C e aje e
+SFX C e ajes e
+SFX C  n onaje  n
+SFX C  n onajes  n
+SFX C o aje o
+SFX C o ajes o
+
+SFX F Y 6
+SFX F te cia ante
+SFX F te cias ante
+SFX F te cia [^i]ente
+SFX F te cias [^i]ente
+SFX F iente encia iente
+SFX F iente encias iente
+
+SFX H Y 14
+SFX H 0 zo a
+SFX H 0 zos a
+SFX H e azo [^u]e
+SFX H e azos [^u]e
+SFX H que cazo que
+SFX H que cazos que
+SFX H o azo o
+SFX H o azos o
+SFX H 0 azo [lr]
+SFX H 0 azos [lr]
+SFX H  n inazo  n
+SFX H  n inazos  n
+SFX H  n onazo  n
+SFX H  n onazos  n
+
+SFX J Y 2
+SFX J le ilidad ble
+SFX J le ilidades ble
+
+SFX K Y 26
+SFX K o idad [bdmnruvx]o
+SFX K o idades [bdmnruvx]o
+SFX K zo cedad [^ei]zo
+SFX K zo cedades [^ei]zo
+SFX K z cidad z
+SFX K z cidades z
+SFX K zo cidad [ei]zo
+SFX K zo cidades [ei]zo
+SFX K e icidad le
+SFX K e icidades le
+SFX K o edad [fhij]o
+SFX K o edades [fhij]o
+SFX K  o iedad  o
+SFX K  o iedades  o
+SFX K 0 idad [lr]
+SFX K 0 idades [lr]
+SFX K e idad [mnru]e
+SFX K e idades [mnru]e
+SFX K 0 dad [pv]e
+SFX K 0 dades [pv]e
+SFX K o edad lso
+SFX K o edades lso
+SFX K o idad [^l]so
+SFX K o idades [^l]so
+SFX K co quedad co
+SFX K co quedades co
+
+SFX L Y 34
+SFX L o  a ero
+SFX L o  as ero
+SFX L o er a [bdhjln pst]o
+SFX L o er as [bdhjln pst]o
+SFX L o er a [^e]ro
+SFX L o er as [^e]ro
+SFX L za cer a za
+SFX L za cer as za
+SFX L zo cer a zo
+SFX L zo cer as zo
+SFX L z cer a z
+SFX L z cer as z
+SFX L a  a era
+SFX L a  as era
+SFX L a er a [djlpsty]a
+SFX L a er as [djlpsty]a
+SFX L a er a [^e]ra
+SFX L a er as [^e]ra
+SFX L  o er a  o
+SFX L  o er as  o
+SFX L 0  a er
+SFX L 0  as er
+SFX L 0 r a [jr]e
+SFX L 0 r as [jr]e
+SFX L 0 er a l
+SFX L 0 er as l
+SFX L  n aner a  n
+SFX L  n aner as  n
+SFX L  n oner a  n
+SFX L  n oner as  n
+SFX L co quer a co
+SFX L co quer as co
+SFX L a uer a ga
+SFX L a uer as ga
+
+SFX M Y 40
+SFX M zo cez zo
+SFX M zo ceces zo
+SFX M 0 za [cdlmpr]e
+SFX M 0 zas [cdlmpr]e
+SFX M o ez [anou]do
+SFX M o eces [anou]do
+SFX M io ez dio
+SFX M io eces dio
+SFX M a ez a
+SFX M a eces a
+SFX M o ez [hsvy]o
+SFX M o eces [hsvy]o
+SFX M o ez rio
+SFX M o eces rio
+SFX M o eza [bp]io
+SFX M o ezas [bp]io
+SFX M 0 z [jt]e
+SFX M 0 ces [jt]e
+SFX M o ez ojo
+SFX M o eces ojo
+SFX M o eza [ai]jo
+SFX M o ezas [ai]jo
+SFX M 0 eza l
+SFX M 0 ezas l
+SFX M o eza [npr]o
+SFX M o ezas [npr]o
+SFX M o ez a o
+SFX M o eces a o
+SFX M o eza [eio] o
+SFX M o ezas [eio] o
+SFX M o ez [ai]to
+SFX M o eces [ai]to
+SFX M o eza nto
+SFX M o ezas nto
+SFX M o eza [aie]sto
+SFX M o ezas [^u]sto
+SFX M o ez usto
+SFX M o eces usto
+SFX M o uez go
+SFX M o ueces go
+
+SFX N Y 36
+SFX N a illa [bdfhjlmnprstv]a
+SFX N a illas [bdfhjlmnprstv]a
+SFX N o illo [bdhjlmnprstv]o
+SFX N o illos [bdhjlmnprstv]o
+SFX N 0 cilla ve
+SFX N 0 cillas ve
+SFX N za cilla za
+SFX N za cillas za
+SFX N 0 ecilla d
+SFX N 0 ecillas d
+SFX N  n oncillo  n
+SFX N  n ancillo  n
+SFX N 0 cillo or
+SFX N 0 cillos or
+SFX N zo cillo zo
+SFX N zo cillos zo
+SFX N 0 cillo [djlnu]e
+SFX N 0 cillos [djlnu]e
+SFX N z cecillo z
+SFX N z cecillos z
+SFX N 0 ecillo ur
+SFX N 0 ecillos ur
+SFX N e illo [cpt]e
+SFX N e illos [cpt]e
+SFX N 0 illo [ls]
+SFX N 0 illos [ls]
+SFX N 0 illo [^ou]r
+SFX N 0 illos [^ou]r
+SFX N co quillo co
+SFX N co quillos co
+SFX N go guillo go
+SFX N go guillos go
+SFX N ca quilla ca
+SFX N ca quillas ca
+SFX N ga guilla ga
+SFX N ga guillas ga
+
+SFX O Y 18
+SFX O ta mo ta
+SFX O 0 ismo [dflnr]
+SFX O o ismo [^i]co
+SFX O o ismo [^o]ico
+SFX O ico  smo oico
+SFX O a ismo [dt]a
+SFX O o  smo eo
+SFX O e ismo [jrt]e
+SFX O 0 ismo ln
+SFX O  n anismo  n
+SFX O  n onismo  n
+SFX O o smo io
+SFX O o ismo [rst]o
+SFX O  a ismo  a
+SFX O a smo ia
+SFX O  s esismo  s
+SFX O 0 mo is
+SFX O o uismo go
+
+SFX P Y 4
+SFX P r miento [ai]r
+SFX P r mientos [ai]r
+SFX P er imiento er
+SFX P er imientos er
+
+SFX Q Y 40
+SFX Q ar i n [lnsx]ar
+SFX Q ar iones [lnsx]ar
+SFX Q r i n [np]ir
+SFX Q r iones [np]ir
+SFX Q ar  n iar
+SFX Q ar ones iar
+SFX Q der si n der
+SFX Q der siones der
+SFX Q tir si n tir
+SFX Q tir siones tir
+SFX Q dir si n dir
+SFX Q dir siones dir
+SFX Q jar si n rjar
+SFX Q jar siones rjar
+SFX Q dar si n dar
+SFX Q dar siones dar
+SFX Q onar  n onar
+SFX Q ar es onar
+SFX Q decer si n decer
+SFX Q decer siones decer
+SFX Q ir si n uir
+SFX Q ir siones uir
+SFX Q ndir si n ndir
+SFX Q ndir siones ndir
+SFX Q er si n [eo]er
+SFX Q er siones [eo]er
+SFX Q tar si n otar
+SFX Q tar siones otar
+SFX Q gir si n gir
+SFX Q gir siones gir
+SFX Q cer si n rcer
+SFX Q cer siones rcer
+SFX Q rir sti n rir
+SFX Q rir stiones rir
+SFX Q ctar xi n ctar
+SFX Q ctar xiones ctar
+SFX Q car xi n car
+SFX Q car xiones car
+SFX Q jar xi n ejar
+SFX Q jar xiones ejar
+
+SFX R Y 197
+SFX R r mos [aei]r
+SFX R ar  is ar
+SFX R r ba ar
+SFX R r bas ar
+SFX R ar  bamos ar
+SFX R ar abais ar
+SFX R r ban ar
+SFX R ar   [^cguz]ar
+SFX R car qu  car
+SFX R ar u  gar
+SFX R ar   [^g]uar
+SFX R uar    guar
+SFX R zar c  zar
+SFX R r ste ar
+SFX R ar   ar
+SFX R r steis ar
+SFX R r ron ar
+SFX R 0   [aei]r
+SFX R 0  s [aei]r
+SFX R 0   [aei]r
+SFX R 0 emos [aei]r
+SFX R 0  is [aei]r
+SFX R 0  n [aei]r
+SFX R 0  a [aei]r
+SFX R 0  as [aei]r
+SFX R 0  amos [aei]r
+SFX R 0  ais [aei]r
+SFX R 0  an [aei]r
+SFX R ar emos [^cguz]ar
+SFX R car quemos car
+SFX R ar uemos gar
+SFX R ar emos [^g]uar
+SFX R uar  emos guar
+SFX R zar cemos zar
+SFX R ar  is [^cguz]ar
+SFX R car qu is car
+SFX R ar u is gar
+SFX R ar  is [^g]uar
+SFX R uar   is guar
+SFX R zar c is zar
+SFX R 0 a ar
+SFX R r se ar
+SFX R 0 as ar
+SFX R r ses ar
+SFX R ar  ramos ar
+SFX R ar  semos ar
+SFX R 0 ais ar
+SFX R r seis ar
+SFX R 0 an ar
+SFX R r sen ar
+SFX R 0 e ar
+SFX R 0 es ar
+SFX R ar  remos ar
+SFX R 0 eis ar
+SFX R 0 en ar
+SFX R r d [aei]r
+SFX R r ndo ar
+SFX R ar  ndose ar
+SFX R 0 se [aei ]r
+SFX R er  is er
+SFX R er  a er
+SFX R er  as er
+SFX R er  amos er
+SFX R er  ais er
+SFX R er  an er
+SFX R er   er
+SFX R er iste [^aeo]er
+SFX R er  ste [aeo]er
+SFX R er i  [^aeo]er
+SFX R er y  [aeo]er
+SFX R er imos [^aeo]er
+SFX R er  mos [aeo]er
+SFX R er isteis [^aeo]er
+SFX R er  steis [aeo]er
+SFX R er ieron [^aeo]er
+SFX R er yeron [aeo]er
+SFX R er iera [^aeo]er
+SFX R er yera [aeo]er
+SFX R er iese [^aeo]er
+SFX R er yese [aeo]er
+SFX R er ieras [^aeo]er
+SFX R er yeras [aeo]er
+SFX R er ieses [^aeo]er
+SFX R er yeses [aeo]er
+SFX R er i ramos [^aeo]er
+SFX R er y ramos [aeo]er
+SFX R er i semos [^aeo]er
+SFX R er y semos [aeo]er
+SFX R er ierais [^aeo]er
+SFX R er yerais [aeo]er
+SFX R er ieseis [^aeo]er
+SFX R er yeseis [aeo]er
+SFX R er ieran [^aeo]er
+SFX R er yeran [aeo]er
+SFX R er iesen [^aeo]er
+SFX R er yesen [aeo]er
+SFX R er iere [^aeo]er
+SFX R er yere [aeo]er
+SFX R er ieres [^aeo]er
+SFX R er yeres [aeo]er
+SFX R er i remos [^aeo]er
+SFX R er y remos [aeo]er
+SFX R er iereis [^aeo]er
+SFX R er yereis [aeo]er
+SFX R er ieren [^aeo]er
+SFX R er yeren [aeo]er
+SFX R er iendo [^aeo ]er
+SFX R er i ndose [^aeo ]er
+SFX R er yendo [aeo]er
+SFX R er y ndose [aeo]er
+SFX R r ndo  er
+SFX R er  ndose  er
+SFX R ir  s ir
+SFX R ir  a ir
+SFX R ir  as ir
+SFX R ir  amos ir
+SFX R ir  ais ir
+SFX R ir  an ir
+SFX R ir   ir
+SFX R r ste ir
+SFX R r   [^l ]ir
+SFX R r   [^l]lir
+SFX R ir   llir
+SFX R ir    ir
+SFX R r steis ir
+SFX R r eron [^l ]ir
+SFX R r eron [^l]lir
+SFX R ir eron llir
+SFX R ir eron  ir
+SFX R r era [^l ]ir
+SFX R r era [^l]lir
+SFX R ir era llir
+SFX R ir era  ir
+SFX R r ese [^l ]ir
+SFX R r ese [^l]lir
+SFX R ir ese llir
+SFX R ir ese  ir
+SFX R r eras [^l ]ir
+SFX R r eras [^l]lir
+SFX R ir eras llir
+SFX R ir eras  ir
+SFX R r eses [^l ]ir
+SFX R r eses [^l]lir
+SFX R ir eses llir
+SFX R ir eses  ir
+SFX R r  ramos [^l ]ir
+SFX R r  ramos [^l]lir
+SFX R ir  ramos llir
+SFX R ir  ramos  ir
+SFX R r  semos [^l ]ir
+SFX R r  semos [^l]lir
+SFX R ir  semos llir
+SFX R ir  semos  ir
+SFX R r erais [^l ]ir
+SFX R r erais [^l]lir
+SFX R ir erais llir
+SFX R ir erais  ir
+SFX R r eseis [^l ]ir
+SFX R r eseis [^l]lir
+SFX R ir eseis llir
+SFX R ir eseis  ir
+SFX R r eran [^l ]ir
+SFX R r eran [^l]lir
+SFX R ir eran llir
+SFX R ir eran  ir
+SFX R r esen [^l ]ir
+SFX R r esen [^l]lir
+SFX R ir esen llir
+SFX R ir esen  ir
+SFX R r ere [^l ]ir
+SFX R r ere [^l]lir
+SFX R ir ere llir
+SFX R ir ere  ir
+SFX R r eres [^l ]ir
+SFX R r eres [^l]lir
+SFX R ir eres llir
+SFX R ir eres  ir
+SFX R r  remos [^l ]ir
+SFX R r  remos [^l]lir
+SFX R ir  remos llir
+SFX R ir  remos  ir
+SFX R r ereis [^l ]ir
+SFX R r ereis [^l]lir
+SFX R ir ereis llir
+SFX R ir ereis  ir
+SFX R r eren [^l ]ir
+SFX R r eren [^l]lir
+SFX R ir eren llir
+SFX R ir eren  ir
+SFX R r endo [^l ]ir
+SFX R r  ndose [^l ]ir
+SFX R r endo [^l]lir
+SFX R r  ndose [^l]lir
+SFX R ir endo llir
+SFX R ir  ndose llir
+SFX R ir endo  ir
+SFX R ir  ndose  ir
+
+SFX E Y 73
+SFX E ar o ar
+SFX E r s [ae]r
+SFX E r 0 [ae]r
+SFX E r n [ae]r
+SFX E ar e [^cguz]ar
+SFX E car que car
+SFX E ar ue gar
+SFX E ar e [^g]uar
+SFX E uar  e guar
+SFX E zar ce zar
+SFX E ar es [^cguz]ar
+SFX E car ques car
+SFX E gar gues gar
+SFX E ar es [^g]uar
+SFX E uar  es guar
+SFX E zar ces zar
+SFX E ar en [^cguz]ar
+SFX E car quen car
+SFX E gar guen gar
+SFX E ar en [^g]uar
+SFX E uar  en guar
+SFX E zar cen zar
+SFX E er o [^cg]er
+SFX E cer zo cer
+SFX E ger jo ger
+SFX E er a [^cg]er
+SFX E cer za cer
+SFX E ger ja ger
+SFX E er as [^cg]er
+SFX E cer zas cer
+SFX E ger jas ger
+SFX E er amos [^cg]er
+SFX E cer zamos cer
+SFX E ger jamos ger
+SFX E er  is [^cg]er
+SFX E cer z is cer
+SFX E ger j is ger
+SFX E er an [^cg]er
+SFX E cer zan cer
+SFX E ger jan ger
+SFX E ir o [^cgu]ir
+SFX E cir zo cir
+SFX E gir jo gir
+SFX E uir o guir
+SFX E quir co quir
+SFX E ir es ir
+SFX E ir e ir
+SFX E ir en ir
+SFX E ir a [^cgu]ir
+SFX E cir za cir
+SFX E gir ja gir
+SFX E uir a guir
+SFX E quir ca quir
+SFX E ir as [^cgu]ir
+SFX E cir zas cir
+SFX E gir jas gir
+SFX E uir as guir
+SFX E quir cas quir
+SFX E ir amos [^cgu]ir
+SFX E cir zamos cir
+SFX E gir jamos gir
+SFX E uir amos guir
+SFX E quir camos quir
+SFX E ir  is [^cgu]ir
+SFX E cir z is cir
+SFX E gir j is gir
+SFX E uir  is guir
+SFX E quir c is quir
+SFX E ir an [^cgu]ir
+SFX E cir zan cir
+SFX E gir jan gir
+SFX E uir an guir
+SFX E quir can quir
+
+SFX I Y 729
+SFX I ertar ierto ertar
+SFX I ertar iertas ertar
+SFX I ertar ierta ertar
+SFX I ertar iertan ertar
+SFX I ertar ierte ertar
+SFX I ertar iertes ertar
+SFX I ertar ierten ertar
+SFX I eldar ieldo eldar
+SFX I eldar ieldas eldar
+SFX I eldar ielda eldar
+SFX I eldar ieldan eldar
+SFX I eldar ielde eldar
+SFX I eldar ieldes eldar
+SFX I eldar ielden eldar
+SFX I entar iento entar
+SFX I entar ientas entar
+SFX I entar ienta entar
+SFX I entar ientan entar
+SFX I entar iente entar
+SFX I entar ientes entar
+SFX I entar ienten entar
+SFX I egar iego egar
+SFX I egar iegas egar
+SFX I egar iega egar
+SFX I egar iegan egar
+SFX I egar iegue egar
+SFX I egar iegues egar
+SFX I egar ieguen egar
+SFX I errar ierro errar
+SFX I errar ierras errar
+SFX I errar ierra errar
+SFX I errar ierran errar
+SFX I errar ierre errar
+SFX I errar ierres errar
+SFX I errar ierren errar
+SFX I ebrar iebro ebrar
+SFX I ebrar iebras ebrar
+SFX I ebrar iebra ebrar
+SFX I ebrar iebran ebrar
+SFX I ebrar iebre ebrar
+SFX I ebrar iebres ebrar
+SFX I ebrar iebren ebrar
+SFX I elar ielo elar
+SFX I elar ielas elar
+SFX I elar iela elar
+SFX I elar ielan elar
+SFX I elar iele elar
+SFX I elar ieles elar
+SFX I elar ielen elar
+SFX I ernar ierno ernar
+SFX I ernar iernas ernar
+SFX I ernar ierna ernar
+SFX I ernar iernan ernar
+SFX I ernar ierne ernar
+SFX I ernar iernes ernar
+SFX I ernar iernen ernar
+SFX I endar iendo endar
+SFX I endar iendas endar
+SFX I endar ienda endar
+SFX I endar iendan endar
+SFX I endar iende endar
+SFX I endar iendes endar
+SFX I endar ienden endar
+SFX I estar iesto estar
+SFX I estar iestas estar
+SFX I estar iesta estar
+SFX I estar iestan estar
+SFX I estar ieste estar
+SFX I estar iestes estar
+SFX I estar iesten estar
+SFX I esar ieso esar
+SFX I esar iesas esar
+SFX I esar iesa esar
+SFX I esar iesan esar
+SFX I esar iese esar
+SFX I esar ieses esar
+SFX I esar iesen esar
+SFX I enzar ienzo enzar
+SFX I enzar ienzas enzar
+SFX I enzar ienza enzar
+SFX I enzar ienzan enzar
+SFX I enzar ience enzar
+SFX I enzar iences enzar
+SFX I enzar iencen enzar
+SFX I edrar iedro edrar
+SFX I edrar iedras edrar
+SFX I edrar iedra edrar
+SFX I edrar iedran edrar
+SFX I edrar iedre edrar
+SFX I edrar iedres edrar
+SFX I edrar iedren edrar
+SFX I erbar ierbo erbar
+SFX I erbar ierbas erbar
+SFX I erbar ierba erbar
+SFX I erbar ierban erbar
+SFX I erbar ierbe erbar
+SFX I erbar ierbes erbar
+SFX I erbar ierben erbar
+SFX I embrar iembro embrar
+SFX I embrar iembras embrar
+SFX I embrar iembra embrar
+SFX I embrar iembran embrar
+SFX I embrar iembre embrar
+SFX I embrar iembres embrar
+SFX I embrar iembren embrar
+SFX I ezar iezo ezar
+SFX I ezar iezas ezar
+SFX I ezar ieza ezar
+SFX I ezar iezan ezar
+SFX I ezar iece ezar
+SFX I ezar ieces ezar
+SFX I ezar iecen ezar
+SFX I ensar ienso ensar
+SFX I ensar iensas ensar
+SFX I ensar iensa ensar
+SFX I ensar iensan ensar
+SFX I ensar iense ensar
+SFX I ensar ienses ensar
+SFX I ensar iensen ensar
+SFX I emplar iemplo emplar
+SFX I emplar iemplas emplar
+SFX I emplar iempla emplar
+SFX I emplar iemplan emplar
+SFX I emplar iemple emplar
+SFX I emplar iemples emplar
+SFX I emplar iemplen emplar
+SFX I estrar iestro estrar
+SFX I estrar iestras estrar
+SFX I estrar iestra estrar
+SFX I estrar iestran estrar
+SFX I estrar iestre estrar
+SFX I estrar iestres estrar
+SFX I estrar iestren estrar
+SFX I endrar iendro endrar
+SFX I endrar iendras endrar
+SFX I endrar iendra endrar
+SFX I endrar iendran endrar
+SFX I endrar iendre endrar
+SFX I endrar iendres endrar
+SFX I endrar iendren endrar
+SFX I erdar ierdo erdar
+SFX I erdar ierdas erdar
+SFX I erdar ierda erdar
+SFX I erdar ierdan erdar
+SFX I erdar ierde erdar
+SFX I erdar ierdes erdar
+SFX I erdar ierden erdar
+SFX I etar ieto etar
+SFX I etar ietas etar
+SFX I etar ieta etar
+SFX I etar ietan etar
+SFX I etar iete etar
+SFX I etar ietes etar
+SFX I etar ieten etar
+SFX I evar ievo evar
+SFX I evar ievas evar
+SFX I evar ieva evar
+SFX I evar ievan evar
+SFX I evar ieve evar
+SFX I evar ieves evar
+SFX I evar ieven evar
+SFX I eblar ieblo eblar
+SFX I eblar ieblas eblar
+SFX I eblar iebla eblar
+SFX I eblar ieblan eblar
+SFX I eblar ieble eblar
+SFX I eblar iebles eblar
+SFX I eblar ieblen eblar
+SFX I emblar iemblo emblar
+SFX I emblar iemblas emblar
+SFX I emblar iembla emblar
+SFX I emblar iemblan emblar
+SFX I emblar iemble emblar
+SFX I emblar iembles emblar
+SFX I emblar iemblen emblar
+SFX I uar  o uar
+SFX I uar  as uar
+SFX I uar  a uar
+SFX I uar  an uar
+SFX I uar  e uar
+SFX I uar  es uar
+SFX I uar  en uar
+SFX I iar  o iar
+SFX I iar  as iar
+SFX I iar  a iar
+SFX I iar  an iar
+SFX I iar  e iar
+SFX I iar  es iar
+SFX I iar  en iar
+SFX I inar  no inar
+SFX I inar  nas inar
+SFX I inar  na inar
+SFX I inar  nan inar
+SFX I inar  ne inar
+SFX I inar  nes inar
+SFX I inar  nen inar
+SFX I ilar  lo ilar
+SFX I ilar  las ilar
+SFX I ilar  la ilar
+SFX I ilar  lan ilar
+SFX I ilar  le ilar
+SFX I ilar  les ilar
+SFX I ilar  len ilar
+SFX I izar  zo izar
+SFX I izar  zas izar
+SFX I izar  za izar
+SFX I izar  zan izar
+SFX I izar  ce izar
+SFX I izar  ces izar
+SFX I izar  cen izar
+SFX I uchar  cho uchar
+SFX I uchar  chas uchar
+SFX I uchar  cha uchar
+SFX I uchar  chan uchar
+SFX I uchar  che uchar
+SFX I uchar  ches uchar
+SFX I uchar  chen uchar
+SFX I umar  mo umar
+SFX I umar  mas umar
+SFX I umar  ma umar
+SFX I umar  man umar
+SFX I umar  me umar
+SFX I umar  mes umar
+SFX I umar  men umar
+SFX I usar  so usar
+SFX I usar  sas usar
+SFX I usar  sa usar
+SFX I usar  san usar
+SFX I usar  se usar
+SFX I usar  ses usar
+SFX I usar  sen usar
+SFX I ullar  llo ullar
+SFX I ullar  llas ullar
+SFX I ullar  lla ullar
+SFX I ullar  llan ullar
+SFX I ullar  lle ullar
+SFX I ullar  lles ullar
+SFX I ullar  llen ullar
+SFX I unar  no unar
+SFX I unar  nas unar
+SFX I unar  na unar
+SFX I unar  nan unar
+SFX I unar  ne unar
+SFX I unar  nes unar
+SFX I unar  nen unar
+SFX I upar  po upar
+SFX I upar  pas upar
+SFX I upar  pa upar
+SFX I upar  pan upar
+SFX I upar  pe upar
+SFX I upar  pes upar
+SFX I upar  pen upar
+SFX I ustar  sto ustar
+SFX I ustar  stas ustar
+SFX I ustar  sta ustar
+SFX I ustar  stan ustar
+SFX I ustar  ste ustar
+SFX I ustar  stes ustar
+SFX I ustar  sten ustar
+SFX I ular  lo ular
+SFX I ular  las ular
+SFX I ular  la ular
+SFX I ular  lan ular
+SFX I ular  le ular
+SFX I ular  les ular
+SFX I ular  len ular
+SFX I ijar  jo ijar
+SFX I ijar  jas ijar
+SFX I ijar  ja ijar
+SFX I ijar  jan ijar
+SFX I ijar  je ijar
+SFX I ijar  jes ijar
+SFX I ijar  jen ijar
+SFX I incar  nco incar
+SFX I incar  ncas incar
+SFX I incar  nca incar
+SFX I incar  ncan incar
+SFX I incar  nque incar
+SFX I incar  nques incar
+SFX I incar  nquen incar
+SFX I itar  to itar
+SFX I itar  tas itar
+SFX I itar  ta itar
+SFX I itar  tan itar
+SFX I itar  te itar
+SFX I itar  tes itar
+SFX I itar  ten itar
+SFX I irar  ro irar
+SFX I irar  ras irar
+SFX I irar  ra irar
+SFX I irar  ran irar
+SFX I irar  re irar
+SFX I irar  res irar
+SFX I irar  ren irar
+SFX I islar  slo islar
+SFX I islar  slas islar
+SFX I islar  sla islar
+SFX I islar  slan islar
+SFX I islar  sle islar
+SFX I islar  sles islar
+SFX I islar  slen islar
+SFX I illar  llo illar
+SFX I illar  llas illar
+SFX I illar  lla illar
+SFX I illar  llan illar
+SFX I illar  lle illar
+SFX I illar  lles illar
+SFX I illar  llen illar
+SFX I igar  go igar
+SFX I igar  gas igar
+SFX I igar  ga igar
+SFX I igar  gan igar
+SFX I igar  gue igar
+SFX I igar  gues igar
+SFX I igar  guen igar
+SFX I olar uelo olar
+SFX I olar uelas olar
+SFX I olar uela olar
+SFX I olar uelan olar
+SFX I olar uele olar
+SFX I olar ueles olar
+SFX I olar uelen olar
+SFX I ocar ueco ocar
+SFX I ocar uecas ocar
+SFX I ocar ueca ocar
+SFX I ocar uecan ocar
+SFX I ocar ueque ocar
+SFX I ocar ueques ocar
+SFX I ocar uequen ocar
+SFX I ordar uerdo ordar
+SFX I ordar uerdas ordar
+SFX I ordar uerda ordar
+SFX I ordar uerdan ordar
+SFX I ordar uerde ordar
+SFX I ordar uerdes ordar
+SFX I ordar uerden ordar
+SFX I ornar uerno ornar
+SFX I ornar uernas ornar
+SFX I ornar uerna ornar
+SFX I ornar uernan ornar
+SFX I ornar uerne ornar
+SFX I ornar uernes ornar
+SFX I ornar uernen ornar
+SFX I ostar uesto ostar
+SFX I ostar uestas ostar
+SFX I ostar uesta ostar
+SFX I ostar uestan ostar
+SFX I ostar ueste ostar
+SFX I ostar uestes ostar
+SFX I ostar uesten ostar
+SFX I ollar uello [^g]ollar
+SFX I ollar  ello gollar
+SFX I ollar uellas [^g]ollar
+SFX I ollar  ellas gollar
+SFX I ollar uella [^g]ollar
+SFX I ollar  ella gollar
+SFX I ollar uellan [^g]ollar
+SFX I ollar  ellan gollar
+SFX I ollar uelle [^g]ollar
+SFX I ollar  elle gollar
+SFX I ollar uelles [^g]ollar
+SFX I ollar  elles gollar
+SFX I ollar uellen [^g]ollar
+SFX I ollar  ellen gollar
+SFX I orar uero [^g]orar
+SFX I orar  ero gorar
+SFX I orar ueras [^g]orar
+SFX I orar  eras gorar
+SFX I orar uera [^g]orar
+SFX I orar  era gorar
+SFX I orar ueran [^g]orar
+SFX I orar  eran gorar
+SFX I orar uere [^g]orar
+SFX I orar  ere gorar
+SFX I orar ueres [^g]orar
+SFX I orar  eres gorar
+SFX I orar ueren [^g]orar
+SFX I orar  eren gorar
+SFX I orzar uerzo orzar
+SFX I orzar uerzas orzar
+SFX I orzar uerza orzar
+SFX I orzar uerzan orzar
+SFX I orzar uerce orzar
+SFX I orzar uerces orzar
+SFX I orzar uercen orzar
+SFX I oblar ueblo oblar
+SFX I oblar ueblas oblar
+SFX I oblar uebla oblar
+SFX I oblar ueblan oblar
+SFX I oblar ueble oblar
+SFX I oblar uebles oblar
+SFX I oblar ueblen oblar
+SFX I ostrar uestro ostrar
+SFX I ostrar uestras ostrar
+SFX I ostrar uestra ostrar
+SFX I ostrar uestran ostrar
+SFX I ostrar uestre ostrar
+SFX I ostrar uestres ostrar
+SFX I ostrar uestren ostrar
+SFX I ostar uesto ostar
+SFX I ostar uestas ostar
+SFX I ostar uesta ostar
+SFX I ostar uestan ostar
+SFX I ostar ueste ostar
+SFX I ostar uestes ostar
+SFX I ostar uesten ostar
+SFX I obar uebo obar
+SFX I obar uebas obar
+SFX I obar ueba obar
+SFX I obar ueban obar
+SFX I obar uebe obar
+SFX I obar uebes obar
+SFX I obar ueben obar
+SFX I onar ueno onar
+SFX I onar uenas onar
+SFX I onar uena onar
+SFX I onar uenan onar
+SFX I onar uene onar
+SFX I onar uenes onar
+SFX I onar uenen onar
+SFX I onzar  enzo gonzar
+SFX I onzar  enzas gonzar
+SFX I onzar  enza gonzar
+SFX I onzar  enzan gonzar
+SFX I onzar  ence gonzar
+SFX I onzar  ences gonzar
+SFX I onzar  encen gonzar
+SFX I olgar uelgo olgar
+SFX I olgar uelgas olgar
+SFX I olgar uelga olgar
+SFX I olgar uelgan olgar
+SFX I olgar uelgue olgar
+SFX I olgar uelgues olgar
+SFX I olgar uelguen olgar
+SFX I ontar uento ontar
+SFX I ontar uentas ontar
+SFX I ontar uenta ontar
+SFX I ontar uentan ontar
+SFX I ontar uente ontar
+SFX I ontar uentes ontar
+SFX I ontar uenten ontar
+SFX I ovar uevo ovar
+SFX I ovar uevas ovar
+SFX I ovar ueva ovar
+SFX I ovar uevan ovar
+SFX I ovar ueve ovar
+SFX I ovar ueves ovar
+SFX I ovar ueven ovar
+SFX I osar ueso osar
+SFX I osar uesas osar
+SFX I osar uesa osar
+SFX I osar uesan osar
+SFX I osar uese osar
+SFX I osar ueses osar
+SFX I osar uesen osar
+SFX I oldar ueldo [^g]oldar
+SFX I oldar  eldo goldar
+SFX I oldar ueldas [^g]oldar
+SFX I oldar  eldo goldar
+SFX I oldar uelda [^g]oldar
+SFX I oldar  elda goldar
+SFX I oldar ueldan [^g]oldar
+SFX I oldar  eldan goldar
+SFX I oldar uelde [^g]oldar
+SFX I oldar  elde goldar
+SFX I oldar ueldes [^g]oldar
+SFX I oldar  eldes goldar
+SFX I oldar uelden [^g]oldar
+SFX I oldar  elden goldar
+SFX I orcar uerco orcar
+SFX I orcar uercas orcar
+SFX I orcar uerca orcar
+SFX I orcar uercan orcar
+SFX I orcar uerque orcar
+SFX I orcar uerques orcar
+SFX I orcar uerquen orcar
+SFX I ontrar uentro ontrar
+SFX I ontrar uentras ontrar
+SFX I ontrar uentra ontrar
+SFX I ontrar uentran ontrar
+SFX I ontrar uentre ontrar
+SFX I ontrar uentres ontrar
+SFX I ontrar uentren ontrar
+SFX I odar uedo odar
+SFX I odar uedas odar
+SFX I odar ueda odar
+SFX I odar uedan odar
+SFX I odar uede odar
+SFX I odar uedes odar
+SFX I odar ueden odar
+SFX I o ar ue o o ar
+SFX I o ar ue as o ar
+SFX I o ar ue a o ar
+SFX I o ar ue an o ar
+SFX I o ar ue e o ar
+SFX I o ar ue es o ar
+SFX I o ar ue en o ar
+SFX I ortar uerto ortar
+SFX I ortar uertas ortar
+SFX I ortar uerta ortar
+SFX I ortar uertan ortar
+SFX I ortar uerte ortar
+SFX I ortar uertes ortar
+SFX I ortar uerten ortar
+SFX I olcar uelco olcar
+SFX I olcar uelcas olcar
+SFX I olcar uelca olcar
+SFX I olcar uelcan olcar
+SFX I olcar uelque olcar
+SFX I olcar uelques olcar
+SFX I olcar uelquen olcar
+SFX I ogar uego ogar
+SFX I ogar uegas ogar
+SFX I ogar uega ogar
+SFX I ogar uegan ogar
+SFX I ogar uegue ogar
+SFX I ogar uegues ogar
+SFX I ogar ueguen ogar
+SFX I oltar uelto oltar
+SFX I oltar ueltas oltar
+SFX I oltar uelta oltar
+SFX I oltar ueltan oltar
+SFX I oltar uelte oltar
+SFX I oltar ueltes oltar
+SFX I oltar uelten oltar
+SFX I untar  nto untar
+SFX I untar  ntas untar
+SFX I untar  nta untar
+SFX I untar  ntan untar
+SFX I untar  nte untar
+SFX I untar  ntes untar
+SFX I untar  nten untar
+SFX I usar  so usar
+SFX I usar  sas usar
+SFX I usar  sa usar
+SFX I usar  san usar
+SFX I usar  se usar
+SFX I usar  ses usar
+SFX I usar  sen usar
+SFX I cer zco [ae]cer
+SFX I r s [ae]cer
+SFX I r 0 [ae]cer
+SFX I r n [ae]cer
+SFX I cer zca [ae]cer
+SFX I cer zcas [ae]cer
+SFX I cer zcamos [ae]cer
+SFX I cer zc is [ae]cer
+SFX I cer zcan [ae]cer
+SFX I cer zco nocer
+SFX I r s nocer
+SFX I r 0 nocer
+SFX I r n nocer
+SFX I cer zca nocer
+SFX I cer zcas nocer
+SFX I cer zcamos nocer
+SFX I cer zc is nocer
+SFX I cer zcan nocer
+SFX I olver uelvo olver
+SFX I olver uelves olver
+SFX I olver uelve olver
+SFX I olver uelven olver
+SFX I olver uelva olver
+SFX I olver uelvas olver
+SFX I er amos [^aoc]er
+SFX I er  is [^aoc]er
+SFX I olver uelvan olver
+SFX I over uevo over
+SFX I over ueves over
+SFX I over ueve over
+SFX I over ueven over
+SFX I over ueva over
+SFX I over uevas over
+SFX I over uevan over
+SFX I ocer uezo cocer
+SFX I ocer ueces cocer
+SFX I ocer uece cocer
+SFX I ocer uecen cocer
+SFX I ocer ueza cocer
+SFX I ocer uezas cocer
+SFX I cer zamos cocer
+SFX I cer z is cocer
+SFX I ocer uezan cocer
+SFX I oler uelo oler
+SFX I oler ueles oler
+SFX I oler uele oler
+SFX I oler uelen oler
+SFX I oler uela oler
+SFX I oler uelas oler
+SFX I oler uelan oler
+SFX I orcer uerzo orcer
+SFX I orcer uerces orcer
+SFX I orcer uerce orcer
+SFX I orcer uercen orcer
+SFX I orcer uerza orcer
+SFX I orcer uerzas orcer
+SFX I cer zamos orcer
+SFX I cer z is orcer
+SFX I orcer uerzan orcer
+SFX I order uerdo order
+SFX I order uerdes order
+SFX I order uerde order
+SFX I order uerden order
+SFX I order uerda order
+SFX I order uerdas order
+SFX I order uerdan order
+SFX I ender iendo ender
+SFX I ender iendes ender
+SFX I ender iende ender
+SFX I ender ienden ender
+SFX I ender ienda ender
+SFX I ender iendas ender
+SFX I ender iendan ender
+SFX I eder iedo eder
+SFX I eder iedes eder
+SFX I eder iede eder
+SFX I eder ieden eder
+SFX I eder ieda eder
+SFX I eder iedas eder
+SFX I eder iedan eder
+SFX I erder ierdo erder
+SFX I erder ierdes erder
+SFX I erder ierde erder
+SFX I erder ierden erder
+SFX I erder ierda erder
+SFX I erder ierdas erder
+SFX I erder ierdan erder
+SFX I erter ierto erter
+SFX I erter iertes erter
+SFX I erter ierte erter
+SFX I erter ierten erter
+SFX I erter ierta erter
+SFX I erter iertas erter
+SFX I erter iertan erter
+SFX I erner ierno erner
+SFX I erner iernes erner
+SFX I erner ierne erner
+SFX I erner iernen erner
+SFX I erner ierna erner
+SFX I erner iernas erner
+SFX I erner iernan erner
+SFX I cer zgo yacer
+SFX I cer go yacer
+SFX I cer zga yacer
+SFX I cer ga yacer
+SFX I cer zgas yacer
+SFX I cer gas yacer
+SFX I cer zgamos yacer
+SFX I cer zg is yacer
+SFX I cer g is yacer
+SFX I cer zgan yacer
+SFX I cer gan yacer
+SFX I er igo aer
+SFX I r s aer
+SFX I r 0 aer
+SFX I r n aer
+SFX I er iga aer
+SFX I er igas aer
+SFX I er igamos aer
+SFX I er ig is aer
+SFX I er igan aer
+SFX I er igo oer
+SFX I er yo oer
+SFX I r s oer
+SFX I r 0 oer
+SFX I r n oer
+SFX I er iga oer
+SFX I er ya oer
+SFX I er igas oer
+SFX I er yas oer
+SFX I er igamos oer
+SFX I er ig is oer
+SFX I er y is oer
+SFX I er igan oer
+SFX I er yan oer
+SFX I ir go sir
+SFX I ir es sir
+SFX I ir e sir
+SFX I ir en sir
+SFX I ir ga sir
+SFX I ir gas sir
+SFX I ir gamos sir
+SFX I ir g is sir
+SFX I ir gan sir
+SFX I ernir ierno ernir
+SFX I ernir iernes ernir
+SFX I ernir ierne ernir
+SFX I ernir iernen ernir
+SFX I ernir ierna ernir
+SFX I ernir iernas ernir
+SFX I ir amos [^cs]ir
+SFX I ir  is [^cs]ir
+SFX I ernir iernan ernir
+SFX I endir iendo endir
+SFX I endir iendes endir
+SFX I endir iende endir
+SFX I endir ienden endir
+SFX I endir ienda endir
+SFX I endir iendas endir
+SFX I endir iendan endir
+SFX I ibir  bo ibir
+SFX I ibir  bes ibir
+SFX I ibir  be ibir
+SFX I ibir  ben ibir
+SFX I ibir  ba ibir
+SFX I ibir  bas ibir
+SFX I ibir  ban ibir
+SFX I cir zco cir
+SFX I ir es cir
+SFX I ir e cir
+SFX I ir en cir
+SFX I cir zca cir
+SFX I cir zcas cir
+SFX I cir zcamos cir
+SFX I cir zc is cir
+SFX I cir zcan cir
+SFX I undir  ndo undir
+SFX I undir  ndes undir
+SFX I undir  nde undir
+SFX I undir  nden undir
+SFX I undir  nda undir
+SFX I undir  ndas undir
+SFX I undir  ndan undir
+SFX I unir  no unir
+SFX I unir  nes unir
+SFX I unir  ne unir
+SFX I unir  nen unir
+SFX I unir  na unir
+SFX I unir  nas unir
+SFX I unir  nan unir
+
+SFX X Y 1167
+SFX X er go oner
+SFX X r s oner
+SFX X r 0 oner
+SFX X r mos [ei]r
+SFX X er  is [^v]er
+SFX X er  is [es]ver
+SFX X r n oner
+SFX X erer iero erer
+SFX X erer ieres erer
+SFX X erer iere erer
+SFX X erer ieren erer
+SFX X er go ener
+SFX X ener ienes ener
+SFX X ener iene ener
+SFX X ener ienen ener
+SFX X er igo aer
+SFX X r s aer
+SFX X r 0 aer
+SFX X r n aer
+SFX X cer go acer
+SFX X r s acer
+SFX X r 0 acer
+SFX X r n acer
+SFX X aber   saber
+SFX X r s aber
+SFX X r 0 aber
+SFX X r n aber
+SFX X er o  er
+SFX X r s  er
+SFX X r 0  er
+SFX X r n  er
+SFX X er go aler
+SFX X r s aler
+SFX X r 0 aler
+SFX X r n aler
+SFX X r o ver
+SFX X er  s [es]ver
+SFX X er   [es]ver
+SFX X er  n [es]ver
+SFX X erir iero erir
+SFX X erir ieres erir
+SFX X erir iere erir
+SFX X ir  s [^u]ir
+SFX X ir is [^g]uir
+SFX X ir  s guir
+SFX X erir ieren erir
+SFX X ertir ierto ertir
+SFX X ertir iertes ertir
+SFX X ertir ierte ertir
+SFX X ertir ierten ertir
+SFX X entir iento entir
+SFX X entir ientes entir
+SFX X entir iente entir
+SFX X entir ienten entir
+SFX X ervir iervo hervir
+SFX X ervir ierves hervir
+SFX X ervir ierve hervir
+SFX X ervir ierven hervir
+SFX X ormir uermo ormir
+SFX X ormir uermes ormir
+SFX X ormir uerme ormir
+SFX X ormir uermen ormir
+SFX X orir uero orir
+SFX X orir ueres orir
+SFX X orir uere orir
+SFX X orir ueren orir
+SFX X irir iero irir
+SFX X irir ieres irir
+SFX X irir iere irir
+SFX X irir ieren irir
+SFX X cir zco ucir
+SFX X ir es ucir
+SFX X ir e ucir
+SFX X ir en ucir
+SFX X ir go enir
+SFX X enir ienes enir
+SFX X enir iene enir
+SFX X enir ienen enir
+SFX X ir yo [^g]uir
+SFX X ir yes [^g]uir
+SFX X ir ye [^g]uir
+SFX X ir yen [^g]uir
+SFX X  ir uyo  ir
+SFX X  ir uyes  ir
+SFX X  ir uye  ir
+SFX X  ir uyen  ir
+SFX X e ir i o e ir
+SFX X e ir i es e ir
+SFX X e ir i e e ir
+SFX X e ir i en e ir
+SFX X egir ijo egir
+SFX X egir iges egir
+SFX X egir ige egir
+SFX X egir igen egir
+SFX X edir ido edir
+SFX X edir ides edir
+SFX X edir ide edir
+SFX X edir iden edir
+SFX X etir ito etir
+SFX X etir ites etir
+SFX X etir ite etir
+SFX X etir iten etir
+SFX X ebir ibo ebir
+SFX X ebir ibes ebir
+SFX X ebir ibe ebir
+SFX X ebir iben ebir
+SFX X emir imo emir
+SFX X emir imes emir
+SFX X emir ime emir
+SFX X emir imen emir
+SFX X eguir igo eguir
+SFX X eguir igues eguir
+SFX X eguir igue eguir
+SFX X eguir iguen eguir
+SFX X estir isto estir
+SFX X estir istes estir
+SFX X estir iste estir
+SFX X estir isten estir
+SFX X ervir irvo servir
+SFX X ervir irves servir
+SFX X ervir irve servir
+SFX X ervir irven servir
+SFX X endir indo endir
+SFX X endir indes endir
+SFX X endir inde endir
+SFX X endir inden endir
+SFX X ir go lir
+SFX X ir es lir
+SFX X ir e lir
+SFX X ir en lir
+SFX X ecir igo ecir
+SFX X ecir ices ecir
+SFX X ecir ice ecir
+SFX X ecir icen ecir
+SFX X e r  o e r
+SFX X e r  es e r
+SFX X e r  e e r
+SFX X r mos  r
+SFX X r s  r
+SFX X e r  en e r
+SFX X  r igo o r
+SFX X  r yes o r
+SFX X  r ye o r
+SFX X  r yen o r
+SFX X er  a [^v]er
+SFX X r  a ver
+SFX X er  as [^v]er
+SFX X r  as ver
+SFX X er  amos [^v]er
+SFX X r  amos ver
+SFX X er  ais [^v]er
+SFX X r  ais ver
+SFX X er  an [^v]er
+SFX X r  an ver
+SFX X ir  a ir
+SFX X ir  as ir
+SFX X ir  amos ir
+SFX X ir  ais ir
+SFX X ir  an ir
+SFX X r a  r
+SFX X r as  r
+SFX X r amos  r
+SFX X r ais  r
+SFX X r an  r
+SFX X oner use oner
+SFX X oner usiste oner
+SFX X oner uso oner
+SFX X oner usimos oner
+SFX X oner usisteis oner
+SFX X oner usieron oner
+SFX X erer ise erer
+SFX X erer isiste erer
+SFX X erer iso erer
+SFX X erer isimos erer
+SFX X erer isisteis erer
+SFX X erer isieron erer
+SFX X ener uve ener
+SFX X ener uviste ener
+SFX X ener uvo ener
+SFX X ener uvimos ener
+SFX X ener uvisteis ener
+SFX X ener uvieron ener
+SFX X er je raer
+SFX X er jiste raer
+SFX X er jo raer
+SFX X er jimos raer
+SFX X er jisteis raer
+SFX X er jeron raer
+SFX X acer ice [^ae]hacer
+SFX X acer  ce [ae]hacer
+SFX X acer ice facer
+SFX X acer iciste acer
+SFX X acer izo [^ae]hacer
+SFX X acer  zo [ae]hacer
+SFX X acer izo facer
+SFX X acer icimos acer
+SFX X acer icisteis acer
+SFX X acer icieron acer
+SFX X aber upe aber
+SFX X aber upiste aber
+SFX X aber upo aber
+SFX X aber upimos aber
+SFX X aber upisteis aber
+SFX X aber upieron aber
+SFX X er    er
+SFX X er iste  er
+SFX X er    er
+SFX X er imos  er
+SFX X er isteis  er
+SFX X 0 on  er
+SFX X er   ler
+SFX X er   [es]ver
+SFX X er iste [lv]er
+SFX X er i  ler
+SFX X er i  [es]ver
+SFX X er imos [lv]er
+SFX X er isteis [lv]er
+SFX X er ieron [lv]er
+SFX X ir   [^cn]ir
+SFX X r ste [^cn]ir
+SFX X erir iri  erir
+SFX X r steis [^cn]ir
+SFX X erir irieron erir
+SFX X ertir irti  ertir
+SFX X ertir irtieron ertir
+SFX X entir inti  entir
+SFX X entir intieron entir
+SFX X ervir irvi  ervir
+SFX X ervir irvieron ervir
+SFX X ormir urmi  ormir
+SFX X ormir urmieron ormir
+SFX X orir uri  orir
+SFX X orir urieron orir
+SFX X irir iri  irir
+SFX X irir irieron irir
+SFX X cir je ucir
+SFX X cir jiste ucir
+SFX X cir jo ucir
+SFX X cir jimos ucir
+SFX X cir jisteis ucir
+SFX X cir jeron ucir
+SFX X enir ine enir
+SFX X enir iniste enir
+SFX X enir ino enir
+SFX X enir inimos enir
+SFX X enir inisteis enir
+SFX X enir inieron enir
+SFX X ir y  [^g]uir
+SFX X ir yeron [^g]uir
+SFX X  ir uy   ir
+SFX X  ir uyeron  ir
+SFX X e ir i   e ir
+SFX X e ir i eron e ir
+SFX X egir igi  egir
+SFX X egir igieron egir
+SFX X edir idi  edir
+SFX X edir idieron edir
+SFX X etir iti  etir
+SFX X etir itieron etir
+SFX X ebir ibi  ebir
+SFX X ebir ibieron ebir
+SFX X emir imi  emir
+SFX X emir imieron emir
+SFX X eguir igui  eguir
+SFX X eguir iguieron eguir
+SFX X estir isti  estir
+SFX X estir istieron estir
+SFX X endir indi  endir
+SFX X endir indieron endir
+SFX X r   lir
+SFX X r eron lir
+SFX X ecir ije ecir
+SFX X ecir ijiste ecir
+SFX X ecir ijo ecir
+SFX X ecir ijimos ecir
+SFX X ecir ijisteis ecir
+SFX X ecir ijeron ecir
+SFX X r 0  r
+SFX X r ste  r
+SFX X e r i  e r
+SFX X r mos  r
+SFX X r steis  r
+SFX X e r ieron e r
+SFX X  r y  o r
+SFX X  r yeron o r
+SFX X er dr  ner
+SFX X er dr s ner
+SFX X er dr  ner
+SFX X er dremos ner
+SFX X er dr is ner
+SFX X er dr n ner
+SFX X er r  [br]er
+SFX X er r s [br]er
+SFX X er r  [br]er
+SFX X er remos [br]er
+SFX X er r is [br]er
+SFX X er r n [br]er
+SFX X 0   [a v]er
+SFX X 0  s [a v]er
+SFX X 0   [a v]er
+SFX X 0 emos [a v]er
+SFX X 0  is [a v]er
+SFX X 0  n [a v]er
+SFX X cer r  acer
+SFX X cer r s acer
+SFX X cer r  acer
+SFX X cer remos acer
+SFX X cer r is acer
+SFX X cer r n acer
+SFX X er dr  aler
+SFX X er dr s aler
+SFX X er dr  aler
+SFX X er dremos aler
+SFX X er dr is aler
+SFX X er dr n aler
+SFX X 0   oler
+SFX X 0  s oler
+SFX X 0   oler
+SFX X 0 emos oler
+SFX X 0  is oler
+SFX X 0  n oler
+SFX X 0   [^cln]ir
+SFX X 0  s [^cln]ir
+SFX X 0   [^cln]ir
+SFX X 0 emos [^cln]ir
+SFX X 0  is [^cln]ir
+SFX X 0  n [^cln]ir
+SFX X 0   [^e]nir
+SFX X 0  s [^e]nir
+SFX X 0   [^e]nir
+SFX X 0 emos [^e]nir
+SFX X 0  is [^e]nir
+SFX X 0  n [^e]nir
+SFX X ir dr  enir
+SFX X ir dr s enir
+SFX X ir dr  enir
+SFX X ir dremos enir
+SFX X ir dr is enir
+SFX X ir dr n enir
+SFX X ir dr  lir
+SFX X ir dr s lir
+SFX X ir dr  lir
+SFX X ir dremos lir
+SFX X ir dr is lir
+SFX X ir dr n lir
+SFX X ecir ir  [^ln]decir
+SFX X ecir ir s [^ln]decir
+SFX X ecir ir  [^ln]decir
+SFX X ecir iremos [^ln]decir
+SFX X ecir ir is [^ln]decir
+SFX X ecir ir n [^ln]decir
+SFX X ecir ir  ondecir
+SFX X ecir ir s ondecir
+SFX X ecir ir  ondecir
+SFX X ecir iremos ondecir
+SFX X ecir ir is ondecir
+SFX X ecir ir n ondecir
+SFX X 0   endecir
+SFX X 0  s endecir
+SFX X 0   endecir
+SFX X 0 emos endecir
+SFX X 0  is endecir
+SFX X 0  n endecir
+SFX X 0   ldecir
+SFX X 0  s ldecir
+SFX X 0   ldecir
+SFX X 0 emos ldecir
+SFX X 0  is ldecir
+SFX X 0  n ldecir
+SFX X 0   ucir
+SFX X 0  s ucir
+SFX X 0   ucir
+SFX X 0 emos ucir
+SFX X 0  is ucir
+SFX X 0  n ucir
+SFX X  r ir   r
+SFX X  r ir s  r
+SFX X  r ir   r
+SFX X  r iremos  r
+SFX X  r ir is  r
+SFX X  r ir n  r
+SFX X er dr a ner
+SFX X er dr as ner
+SFX X er dr amos ner
+SFX X er dr ais ner
+SFX X er dr an ner
+SFX X er r a [br]er
+SFX X er r as [br]er
+SFX X er r amos [br]er
+SFX X er r ais [br]er
+SFX X er r an [br]er
+SFX X 0  a [a v]er
+SFX X 0  as [a v]er
+SFX X 0  amos [a v]er
+SFX X 0  ais [a v]er
+SFX X 0  an [a v]er
+SFX X cer r a acer
+SFX X cer r as acer
+SFX X cer r amos acer
+SFX X cer r ais acer
+SFX X cer r an acer
+SFX X er dr a aler
+SFX X er dr as aler
+SFX X er dr amos aler
+SFX X er dr ais aler
+SFX X er dr an aler
+SFX X 0  a oler
+SFX X 0  as oler
+SFX X 0  amos oler
+SFX X 0  ais oler
+SFX X 0  an oler
+SFX X 0  a [^cln]ir
+SFX X 0  as [^cln]ir
+SFX X 0  amos [^cln]ir
+SFX X 0  ais [^cln]ir
+SFX X 0  an [^cln]ir
+SFX X 0  a [^e]nir
+SFX X 0  as [^e]nir
+SFX X 0  amos [^e]nir
+SFX X 0  ais [^e]nir
+SFX X 0  an [^e]nir
+SFX X ir dr a enir
+SFX X ir dr as enir
+SFX X ir dr amos enir
+SFX X ir dr ais enir
+SFX X ir dr an enir
+SFX X ir dr a lir
+SFX X ir dr as lir
+SFX X ir dr amos lir
+SFX X ir dr ais lir
+SFX X ir dr an lir
+SFX X ecir ir a [^ln]decir
+SFX X ecir ir as [^ln]decir
+SFX X ecir ir amos [^ln]decir
+SFX X ecir ir ais [^ln]decir
+SFX X ecir ir an [^ln]decir
+SFX X ecir ir a ondecir
+SFX X ecir ir as ondecir
+SFX X ecir ir amos ondecir
+SFX X ecir ir ais ondecir
+SFX X ecir ir an ondecir
+SFX X 0  a endecir
+SFX X 0  as endecir
+SFX X 0  amos endecir
+SFX X 0  ais endecir
+SFX X 0  an endecir
+SFX X 0  a ldecir
+SFX X 0  as ldecir
+SFX X 0  amos ldecir
+SFX X 0  ais ldecir
+SFX X 0  an ldecir
+SFX X  r ir a  r
+SFX X  r ir as  r
+SFX X  r ir amos  r
+SFX X  r ir ais  r
+SFX X  r ir an  r
+SFX X 0  a ucir
+SFX X 0  as ucir
+SFX X 0  amos ucir
+SFX X 0  ais ucir
+SFX X 0  an ucir
+SFX X er ga ner
+SFX X er gas ner
+SFX X er gamos ner
+SFX X er g is ner
+SFX X er gan ner
+SFX X erer iera erer
+SFX X erer ieras erer
+SFX X erer iera erer
+SFX X er amos erer
+SFX X er  is erer
+SFX X erer ieran erer
+SFX X er iga aer
+SFX X er igas aer
+SFX X er igamos aer
+SFX X er ig is aer
+SFX X er igan aer
+SFX X cer ga acer
+SFX X cer gas acer
+SFX X cer gamos acer
+SFX X cer g is acer
+SFX X cer gan acer
+SFX X aber epa saber
+SFX X aber epas saber
+SFX X aber epamos saber
+SFX X aber ep is saber
+SFX X aber epan saber
+SFX X er a  er
+SFX X er as  er
+SFX X er a  er
+SFX X er amos  er
+SFX X er  is  er
+SFX X er an  er
+SFX X r a ver
+SFX X r as ver
+SFX X r a ver
+SFX X r amos ver
+SFX X r  is ver
+SFX X r an ver
+SFX X er ga aler
+SFX X er gas aler
+SFX X er gamos aler
+SFX X er g is aler
+SFX X er gan aler
+SFX X er amos oler
+SFX X er  is oler
+SFX X erir iera erir
+SFX X erir ieras erir
+SFX X erir iramos erir
+SFX X erir ir is erir
+SFX X erir ieran erir
+SFX X ertir ierta ertir
+SFX X ertir iertas ertir
+SFX X ertir irtamos ertir
+SFX X ertir irt is ertir
+SFX X ertir iertan ertir
+SFX X entir ienta entir
+SFX X entir ientas entir
+SFX X entir intamos entir
+SFX X entir int is entir
+SFX X entir ientan entir
+SFX X ervir ierva hervir
+SFX X ervir iervas hervir
+SFX X ervir irvamos hervir
+SFX X ervir irv is hervir
+SFX X ervir iervan hervir
+SFX X ormir uerma ormir
+SFX X ormir uermas ormir
+SFX X ormir urmamos ormir
+SFX X ormir urm is ormir
+SFX X ormir uerman ormir
+SFX X orir uera orir
+SFX X orir ueras orir
+SFX X orir uramos orir
+SFX X orir ur is orir
+SFX X orir ueran orir
+SFX X irir iera irir
+SFX X irir ieras irir
+SFX X irir iramos irir
+SFX X irir ir is irir
+SFX X irir ieran irir
+SFX X cir zca ucir
+SFX X cir zcas ucir
+SFX X cir zcamos ucir
+SFX X cir zc is ucir
+SFX X cir zcan ucir
+SFX X ir ga enir
+SFX X ir gas enir
+SFX X ir gamos enir
+SFX X ir g is enir
+SFX X ir gan enir
+SFX X ir ya [^g]uir
+SFX X ir yas [^g]uir
+SFX X ir yamos [^g]uir
+SFX X ir y is [^g]uir
+SFX X ir yan [^g]uir
+SFX X  ir uya  ir
+SFX X  ir uyas  ir
+SFX X  ir uyamos  ir
+SFX X  ir uy is  ir
+SFX X  ir uyan  ir
+SFX X e ir i a e ir
+SFX X e ir i as e ir
+SFX X e ir i amos e ir
+SFX X e ir i  is e ir
+SFX X e ir i an e ir
+SFX X egir ija egir
+SFX X egir ijas egir
+SFX X egir ijamos egir
+SFX X egir ij is egir
+SFX X egir ijan egir
+SFX X edir ida edir
+SFX X edir idas edir
+SFX X edir idamos edir
+SFX X edir id is edir
+SFX X edir idan edir
+SFX X etir ita etir
+SFX X etir itas etir
+SFX X etir itamos etir
+SFX X etir it is etir
+SFX X etir itan etir
+SFX X ebir iba ebir
+SFX X ebir ibas ebir
+SFX X ebir ibamos ebir
+SFX X ebir ib is ebir
+SFX X ebir iban ebir
+SFX X emir ima emir
+SFX X emir imas emir
+SFX X emir imamos emir
+SFX X emir im is emir
+SFX X emir iman emir
+SFX X eguir iga eguir
+SFX X eguir igas eguir
+SFX X eguir igamos eguir
+SFX X eguir ig is eguir
+SFX X eguir igan eguir
+SFX X estir ista estir
+SFX X estir istas estir
+SFX X estir istamos estir
+SFX X estir ist is estir
+SFX X estir istan estir
+SFX X ervir irva servir
+SFX X ervir irvas servir
+SFX X ervir irvamos servir
+SFX X ervir irv is servir
+SFX X ervir irvan servir
+SFX X endir inda endir
+SFX X endir indas endir
+SFX X endir indamos endir
+SFX X endir ind is endir
+SFX X endir indan endir
+SFX X ir ga lir
+SFX X ir gas lir
+SFX X ir gamos lir
+SFX X ir g is lir
+SFX X ir gan lir
+SFX X ecir iga ecir
+SFX X ecir igas ecir
+SFX X ecir igamos ecir
+SFX X ecir ig is ecir
+SFX X ecir igan ecir
+SFX X e r  a e r
+SFX X e r  as e r
+SFX X e r iamos e r
+SFX X e r i is e r
+SFX X e r  an e r
+SFX X  r iga o r
+SFX X  r igas o r
+SFX X  r igamos o r
+SFX X  r ig is o r
+SFX X  r igan o r
+SFX X oner usiera oner
+SFX X oner usiese oner
+SFX X oner usieras oner
+SFX X oner usieses oner
+SFX X oner usi ramos oner
+SFX X oner usi semos oner
+SFX X oner usierais oner
+SFX X oner usieseis oner
+SFX X oner usieran oner
+SFX X oner usiesen oner
+SFX X erer isiera erer
+SFX X erer isiese erer
+SFX X erer isieras erer
+SFX X erer isieses erer
+SFX X erer isi ramos erer
+SFX X erer isi semos erer
+SFX X erer isierais erer
+SFX X erer isieseis erer
+SFX X erer isieran erer
+SFX X erer isiesen erer
+SFX X ener uviera ener
+SFX X ener uviese ener
+SFX X ener uvieras ener
+SFX X ener uvieses ener
+SFX X ener uvi ramos ener
+SFX X ener uvi semos ener
+SFX X ener uvierais ener
+SFX X ener uvieseis ener
+SFX X ener uvieran ener
+SFX X ener uviesen ener
+SFX X er jera raer
+SFX X er jese raer
+SFX X er jeras raer
+SFX X er jeses raer
+SFX X er j ramos raer
+SFX X er j semos raer
+SFX X er jerais raer
+SFX X er jeseis raer
+SFX X er jeran raer
+SFX X er jesen raer
+SFX X acer iciera acer
+SFX X acer iciese acer
+SFX X acer icieras acer
+SFX X acer icieses acer
+SFX X acer ici ramos acer
+SFX X acer ici semos acer
+SFX X acer icierais acer
+SFX X acer icieseis acer
+SFX X acer icieran acer
+SFX X acer iciesen acer
+SFX X aber upiera aber
+SFX X aber upiese aber
+SFX X aber upieras aber
+SFX X aber upieses aber
+SFX X aber upi ramos aber
+SFX X aber upi semos aber
+SFX X aber upierais aber
+SFX X aber upieseis aber
+SFX X aber upieran aber
+SFX X aber upiesen aber
+SFX X r ra  er 
+SFX X r se  er 
+SFX X r ras  er 
+SFX X r ses  er 
+SFX X er  ramos  er 
+SFX X er  semos  er 
+SFX X r rais  er 
+SFX X r seis  er 
+SFX X r ran  er 
+SFX X r sen  er 
+SFX X er iera [lv]er 
+SFX X er iese [lv]er 
+SFX X er ieras [lv]er 
+SFX X er ieses [lv]er 
+SFX X er i ramos [lv]er 
+SFX X er i semos [lv]er 
+SFX X er ierais [lv]er 
+SFX X er ieseis [lv]er 
+SFX X er ieran [lv]er 
+SFX X er iesen [lv]er 
+SFX X erir iriera erir
+SFX X erir iriese erir
+SFX X erir irieras erir
+SFX X erir irieses erir
+SFX X erir iri ramos erir
+SFX X erir iri semos erir
+SFX X erir irierais erir
+SFX X erir irieseis erir
+SFX X erir irieran erir
+SFX X erir iriesen erir
+SFX X ertir irtiera ertir
+SFX X ertir irtiese ertir
+SFX X ertir irtieras ertir
+SFX X ertir irtieses ertir
+SFX X ertir irti ramos ertir
+SFX X ertir irti semos ertir
+SFX X ertir irtierais ertir
+SFX X ertir irtieseis ertir
+SFX X ertir irtieran ertir
+SFX X ertir irtiesen ertir
+SFX X entir intiera entir
+SFX X entir intiese entir
+SFX X entir intieras entir
+SFX X entir intieses entir
+SFX X entir inti ramos entir
+SFX X entir inti semos entir
+SFX X entir intierais entir
+SFX X entir intieseis entir
+SFX X entir intieran entir
+SFX X entir intiesen entir
+SFX X ervir irviera ervir
+SFX X ervir irviese ervir
+SFX X ervir irvieras ervir
+SFX X ervir irvieses ervir
+SFX X ervir irvi ramos ervir
+SFX X ervir irvi semos ervir
+SFX X ervir irvierais ervir
+SFX X ervir irvieseis ervir
+SFX X ervir irvieran ervir
+SFX X ervir irviesen ervir
+SFX X ormir urmiera ormir
+SFX X ormir urmiese ormir
+SFX X ormir urmieras ormir
+SFX X ormir urmieses ormir
+SFX X ormir urmi ramos ormir
+SFX X ormir urmi semos ormir
+SFX X ormir urmierais ormir
+SFX X ormir urmieseis ormir
+SFX X ormir urmieran ormir
+SFX X ormir urmiesen ormir
+SFX X orir uriera orir
+SFX X orir uriese orir
+SFX X orir urieras orir
+SFX X orir urieses orir
+SFX X orir uri ramos orir
+SFX X orir uri semos orir
+SFX X orir urierais orir
+SFX X orir urieseis orir
+SFX X orir urieran orir
+SFX X orir uriesen orir
+SFX X irir iriera irir
+SFX X irir iriese irir
+SFX X irir irieras irir
+SFX X irir irieses irir
+SFX X irir iri ramos irir
+SFX X irir iri semos irir
+SFX X irir irierais irir
+SFX X irir irieseis irir
+SFX X irir irieran irir
+SFX X irir iriesen irir
+SFX X cir jera ucir
+SFX X cir jese ucir
+SFX X cir jeras ucir
+SFX X cir jeses ucir
+SFX X cir j ramos ucir
+SFX X cir j semos ucir
+SFX X cir jerais ucir
+SFX X cir jeseis ucir
+SFX X cir jeran ucir
+SFX X cir jesen ucir
+SFX X enir iniera enir
+SFX X enir iniese enir
+SFX X enir inieras enir
+SFX X enir inieses enir
+SFX X enir ini ramos enir
+SFX X enir ini semos enir
+SFX X enir inierais enir
+SFX X enir inieseis enir
+SFX X enir inieran enir
+SFX X enir iniesen enir
+SFX X ir yera [^g]uir
+SFX X ir yese [^g]uir
+SFX X ir yeras [^g]uir
+SFX X ir yeses [^g]uir
+SFX X ir y ramos [^g]uir
+SFX X ir y semos [^g]uir
+SFX X ir yerais [^g]uir
+SFX X ir yeseis [^g]uir
+SFX X ir yeran [^g]uir
+SFX X ir yesen [^g]uir
+SFX X  ir uyera  ir
+SFX X  ir uyese  ir
+SFX X  ir uyeras  ir
+SFX X  ir uyeses  ir
+SFX X  ir uy ramos  ir
+SFX X  ir uy semos  ir
+SFX X  ir uyerais  ir
+SFX X  ir uyeseis  ir
+SFX X  ir uyeran  ir
+SFX X  ir uyesen  ir
+SFX X e ir i era e ir
+SFX X e ir i ese e ir
+SFX X e ir i eras e ir
+SFX X e ir i eses e ir
+SFX X e ir i  ramos e ir
+SFX X e ir i  semos e ir
+SFX X e ir i erais e ir
+SFX X e ir i eseis e ir
+SFX X e ir i eran e ir
+SFX X e ir i esen e ir
+SFX X egir igiera egir
+SFX X egir igiese egir
+SFX X egir igieras egir
+SFX X egir igieses egir
+SFX X egir igi ramos egir
+SFX X egir igi semos egir
+SFX X egir igierais egir
+SFX X egir igieseis egir
+SFX X egir igieran egir
+SFX X egir igiesen egir
+SFX X edir idiera edir
+SFX X edir idiese edir
+SFX X edir idieras edir
+SFX X edir idieses edir
+SFX X edir idi ramos edir
+SFX X edir idi semos edir
+SFX X edir idierais edir
+SFX X edir idieseis edir
+SFX X edir idieran edir
+SFX X edir idiesen edir
+SFX X etir itiera etir
+SFX X etir itiese etir
+SFX X etir itieras etir
+SFX X etir itieses etir
+SFX X etir iti ramos etir
+SFX X etir iti semos etir
+SFX X etir itierais etir
+SFX X etir itieseis etir
+SFX X etir itieran etir
+SFX X etir itiesen etir
+SFX X ebir ibiera ebir
+SFX X ebir ibiese ebir
+SFX X ebir ibieras ebir
+SFX X ebir ibieses ebir
+SFX X ebir ibi ramos ebir
+SFX X ebir ibi semos ebir
+SFX X ebir ibierais ebir
+SFX X ebir ibieseis ebir
+SFX X ebir ibieran ebir
+SFX X ebir ibiesen ebir
+SFX X emir imiera emir
+SFX X emir imiese emir
+SFX X emir imieras emir
+SFX X emir imieses emir
+SFX X emir imi ramos emir
+SFX X emir imi semos emir
+SFX X emir imierais emir
+SFX X emir imieseis emir
+SFX X emir imieran emir
+SFX X emir imiesen emir
+SFX X eguir iguiera eguir
+SFX X eguir iguiese eguir
+SFX X eguir iguieras eguir
+SFX X eguir iguieses eguir
+SFX X eguir igui ramos eguir
+SFX X eguir igui semos eguir
+SFX X eguir iguierais eguir
+SFX X eguir iguieseis eguir
+SFX X eguir iguieran eguir
+SFX X eguir iguiesen eguir
+SFX X estir istiera estir
+SFX X estir istiese estir
+SFX X estir istieras estir
+SFX X estir istieses estir
+SFX X estir isti ramos estir
+SFX X estir isti semos estir
+SFX X estir istierais estir
+SFX X estir istieseis estir
+SFX X estir istieran estir
+SFX X estir istiesen estir
+SFX X endir indiera endir
+SFX X endir indiese endir
+SFX X endir indieras endir
+SFX X endir indieses endir
+SFX X endir indi ramos endir
+SFX X endir indi semos endir
+SFX X endir indierais endir
+SFX X endir indieseis endir
+SFX X endir indieran endir
+SFX X endir indiesen endir
+SFX X r era lir
+SFX X r ese lir
+SFX X r eras lir
+SFX X r eses lir
+SFX X r  ramos lir
+SFX X r  semos lir
+SFX X r erais lir
+SFX X r eseis lir
+SFX X r eran lir
+SFX X r esen lir
+SFX X ecir ijera ecir
+SFX X ecir ijese ecir
+SFX X ecir ijeras ecir
+SFX X ecir ijeses ecir
+SFX X ecir ij ramos ecir
+SFX X ecir ij semos ecir
+SFX X ecir ijerais ecir
+SFX X ecir ijeseis ecir
+SFX X ecir ijeran ecir
+SFX X ecir ijesen ecir
+SFX X e r iera e r
+SFX X e r iese e r
+SFX X e r ieras e r
+SFX X e r ieses e r
+SFX X e r i ramos e r
+SFX X e r i semos e r
+SFX X e r ierais e r
+SFX X e r ieseis e r
+SFX X e r ieran e r
+SFX X e r iesen e r
+SFX X  r yera o r
+SFX X  r yese o r
+SFX X  r yeras o r
+SFX X  r yeses o r
+SFX X  r y ramos o r
+SFX X  r y semos o r
+SFX X  r yerais o r
+SFX X  r yeseis o r
+SFX X  r yeran o r
+SFX X  r yesen o r
+SFX X oner usiere oner
+SFX X oner usieres oner
+SFX X oner usi remos oner
+SFX X oner usiereis oner
+SFX X oner usieren oner
+SFX X erer isiere erer
+SFX X erer isieres erer
+SFX X erer isi remos erer
+SFX X erer isiereis erer
+SFX X erer isieren erer
+SFX X ener uviere ener
+SFX X ener uvieres ener
+SFX X ener uvi remos ener
+SFX X ener uviereis ener
+SFX X ener uvieren ener
+SFX X er jere raer
+SFX X er jeres raer
+SFX X er j remos raer
+SFX X er jereis raer
+SFX X er jeren raer
+SFX X acer iciere acer
+SFX X acer icieres acer
+SFX X acer ici remos acer
+SFX X acer iciereis acer
+SFX X acer icieren acer
+SFX X aber upiere aber
+SFX X aber upieres aber
+SFX X aber upi remos aber
+SFX X aber upiereis aber
+SFX X aber upieren aber
+SFX X r re  er 
+SFX X r res  er 
+SFX X er  remos  er 
+SFX X r reis  er 
+SFX X r ren  er 
+SFX X er iere [lv]er 
+SFX X er ieres [lv]er 
+SFX X er i remos [lv]er 
+SFX X er iereis [lv]er 
+SFX X er ieren [lv]er 
+SFX X erir iriere erir
+SFX X erir irieres erir
+SFX X erir iri remos erir
+SFX X erir iri reis erir
+SFX X erir irieren erir
+SFX X ertir irtiere ertir
+SFX X ertir irtieres ertir
+SFX X ertir irti remos ertir
+SFX X ertir irti reis ertir
+SFX X ertir irtieren ertir
+SFX X entir intiere entir
+SFX X entir intieres entir
+SFX X entir inti remos entir
+SFX X entir inti reis entir
+SFX X entir intieren entir
+SFX X ervir irviere ervir
+SFX X ervir irvieres ervir
+SFX X ervir irvi remos ervir
+SFX X ervir irvi reis ervir
+SFX X ervir irvieren ervir
+SFX X ormir urmiere ormir
+SFX X ormir urmieres ormir
+SFX X ormir urmi remos ormir
+SFX X ormir urmi reis ormir
+SFX X ormir urmieren ormir
+SFX X orir uriere orir
+SFX X orir urieres orir
+SFX X orir uri remos orir
+SFX X orir uri reis orir
+SFX X orir urieren orir
+SFX X irir iriere irir
+SFX X irir irieres irir
+SFX X irir iri remos irir
+SFX X irir iri reis irir
+SFX X irir irieren irir
+SFX X cir jere ucir
+SFX X cir jeres ucir
+SFX X cir j remos ucir
+SFX X cir jereis ucir
+SFX X cir jeren ucir
+SFX X enir iniere enir
+SFX X enir inieres enir
+SFX X enir ini remos enir
+SFX X enir iniereis enir
+SFX X enir inieren enir
+SFX X ir yere [^g]uir
+SFX X ir yeres [^g]uir
+SFX X ir y remos [^g]uir
+SFX X ir yereis [^g]uir
+SFX X ir yeren [^g]uir
+SFX X  ir uyere  ir
+SFX X  ir uyeres  ir
+SFX X  ir uy remos  ir
+SFX X  ir uyereis  ir
+SFX X  ir uyeren  ir
+SFX X e ir i ere e ir
+SFX X e ir i eses e ir
+SFX X e ir i  remos e ir
+SFX X e ir i ereis e ir
+SFX X e ir i eren e ir
+SFX X egir igiere egir
+SFX X egir igieres egir
+SFX X egir igi remos egir
+SFX X egir igiereis egir
+SFX X egir igieren egir
+SFX X edir idiere edir
+SFX X edir idieres edir
+SFX X edir idi remos edir
+SFX X edir idiereis edir
+SFX X edir idieren edir
+SFX X etir itiere etir
+SFX X etir itieres etir
+SFX X etir iti remos etir
+SFX X etir itiereis etir
+SFX X etir itieren etir
+SFX X ebir ibiere ebir
+SFX X ebir ibieres ebir
+SFX X ebir ibi remos ebir
+SFX X ebir ibiereis ebir
+SFX X ebir ibieren ebir
+SFX X emir imiere emir
+SFX X emir imieres emir
+SFX X emir imi remos emir
+SFX X emir imiereis emir
+SFX X emir imieren emir
+SFX X eguir iguiere eguir
+SFX X eguir iguieres eguir
+SFX X eguir igui remos eguir
+SFX X eguir iguiereis eguir
+SFX X eguir iguieren eguir
+SFX X estir istiere estir
+SFX X estir istieres estir
+SFX X estir isti remos estir
+SFX X estir istiereis estir
+SFX X estir istieren estir
+SFX X endir indiere endir
+SFX X endir indieres endir
+SFX X endir indi remos endir
+SFX X endir indiereis endir
+SFX X endir indieren endir
+SFX X r ere lir
+SFX X r eres lir
+SFX X r  remos lir
+SFX X r ereis lir
+SFX X r eren lir
+SFX X ecir ijere ecir
+SFX X ecir ijeres ecir
+SFX X ecir ij remos ecir
+SFX X ecir ijereis ecir
+SFX X ecir ijeren ecir
+SFX X e r iere e r
+SFX X e r ieres e r
+SFX X e r i remos e r
+SFX X e r iereis e r
+SFX X e r ieren e r
+SFX X  r yere o r
+SFX X  r yeres o r
+SFX X  r y remos o r
+SFX X  r yereis o r
+SFX X  r yeren o r
+SFX X r d [ei]r
+SFX X er iendo [^a ]er
+SFX X er i ndose [^a ]er
+SFX X er yendo aer
+SFX X er y ndose aer
+SFX X r ndo  er
+SFX X er  ndose  er
+SFX X erir iriendo erir
+SFX X erir iri ndose erir
+SFX X ertir irtiendo ertir
+SFX X ertir irti ndose ertir
+SFX X entir intiendo entir
+SFX X entir inti ndose entir
+SFX X ervir irviendo ervir
+SFX X ervir irvi ndose ervir
+SFX X endir indiendo endir
+SFX X endir indi ndose endir
+SFX X r endo lir
+SFX X r i ndose lir
+SFX X ormir urmiendo ormir
+SFX X ormir urmi ndose ormir
+SFX X orir uriendo orir
+SFX X orir uri ndose orir
+SFX X enir iniendo enir
+SFX X enir ini ndose enir
+SFX X ir yendo [^g]uir
+SFX X ir y ndose [^g]uir
+SFX X  ir uyendo  ir
+SFX X  ir uy ndose  ir
+SFX X e ir i endo e ir
+SFX X e ir i  ndose e ir
+SFX X egir igiendo egir
+SFX X egir igi ndose egir
+SFX X edir idiendo edir
+SFX X edir idi ndose edir
+SFX X etir itiendo etir
+SFX X etir iti ndose etir
+SFX X ebir ibiendo ebir
+SFX X ebir ibi ndose ebir
+SFX X emir imiendo emir
+SFX X emir imi ndose emir
+SFX X eguir iguiendo eguir
+SFX X eguir igui ndose eguir
+SFX X estir istiendo estir
+SFX X estir isti ndose estir
+SFX X ecir iciendo ecir
+SFX X ecir ici ndose ecir
+SFX X e r iendo e r
+SFX X e r i ndose e r
+SFX X  r yendo o r
+SFX X  r y ndose o r
+SFX X r endo ucir
+SFX X r  ndose ucir
+SFX X r endo irir
+SFX X r  ndose irir
+SFX X 0 se [ei ]r
+
+SFX D Y 12
+SFX D r do [ai ]r
+SFX D r dos [ai ]r
+SFX D r da [ai ]r
+SFX D r das [ai ]r
+SFX D er ido [^aeo]er
+SFX D er  do [aeo]er
+SFX D er idos [^aeo]er
+SFX D er  dos [aeo]er
+SFX D er ida [^aeo]er
+SFX D er  da [aeo]er
+SFX D er idas [^aeo]er
+SFX D er  das [aeo]er
+
+SFX G Y 18
+SFX G e a [^u]e
+SFX G que ca que
+SFX G o a o
+SFX G 0 a [dlrz]
+SFX G  n ana  n
+SFX G  n ina  n
+SFX G  n ona  n
+SFX G  s esa  s
+SFX G  s osa  s
+SFX G e as [^u]e
+SFX G que cas que
+SFX G o as o
+SFX G 0 as [dlrz]
+SFX G  n anas  n
+SFX G  n inas  n
+SFX G  n onas  n
+SFX G  s esas  s
+SFX G  s osas  s
+
+SFX S Y 32
+SFX S 0 s [ace fgi ko ptu w]
+SFX S 0 es [bdh jlmr y]
+SFX S   aes  
+SFX S 0 es [^ e    ]n
+SFX S 0 es [^     ]s
+SFX S  n anes  n
+SFX S  n enes  n
+SFX S  n ines  n
+SFX S  n ones  n
+SFX S  n unes  n
+SFX S  s ases  s
+SFX S  s eses  s
+SFX S  s ises  s
+SFX S  s oses  s
+SFX S  s uses  s
+SFX S 0 es [^dgmv]en
+SFX S orden  rdenes orden
+SFX S agen  genes agen
+SFX S argen  rgenes argen
+SFX S igen  genes igen
+SFX S irgen  rgenes irgen
+SFX S amen  menes amen
+SFX S armen  rmenes armen
+SFX S emen  menes emen
+SFX S ermen  rmenes ermen
+SFX S imen  menes imen
+SFX S omen  menes omen
+SFX S olmen  lmenes olmen
+SFX S umen  menes umen
+SFX S ulmen  lmenes ulmen
+SFX S oven  venes oven
+SFX S z ces z
+
+SFX   Y 4
+SFX   0 la r
+SFX   0 lo r
+SFX   0 las r
+SFX   0 los r
+
+SFX   Y 4
+SFX   0 me r
+SFX   0 te r
+SFX   0 nos r
+SFX   0 os r
+
+SFX   Y 2
+SFX   0 le r
+SFX   0 les r
+
+SFX   Y 80
+SFX   ar  rmela ar
+SFX   ar  rmelo ar
+SFX   ar  rmelas ar
+SFX   ar  rmelos ar
+SFX   ar  rtela ar
+SFX   ar  rtelo ar
+SFX   ar  rtelas ar
+SFX   ar  rtelos ar
+SFX   ar  rsela ar
+SFX   ar  rselo ar
+SFX   ar  rselas ar
+SFX   ar  rselos ar
+SFX   ar  rnosla ar
+SFX   ar  rnoslo ar
+SFX   ar  rnoslas ar
+SFX   ar  rnoslos ar
+SFX   ar  rosla ar
+SFX   ar  roslo ar
+SFX   ar  roslas ar
+SFX   ar  roslos ar
+SFX   er  rmela er
+SFX   er  rmelo er
+SFX   er  rmelas er
+SFX   er  rmelos er
+SFX   er  rtela er
+SFX   er  rtelo er
+SFX   er  rtelas er
+SFX   er  rtelos er
+SFX   er  rsela er
+SFX   er  rselo er
+SFX   er  rselas er
+SFX   er  rselos er
+SFX   er  rnosla er
+SFX   er  rnoslo er
+SFX   er  rnoslas er
+SFX   er  rnoslos er
+SFX   er  rosla er
+SFX   er  roslo er
+SFX   er  roslas er
+SFX   er  roslos er
+SFX   ir  rmela ir
+SFX   ir  rmelo ir
+SFX   ir  rmelas ir
+SFX   ir  rmelos ir
+SFX   ir  rtela ir
+SFX   ir  rtelo ir
+SFX   ir  rtelas ir
+SFX   ir  rtelos ir
+SFX   ir  rsela ir
+SFX   ir  rselo ir
+SFX   ir  rselas ir
+SFX   ir  rselos ir
+SFX   ir  rnosla ir
+SFX   ir  rnoslo ir
+SFX   ir  rnoslas ir
+SFX   ir  rnoslos ir
+SFX   ir  rosla ir
+SFX   ir  roslo ir
+SFX   ir  roslas ir
+SFX   ir  roslos ir
+SFX   0 mela  r
+SFX   0 melo  r
+SFX   0 melas  r
+SFX   0 melos  r
+SFX   0 tela  r
+SFX   0 telo  r
+SFX   0 telas  r
+SFX   0 telos  r
+SFX   0 sela  r
+SFX   0 selo  r
+SFX   0 selas  r
+SFX   0 selos  r
+SFX   0 nosla  r
+SFX   0 noslo  r
+SFX   0 noslas  r
+SFX   0 noslos  r
+SFX   0 osla  r
+SFX   0 oslo  r
+SFX   0 oslas  r
+SFX   0 oslos  r
+
+SFX   Y 16
+SFX   ar  ndola ar
+SFX   ar  ndolo ar
+SFX   ar  ndolas ar
+SFX   ar  ndolos ar
+SFX   er i ndola [^aeo]er
+SFX   er i ndolo [^aeo]er
+SFX   er i ndolas [^aeo]er
+SFX   er i ndolos [^aeo]er
+SFX   er y ndola [aeo]er
+SFX   er y ndolo [aeo]er
+SFX   er y ndolas [aeo]er
+SFX   er y ndolos [aeo]er
+SFX   r  ndola ir
+SFX   r  ndolo ir
+SFX   r  ndolas ir
+SFX   r  ndolos ir
+
+SFX   Y 16
+SFX   ar  ndome ar
+SFX   ar  ndote ar
+SFX   ar  ndonos ar
+SFX   ar  ndoos ar
+SFX   er i ndome [^aeo]er
+SFX   er i ndote [^aeo]er
+SFX   er i ndonos [^aeo]er
+SFX   er i ndoos [^aeo]er
+SFX   er y ndome [aeo]er
+SFX   er y ndote [aeo]er
+SFX   er y ndonos [aeo]er
+SFX   er y ndoos [aeo]er
+SFX   r  ndome ir
+SFX   r  ndote ir
+SFX   r  ndonos ir
+SFX   r  ndoos ir
+
+SFX   Y 8
+SFX   ar  ndole ar
+SFX   ar  ndoles ar
+SFX   er i ndole [^aeo]er
+SFX   er i ndoles [^aeo]er
+SFX   er y ndole [aeo]er
+SFX   er y ndoles [aeo]er
+SFX   r  ndole ir
+SFX   r  ndoles ir
+
+SFX   Y 60
+SFX   ar  ndomela ar
+SFX   ar  ndomelo ar
+SFX   ar  ndomelas ar
+SFX   ar  ndomelos ar
+SFX   ar  ndotela ar
+SFX   ar  ndotelo ar
+SFX   ar  ndotelas ar
+SFX   ar  ndotelos ar
+SFX   ar  ndosela ar
+SFX   ar  ndoselo ar
+SFX   ar  ndoselas ar
+SFX   ar  ndoselos ar
+SFX   ar  ndonosla ar
+SFX   ar  ndonoslo ar
+SFX   ar  ndonoslas ar
+SFX   ar  ndonoslos ar
+SFX   ar  ndoosla ar
+SFX   ar  ndooslo ar
+SFX   ar  ndooslas ar
+SFX   ar  ndooslos ar
+SFX   er i ndomela er
+SFX   er i ndomelo er
+SFX   er i ndomelas er
+SFX   er i ndomelos er
+SFX   er i ndotela er
+SFX   er i ndotelo er
+SFX   er i ndotelas er
+SFX   er i ndotelos er
+SFX   er i ndosela er
+SFX   er i ndoselo er
+SFX   er i ndoselas er
+SFX   er i ndoselos er
+SFX   er i ndonosla er
+SFX   er i ndonoslo er
+SFX   er i ndonoslas er
+SFX   er i ndonoslos er
+SFX   er i ndoosla er
+SFX   er i ndooslo er
+SFX   er i ndooslas er
+SFX   er i ndooslos er
+SFX   r  ndomela ir
+SFX   r  ndomelo ir
+SFX   r  ndomelas ir
+SFX   r  ndomelos ir
+SFX   r  ndotela ir
+SFX   r  ndotelo ir
+SFX   r  ndotelas ir
+SFX   r  ndotelos ir
+SFX   r  ndosela ir
+SFX   r  ndoselo ir
+SFX   r  ndoselas ir
+SFX   r  ndoselos ir
+SFX   r  ndonosla ir
+SFX   r  ndonoslo ir
+SFX   r  ndonoslas ir
+SFX   r  ndonoslos ir
+SFX   r  ndoosla ir
+SFX   r  ndooslo ir
+SFX   r  ndooslas ir
+SFX   r  ndooslos ir
+
+SFX   Y 76
+SFX   er i ndola er
+SFX   er i ndolo er
+SFX   er i ndolas er
+SFX   er i ndolos er
+SFX   erir iri ndola erir
+SFX   erir iri ndolo erir
+SFX   erir iri ndolas erir
+SFX   erir iri ndolos erir
+SFX   ertir irti ndola ertir
+SFX   ertir irti ndolo ertir
+SFX   ertir irti ndolas ertir
+SFX   ertir irti ndolos ertir
+SFX   entir inti ndola entir
+SFX   entir inti ndolo entir
+SFX   entir inti ndolas entir
+SFX   entir inti ndolos entir
+SFX   ervir irvi ndola ervir
+SFX   ervir irvi ndolo ervir
+SFX   ervir irvi ndolas ervir
+SFX   ervir irvi ndolos ervir
+SFX   enir ini ndola enir
+SFX   enir ini ndolo enir
+SFX   enir ini ndolas enir
+SFX   enir ini ndolos enir
+SFX   ir y ndola [^g]uir
+SFX   ir y ndolo [^g]uir
+SFX   ir y ndolas [^g]uir
+SFX   ir y ndolos [^g]uir
+SFX   e ir i  ndola e ir
+SFX   e ir i  ndolo e ir
+SFX   e ir i  ndolas e ir
+SFX   e ir i  ndolos e ir
+SFX   egir igi ndola egir
+SFX   egir igi ndolo egir
+SFX   egir igi ndolas egir
+SFX   egir igi ndolos egir
+SFX   edir idi ndola edir
+SFX   edir idi ndolo edir
+SFX   edir idi ndolas edir
+SFX   edir idi ndolos edir
+SFX   etir iti ndola etir
+SFX   etir iti ndolo etir
+SFX   etir iti ndolas etir
+SFX   etir iti ndolos etir
+SFX   ebir ibi ndola ebir
+SFX   ebir ibi ndolo ebir
+SFX   ebir ibi ndolas ebir
+SFX   ebir ibi ndolos ebir
+SFX   emir imi ndola emir
+SFX   emir imi ndolo emir
+SFX   emir imi ndolas emir
+SFX   emir imi ndolos emir
+SFX   eguir igui ndola eguir
+SFX   eguir igui ndolo eguir
+SFX   eguir igui ndolas eguir
+SFX   eguir igui ndolos eguir
+SFX   estir isti ndola estir
+SFX   estir isti ndolo estir
+SFX   estir isti ndolas estir
+SFX   estir isti ndolos estir
+SFX   ecir ici ndola ecir
+SFX   ecir ici ndolo ecir
+SFX   ecir ici ndolas ecir
+SFX   ecir ici ndolos ecir
+SFX   e r i ndola e r
+SFX   e r i ndolo e r
+SFX   e r i ndolas e r
+SFX   e r i ndolos e r
+SFX    r y ndola o r
+SFX    r y ndolo o r
+SFX    r y ndolas o r
+SFX    r y ndolos o r
+SFX   r  ndola ucir
+SFX   r  ndolo ucir
+SFX   r  ndolas ucir
+SFX   r  ndolos ucir
+
+SFX   Y 60
+SFX   er i ndome [^a]er
+SFX   er i ndote [^a]er
+SFX   er i ndonos [^a]er
+SFX   er i ndoos [^a]er
+SFX   er y ndome aer
+SFX   er y ndote aer
+SFX   er y ndonos aer
+SFX   er y ndoos aer
+SFX   erir iri ndome erir
+SFX   erir iri ndote erir
+SFX   erir iri ndonos erir
+SFX   erir iri ndoos erir
+SFX   ertir irti ndome ertir
+SFX   ertir irti ndote ertir
+SFX   ertir irti ndonos ertir
+SFX   ertir irti ndoos ertir
+SFX   ervir irvi ndome ervir
+SFX   ervir irvi ndote ervir
+SFX   ervir irvi ndonos ervir
+SFX   ervir irvi ndoos ervir
+SFX   ormir urmi ndome ormir
+SFX   ormir urmi ndote ormir
+SFX   ormir urmi ndonos ormir
+SFX   ormir urmi ndoos ormir
+SFX   ir y ndome [^g]uir
+SFX   ir y ndote [^g]uir
+SFX   ir y ndonos [^g]uir
+SFX   ir y ndoos [^g]uir
+SFX   edir idi ndome edir
+SFX   edir idi ndote edir
+SFX   edir idi ndonos edir
+SFX   edir idi ndoos edir
+SFX   etir iti ndome etir
+SFX   etir iti ndote etir
+SFX   etir iti ndonos etir
+SFX   etir iti ndoos etir
+SFX   eguir igui ndome eguir
+SFX   eguir igui ndote eguir
+SFX   eguir igui ndonos eguir
+SFX   eguir igui ndoos eguir
+SFX   estir isti ndome estir
+SFX   estir isti ndote estir
+SFX   estir isti ndonos estir
+SFX   estir isti ndoos estir
+SFX   ecir ici ndome ecir
+SFX   ecir ici ndote ecir
+SFX   ecir ici ndonos ecir
+SFX   ecir ici ndoos ecir
+SFX   e r i ndome e r
+SFX   e r i ndote e r
+SFX   e r i ndonos e r
+SFX   e r i ndoos e r
+SFX    r y ndome o r
+SFX    r y ndote o r
+SFX    r y ndonos o r
+SFX    r y ndoos o r
+SFX   r  ndome ucir
+SFX   r  ndote ucir
+SFX   r  ndonos ucir
+SFX   r  ndoos ucir
+
+SFX   Y 38
+SFX   er i ndole [^a]er
+SFX   er i ndoles [^a]er
+SFX   er y ndole aer
+SFX   er y ndoles aer
+SFX   erir iri ndole erir
+SFX   erir iri ndoles erir
+SFX   ertir irti ndole ertir
+SFX   ertir irti ndoles ertir
+SFX   entir inti ndole entir
+SFX   entir inti ndoles entir
+SFX   endir indi ndole endir
+SFX   endir indi ndoles endir
+SFX   ervir irvi ndole ervir
+SFX   ervir irvi ndoles ervir
+SFX   enir ini ndole enir
+SFX   enir ini ndoles enir
+SFX   ir y ndole [^g]uir
+SFX   ir y ndoles [^g]uir
+SFX   e ir i  ndole e ir
+SFX   e ir i  ndoles e ir
+SFX   egir igi ndole egir
+SFX   egir igi ndoles egir
+SFX   edir idi ndole edir
+SFX   edir idi ndoles edir
+SFX   eguir igui ndole eguir
+SFX   eguir igui ndoles eguir
+SFX   estir isti ndole estir
+SFX   estir isti ndoles estir
+SFX   ecir ici ndole ecir
+SFX   ecir ici ndoles ecir
+SFX   e r i ndole e r
+SFX   e r i ndoles e r
+SFX    r y ndole o r
+SFX    r y ndoles o r
+SFX   r  ndole ucir
+SFX   r  ndoles ucir
+SFX   r  ndole irir
+SFX   r  ndoles irir
+
+SFX   Y 140
+SFX   er i ndomela er
+SFX   er i ndomelo er
+SFX   er i ndomelas er
+SFX   er i ndomelos er
+SFX   er i ndonosla er
+SFX   er i ndonoslo er
+SFX   er i ndonoslas er
+SFX   er i ndonoslos er
+SFX   er i ndoosla er
+SFX   er i ndooslo er
+SFX   er i ndooslas er
+SFX   er i ndooslos er
+SFX   er i ndosela er
+SFX   er i ndoselo er
+SFX   er i ndoselas er
+SFX   er i ndoselos er
+SFX   er i ndotela er
+SFX   er i ndotelo er
+SFX   er i ndotelas er
+SFX   er i ndotelos er
+SFX   ertir irti ndomela ertir
+SFX   ertir irti ndomelo ertir
+SFX   ertir irti ndomelas ertir
+SFX   ertir irti ndomelos ertir
+SFX   ertir irti ndotela ertir
+SFX   ertir irti ndotelo ertir
+SFX   ertir irti ndotelas ertir
+SFX   ertir irti ndotelos ertir
+SFX   ertir irti ndosela ertir
+SFX   ertir irti ndoselo ertir
+SFX   ertir irti ndoselas ertir
+SFX   ertir irti ndoselos ertir
+SFX   ertir irti ndonosla ertir
+SFX   ertir irti ndonoslo ertir
+SFX   ertir irti ndonoslas ertir
+SFX   ertir irti ndonoslos ertir
+SFX   ertir irti ndoosla ertir
+SFX   ertir irti ndooslo ertir
+SFX   ertir irti ndooslas ertir
+SFX   ertir irti ndooslos ertir
+SFX   endir indi ndomela endir
+SFX   endir indi ndomelas endir
+SFX   endir indi ndomelo endir
+SFX   endir indi ndomelos endir
+SFX   endir indi ndonosla endir
+SFX   endir indi ndonoslas endir
+SFX   endir indi ndonoslo endir
+SFX   endir indi ndonoslos endir
+SFX   endir indi ndoosla endir
+SFX   endir indi ndooslas endir
+SFX   endir indi ndooslo endir
+SFX   endir indi ndooslos endir
+SFX   endir indi ndosela endir
+SFX   endir indi ndoselas endir
+SFX   endir indi ndoselo endir
+SFX   endir indi ndoselos endir
+SFX   endir indi ndotela endir
+SFX   endir indi ndotelas endir
+SFX   endir indi ndotelo endir
+SFX   endir indi ndotelos endir
+SFX   ir y ndomela [^g]uir
+SFX   ir y ndomelo [^g]uir
+SFX   ir y ndomelas [^g]uir
+SFX   ir y ndomelos [^g]uir
+SFX   ir y ndotela [^g]uir
+SFX   ir y ndotelo [^g]uir
+SFX   ir y ndotelas [^g]uir
+SFX   ir y ndotelos [^g]uir
+SFX   ir y ndosela [^g]uir
+SFX   ir y ndoselo [^g]uir
+SFX   ir y ndoselas [^g]uir
+SFX   ir y ndoselos [^g]uir
+SFX   ir y ndonosla [^g]uir
+SFX   ir y ndonoslo [^g]uir
+SFX   ir y ndonoslas [^g]uir
+SFX   ir y ndonoslos [^g]uir
+SFX   ir y ndoosla [^g]uir
+SFX   ir y ndooslo [^g]uir
+SFX   ir y ndooslas [^g]uir
+SFX   ir y ndooslos [^g]uir
+SFX   edir idi ndomela edir
+SFX   edir idi ndomelo edir
+SFX   edir idi ndomelas edir
+SFX   edir idi ndomelos edir
+SFX   edir idi ndotela edir
+SFX   edir idi ndotelo edir
+SFX   edir idi ndotelas edir
+SFX   edir idi ndotelos edir
+SFX   edir idi ndosela edir
+SFX   edir idi ndoselo edir
+SFX   edir idi ndoselas edir
+SFX   edir idi ndoselos edir
+SFX   edir idi ndonosla edir
+SFX   edir idi ndonoslo edir
+SFX   edir idi ndonoslas edir
+SFX   edir idi ndonoslos edir
+SFX   edir idi ndoosla edir
+SFX   edir idi ndooslo edir
+SFX   edir idi ndooslas edir
+SFX   edir idi ndooslos edir
+SFX   ecir ici ndomela ecir
+SFX   ecir ici ndomelo ecir
+SFX   ecir ici ndomelas ecir
+SFX   ecir ici ndomelos ecir
+SFX   ecir ici ndotela ecir
+SFX   ecir ici ndotelo ecir
+SFX   ecir ici ndotelas ecir
+SFX   ecir ici ndotelos ecir
+SFX   ecir ici ndosela ecir
+SFX   ecir ici ndoselo ecir
+SFX   ecir ici ndoselas ecir
+SFX   ecir ici ndoselos ecir
+SFX   ecir ici ndonosla ecir
+SFX   ecir ici ndonoslo ecir
+SFX   ecir ici ndonoslas ecir
+SFX   ecir ici ndonoslos ecir
+SFX   ecir ici ndoosla ecir
+SFX   ecir ici ndooslo ecir
+SFX   ecir ici ndooslas ecir
+SFX   ecir ici ndooslos ecir
+SFX    r y ndomela o r
+SFX    r y ndomelo o r
+SFX    r y ndomelas o r
+SFX    r y ndomelos o r
+SFX    r y ndotela o r
+SFX    r y ndotelo o r
+SFX    r y ndotelas o r
+SFX    r y ndotelos o r
+SFX    r y ndosela o r
+SFX    r y ndoselo o r
+SFX    r y ndoselas o r
+SFX    r y ndoselos o r
+SFX    r y ndonosla o r
+SFX    r y ndonoslo o r
+SFX    r y ndonoslas o r
+SFX    r y ndonoslos o r
+SFX    r y ndoosla o r
+SFX    r y ndooslo o r
+SFX    r y ndooslas o r
+SFX    r y ndooslos o r
+
+SFX   Y 380
+SFX   abar  bala abar
+SFX   abar  balas abar
+SFX   abar  balo abar
+SFX   abar  balos abar
+SFX   r dla r
+SFX   r dlas r
+SFX   r dlo r
+SFX   r dlos r
+SFX   acar  cala acar
+SFX   acar  calas acar
+SFX   acar  calo acar
+SFX   acar  calos acar
+SFX   achar  chala achar
+SFX   achar  chalas achar
+SFX   achar  chalo achar
+SFX   achar  chalos achar
+SFX   adir  dela adir
+SFX   adir  delas adir
+SFX   adir  delo adir
+SFX   adir  delos adir
+SFX   agar  gala agar
+SFX   agar  galas agar
+SFX   agar  galo agar
+SFX   agar  galos agar
+SFX   ajar  jala ajar
+SFX   ajar  jalas ajar
+SFX   ajar  jalo ajar
+SFX   ajar  jalos ajar
+SFX   alar  lala alar
+SFX   alar  lalas alar
+SFX   alar  lalo alar
+SFX   alar  lalos alar
+SFX   amar  mala amar
+SFX   amar  malas amar
+SFX   amar  malo amar
+SFX   amar  malos amar
+SFX   ambiar  mbiala ambiar
+SFX   ambiar  mbialas ambiar
+SFX   ambiar  mbialo ambiar
+SFX   ambiar  mbialos ambiar
+SFX   andar  ndala andar
+SFX   andar  ndalas andar
+SFX   andar  ndalo andar
+SFX   andar  ndalos andar
+SFX   ansar  nsala ansar
+SFX   ansar  nsalas ansar
+SFX   ansar  nsalo ansar
+SFX   ansar  nsalos ansar
+SFX   antar  ntala antar
+SFX   antar  ntalas antar
+SFX   antar  ntalo antar
+SFX   antar  ntalos antar
+SFX   anzar  nzala anzar
+SFX   anzar  nzalas anzar
+SFX   anzar  nzalo anzar
+SFX   anzar  nzalos anzar
+SFX   a ar   ala a ar
+SFX   a ar   alas a ar
+SFX   a ar   alo a ar
+SFX   a ar   alos a ar
+SFX   apar  pala apar
+SFX   apar  palas apar
+SFX   apar  palo apar
+SFX   apar  palos apar
+SFX   arar  rala arar
+SFX   arar  ralas arar
+SFX   arar  ralo arar
+SFX   arar  ralos arar
+SFX   arcar  rcala arcar
+SFX   arcar  rcalas arcar
+SFX   arcar  rcalo arcar
+SFX   arcar  rcalos arcar
+SFX   arcir  rcela arcir
+SFX   arcir  rcelas arcir
+SFX   arcir  rcelo arcir
+SFX   arcir  rcelos arcir
+SFX   ardar  rdala ardar
+SFX   ardar  rdalas ardar
+SFX   ardar  rdalo ardar
+SFX   ardar  rdalos ardar
+SFX   argar  rgala argar
+SFX   argar  rgalas argar
+SFX   argar  rgalo argar
+SFX   argar  rgalos argar
+SFX   arrar  rrala arrar
+SFX   arrar  rralas arrar
+SFX   arrar  rralo arrar
+SFX   arrar  rralos arrar
+SFX   artar  rtala artar
+SFX   artar  rtalas artar
+SFX   artar  rtalo artar
+SFX   artar  rtalos artar
+SFX   artir  rtela artir
+SFX   artir  rtelas artir
+SFX   artir  rtelo artir
+SFX   artir  rtelos artir
+SFX   asar  sala asar
+SFX   asar  salas asar
+SFX   asar  salo asar
+SFX   asar  salos asar
+SFX   astar  stala astar
+SFX   astar  stalas astar
+SFX   astar  stalo astar
+SFX   astar  stalos astar
+SFX   astrar  strala astrar
+SFX   astrar  stralas astrar
+SFX   astrar  stralo astrar
+SFX   astrar  stralos astrar
+SFX   atar  tala atar
+SFX   atar  talas atar
+SFX   atar  talo atar
+SFX   atar  talos atar
+SFX   atir  tela atir
+SFX   atir  telas atir
+SFX   atir  telo atir
+SFX   atir  telos atir
+SFX   avar  vala avar
+SFX   avar  valas avar
+SFX   avar  valo avar
+SFX   avar  valos avar
+SFX   azar  zala azar
+SFX   azar  zalas azar
+SFX   azar  zalo azar
+SFX   azar  zalos azar
+SFX   ear  ala ear
+SFX   ear  alas ear
+SFX   ear  alo ear
+SFX   ear  alos ear
+SFX   eber  bela eber
+SFX   eber  belas eber
+SFX   eber  belo eber
+SFX   eber  belos eber
+SFX   echar  chala echar
+SFX   echar  chalas echar
+SFX   echar  chalo echar
+SFX   echar  chalos echar
+SFX   eer  ela eer
+SFX   eer  elas eer
+SFX   eer  elo eer
+SFX   eer  elos eer
+SFX   egar  gala egar
+SFX   egar  galas egar
+SFX   egar  galo egar
+SFX   egar  galos egar
+SFX   ejar  jala ejar
+SFX   ejar  jalas ejar
+SFX   ejar  jalo ejar
+SFX   ejar  jalos ejar
+SFX   elar  lala elar
+SFX   elar  lalas elar
+SFX   elar  lalo elar
+SFX   elar  lalos elar
+SFX   emar  mala emar
+SFX   emar  malas emar
+SFX   emar  malo emar
+SFX   emar  malos emar
+SFX   enar  nala enar
+SFX   enar  nalas enar
+SFX   enar  nalo enar
+SFX   enar  nalos enar
+SFX   ender  ndela ender
+SFX   ender  ndelas ender
+SFX   ender  ndelo ender
+SFX   ender  ndelos ender
+SFX   entar  ntala entar
+SFX   entar  ntalas entar
+SFX   entar  ntalo entar
+SFX   entar  ntalos entar
+SFX   eptar  ptala eptar
+SFX   eptar  ptalas eptar
+SFX   eptar  ptalo eptar
+SFX   eptar  ptalos eptar
+SFX   erar  rala erar
+SFX   erar  ralas erar
+SFX   erar  ralo erar
+SFX   erar  ralos erar
+SFX   ervar  rvala ervar
+SFX   ervar  rvalas ervar
+SFX   ervar  rvalo ervar
+SFX   ervar  rvalos ervar
+SFX   esar  sala esar
+SFX   esar  salas esar
+SFX   esar  salo esar
+SFX   esar  salos esar
+SFX   escar  scala escar
+SFX   escar  scalas escar
+SFX   escar  scalo escar
+SFX   escar  scalos escar
+SFX   estar  stala estar
+SFX   estar  stalas estar
+SFX   estar  stalo estar
+SFX   estar  stalos estar
+SFX   etar  tala etar
+SFX   etar  talas etar
+SFX   etar  talo etar
+SFX   etar  talos etar
+SFX   eter  tela eter
+SFX   eter  telas eter
+SFX   eter  telo eter
+SFX   eter  telos eter
+SFX   evar  vala evar
+SFX   evar  valas evar
+SFX   evar  valo evar
+SFX   evar  valos evar
+SFX   icar  cala icar
+SFX   icar  calas icar
+SFX   icar  calo icar
+SFX   icar  calos icar
+SFX   idar  dala idar
+SFX   idar  dalas idar
+SFX   idar  dalo idar
+SFX   idar  dalos idar
+SFX   idir  dela idir
+SFX   idir  delas idir
+SFX   idir  delo idir
+SFX   idir  delos idir
+SFX   igar  gala igar
+SFX   igar  galas igar
+SFX   igar  galo igar
+SFX   igar  galos igar
+SFX   iguar  guala iguar
+SFX   iguar  gualas iguar
+SFX   iguar  gualo iguar
+SFX   iguar  gualos iguar
+SFX   imir  mela imir
+SFX   imir  melas imir
+SFX   imir  melo imir
+SFX   imir  melos imir
+SFX   inar  nala inar
+SFX   inar  nalas inar
+SFX   inar  nalo inar
+SFX   inar  nalos inar
+SFX   i ar   ala i ar
+SFX   i ar   alas i ar
+SFX   i ar   alo i ar
+SFX   i ar   alos i ar
+SFX   irar  rala irar
+SFX   irar  ralas irar
+SFX   irar  ralo irar
+SFX   irar  ralos irar
+SFX   isar  sala isar
+SFX   isar  salas isar
+SFX   isar  salo isar
+SFX   isar  salos isar
+SFX   itar  tala itar
+SFX   itar  talas itar
+SFX   itar  talo itar
+SFX   itar  talos itar
+SFX   itir  tela itir
+SFX   itir  telas itir
+SFX   itir  telo itir
+SFX   itir  telos itir
+SFX   ivar  vala ivar
+SFX   ivar  valas ivar
+SFX   ivar  valo ivar
+SFX   ivar  valos ivar
+SFX   ivir  vela ivir
+SFX   ivir  velas ivir
+SFX   ivir  velo ivir
+SFX   ivir  velos ivir
+SFX   izar  zala izar
+SFX   izar  zalas izar
+SFX   izar  zalo izar
+SFX   izar  zalos izar
+SFX   obar  bala obar
+SFX   obar  balas obar
+SFX   obar  balo obar
+SFX   obar  balos obar
+SFX   ocar  cala ocar
+SFX   ocar  calas ocar
+SFX   ocar  calo ocar
+SFX   ocar  calos ocar
+SFX   ogar  gala ogar
+SFX   ogar  galas ogar
+SFX   ogar  galo ogar
+SFX   ogar  galos ogar
+SFX   oger  gela oger
+SFX   oger  gelas oger
+SFX   oger  gelo oger
+SFX   oger  gelos oger
+SFX   ojar  jala ojar
+SFX   ojar  jalas ojar
+SFX   ojar  jalo ojar
+SFX   ojar  jalos ojar
+SFX   ollar  llala ollar
+SFX   ollar  llalas ollar
+SFX   ollar  llalo ollar
+SFX   ollar  llalos ollar
+SFX   omar  mala omar
+SFX   omar  malas omar
+SFX   omar  malo omar
+SFX   omar  malos omar
+SFX   omer  mela omer
+SFX   omer  melas omer
+SFX   omer  melo omer
+SFX   omer  melos omer
+SFX   onar  nala onar
+SFX   onar  nalas onar
+SFX   onar  nalo onar
+SFX   onar  nalos onar
+SFX   onder  ndela onder
+SFX   onder  ndelas onder
+SFX   onder  ndelo onder
+SFX   onder  ndelos onder
+SFX   orar  rala orar
+SFX   orar  ralas orar
+SFX   orar  ralo orar
+SFX   orar  ralos orar
+SFX   ornar  rnala ornar
+SFX   ornar  rnalas ornar
+SFX   ornar  rnalo ornar
+SFX   ornar  rnalos ornar
+SFX   ortar  rtala ortar
+SFX   ortar  rtalas ortar
+SFX   ortar  rtalo ortar
+SFX   ortar  rtalos ortar
+SFX   otar  tala otar
+SFX   otar  talas otar
+SFX   otar  talo otar
+SFX   otar  talos otar
+SFX   ozar  zala ozar
+SFX   ozar  zalas ozar
+SFX   ozar  zalo ozar
+SFX   ozar  zalos ozar
+SFX   ubrir  brelas ubrir
+SFX   ubrir  brela ubrir
+SFX   ubrir  brelos ubrir
+SFX   ubrir  brelo ubrir
+SFX   udar  dalas udar
+SFX   udar  dala udar
+SFX   udar  dalos udar
+SFX   udar  dalo udar
+SFX   ufrir  frelas ufrir
+SFX   ufrir  frela ufrir
+SFX   ufrir  frelos ufrir
+SFX   ufrir  frelo ufrir
+SFX   ujar  jalas ujar
+SFX   ujar  jala ujar
+SFX   ujar  jalos ujar
+SFX   ujar  jalo ujar
+SFX   ulsar  lsalas ulsar
+SFX   ulsar  lsala ulsar
+SFX   ulsar  lsalos ulsar
+SFX   ulsar  lsalo ulsar
+SFX   ultar  ltalas ultar
+SFX   ultar  ltala ultar
+SFX   ultar  ltalos ultar
+SFX   ultar  ltalo ultar
+SFX   umar  malas umar
+SFX   umar  mala umar
+SFX   umar  malos umar
+SFX   umar  malo umar
+SFX   umir  melas umir
+SFX   umir  mela umir
+SFX   umir  melos umir
+SFX   umir  melo umir
+SFX   unciar  ncialas unciar
+SFX   unciar  nciala unciar
+SFX   unciar  ncialos unciar
+SFX   unciar  ncialo unciar
+SFX   untar  ntalas untar
+SFX   untar  ntala untar
+SFX   untar  ntalos untar
+SFX   untar  ntalo untar
+SFX   urar  ralas urar
+SFX   urar  rala urar
+SFX   urar  ralos urar
+SFX   urar  ralo urar
+SFX   urrir  rrelas urrir
+SFX   urrir  rrela urrir
+SFX   urrir  rrelos urrir
+SFX   urrir  rrelo urrir
+SFX   uscar  scalas uscar
+SFX   uscar  scala uscar
+SFX   uscar  scalos uscar
+SFX   uscar  scalo uscar
+SFX   utar  talas utar
+SFX   utar  tala utar
+SFX   utar  talos utar
+SFX   utar  talo utar
+
+SFX   Y 162
+SFX   abar  bame abar
+SFX   abar  banos abar
+SFX   r dme r
+SFX   r dnos r
+SFX   ablar  blame ablar
+SFX   ablar  blanos ablar
+SFX   acar  came acar
+SFX   acar  canos acar
+SFX   agar  game agar
+SFX   agar  ganos agar
+SFX   ajar  jame ajar
+SFX   ajar  janos ajar
+SFX   almar  lmame almar
+SFX   almar  lmanos almar
+SFX   alvar  lvame alvar
+SFX   alvar  lvanos alvar
+SFX   amar  mame amar
+SFX   amar  manos amar
+SFX   ambiar  mbiame ambiar
+SFX   ambiar  mbianos ambiar
+SFX   ancar  ncame ancar
+SFX   ancar  ncanos ancar
+SFX   andar  ndame andar
+SFX   andar  ndanos andar
+SFX   antar  ntame antar
+SFX   antar  ntanos antar
+SFX   anzar  nzame anzar
+SFX   anzar  nzanos anzar
+SFX   a ar   ame a ar
+SFX   a ar   anos a ar
+SFX   apar  pame apar
+SFX   apar  panos apar
+SFX   aptar  ptame aptar
+SFX   aptar  ptanos aptar
+SFX   arar  rame arar
+SFX   arar  ranos arar
+SFX   ardar  rdame ardar
+SFX   ardar  rdanos ardar
+SFX   argar  rgame argar
+SFX   argar  rganos argar
+SFX   arrar  rrame arrar
+SFX   arrar  rranos arrar
+SFX   atar  tame atar
+SFX   atar  tanos atar
+SFX   avar  vame avar
+SFX   avar  vanos avar
+SFX   azar  zame azar
+SFX   azar  zanos azar
+SFX   ear  ame ear
+SFX   ear  anos ear
+SFX   eder  deme eder
+SFX   eder  denos eder
+SFX   eer  eme eer
+SFX   eer  enos eer
+SFX   egar  game egar
+SFX   egar  ganos egar
+SFX   egrar  grame egrar
+SFX   egrar  granos egrar
+SFX   ejar  jame ejar
+SFX   ejar  janos ejar
+SFX   enar  name enar
+SFX   enar  nanos enar
+SFX   endar  ndame endar
+SFX   endar  ndanos endar
+SFX   ender  ndeme ender
+SFX   ender  ndenos ender
+SFX   entar  ntame entar
+SFX   entar  ntanos entar
+SFX   e ar   ame e ar
+SFX   e ar   anos e ar
+SFX   epar  pame epar
+SFX   epar  panos epar
+SFX   eptar  ptame eptar
+SFX   eptar  ptanos eptar
+SFX   erar  rame erar
+SFX   erar  ranos erar
+SFX   ercar  rcame ercar
+SFX   ercar  rcanos ercar
+SFX   esar  same esar
+SFX   esar  sanos esar
+SFX   estar  stame estar
+SFX   estar  stanos estar
+SFX   etar  tame etar
+SFX   etar  tanos etar
+SFX   eter  teme eter
+SFX   eter  tenos eter
+SFX   evar  vame evar
+SFX   evar  vanos evar
+SFX   ibir  beme ibir
+SFX   ibir  benos ibir
+SFX   icar  came icar
+SFX   icar  canos icar
+SFX   iciar  ciame iciar
+SFX   iciar  cianos iciar
+SFX   idar  dame idar
+SFX   idar  danos idar
+SFX   igar  game igar
+SFX   igar  ganos igar
+SFX   irar  rame irar
+SFX   irar  ranos irar
+SFX   isar  same isar
+SFX   isar  sanos isar
+SFX   itar  tame itar
+SFX   itar  tanos itar
+SFX   iviar  viame iviar
+SFX   iviar  vianos iviar
+SFX   obrar  brame obrar
+SFX   obrar  branos obrar
+SFX   ocar  came ocar
+SFX   ocar  canos ocar
+SFX   oger  geme oger
+SFX   oger  genos oger
+SFX   ojar  jame ojar
+SFX   ojar  janos ojar
+SFX   omar  mame omar
+SFX   omar  manos omar
+SFX   omer  meme omer
+SFX   omer  menos omer
+SFX   omprar  mprame omprar
+SFX   omprar  mpranos omprar
+SFX   onar  name onar
+SFX   onar  nanos onar
+SFX   oplar  plame oplar
+SFX   oplar  planos oplar
+SFX   orar  rame orar
+SFX   orar  ranos orar
+SFX   orrar  rrame orrar
+SFX   orrar  rranos orrar
+SFX   orrer  rreme orrer
+SFX   orrer  rrenos orrer
+SFX   otar  tame otar
+SFX   otar  tanos otar
+SFX   ubir  beme ubir
+SFX   ubir  benos ubir
+SFX   ucar  came ucar
+SFX   ucar  canos ucar
+SFX   uchar  chame uchar
+SFX   uchar  chanos uchar
+SFX   udar  dame udar
+SFX   udar  danos udar
+SFX   ujar  jame ujar
+SFX   ujar  janos ujar
+SFX   ullar  llame ullar
+SFX   ullar  llanos ullar
+SFX   ulpar  lpame ulpar
+SFX   ulpar  lpanos ulpar
+SFX   ultar  ltame ultar
+SFX   ultar  ltanos ultar
+SFX   unciar  nciame unciar
+SFX   unciar  ncianos unciar
+SFX   untar  ntame untar
+SFX   untar  ntanos untar
+SFX   upar  pame upar
+SFX   upar  panos upar
+SFX   urar  rame urar
+SFX   urar  ranos urar
+SFX   urgar  rgame urgar
+SFX   urgar  rganos urgar
+SFX   usar  same usar
+SFX   usar  sanos usar
+SFX   uscar  scame uscar
+SFX   uscar  scanos uscar
+
+SFX   Y 84
+SFX   abar  bale abar
+SFX   abar  bales abar
+SFX   r dle r
+SFX   r dles r
+SFX   ablar  blale ablar
+SFX   ablar  blales ablar
+SFX   acar  cale acar
+SFX   acar  cales acar
+SFX   adir  dele adir
+SFX   adir  deles adir
+SFX   ajar  jale ajar
+SFX   ajar  jales ajar
+SFX   ambiar  mbiale ambiar
+SFX   ambiar  mbiales ambiar
+SFX   antar  ntale antar
+SFX   antar  ntales antar
+SFX   apar  pale apar
+SFX   apar  pales apar
+SFX   arir  rele arir
+SFX   arir  reles arir
+SFX   arrar  rrale arrar
+SFX   arrar  rrales arrar
+SFX   egar  gale egar
+SFX   egar  gales egar
+SFX   eglar  glale eglar
+SFX   eglar  glales eglar
+SFX   ejar  jale ejar
+SFX   ejar  jales ejar
+SFX   entar  ntale entar
+SFX   entar  ntales entar
+SFX   e ar   ale e ar
+SFX   e ar   ales e ar
+SFX   erar  rale erar
+SFX   erar  rales erar
+SFX   ercar  rcale ercar
+SFX   ercar  rcales ercar
+SFX   estar  stale estar
+SFX   estar  stales estar
+SFX   eter  tele eter
+SFX   eter  teles eter
+SFX   evar  vale evar
+SFX   evar  vales evar
+SFX   icar  cale icar
+SFX   icar  cales icar
+SFX   iciar  ciale iciar
+SFX   iciar  ciales iciar
+SFX   igir  gele igir
+SFX   igir  geles igir
+SFX   imar  male imar
+SFX   imar  males imar
+SFX   ingar  ngale ingar
+SFX   ingar  ngales ingar
+SFX   irar  rale irar
+SFX   irar  rales irar
+SFX   irmar  rmale irmar
+SFX   irmar  rmales irmar
+SFX   isar  sale isar
+SFX   isar  sales isar
+SFX   istar  stale istar
+SFX   istar  stales istar
+SFX   izar  zale izar
+SFX   izar  zales izar
+SFX   ocar  cale ocar
+SFX   ocar  cales ocar
+SFX   onar  nale onar
+SFX   onar  nales onar
+SFX   onder  ndele onder
+SFX   onder  ndeles onder
+SFX   orar  rale orar
+SFX   orar  rales orar
+SFX   uchar  chales uchar
+SFX   uchar  chale uchar
+SFX   udar  dales udar
+SFX   udar  dale udar
+SFX   ultar  ltales ultar
+SFX   ultar  ltale ultar
+SFX   umir  meles umir
+SFX   umir  mele umir
+SFX   unciar  nciales unciar
+SFX   unciar  nciale unciar
+SFX   untar  ntales untar
+SFX   untar  ntale untar
+SFX   uscar  scales uscar
+SFX   uscar  scale uscar
+
+SFX   Y 264
+SFX   adir  demela adir
+SFX   adir  demelas adir
+SFX   adir  demelo adir
+SFX   adir  demelos adir
+SFX   adir  denosla adir
+SFX   adir  denoslas adir
+SFX   adir  denoslo adir
+SFX   adir  denoslos adir
+SFX   adir  desela adir
+SFX   adir  deselas adir
+SFX   adir  deselo adir
+SFX   adir  deselos adir
+SFX   ir  dmela ir
+SFX   ir  dmelas ir
+SFX   ir  dmelo ir
+SFX   ir  dmelos ir
+SFX   ir  dnosla ir
+SFX   ir  dnoslas ir
+SFX   ir  dnoslo ir
+SFX   ir  dnoslos ir
+SFX   ir  dsela ir
+SFX   ir  dselas ir
+SFX   ir  dselo ir
+SFX   ir  dselos ir
+SFX   ambiar  mbiamela ambiar
+SFX   ambiar  mbiamelas ambiar
+SFX   ambiar  mbiamelo ambiar
+SFX   ambiar  mbiamelos ambiar
+SFX   ambiar  mbianosla ambiar
+SFX   ambiar  mbianoslas ambiar
+SFX   ambiar  mbianoslo ambiar
+SFX   ambiar  mbianoslos ambiar
+SFX   ambiar  mbiasela ambiar
+SFX   ambiar  mbiaselas ambiar
+SFX   ambiar  mbiaselo ambiar
+SFX   ambiar  mbiaselos ambiar
+SFX   ar  dmela ar
+SFX   ar  dmelas ar
+SFX   ar  dmelo ar
+SFX   ar  dmelos ar
+SFX   ar  dnosla ar
+SFX   ar  dnoslas ar
+SFX   ar  dnoslo ar
+SFX   ar  dnoslos ar
+SFX   ar  dsela ar
+SFX   ar  dselas ar
+SFX   ar  dselo ar
+SFX   ar  dselos ar
+SFX   ancar  ncamela ancar
+SFX   ancar  ncamelas ancar
+SFX   ancar  ncamelo ancar
+SFX   ancar  ncamelos ancar
+SFX   ancar  ncanosla ancar
+SFX   ancar  ncanoslas ancar
+SFX   ancar  ncanoslo ancar
+SFX   ancar  ncanoslos ancar
+SFX   ancar  ncasela ancar
+SFX   ancar  ncaselas ancar
+SFX   ancar  ncaselo ancar
+SFX   ancar  ncaselos ancar
+SFX   antar  ntamela antar
+SFX   antar  ntamelas antar
+SFX   antar  ntamelo antar
+SFX   antar  ntamelos antar
+SFX   antar  ntanosla antar
+SFX   antar  ntanoslas antar
+SFX   antar  ntanoslo antar
+SFX   antar  ntanoslos antar
+SFX   antar  ntasela antar
+SFX   antar  ntaselas antar
+SFX   antar  ntaselo antar
+SFX   antar  ntaselos antar
+SFX   anzar  nzamela anzar
+SFX   anzar  nzamelas anzar
+SFX   anzar  nzamelo anzar
+SFX   anzar  nzamelos anzar
+SFX   anzar  nzanosla anzar
+SFX   anzar  nzanoslas anzar
+SFX   anzar  nzanoslo anzar
+SFX   anzar  nzanoslos anzar
+SFX   anzar  nzasela anzar
+SFX   anzar  nzaselas anzar
+SFX   anzar  nzaselo anzar
+SFX   anzar  nzaselos anzar
+SFX   asar  samela asar
+SFX   asar  samelas asar
+SFX   asar  samelo asar
+SFX   asar  samelos asar
+SFX   asar  sanosla asar
+SFX   asar  sanoslas asar
+SFX   asar  sanoslo asar
+SFX   asar  sanoslos asar
+SFX   asar  sasela asar
+SFX   asar  saselas asar
+SFX   asar  saselo asar
+SFX   asar  saselos asar
+SFX   ear  amela ear
+SFX   ear  amelas ear
+SFX   ear  amelo ear
+SFX   ear  amelos ear
+SFX   ear  anosla ear
+SFX   ear  anoslas ear
+SFX   ear  anoslo ear
+SFX   ear  anoslos ear
+SFX   ear  asela ear
+SFX   ear  aselas ear
+SFX   ear  aselo ear
+SFX   ear  aselos ear
+SFX   eder  demela eder
+SFX   eder  demelas eder
+SFX   eder  demelo eder
+SFX   eder  demelos eder
+SFX   eder  denosla eder
+SFX   eder  denoslas eder
+SFX   eder  denoslo eder
+SFX   eder  denoslos eder
+SFX   eder  desela eder
+SFX   eder  deselas eder
+SFX   eder  deselo eder
+SFX   eder  deselos eder
+SFX   er  dmela er
+SFX   er  dmelas er
+SFX   er  dmelo er
+SFX   er  dmelos er
+SFX   er  dnosla er
+SFX   er  dnoslas er
+SFX   er  dnoslo er
+SFX   er  dnoslos er
+SFX   er  dsela er
+SFX   er  dselas er
+SFX   er  dselo er
+SFX   er  dselos er
+SFX   eer  emela eer
+SFX   eer  emelas eer
+SFX   eer  emelo eer
+SFX   eer  emelos eer
+SFX   eer  enosla eer
+SFX   eer  enoslas eer
+SFX   eer  enoslo eer
+SFX   eer  enoslos eer
+SFX   eer  esela eer
+SFX   eer  eselas eer
+SFX   eer  eselo eer
+SFX   eer  eselos eer
+SFX   egar  gamela egar
+SFX   egar  gamelas egar
+SFX   egar  gamelo egar
+SFX   egar  gamelos egar
+SFX   egar  ganosla egar
+SFX   egar  ganoslas egar
+SFX   egar  ganoslo egar
+SFX   egar  ganoslos egar
+SFX   egar  gasela egar
+SFX   egar  gaselas egar
+SFX   egar  gaselo egar
+SFX   egar  gaselos egar
+SFX   ejar  jamela ejar
+SFX   ejar  jamelas ejar
+SFX   ejar  jamelo ejar
+SFX   ejar  jamelos ejar
+SFX   ejar  janosla ejar
+SFX   ejar  janoslas ejar
+SFX   ejar  janoslo ejar
+SFX   ejar  janoslos ejar
+SFX   ejar  jasela ejar
+SFX   ejar  jaselas ejar
+SFX   ejar  jaselo ejar
+SFX   ejar  jaselos ejar
+SFX   e ar   amela e ar
+SFX   e ar   amelas e ar
+SFX   e ar   amelo e ar
+SFX   e ar   amelos e ar
+SFX   e ar   anosla e ar
+SFX   e ar   anoslas e ar
+SFX   e ar   anoslo e ar
+SFX   e ar   anoslos e ar
+SFX   e ar   asela e ar
+SFX   e ar   aselas e ar
+SFX   e ar   aselo e ar
+SFX   e ar   aselos e ar
+SFX   eter  temela eter
+SFX   eter  temelas eter
+SFX   eter  temelo eter
+SFX   eter  temelos eter
+SFX   eter  tenosla eter
+SFX   eter  tenoslas eter
+SFX   eter  tenoslo eter
+SFX   eter  tenoslos eter
+SFX   eter  tesela eter
+SFX   eter  teselas eter
+SFX   eter  teselo eter
+SFX   eter  teselos eter
+SFX   ibir  bemela ibir
+SFX   ibir  bemelas ibir
+SFX   ibir  bemelo ibir
+SFX   ibir  bemelos ibir
+SFX   ibir  benosla ibir
+SFX   ibir  benoslas ibir
+SFX   ibir  benoslo ibir
+SFX   ibir  benoslos ibir
+SFX   ibir  besela ibir
+SFX   ibir  beselas ibir
+SFX   ibir  beselo ibir
+SFX   ibir  beselos ibir
+SFX   icar  camela icar
+SFX   icar  camelas icar
+SFX   icar  camelo icar
+SFX   icar  camelos icar
+SFX   icar  canosla icar
+SFX   icar  canoslas icar
+SFX   icar  canoslo icar
+SFX   icar  canoslos icar
+SFX   icar  casela icar
+SFX   icar  caselas icar
+SFX   icar  caselo icar
+SFX   icar  caselos icar
+SFX   inar  namela inar
+SFX   inar  namelas inar
+SFX   inar  namelo inar
+SFX   inar  namelos inar
+SFX   inar  nanosla inar
+SFX   inar  nanoslas inar
+SFX   inar  nanoslo inar
+SFX   inar  nanoslos inar
+SFX   inar  nasela inar
+SFX   inar  naselas inar
+SFX   inar  naselo inar
+SFX   inar  naselos inar
+SFX   obrar  bramela obrar
+SFX   obrar  bramelas obrar
+SFX   obrar  bramelo obrar
+SFX   obrar  bramelos obrar
+SFX   obrar  branosla obrar
+SFX   obrar  branoslas obrar
+SFX   obrar  branoslo obrar
+SFX   obrar  branoslos obrar
+SFX   obrar  brasela obrar
+SFX   obrar  braselas obrar
+SFX   obrar  braselo obrar
+SFX   obrar  braselos obrar
+SFX   untar  ntamelas untar
+SFX   untar  ntamela untar
+SFX   untar  ntamelos untar
+SFX   untar  ntamelo untar
+SFX   untar  ntanoslas untar
+SFX   untar  ntanosla untar
+SFX   untar  ntanoslos untar
+SFX   untar  ntanoslo untar
+SFX   untar  ntaselas untar
+SFX   untar  ntasela untar
+SFX   untar  ntaselos untar
+SFX   untar  ntaselo untar
+SFX   urar  ramelas urar
+SFX   urar  ramela urar
+SFX   urar  ramelos urar
+SFX   urar  ramelo urar
+SFX   urar  ranoslas urar
+SFX   urar  ranosla urar
+SFX   urar  ranoslos urar
+SFX   urar  ranoslo urar
+SFX   urar  raselas urar
+SFX   urar  rasela urar
+SFX   urar  raselos urar
+SFX   urar  raselo urar
+
+SFX   Y 56
+SFX   egar i gala egar
+SFX   egar i galas egar
+SFX   egar i galo egar
+SFX   egar i galos egar
+SFX   r dla r
+SFX   r dlas r
+SFX   r dlo r
+SFX   r dlos r
+SFX   ender i ndela ender
+SFX   ender i ndelas ender
+SFX   ender i ndelo ender
+SFX   ender i ndelos ender
+SFX   ensar i nsala ensar
+SFX   ensar i nsalas ensar
+SFX   ensar i nsalo ensar
+SFX   ensar i nsalos ensar
+SFX   entar i ntala entar
+SFX   entar i ntalas entar
+SFX   entar i ntalo entar
+SFX   entar i ntalos entar
+SFX   errar i rrala errar
+SFX   errar i rralas errar
+SFX   errar i rralo errar
+SFX   errar i rralos errar
+SFX   etar i tala etar
+SFX   etar i talas etar
+SFX   etar i talo etar
+SFX   etar i talos etar
+SFX   iar  ala iar
+SFX   iar  alas iar
+SFX   iar  alo iar
+SFX   iar  alos iar
+SFX   obar u bala obar
+SFX   obar u balas obar
+SFX   obar u balo obar
+SFX   obar u balos obar
+SFX   ocer u cela ocer
+SFX   ocer u celas ocer
+SFX   ocer u celo ocer
+SFX   ocer u celos ocer
+SFX   oltar u ltala oltar
+SFX   oltar u ltalas oltar
+SFX   oltar u ltalo oltar
+SFX   oltar u ltalos oltar
+SFX   olver u lvela olver
+SFX   olver u lvelas olver
+SFX   olver u lvelo olver
+SFX   olver u lvelos olver
+SFX   ontar u ntala ontar
+SFX   ontar u ntalas ontar
+SFX   ontar u ntalo ontar
+SFX   ontar u ntalos ontar
+SFX   ostrar u strala ostrar
+SFX   ostrar u stralas ostrar
+SFX   ostrar u stralo ostrar
+SFX   ostrar u stralos ostrar
+
+SFX   Y 24
+SFX   ecer  ceme ecer
+SFX   ecer  cenos ecer
+SFX   r dme r
+SFX   r dnos r
+SFX   ender i ndeme ender
+SFX   ender i ndenos ender
+SFX   entar i ntame entar
+SFX   entar i ntanos entar
+SFX   errar i rrame errar
+SFX   errar i rranos errar
+SFX   etar i tame etar
+SFX   etar i tanos etar
+SFX   iar  ame iar
+SFX   iar  anos iar
+SFX   oltar u ltame oltar
+SFX   oltar u ltanos oltar
+SFX   olver u lveme olver
+SFX   olver u lvenos olver
+SFX   ontar u ntame ontar
+SFX   ontar u ntanos ontar
+SFX   order u rdeme order
+SFX   order u rdenos order
+SFX   ostrar u strame ostrar
+SFX   ostrar u stranos ostrar
+
+SFX   Y 20
+SFX   ecer  cele ecer
+SFX   ecer  celes ecer
+SFX   r dle r
+SFX   r dles r
+SFX   egar i gale egar
+SFX   egar i gales egar
+SFX   ender i ndele ender
+SFX   ender i ndeles ender
+SFX   errar i rrale errar
+SFX   errar i rrales errar
+SFX   iar  ale iar
+SFX   iar  ales iar
+SFX   ogar u gale ogar
+SFX   ogar u gales ogar
+SFX   ontar u ntale ontar
+SFX   ontar u ntales ontar
+SFX   order u rdele order
+SFX   order u rdeles order
+SFX   ostrar u strale ostrar
+SFX   ostrar u strales ostrar
+
+SFX   Y 96
+SFX   ecer  cemela ecer
+SFX   ecer  cemelas ecer
+SFX   ecer  cemelo ecer
+SFX   ecer  cemelos ecer
+SFX   ecer  cenosla ecer
+SFX   ecer  cenoslas ecer
+SFX   ecer  cenoslo ecer
+SFX   ecer  cenoslos ecer
+SFX   ecer  cesela ecer
+SFX   ecer  ceselas ecer
+SFX   ecer  ceselo ecer
+SFX   ecer  ceselos ecer
+SFX   er  dmela er
+SFX   er  dmelas er
+SFX   er  dmelo er
+SFX   er  dmelos er
+SFX   er  dnosla er
+SFX   er  dnoslas er
+SFX   er  dnoslo er
+SFX   er  dnoslos er
+SFX   er  dsela er
+SFX   er  dselas er
+SFX   er  dselo er
+SFX   er  dselos er
+SFX   iar  amela iar
+SFX   iar  amelas iar
+SFX   iar  amelo iar
+SFX   iar  amelos iar
+SFX   iar  anosla iar
+SFX   iar  anoslas iar
+SFX   iar  anoslo iar
+SFX   iar  anoslos iar
+SFX   iar  asela iar
+SFX   iar  aselas iar
+SFX   iar  aselo iar
+SFX   iar  aselos iar
+SFX   ar  dmela ar
+SFX   ar  dmelas ar
+SFX   ar  dmelo ar
+SFX   ar  dmelos ar
+SFX   ar  dnosla ar
+SFX   ar  dnoslas ar
+SFX   ar  dnoslo ar
+SFX   ar  dnoslos ar
+SFX   ar  dsela ar
+SFX   ar  dselas ar
+SFX   ar  dselo ar
+SFX   ar  dselos ar
+SFX   olver u lvemela olver
+SFX   olver u lvemelas olver
+SFX   olver u lvemelo olver
+SFX   olver u lvemelos olver
+SFX   olver u lvenosla olver
+SFX   olver u lvenoslas olver
+SFX   olver u lvenoslo olver
+SFX   olver u lvenoslos olver
+SFX   olver u lvesela olver
+SFX   olver u lveselas olver
+SFX   olver u lveselo olver
+SFX   olver u lveselos olver
+SFX   ontar u ntamela ontar
+SFX   ontar u ntamelas ontar
+SFX   ontar u ntamelo ontar
+SFX   ontar u ntamelos ontar
+SFX   ontar u ntanosla ontar
+SFX   ontar u ntanoslas ontar
+SFX   ontar u ntanoslo ontar
+SFX   ontar u ntanoslos ontar
+SFX   ontar u ntasela ontar
+SFX   ontar u ntaselas ontar
+SFX   ontar u ntaselo ontar
+SFX   ontar u ntaselos ontar
+SFX   ordar u rdamela ordar
+SFX   ordar u rdamelas ordar
+SFX   ordar u rdamelo ordar
+SFX   ordar u rdamelos ordar
+SFX   ordar u rdanosla ordar
+SFX   ordar u rdanoslas ordar
+SFX   ordar u rdanoslo ordar
+SFX   ordar u rdanoslos ordar
+SFX   ordar u rdasela ordar
+SFX   ordar u rdaselas ordar
+SFX   ordar u rdaselo ordar
+SFX   ordar u rdaselos ordar
+SFX   ostrar u stramela ostrar
+SFX   ostrar u stramelas ostrar
+SFX   ostrar u stramelo ostrar
+SFX   ostrar u stramelos ostrar
+SFX   ostrar u stranosla ostrar
+SFX   ostrar u stranoslas ostrar
+SFX   ostrar u stranoslo ostrar
+SFX   ostrar u stranoslos ostrar
+SFX   ostrar u strasela ostrar
+SFX   ostrar u straselas ostrar
+SFX   ostrar u straselo ostrar
+SFX   ostrar u straselos ostrar
+
+SFX   Y 56
+SFX   aer  ela aer
+SFX   aer  elas aer
+SFX   aer  elo aer
+SFX   aer  elos aer
+SFX   r dla r
+SFX   r dlas r
+SFX   r dlo r
+SFX   r dlos r
+SFX   cer zla cer
+SFX   cer zlas cer
+SFX   cer zlo cer
+SFX   cer zlos cer
+SFX   ecir  cela ecir
+SFX   ecir  celas ecir
+SFX   ecir  celo ecir
+SFX   ecir  celos ecir
+SFX   edir  dela edir
+SFX   edir  delas edir
+SFX   edir  delo edir
+SFX   edir  delos edir
+SFX   eguir  guela eguir
+SFX   eguir  guelas eguir
+SFX   eguir  guelo eguir
+SFX   eguir  guelos eguir
+SFX   e r  ela e r
+SFX   e r  elas e r
+SFX   e r  elo e r
+SFX   e r  elos e r
+SFX   entir i ntela entir
+SFX   entir i ntelas entir
+SFX   entir i ntelo entir
+SFX   entir i ntelos entir
+SFX   erer i rela erer
+SFX   erer i relas erer
+SFX   erer i relo erer
+SFX   erer i relos erer
+SFX   er la ner
+SFX   er las ner
+SFX   er lo ner
+SFX   er los ner
+SFX   ertir i rtela ertir
+SFX   ertir i rtelas ertir
+SFX   ertir i rtelo ertir
+SFX   ertir i rtelos ertir
+SFX   ervir  rvela ervir
+SFX   ervir  rvelas ervir
+SFX   ervir  rvelo ervir
+SFX   ervir  rvelos ervir
+SFX   r la ver
+SFX   r las ver
+SFX   r lo ver
+SFX   r los ver
+SFX   uir  yelas uir
+SFX   uir  yela uir
+SFX   uir  yelos uir
+SFX   uir  yelo uir
+
+SFX   Y 26
+SFX   aber  beme aber
+SFX   aber  benos aber
+SFX   r dme r
+SFX   r dnos r
+SFX   aer  eme aer
+SFX   aer  enos aer
+SFX   ecir  ceme ecir
+SFX   ecir  cenos ecir
+SFX   edir  deme edir
+SFX   edir  denos edir
+SFX   egir  geme egir
+SFX   egir  genos egir
+SFX   eguir  gueme eguir
+SFX   eguir  guenos eguir
+SFX   erer i reme erer
+SFX   erer i renos erer
+SFX   erir i reme erir
+SFX   erir i renos erir
+SFX   er me ner
+SFX   er nos ner
+SFX   estir  steme estir
+SFX   estir  stenos estir
+SFX   r me ver
+SFX   r nos ver
+SFX   ucir  ceme ucir
+SFX   ucir  cenos ucir
+
+SFX   Y 14
+SFX   aber  bele aber
+SFX   aber  beles aber
+SFX   r dle r
+SFX   r dles r
+SFX   aer  ele aer
+SFX   aer  eles aer
+SFX   cer zle cer
+SFX   cer zles cer
+SFX   edir  dele edir
+SFX   edir  deles edir
+SFX   er le ner
+SFX   er les ner
+SFX   r le ver
+SFX   r les ver
+
+SFX   Y 60
+SFX   aer  emela aer
+SFX   aer  emelas aer
+SFX   aer  emelo aer
+SFX   aer  emelos aer
+SFX   aer  enosla aer
+SFX   aer  enoslas aer
+SFX   aer  enoslo aer
+SFX   aer  enoslos aer
+SFX   aer  esela aer
+SFX   aer  eselas aer
+SFX   aer  eselo aer
+SFX   aer  eselos aer
+SFX   er  dmela er
+SFX   er  dmelas er
+SFX   er  dmelo er
+SFX   er  dmelos er
+SFX   er  dnosla er
+SFX   er  dnoslas er
+SFX   er  dnoslo er
+SFX   er  dnoslos er
+SFX   er  dsela er
+SFX   er  dselas er
+SFX   er  dselo er
+SFX   er  dselos er
+SFX   edir  demela edir
+SFX   edir  demelas edir
+SFX   edir  demelo edir
+SFX   edir  demelos edir
+SFX   edir  denosla edir
+SFX   edir  denoslas edir
+SFX   edir  denoslo edir
+SFX   edir  denoslos edir
+SFX   edir  desela edir
+SFX   edir  deselas edir
+SFX   edir  deselo edir
+SFX   edir  deselos edir
+SFX   ir  dmela ir
+SFX   ir  dmelas ir
+SFX   ir  dmelo ir
+SFX   ir  dmelos ir
+SFX   ir  dnosla ir
+SFX   ir  dnoslas ir
+SFX   ir  dnoslo ir
+SFX   ir  dnoslos ir
+SFX   ir  dsela ir
+SFX   ir  dselas ir
+SFX   ir  dselo ir
+SFX   ir  dselos ir
+SFX   oner  nmela oner
+SFX   oner  nmelas oner
+SFX   oner  nmelo oner
+SFX   oner  nmelos oner
+SFX   oner  nnosla oner
+SFX   oner  nnoslas oner
+SFX   oner  nnoslo oner
+SFX   oner  nnoslos oner
+SFX   oner  nsela oner
+SFX   oner  nselas oner
+SFX   oner  nselo oner
+SFX   oner  nselos oner
+
+SFX   Y 664
+SFX   acar  quela acar
+SFX   acar  quelas acar
+SFX   acar  quelo acar
+SFX   acar  quelos acar
+SFX   acar  quenla acar
+SFX   acar  quenlas acar
+SFX   acar  quenlo acar
+SFX   acar  quenlos acar
+SFX   achar  chela achar
+SFX   achar  chelas achar
+SFX   achar  chelo achar
+SFX   achar  chelos achar
+SFX   achar  chenla achar
+SFX   achar  chenlas achar
+SFX   achar  chenlo achar
+SFX   achar  chenlos achar
+SFX   adar  dela adar
+SFX   adar  delas adar
+SFX   adar  delo adar
+SFX   adar  delos adar
+SFX   adar  denla adar
+SFX   adar  denlas adar
+SFX   adar  denlo adar
+SFX   adar  denlos adar
+SFX   agar  guela agar
+SFX   agar  guelas agar
+SFX   agar  guelo agar
+SFX   agar  guelos agar
+SFX   agar  guenla agar
+SFX   agar  guenlas agar
+SFX   agar  guenlo agar
+SFX   agar  guenlos agar
+SFX   ajar  jela ajar
+SFX   ajar  jelas ajar
+SFX   ajar  jelo ajar
+SFX   ajar  jelos ajar
+SFX   ajar  jenla ajar
+SFX   ajar  jenlas ajar
+SFX   ajar  jenlo ajar
+SFX   ajar  jenlos ajar
+SFX   ambiar  mbiela ambiar
+SFX   ambiar  mbielas ambiar
+SFX   ambiar  mbielo ambiar
+SFX   ambiar  mbielos ambiar
+SFX   ambiar  mbienla ambiar
+SFX   ambiar  mbienlas ambiar
+SFX   ambiar  mbienlo ambiar
+SFX   ambiar  mbienlos ambiar
+SFX   ancar  nquela ancar
+SFX   ancar  nquelas ancar
+SFX   ancar  nquelo ancar
+SFX   ancar  nquelos ancar
+SFX   ancar  nquenla ancar
+SFX   ancar  nquenlas ancar
+SFX   ancar  nquenlo ancar
+SFX   ancar  nquenlos ancar
+SFX   anchar  nchela anchar
+SFX   anchar  nchelas anchar
+SFX   anchar  nchelo anchar
+SFX   anchar  nchelos anchar
+SFX   anchar  nchenla anchar
+SFX   anchar  nchenlas anchar
+SFX   anchar  nchenlo anchar
+SFX   anchar  nchenlos anchar
+SFX   andar  ndela andar
+SFX   andar  ndelas andar
+SFX   andar  ndelo andar
+SFX   andar  ndelos andar
+SFX   andar  ndenla andar
+SFX   andar  ndenlas andar
+SFX   andar  ndenlo andar
+SFX   andar  ndenlos andar
+SFX   andir  ndala andir
+SFX   andir  ndalas andir
+SFX   andir  ndalo andir
+SFX   andir  ndalos andir
+SFX   andir  ndanla andir
+SFX   andir  ndanlas andir
+SFX   andir  ndanlo andir
+SFX   andir  ndanlos andir
+SFX   a ar   ela a ar
+SFX   a ar   elas a ar
+SFX   a ar   elo a ar
+SFX   a ar   elos a ar
+SFX   a ar   enla a ar
+SFX   a ar   enlas a ar
+SFX   a ar   enlo a ar
+SFX   a ar   enlos a ar
+SFX   apar  pela apar
+SFX   apar  pelas apar
+SFX   apar  pelo apar
+SFX   apar  pelos apar
+SFX   apar  penla apar
+SFX   apar  penlas apar
+SFX   apar  penlo apar
+SFX   apar  penlos apar
+SFX   arar  rela arar
+SFX   arar  relas arar
+SFX   arar  relo arar
+SFX   arar  relos arar
+SFX   arar  renla arar
+SFX   arar  renlas arar
+SFX   arar  renlo arar
+SFX   arar  renlos arar
+SFX   ardar  rdela ardar
+SFX   ardar  rdelas ardar
+SFX   ardar  rdelo ardar
+SFX   ardar  rdelos ardar
+SFX   ardar  rdenla ardar
+SFX   ardar  rdenlas ardar
+SFX   ardar  rdenlo ardar
+SFX   ardar  rdenlos ardar
+SFX   arrar  rrela arrar
+SFX   arrar  rrelas arrar
+SFX   arrar  rrelo arrar
+SFX   arrar  rrelos arrar
+SFX   arrar  rrenla arrar
+SFX   arrar  rrenlas arrar
+SFX   arrar  rrenlo arrar
+SFX   arrar  rrenlos arrar
+SFX   artar  rtela artar
+SFX   artar  rtelas artar
+SFX   artar  rtelo artar
+SFX   artar  rtelos artar
+SFX   artar  rtenla artar
+SFX   artar  rtenlas artar
+SFX   artar  rtenlo artar
+SFX   artar  rtenlos artar
+SFX   artir  rtala artir
+SFX   artir  rtalas artir
+SFX   artir  rtalo artir
+SFX   artir  rtalos artir
+SFX   artir  rtanla artir
+SFX   artir  rtanlas artir
+SFX   artir  rtanlo artir
+SFX   artir  rtanlos artir
+SFX   asar  sela asar
+SFX   asar  selas asar
+SFX   asar  selo asar
+SFX   asar  selos asar
+SFX   asar  senla asar
+SFX   asar  senlas asar
+SFX   asar  senlo asar
+SFX   asar  senlos asar
+SFX   astrar  strela astrar
+SFX   astrar  strelas astrar
+SFX   astrar  strelo astrar
+SFX   astrar  strelos astrar
+SFX   astrar  strenla astrar
+SFX   astrar  strenlas astrar
+SFX   astrar  strenlo astrar
+SFX   astrar  strenlos astrar
+SFX   atar  tela atar
+SFX   atar  telas atar
+SFX   atar  telo atar
+SFX   atar  telos atar
+SFX   atar  tenla atar
+SFX   atar  tenlas atar
+SFX   atar  tenlo atar
+SFX   atar  tenlos atar
+SFX   atir  tala atir
+SFX   atir  talas atir
+SFX   atir  talo atir
+SFX   atir  talos atir
+SFX   atir  tanla atir
+SFX   atir  tanlas atir
+SFX   atir  tanlo atir
+SFX   atir  tanlos atir
+SFX   azar  cela azar
+SFX   azar  celas azar
+SFX   azar  celo azar
+SFX   azar  celos azar
+SFX   azar  cenla azar
+SFX   azar  cenlas azar
+SFX   azar  cenlo azar
+SFX   azar  cenlos azar
+SFX   ear  ela ear
+SFX   ear  elas ear
+SFX   ear  elo ear
+SFX   ear  elos ear
+SFX   ear  enla ear
+SFX   ear  enlas ear
+SFX   ear  enlo ear
+SFX   ear  enlos ear
+SFX   ecar  quela ecar
+SFX   ecar  quelas ecar
+SFX   ecar  quelo ecar
+SFX   ecar  quelos ecar
+SFX   ecar  quenla ecar
+SFX   ecar  quenlas ecar
+SFX   ecar  quenlo ecar
+SFX   ecar  quenlos ecar
+SFX   echar  chela echar
+SFX   echar  chelas echar
+SFX   echar  chelo echar
+SFX   echar  chelos echar
+SFX   echar  chenla echar
+SFX   echar  chenlas echar
+SFX   echar  chenlo echar
+SFX   echar  chenlos echar
+SFX   ectar  ctela ectar
+SFX   ectar  ctelas ectar
+SFX   ectar  ctelo ectar
+SFX   ectar  ctelos ectar
+SFX   ectar  ctenla ectar
+SFX   ectar  ctenlas ectar
+SFX   ectar  ctenlo ectar
+SFX   ectar  ctenlos ectar
+SFX   eer  ala eer
+SFX   eer  alas eer
+SFX   eer  alo eer
+SFX   eer  alos eer
+SFX   eer  anla eer
+SFX   eer  anlas eer
+SFX   eer  anlo eer
+SFX   eer  anlos eer
+SFX   egar  guela egar
+SFX   egar  guelas egar
+SFX   egar  guelo egar
+SFX   egar  guelos egar
+SFX   egar  guenla egar
+SFX   egar  guenlas egar
+SFX   egar  guenlo egar
+SFX   egar  guenlos egar
+SFX   ejar  jela ejar
+SFX   ejar  jelas ejar
+SFX   ejar  jelo ejar
+SFX   ejar  jelos ejar
+SFX   ejar  jenla ejar
+SFX   ejar  jenlas ejar
+SFX   ejar  jenlo ejar
+SFX   ejar  jenlos ejar
+SFX   elar  lela elar
+SFX   elar  lelas elar
+SFX   elar  lelo elar
+SFX   elar  lelos elar
+SFX   elar  lenla elar
+SFX   elar  lenlas elar
+SFX   elar  lenlo elar
+SFX   elar  lenlos elar
+SFX   emar  mela emar
+SFX   emar  melas emar
+SFX   emar  melo emar
+SFX   emar  melos emar
+SFX   emar  menla emar
+SFX   emar  menlas emar
+SFX   emar  menlo emar
+SFX   emar  menlos emar
+SFX   endar  ndela endar
+SFX   endar  ndelas endar
+SFX   endar  ndelo endar
+SFX   endar  ndelos endar
+SFX   endar  ndenla endar
+SFX   endar  ndenlas endar
+SFX   endar  ndenlo endar
+SFX   endar  ndenlos endar
+SFX   ender  ndala ender
+SFX   ender  ndalas ender
+SFX   ender  ndalo ender
+SFX   ender  ndalos ender
+SFX   ender  ndanla ender
+SFX   ender  ndanlas ender
+SFX   ender  ndanlo ender
+SFX   ender  ndanlos ender
+SFX   entar  ntela entar
+SFX   entar  ntelas entar
+SFX   entar  ntelo entar
+SFX   entar  ntelos entar
+SFX   entar  ntenla entar
+SFX   entar  ntenlas entar
+SFX   entar  ntenlo entar
+SFX   entar  ntenlos entar
+SFX   eptar  ptela eptar
+SFX   eptar  ptelas eptar
+SFX   eptar  ptelo eptar
+SFX   eptar  ptelos eptar
+SFX   eptar  ptenla eptar
+SFX   eptar  ptenlas eptar
+SFX   eptar  ptenlo eptar
+SFX   eptar  ptenlos eptar
+SFX   erar  rela erar
+SFX   erar  relas erar
+SFX   erar  relo erar
+SFX   erar  relos erar
+SFX   erar  renla erar
+SFX   erar  renlas erar
+SFX   erar  renlo erar
+SFX   erar  renlos erar
+SFX   ercar  rquela ercar
+SFX   ercar  rquelas ercar
+SFX   ercar  rquelo ercar
+SFX   ercar  rquelos ercar
+SFX   ercar  rquenla ercar
+SFX   ercar  rquenlas ercar
+SFX   ercar  rquenlo ercar
+SFX   ercar  rquenlos ercar
+SFX   ergir  rjala ergir
+SFX   ergir  rjalas ergir
+SFX   ergir  rjalo ergir
+SFX   ergir  rjalos ergir
+SFX   ergir  rjanla ergir
+SFX   ergir  rjanlas ergir
+SFX   ergir  rjanlo ergir
+SFX   ergir  rjanlos ergir
+SFX   ervar  rvela ervar
+SFX   ervar  rvelas ervar
+SFX   ervar  rvelo ervar
+SFX   ervar  rvelos ervar
+SFX   ervar  rvenla ervar
+SFX   ervar  rvenlas ervar
+SFX   ervar  rvenlo ervar
+SFX   ervar  rvenlos ervar
+SFX   esar  sela esar
+SFX   esar  selas esar
+SFX   esar  selo esar
+SFX   esar  selos esar
+SFX   esar  senla esar
+SFX   esar  senlas esar
+SFX   esar  senlo esar
+SFX   esar  senlos esar
+SFX   etar  tela etar
+SFX   etar  telas etar
+SFX   etar  telo etar
+SFX   etar  telos etar
+SFX   etar  tenla etar
+SFX   etar  tenlas etar
+SFX   etar  tenlo etar
+SFX   etar  tenlos etar
+SFX   evar  vela evar
+SFX   evar  velas evar
+SFX   evar  velo evar
+SFX   evar  velos evar
+SFX   evar  venla evar
+SFX   evar  venlas evar
+SFX   evar  venlo evar
+SFX   evar  venlos evar
+SFX   icar  quela icar
+SFX   icar  quelas icar
+SFX   icar  quelo icar
+SFX   icar  quelos icar
+SFX   icar  quenla icar
+SFX   icar  quenlas icar
+SFX   icar  quenlo icar
+SFX   icar  quenlos icar
+SFX   idar  dela idar
+SFX   idar  delas idar
+SFX   idar  delo idar
+SFX   idar  delos idar
+SFX   idar  denla idar
+SFX   idar  denlas idar
+SFX   idar  denlo idar
+SFX   idar  denlos idar
+SFX   inar  nela inar
+SFX   inar  nelas inar
+SFX   inar  nelo inar
+SFX   inar  nelos inar
+SFX   inar  nenla inar
+SFX   inar  nenlas inar
+SFX   inar  nenlo inar
+SFX   inar  nenlos inar
+SFX   irar  rela irar
+SFX   irar  relas irar
+SFX   irar  relo irar
+SFX   irar  relos irar
+SFX   irar  renla irar
+SFX   irar  renlas irar
+SFX   irar  renlo irar
+SFX   irar  renlos irar
+SFX   irmar  rmela irmar
+SFX   irmar  rmelas irmar
+SFX   irmar  rmelo irmar
+SFX   irmar  rmelos irmar
+SFX   irmar  rmenla irmar
+SFX   irmar  rmenlas irmar
+SFX   irmar  rmenlo irmar
+SFX   irmar  rmenlos irmar
+SFX   isar  sela isar
+SFX   isar  selas isar
+SFX   isar  selo isar
+SFX   isar  selos isar
+SFX   isar  senla isar
+SFX   isar  senlas isar
+SFX   isar  senlo isar
+SFX   isar  senlos isar
+SFX   itar  tela itar
+SFX   itar  telas itar
+SFX   itar  telo itar
+SFX   itar  telos itar
+SFX   itar  tenla itar
+SFX   itar  tenlas itar
+SFX   itar  tenlo itar
+SFX   itar  tenlos itar
+SFX   itir  tala itir
+SFX   itir  talas itir
+SFX   itir  talo itir
+SFX   itir  talos itir
+SFX   itir  tanla itir
+SFX   itir  tanlas itir
+SFX   itir  tanlo itir
+SFX   itir  tanlos itir
+SFX   ivar  vela ivar
+SFX   ivar  velas ivar
+SFX   ivar  velo ivar
+SFX   ivar  velos ivar
+SFX   ivar  venla ivar
+SFX   ivar  venlas ivar
+SFX   ivar  venlo ivar
+SFX   ivar  venlos ivar
+SFX   ivir  vala ivir
+SFX   ivir  valas ivir
+SFX   ivir  valo ivir
+SFX   ivir  valos ivir
+SFX   ivir  vanla ivir
+SFX   ivir  vanlas ivir
+SFX   ivir  vanlo ivir
+SFX   ivir  vanlos ivir
+SFX   izar  cela izar
+SFX   izar  celas izar
+SFX   izar  celo izar
+SFX   izar  celos izar
+SFX   izar  cenla izar
+SFX   izar  cenlas izar
+SFX   izar  cenlo izar
+SFX   izar  cenlos izar
+SFX   oblar  blela oblar
+SFX   oblar  blelas oblar
+SFX   oblar  blelo oblar
+SFX   oblar  blelos oblar
+SFX   oblar  blenla oblar
+SFX   oblar  blenlas oblar
+SFX   oblar  blenlo oblar
+SFX   oblar  blenlos oblar
+SFX   ocar  quela ocar
+SFX   ocar  quelas ocar
+SFX   ocar  quelo ocar
+SFX   ocar  quelos ocar
+SFX   ocar  quenla ocar
+SFX   ocar  quenlas ocar
+SFX   ocar  quenlo ocar
+SFX   ocar  quenlos ocar
+SFX   ochar  chela ochar
+SFX   ochar  chelas ochar
+SFX   ochar  chelo ochar
+SFX   ochar  chelos ochar
+SFX   ochar  chenla ochar
+SFX   ochar  chenlas ochar
+SFX   ochar  chenlo ochar
+SFX   ochar  chenlos ochar
+SFX   ogar  guela ogar
+SFX   ogar  guelas ogar
+SFX   ogar  guelo ogar
+SFX   ogar  guelos ogar
+SFX   ogar  guenla ogar
+SFX   ogar  guenlas ogar
+SFX   ogar  guenlo ogar
+SFX   ogar  guenlos ogar
+SFX   oger  jala oger
+SFX   oger  jalas oger
+SFX   oger  jalo oger
+SFX   oger  jalos oger
+SFX   oger  janla oger
+SFX   oger  janlas oger
+SFX   oger  janlo oger
+SFX   oger  janlos oger
+SFX   ojar  jela ojar
+SFX   ojar  jelas ojar
+SFX   ojar  jelo ojar
+SFX   ojar  jelos ojar
+SFX   ojar  jenla ojar
+SFX   ojar  jenlas ojar
+SFX   ojar  jenlo ojar
+SFX   ojar  jenlos ojar
+SFX   ollar  llela ollar
+SFX   ollar  llelas ollar
+SFX   ollar  llelo ollar
+SFX   ollar  llelos ollar
+SFX   ollar  llenla ollar
+SFX   ollar  llenlas ollar
+SFX   ollar  llenlo ollar
+SFX   ollar  llenlos ollar
+SFX   omar  mela omar
+SFX   omar  melas omar
+SFX   omar  melo omar
+SFX   omar  melos omar
+SFX   omar  menla omar
+SFX   omar  menlas omar
+SFX   omar  menlo omar
+SFX   omar  menlos omar
+SFX   omer  mala omer
+SFX   omer  malas omer
+SFX   omer  malo omer
+SFX   omer  malos omer
+SFX   omer  manla omer
+SFX   omer  manlas omer
+SFX   omer  manlo omer
+SFX   omer  manlos omer
+SFX   onar  nela onar
+SFX   onar  nelas onar
+SFX   onar  nelo onar
+SFX   onar  nelos onar
+SFX   onar  nenla onar
+SFX   onar  nenlas onar
+SFX   onar  nenlo onar
+SFX   onar  nenlos onar
+SFX   opiar  piela opiar
+SFX   opiar  pielas opiar
+SFX   opiar  pielo opiar
+SFX   opiar  pielos opiar
+SFX   opiar  pienla opiar
+SFX   opiar  pienlas opiar
+SFX   opiar  pienlo opiar
+SFX   opiar  pienlos opiar
+SFX   orar  rela orar
+SFX   orar  relas orar
+SFX   orar  relo orar
+SFX   orar  relos orar
+SFX   orar  renla orar
+SFX   orar  renlas orar
+SFX   orar  renlo orar
+SFX   orar  renlos orar
+SFX   orrar  rrela orrar
+SFX   orrar  rrelas orrar
+SFX   orrar  rrelo orrar
+SFX   orrar  rrelos orrar
+SFX   orrar  rrenla orrar
+SFX   orrar  rrenlas orrar
+SFX   orrar  rrenlo orrar
+SFX   orrar  rrenlos orrar
+SFX   ortar  rtela ortar
+SFX   ortar  rtelas ortar
+SFX   ortar  rtelo ortar
+SFX   ortar  rtelos ortar
+SFX   ortar  rtenla ortar
+SFX   ortar  rtenlas ortar
+SFX   ortar  rtenlo ortar
+SFX   ortar  rtenlos ortar
+SFX   otar  tela otar
+SFX   otar  telas otar
+SFX   otar  telo otar
+SFX   otar  telos otar
+SFX   otar  tenla otar
+SFX   otar  tenlas otar
+SFX   otar  tenlo otar
+SFX   otar  tenlos otar
+SFX   ubrir  bralas ubrir
+SFX   ubrir  brala ubrir
+SFX   ubrir  bralos ubrir
+SFX   ubrir  bralo ubrir
+SFX   ubrir  branlas ubrir
+SFX   ubrir  branla ubrir
+SFX   ubrir  branlos ubrir
+SFX   ubrir  branlo ubrir
+SFX   uchar  chelas uchar
+SFX   uchar  chela uchar
+SFX   uchar  chelos uchar
+SFX   uchar  chelo uchar
+SFX   uchar  chenlas uchar
+SFX   uchar  chenla uchar
+SFX   uchar  chenlos uchar
+SFX   uchar  chenlo uchar
+SFX   udar  delas udar
+SFX   udar  dela udar
+SFX   udar  delos udar
+SFX   udar  delo udar
+SFX   udar  denlas udar
+SFX   udar  denla udar
+SFX   udar  denlos udar
+SFX   udar  denlo udar
+SFX   udiar  dielas udiar
+SFX   udiar  diela udiar
+SFX   udiar  dielos udiar
+SFX   udiar  dielo udiar
+SFX   udiar  dienlas udiar
+SFX   udiar  dienla udiar
+SFX   udiar  dienlos udiar
+SFX   udiar  dienlo udiar
+SFX   ujar  jelas ujar
+SFX   ujar  jela ujar
+SFX   ujar  jelos ujar
+SFX   ujar  jelo ujar
+SFX   ujar  jenlas ujar
+SFX   ujar  jenla ujar
+SFX   ujar  jenlos ujar
+SFX   ujar  jenlo ujar
+SFX   ulpar  lpelas ulpar
+SFX   ulpar  lpela ulpar
+SFX   ulpar  lpelos ulpar
+SFX   ulpar  lpelo ulpar
+SFX   ulpar  lpenlas ulpar
+SFX   ulpar  lpenla ulpar
+SFX   ulpar  lpenlos ulpar
+SFX   ulpar  lpenlo ulpar
+SFX   ultar  ltelas ultar
+SFX   ultar  ltela ultar
+SFX   ultar  ltelos ultar
+SFX   ultar  ltelo ultar
+SFX   ultar  ltenlas ultar
+SFX   ultar  ltenla ultar
+SFX   ultar  ltenlos ultar
+SFX   ultar  ltenlo ultar
+SFX   umir  malas umir
+SFX   umir  mala umir
+SFX   umir  malos umir
+SFX   umir  malo umir
+SFX   umir  manlas umir
+SFX   umir  manla umir
+SFX   umir  manlos umir
+SFX   umir  manlo umir
+SFX   umpir  mpalas umpir
+SFX   umpir  mpala umpir
+SFX   umpir  mpalos umpir
+SFX   umpir  mpalo umpir
+SFX   umpir  mpanlas umpir
+SFX   umpir  mpanla umpir
+SFX   umpir  mpanlos umpir
+SFX   umpir  mpanlo umpir
+SFX   unciar  ncielas unciar
+SFX   unciar  nciela unciar
+SFX   unciar  ncielos unciar
+SFX   unciar  ncielo unciar
+SFX   unciar  ncienlas unciar
+SFX   unciar  ncienla unciar
+SFX   unciar  ncienlos unciar
+SFX   unciar  ncienlo unciar
+SFX   urar  relas urar
+SFX   urar  rela urar
+SFX   urar  relos urar
+SFX   urar  relo urar
+SFX   urar  renlas urar
+SFX   urar  renla urar
+SFX   urar  renlos urar
+SFX   urar  renlo urar
+SFX   urrir  rralas urrir
+SFX   urrir  rrala urrir
+SFX   urrir  rralos urrir
+SFX   urrir  rralo urrir
+SFX   urrir  rranlas urrir
+SFX   urrir  rranla urrir
+SFX   urrir  rranlos urrir
+SFX   urrir  rranlo urrir
+SFX   uscar  squelas uscar
+SFX   uscar  squela uscar
+SFX   uscar  squelos uscar
+SFX   uscar  squelo uscar
+SFX   uscar  squenlas uscar
+SFX   uscar  squenla uscar
+SFX   uscar  squenlos uscar
+SFX   uscar  squenlo uscar
+SFX   utar  telas utar
+SFX   utar  tela utar
+SFX   utar  telos utar
+SFX   utar  telo utar
+SFX   utar  tenlas utar
+SFX   utar  tenla utar
+SFX   utar  tenlos utar
+SFX   utar  tenlo utar
+SFX   uzgar  zguelas uzgar
+SFX   uzgar  zguela uzgar
+SFX   uzgar  zguelos uzgar
+SFX   uzgar  zguelo uzgar
+SFX   uzgar  zguenlas uzgar
+SFX   uzgar  zguenla uzgar
+SFX   uzgar  zguenlos uzgar
+SFX   uzgar  zguenlo uzgar
+
+SFX   Y 184
+SFX   acar  queme acar
+SFX   acar  quenme acar
+SFX   acar  quennos acar
+SFX   acar  quenos acar
+SFX   actar  cteme actar
+SFX   actar  ctenme actar
+SFX   actar  ctennos actar
+SFX   actar  ctenos actar
+SFX   ajar  jeme ajar
+SFX   ajar  jenme ajar
+SFX   ajar  jennos ajar
+SFX   ajar  jenos ajar
+SFX   amar  meme amar
+SFX   amar  menme amar
+SFX   amar  mennos amar
+SFX   amar  menos amar
+SFX   antar  nteme antar
+SFX   antar  ntenme antar
+SFX   antar  ntennos antar
+SFX   antar  ntenos antar
+SFX   anzar  nceme anzar
+SFX   anzar  ncenme anzar
+SFX   anzar  ncennos anzar
+SFX   anzar  ncenos anzar
+SFX   a ar   eme a ar
+SFX   a ar   enme a ar
+SFX   a ar   ennos a ar
+SFX   a ar   enos a ar
+SFX   arar  reme arar
+SFX   arar  renme arar
+SFX   arar  rennos arar
+SFX   arar  renos arar
+SFX   ardar  rdeme ardar
+SFX   ardar  rdenme ardar
+SFX   ardar  rdennos ardar
+SFX   ardar  rdenos ardar
+SFX   astar  steme astar
+SFX   astar  stenme astar
+SFX   astar  stennos astar
+SFX   astar  stenos astar
+SFX   atar  teme atar
+SFX   atar  tenme atar
+SFX   atar  tennos atar
+SFX   atar  tenos atar
+SFX   ear  eme ear
+SFX   ear  enme ear
+SFX   ear  ennos ear
+SFX   ear  enos ear
+SFX   eder  dame eder
+SFX   eder  danme eder
+SFX   eder  dannos eder
+SFX   eder  danos eder
+SFX   eer  ame eer
+SFX   eer  anme eer
+SFX   eer  annos eer
+SFX   eer  anos eer
+SFX   egar  gueme egar
+SFX   egar  guenme egar
+SFX   egar  guennos egar
+SFX   egar  guenos egar
+SFX   ejar  jeme ejar
+SFX   ejar  jenme ejar
+SFX   ejar  jennos ejar
+SFX   ejar  jenos ejar
+SFX   endar  ndeme endar
+SFX   endar  ndenme endar
+SFX   endar  ndennos endar
+SFX   endar  ndenos endar
+SFX   ender  ndame ender
+SFX   ender  ndanme ender
+SFX   ender  ndannos ender
+SFX   ender  ndanos ender
+SFX   e ar   eme e ar
+SFX   e ar   enme e ar
+SFX   e ar   ennos e ar
+SFX   e ar   enos e ar
+SFX   eptar  pteme eptar
+SFX   eptar  ptenme eptar
+SFX   eptar  ptennos eptar
+SFX   eptar  ptenos eptar
+SFX   erar  reme erar
+SFX   erar  renme erar
+SFX   erar  rennos erar
+SFX   erar  renos erar
+SFX   estar  steme estar
+SFX   estar  stenme estar
+SFX   estar  stennos estar
+SFX   estar  stenos estar
+SFX   etar  teme etar
+SFX   etar  tenme etar
+SFX   etar  tennos etar
+SFX   etar  tenos etar
+SFX   eter  tame eter
+SFX   eter  tanme eter
+SFX   eter  tannos eter
+SFX   eter  tanos eter
+SFX   ibir  bame ibir
+SFX   ibir  banme ibir
+SFX   ibir  bannos ibir
+SFX   ibir  banos ibir
+SFX   icar  queme icar
+SFX   icar  quenme icar
+SFX   icar  quennos icar
+SFX   icar  quenos icar
+SFX   idar  deme idar
+SFX   idar  denme idar
+SFX   idar  dennos idar
+SFX   idar  denos idar
+SFX   iflar  fleme iflar
+SFX   iflar  flenme iflar
+SFX   iflar  flennos iflar
+SFX   iflar  flenos iflar
+SFX   ilar  leme ilar
+SFX   ilar  lenme ilar
+SFX   ilar  lennos ilar
+SFX   ilar  lenos ilar
+SFX   irar  reme irar
+SFX   irar  renme irar
+SFX   irar  rennos irar
+SFX   irar  renos irar
+SFX   isar  seme isar
+SFX   isar  senme isar
+SFX   isar  sennos isar
+SFX   isar  senos isar
+SFX   itar  teme itar
+SFX   itar  tenme itar
+SFX   itar  tennos itar
+SFX   itar  tenos itar
+SFX   izar  ceme izar
+SFX   izar  cenme izar
+SFX   izar  cennos izar
+SFX   izar  cenos izar
+SFX   obrar  breme obrar
+SFX   obrar  brenme obrar
+SFX   obrar  brennos obrar
+SFX   obrar  brenos obrar
+SFX   ocar  queme ocar
+SFX   ocar  quenme ocar
+SFX   ocar  quennos ocar
+SFX   ocar  quenos ocar
+SFX   onar  neme onar
+SFX   onar  nenme onar
+SFX   onar  nennos onar
+SFX   onar  nenos onar
+SFX   otar  teme otar
+SFX   otar  tenme otar
+SFX   otar  tennos otar
+SFX   otar  tenos otar
+SFX   uchar  cheme uchar
+SFX   uchar  chenme uchar
+SFX   uchar  chennos uchar
+SFX   uchar  chenos uchar
+SFX   udar  deme udar
+SFX   udar  denme udar
+SFX   udar  dennos udar
+SFX   udar  denos udar
+SFX   ulpar  lpeme ulpar
+SFX   ulpar  lpenme ulpar
+SFX   ulpar  lpennos ulpar
+SFX   ulpar  lpenos ulpar
+SFX   ultar  lteme ultar
+SFX   ultar  ltenme ultar
+SFX   ultar  ltennos ultar
+SFX   ultar  ltenos ultar
+SFX   umpir  mpame umpir
+SFX   umpir  mpanme umpir
+SFX   umpir  mpannos umpir
+SFX   umpir  mpanos umpir
+SFX   urar  reme urar
+SFX   urar  renme urar
+SFX   urar  rennos urar
+SFX   urar  renos urar
+SFX   usar  seme usar
+SFX   usar  senme usar
+SFX   usar  sennos usar
+SFX   usar  senos usar
+SFX   uscar  squeme uscar
+SFX   uscar  squenme uscar
+SFX   uscar  squennos uscar
+SFX   uscar  squenos uscar
+SFX   ustar  steme ustar
+SFX   ustar  stenme ustar
+SFX   ustar  stennos ustar
+SFX   ustar  stenos ustar
+
+SFX   Y 144
+SFX   acar  quele acar
+SFX   acar  queles acar
+SFX   acar  quenle acar
+SFX   acar  quenles acar
+SFX   adir  dale adir
+SFX   adir  dales adir
+SFX   adir  danle adir
+SFX   adir  danles adir
+SFX   alar  lele alar
+SFX   alar  leles alar
+SFX   alar  lenle alar
+SFX   alar  lenles alar
+SFX   ambiar  mbiele ambiar
+SFX   ambiar  mbieles ambiar
+SFX   ambiar  mbienle ambiar
+SFX   ambiar  mbienles ambiar
+SFX   ancar  nquele ancar
+SFX   ancar  nqueles ancar
+SFX   ancar  nquenle ancar
+SFX   ancar  nquenles ancar
+SFX   arar  rele arar
+SFX   arar  reles arar
+SFX   arar  renle arar
+SFX   arar  renles arar
+SFX   asar  sele asar
+SFX   asar  seles asar
+SFX   asar  senle asar
+SFX   asar  senles asar
+SFX   astar  stele astar
+SFX   astar  steles astar
+SFX   astar  stenle astar
+SFX   astar  stenles astar
+SFX   azar  cele azar
+SFX   azar  celes azar
+SFX   azar  cenle azar
+SFX   azar  cenles azar
+SFX   egar  guele egar
+SFX   egar  gueles egar
+SFX   egar  guenle egar
+SFX   egar  guenles egar
+SFX   ejar  jele ejar
+SFX   ejar  jeles ejar
+SFX   ejar  jenle ejar
+SFX   ejar  jenles ejar
+SFX   entar  ntele entar
+SFX   entar  nteles entar
+SFX   entar  ntenle entar
+SFX   entar  ntenles entar
+SFX   e ar   ele e ar
+SFX   e ar   eles e ar
+SFX   e ar   enle e ar
+SFX   e ar   enles e ar
+SFX   esgar  sguele esgar
+SFX   esgar  sgueles esgar
+SFX   esgar  sguenle esgar
+SFX   esgar  sguenles esgar
+SFX   estar  stele estar
+SFX   estar  steles estar
+SFX   estar  stenle estar
+SFX   estar  stenles estar
+SFX   eter  tale eter
+SFX   eter  tales eter
+SFX   eter  tanle eter
+SFX   eter  tanles eter
+SFX   icar  quele icar
+SFX   icar  queles icar
+SFX   icar  quenle icar
+SFX   icar  quenles icar
+SFX   iflar  flele iflar
+SFX   iflar  fleles iflar
+SFX   iflar  flenle iflar
+SFX   iflar  flenles iflar
+SFX   igir  jale igir
+SFX   igir  jales igir
+SFX   igir  janle igir
+SFX   igir  janles igir
+SFX   imar  mele imar
+SFX   imar  meles imar
+SFX   imar  menle imar
+SFX   imar  menles imar
+SFX   irar  rele irar
+SFX   irar  reles irar
+SFX   irar  renle irar
+SFX   irar  renles irar
+SFX   irmar  rmele irmar
+SFX   irmar  rmeles irmar
+SFX   irmar  rmenle irmar
+SFX   irmar  rmenles irmar
+SFX   isar  sele isar
+SFX   isar  seles isar
+SFX   isar  senle isar
+SFX   isar  senles isar
+SFX   itar  tele itar
+SFX   itar  teles itar
+SFX   itar  tenle itar
+SFX   itar  tenles itar
+SFX   ocar  quele ocar
+SFX   ocar  queles ocar
+SFX   ocar  quenle ocar
+SFX   ocar  quenles ocar
+SFX   oger  jale oger
+SFX   oger  jales oger
+SFX   oger  janle oger
+SFX   oger  janles oger
+SFX   onar  nele onar
+SFX   onar  neles onar
+SFX   onar  nenle onar
+SFX   onar  nenles onar
+SFX   orgar  rguele orgar
+SFX   orgar  rgueles orgar
+SFX   orgar  rguenle orgar
+SFX   orgar  rguenles orgar
+SFX   ovar  vele ovar
+SFX   ovar  veles ovar
+SFX   ovar  venle ovar
+SFX   ovar  venles ovar
+SFX   uchar  cheles uchar
+SFX   uchar  chele uchar
+SFX   uchar  chenles uchar
+SFX   uchar  chenle uchar
+SFX   ultar  lteles ultar
+SFX   ultar  ltele ultar
+SFX   ultar  ltenles ultar
+SFX   ultar  ltenle ultar
+SFX   umar  meles umar
+SFX   umar  mele umar
+SFX   umar  menles umar
+SFX   umar  menle umar
+SFX   untar  nteles untar
+SFX   untar  ntele untar
+SFX   untar  ntenles untar
+SFX   untar  ntenle untar
+SFX   urar  reles urar
+SFX   urar  rele urar
+SFX   urar  renles urar
+SFX   urar  renle urar
+SFX   uscar  squeles uscar
+SFX   uscar  squele uscar
+SFX   uscar  squenles uscar
+SFX   uscar  squenle uscar
+SFX   ustar  steles ustar
+SFX   ustar  stele ustar
+SFX   ustar  stenles ustar
+SFX   ustar  stenle ustar
+
+SFX   Y 264
+SFX   amar  memela amar
+SFX   amar  memelas amar
+SFX   amar  memelo amar
+SFX   amar  memelos amar
+SFX   amar  menmela amar
+SFX   amar  menmelas amar
+SFX   amar  menmelo amar
+SFX   amar  menmelos amar
+SFX   amar  mennosla amar
+SFX   amar  mennoslas amar
+SFX   amar  mennoslo amar
+SFX   amar  mennoslos amar
+SFX   amar  menosla amar
+SFX   amar  menoslas amar
+SFX   amar  menoslo amar
+SFX   amar  menoslos amar
+SFX   amar  mensela amar
+SFX   amar  menselas amar
+SFX   amar  menselo amar
+SFX   amar  menselos amar
+SFX   amar  mesela amar
+SFX   amar  meselas amar
+SFX   amar  meselo amar
+SFX   amar  meselos amar
+SFX   ear  emela ear
+SFX   ear  emelas ear
+SFX   ear  emelo ear
+SFX   ear  emelos ear
+SFX   ear  enmela ear
+SFX   ear  enmelas ear
+SFX   ear  enmelo ear
+SFX   ear  enmelos ear
+SFX   ear  ennosla ear
+SFX   ear  ennoslas ear
+SFX   ear  ennoslo ear
+SFX   ear  ennoslos ear
+SFX   ear  enosla ear
+SFX   ear  enoslas ear
+SFX   ear  enoslo ear
+SFX   ear  enoslos ear
+SFX   ear  ensela ear
+SFX   ear  enselas ear
+SFX   ear  enselo ear
+SFX   ear  enselos ear
+SFX   ear  esela ear
+SFX   ear  eselas ear
+SFX   ear  eselo ear
+SFX   ear  eselos ear
+SFX   edar  demela edar
+SFX   edar  demelas edar
+SFX   edar  demelo edar
+SFX   edar  demelos edar
+SFX   edar  denmela edar
+SFX   edar  denmelas edar
+SFX   edar  denmelo edar
+SFX   edar  denmelos edar
+SFX   edar  dennosla edar
+SFX   edar  dennoslas edar
+SFX   edar  dennoslo edar
+SFX   edar  dennoslos edar
+SFX   edar  denosla edar
+SFX   edar  denoslas edar
+SFX   edar  denoslo edar
+SFX   edar  denoslos edar
+SFX   edar  densela edar
+SFX   edar  denselas edar
+SFX   edar  denselo edar
+SFX   edar  denselos edar
+SFX   edar  desela edar
+SFX   edar  deselas edar
+SFX   edar  deselo edar
+SFX   edar  deselos edar
+SFX   eer  amela eer
+SFX   eer  amelas eer
+SFX   eer  amelo eer
+SFX   eer  amelos eer
+SFX   eer  anmela eer
+SFX   eer  anmelas eer
+SFX   eer  anmelo eer
+SFX   eer  anmelos eer
+SFX   eer  annosla eer
+SFX   eer  annoslas eer
+SFX   eer  annoslo eer
+SFX   eer  annoslos eer
+SFX   eer  anosla eer
+SFX   eer  anoslas eer
+SFX   eer  anoslo eer
+SFX   eer  anoslos eer
+SFX   eer  ansela eer
+SFX   eer  anselas eer
+SFX   eer  anselo eer
+SFX   eer  anselos eer
+SFX   eer  asela eer
+SFX   eer  aselas eer
+SFX   eer  aselo eer
+SFX   eer  aselos eer
+SFX   egar  guemela egar
+SFX   egar  guemelas egar
+SFX   egar  guemelo egar
+SFX   egar  guemelos egar
+SFX   egar  guenmela egar
+SFX   egar  guenmelas egar
+SFX   egar  guenmelo egar
+SFX   egar  guenmelos egar
+SFX   egar  guennosla egar
+SFX   egar  guennoslas egar
+SFX   egar  guennoslo egar
+SFX   egar  guennoslos egar
+SFX   egar  guenosla egar
+SFX   egar  guenoslas egar
+SFX   egar  guenoslo egar
+SFX   egar  guenoslos egar
+SFX   egar  guensela egar
+SFX   egar  guenselas egar
+SFX   egar  guenselo egar
+SFX   egar  guenselos egar
+SFX   egar  guesela egar
+SFX   egar  gueselas egar
+SFX   egar  gueselo egar
+SFX   egar  gueselos egar
+SFX   ejar  jemela ejar
+SFX   ejar  jemelas ejar
+SFX   ejar  jemelo ejar
+SFX   ejar  jemelos ejar
+SFX   ejar  jenmela ejar
+SFX   ejar  jenmelas ejar
+SFX   ejar  jenmelo ejar
+SFX   ejar  jenmelos ejar
+SFX   ejar  jennosla ejar
+SFX   ejar  jennoslas ejar
+SFX   ejar  jennoslo ejar
+SFX   ejar  jennoslos ejar
+SFX   ejar  jenosla ejar
+SFX   ejar  jenoslas ejar
+SFX   ejar  jenoslo ejar
+SFX   ejar  jenoslos ejar
+SFX   ejar  jensela ejar
+SFX   ejar  jenselas ejar
+SFX   ejar  jenselo ejar
+SFX   ejar  jenselos ejar
+SFX   ejar  jesela ejar
+SFX   ejar  jeselas ejar
+SFX   ejar  jeselo ejar
+SFX   ejar  jeselos ejar
+SFX   ender  ndamela ender
+SFX   ender  ndamelas ender
+SFX   ender  ndamelo ender
+SFX   ender  ndamelos ender
+SFX   ender  ndanmela ender
+SFX   ender  ndanmelas ender
+SFX   ender  ndanmelo ender
+SFX   ender  ndanmelos ender
+SFX   ender  ndannosla ender
+SFX   ender  ndannoslas ender
+SFX   ender  ndannoslo ender
+SFX   ender  ndannoslos ender
+SFX   ender  ndanosla ender
+SFX   ender  ndanoslas ender
+SFX   ender  ndanoslo ender
+SFX   ender  ndanoslos ender
+SFX   ender  ndansela ender
+SFX   ender  ndanselas ender
+SFX   ender  ndanselo ender
+SFX   ender  ndanselos ender
+SFX   ender  ndasela ender
+SFX   ender  ndaselas ender
+SFX   ender  ndaselo ender
+SFX   ender  ndaselos ender
+SFX   entar  ntemela entar
+SFX   entar  ntemelas entar
+SFX   entar  ntemelo entar
+SFX   entar  ntemelos entar
+SFX   entar  ntenmela entar
+SFX   entar  ntenmelas entar
+SFX   entar  ntenmelo entar
+SFX   entar  ntenmelos entar
+SFX   entar  ntennosla entar
+SFX   entar  ntennoslas entar
+SFX   entar  ntennoslo entar
+SFX   entar  ntennoslos entar
+SFX   entar  ntenosla entar
+SFX   entar  ntenoslas entar
+SFX   entar  ntenoslo entar
+SFX   entar  ntenoslos entar
+SFX   entar  ntensela entar
+SFX   entar  ntenselas entar
+SFX   entar  ntenselo entar
+SFX   entar  ntenselos entar
+SFX   entar  ntesela entar
+SFX   entar  nteselas entar
+SFX   entar  nteselo entar
+SFX   entar  nteselos entar
+SFX   icar  quemela icar
+SFX   icar  quemelas icar
+SFX   icar  quemelo icar
+SFX   icar  quemelos icar
+SFX   icar  quenmela icar
+SFX   icar  quenmelas icar
+SFX   icar  quenmelo icar
+SFX   icar  quenmelos icar
+SFX   icar  quennosla icar
+SFX   icar  quennoslas icar
+SFX   icar  quennoslo icar
+SFX   icar  quennoslos icar
+SFX   icar  quenosla icar
+SFX   icar  quenoslas icar
+SFX   icar  quenoslo icar
+SFX   icar  quenoslos icar
+SFX   icar  quensela icar
+SFX   icar  quenselas icar
+SFX   icar  quenselo icar
+SFX   icar  quenselos icar
+SFX   icar  quesela icar
+SFX   icar  queselas icar
+SFX   icar  queselo icar
+SFX   icar  queselos icar
+SFX   inar  nemela inar
+SFX   inar  nemelas inar
+SFX   inar  nemelo inar
+SFX   inar  nemelos inar
+SFX   inar  nenmela inar
+SFX   inar  nenmelas inar
+SFX   inar  nenmelo inar
+SFX   inar  nenmelos inar
+SFX   inar  nennosla inar
+SFX   inar  nennoslas inar
+SFX   inar  nennoslo inar
+SFX   inar  nennoslos inar
+SFX   inar  nenosla inar
+SFX   inar  nenoslas inar
+SFX   inar  nenoslo inar
+SFX   inar  nenoslos inar
+SFX   inar  nensela inar
+SFX   inar  nenselas inar
+SFX   inar  nenselo inar
+SFX   inar  nenselos inar
+SFX   inar  nesela inar
+SFX   inar  neselas inar
+SFX   inar  neselo inar
+SFX   inar  neselos inar
+SFX   itar  temela itar
+SFX   itar  temelas itar
+SFX   itar  temelo itar
+SFX   itar  temelos itar
+SFX   itar  tenmela itar
+SFX   itar  tenmelas itar
+SFX   itar  tenmelo itar
+SFX   itar  tenmelos itar
+SFX   itar  tennosla itar
+SFX   itar  tennoslas itar
+SFX   itar  tennoslo itar
+SFX   itar  tennoslos itar
+SFX   itar  tenosla itar
+SFX   itar  tenoslas itar
+SFX   itar  tenoslo itar
+SFX   itar  tenoslos itar
+SFX   itar  tensela itar
+SFX   itar  tenselas itar
+SFX   itar  tenselo itar
+SFX   itar  tenselos itar
+SFX   itar  tesela itar
+SFX   itar  teselas itar
+SFX   itar  teselo itar
+SFX   itar  teselos itar
+
+SFX   Y 120
+SFX   egar i guela egar
+SFX   egar i guelas egar
+SFX   egar i guelo egar
+SFX   egar i guelos egar
+SFX   egar i guenla egar
+SFX   egar i guenlas egar
+SFX   egar i guenlo egar
+SFX   egar i guenlos egar
+SFX   ender i ndala ender
+SFX   ender i ndalas ender
+SFX   ender i ndalo ender
+SFX   ender i ndalos ender
+SFX   ender i ndanla ender
+SFX   ender i ndanlas ender
+SFX   ender i ndanlo ender
+SFX   ender i ndanlos ender
+SFX   ensar i nsela ensar
+SFX   ensar i nselas ensar
+SFX   ensar i nselo ensar
+SFX   ensar i nselos ensar
+SFX   ensar i nsenla ensar
+SFX   ensar i nsenlas ensar
+SFX   ensar i nsenlo ensar
+SFX   ensar i nsenlos ensar
+SFX   etar i tela etar
+SFX   etar i telas etar
+SFX   etar i telo etar
+SFX   etar i telos etar
+SFX   etar i tenla etar
+SFX   etar i tenlas etar
+SFX   etar i tenlo etar
+SFX   etar i tenlos etar
+SFX   iar  ela iar
+SFX   iar  elas iar
+SFX   iar  elo iar
+SFX   iar  elos iar
+SFX   iar  enla iar
+SFX   iar  enlas iar
+SFX   iar  enlo iar
+SFX   iar  enlos iar
+SFX   obar u bela obar
+SFX   obar u belas obar
+SFX   obar u belo obar
+SFX   obar u belos obar
+SFX   obar u benla obar
+SFX   obar u benlas obar
+SFX   obar u benlo obar
+SFX   obar u benlos obar
+SFX   ocer u zala ocer
+SFX   ocer u zalas ocer
+SFX   ocer u zalo ocer
+SFX   ocer u zalos ocer
+SFX   ocer u zanla ocer
+SFX   ocer u zanlas ocer
+SFX   ocer u zanlo ocer
+SFX   ocer u zanlos ocer
+SFX   olar u lela olar
+SFX   olar u lelas olar
+SFX   olar u lelo olar
+SFX   olar u lelos olar
+SFX   olar u lenla olar
+SFX   olar u lenlas olar
+SFX   olar u lenlo olar
+SFX   olar u lenlos olar
+SFX   oltar u ltela oltar
+SFX   oltar u ltelas oltar
+SFX   oltar u ltelo oltar
+SFX   oltar u ltelos oltar
+SFX   oltar u ltenla oltar
+SFX   oltar u ltenlas oltar
+SFX   oltar u ltenlo oltar
+SFX   oltar u ltenlos oltar
+SFX   olver u lvala olver
+SFX   olver u lvalas olver
+SFX   olver u lvalo olver
+SFX   olver u lvalos olver
+SFX   olver u lvanla olver
+SFX   olver u lvanlas olver
+SFX   olver u lvanlo olver
+SFX   olver u lvanlos olver
+SFX   ontar u ntela ontar
+SFX   ontar u ntelas ontar
+SFX   ontar u ntelo ontar
+SFX   ontar u ntelos ontar
+SFX   ontar u ntenla ontar
+SFX   ontar u ntenlas ontar
+SFX   ontar u ntenlo ontar
+SFX   ontar u ntenlos ontar
+SFX   ordar u rdela ordar
+SFX   ordar u rdelas ordar
+SFX   ordar u rdelo ordar
+SFX   ordar u rdelos ordar
+SFX   ordar u rdenla ordar
+SFX   ordar u rdenlas ordar
+SFX   ordar u rdenlo ordar
+SFX   ordar u rdenlos ordar
+SFX   ostrar u strela ostrar
+SFX   ostrar u strelas ostrar
+SFX   ostrar u strelo ostrar
+SFX   ostrar u strelos ostrar
+SFX   ostrar u strenla ostrar
+SFX   ostrar u strenlas ostrar
+SFX   ostrar u strenlo ostrar
+SFX   ostrar u strenlos ostrar
+SFX   over u vala over
+SFX   over u valas over
+SFX   over u valo over
+SFX   over u valos over
+SFX   over u vanla over
+SFX   over u vanlas over
+SFX   over u vanlo over
+SFX   over u vanlos over
+SFX   uar  elas uar
+SFX   uar  ela uar
+SFX   uar  elos uar
+SFX   uar  elo uar
+SFX   uar  enlas uar
+SFX   uar  enla uar
+SFX   uar  enlos uar
+SFX   uar  enlo uar
+
+SFX   Y 36
+SFX   ender i ndame ender
+SFX   ender i ndanme ender
+SFX   ender i ndannos ender
+SFX   ender i ndanos ender
+SFX   entar i nteme entar
+SFX   entar i ntenme entar
+SFX   entar i ntennos entar
+SFX   entar i ntenos entar
+SFX   ertar i rteme ertar
+SFX   ertar i rtenme ertar
+SFX   ertar i rtennos ertar
+SFX   ertar i rtenos ertar
+SFX   iar  eme iar
+SFX   iar  enme iar
+SFX   iar  ennos iar
+SFX   iar  enos iar
+SFX   oltar u lteme oltar
+SFX   oltar u ltenme oltar
+SFX   oltar u ltennos oltar
+SFX   oltar u ltenos oltar
+SFX   olver u lvame olver
+SFX   olver u lvanme olver
+SFX   olver u lvannos olver
+SFX   olver u lvanos olver
+SFX   ontar u nteme ontar
+SFX   ontar u ntenme ontar
+SFX   ontar u ntennos ontar
+SFX   ontar u ntenos ontar
+SFX   ordar u rdeme ordar
+SFX   ordar u rdenme ordar
+SFX   ordar u rdennos ordar
+SFX   ordar u rdenos ordar
+SFX   ostrar u streme ostrar
+SFX   ostrar u strenme ostrar
+SFX   ostrar u strennos ostrar
+SFX   ostrar u strenos ostrar
+
+SFX   Y 24
+SFX   ecer  zcale ecer
+SFX   ecer  zcales ecer
+SFX   ecer  zcanle ecer
+SFX   ecer  zcanles ecer
+SFX   iar  ele iar
+SFX   iar  eles iar
+SFX   iar  enle iar
+SFX   iar  enles iar
+SFX   ogar u guele ogar
+SFX   ogar u gueles ogar
+SFX   ogar u guenle ogar
+SFX   ogar u guenles ogar
+SFX   ontar u ntele ontar
+SFX   ontar u nteles ontar
+SFX   ontar u ntenle ontar
+SFX   ontar u ntenles ontar
+SFX   ordar u rdele ordar
+SFX   ordar u rdeles ordar
+SFX   ordar u rdenle ordar
+SFX   ordar u rdenles ordar
+SFX   ostrar u strele ostrar
+SFX   ostrar u streles ostrar
+SFX   ostrar u strenle ostrar
+SFX   ostrar u strenles ostrar
+
+SFX   Y 72
+SFX   iar  emela iar
+SFX   iar  emelas iar
+SFX   iar  emelo iar
+SFX   iar  emelos iar
+SFX   iar  enmela iar
+SFX   iar  enmelas iar
+SFX   iar  enmelo iar
+SFX   iar  enmelos iar
+SFX   iar  ennosla iar
+SFX   iar  ennoslas iar
+SFX   iar  ennoslo iar
+SFX   iar  ennoslos iar
+SFX   iar  enosla iar
+SFX   iar  enoslas iar
+SFX   iar  enoslo iar
+SFX   iar  enoslos iar
+SFX   iar  ensela iar
+SFX   iar  enselas iar
+SFX   iar  enselo iar
+SFX   iar  enselos iar
+SFX   iar  esela iar
+SFX   iar  eselas iar
+SFX   iar  eselo iar
+SFX   iar  eselos iar
+SFX   ontar u ntemela ontar
+SFX   ontar u ntemelas ontar
+SFX   ontar u ntemelo ontar
+SFX   ontar u ntemelos ontar
+SFX   ontar u ntenmela ontar
+SFX   ontar u ntenmelas ontar
+SFX   ontar u ntenmelo ontar
+SFX   ontar u ntenmelos ontar
+SFX   ontar u ntennosla ontar
+SFX   ontar u ntennoslas ontar
+SFX   ontar u ntennoslo ontar
+SFX   ontar u ntennoslos ontar
+SFX   ontar u ntenosla ontar
+SFX   ontar u ntenoslas ontar
+SFX   ontar u ntenoslo ontar
+SFX   ontar u ntenoslos ontar
+SFX   ontar u ntensela ontar
+SFX   ontar u ntenselas ontar
+SFX   ontar u ntenselo ontar
+SFX   ontar u ntenselos ontar
+SFX   ontar u ntesela ontar
+SFX   ontar u nteselas ontar
+SFX   ontar u nteselo ontar
+SFX   ontar u nteselos ontar
+SFX   ostrar u stremela ostrar
+SFX   ostrar u stremelas ostrar
+SFX   ostrar u stremelo ostrar
+SFX   ostrar u stremelos ostrar
+SFX   ostrar u strenmela ostrar
+SFX   ostrar u strenmelas ostrar
+SFX   ostrar u strenmelo ostrar
+SFX   ostrar u strenmelos ostrar
+SFX   ostrar u strennosla ostrar
+SFX   ostrar u strennoslas ostrar
+SFX   ostrar u strennoslo ostrar
+SFX   ostrar u strennoslos ostrar
+SFX   ostrar u strenosla ostrar
+SFX   ostrar u strenoslas ostrar
+SFX   ostrar u strenoslo ostrar
+SFX   ostrar u strenoslos ostrar
+SFX   ostrar u strensela ostrar
+SFX   ostrar u strenselas ostrar
+SFX   ostrar u strenselo ostrar
+SFX   ostrar u strenselos ostrar
+SFX   ostrar u stresela ostrar
+SFX   ostrar u streselas ostrar
+SFX   ostrar u streselo ostrar
+SFX   ostrar u streselos ostrar
+
+SFX   Y 128
+SFX   aber  pala aber
+SFX   aber  palas aber
+SFX   aber  palo aber
+SFX   aber  palos aber
+SFX   aber  panla aber
+SFX   aber  panlas aber
+SFX   aber  panlo aber
+SFX   aber  panlos aber
+SFX   acer  gala acer
+SFX   acer  galas acer
+SFX   acer  galo acer
+SFX   acer  galos acer
+SFX   acer  ganla acer
+SFX   acer  ganlas acer
+SFX   acer  ganlo acer
+SFX   acer  ganlos acer
+SFX   aer  igala aer
+SFX   aer  igalas aer
+SFX   aer  igalo aer
+SFX   aer  igalos aer
+SFX   aer  iganla aer
+SFX   aer  iganlas aer
+SFX   aer  iganlo aer
+SFX   aer  iganlos aer
+SFX   ecir  gala ecir
+SFX   ecir  galas ecir
+SFX   ecir  galo ecir
+SFX   ecir  galos ecir
+SFX   ecir  ganla ecir
+SFX   ecir  ganlas ecir
+SFX   ecir  ganlo ecir
+SFX   ecir  ganlos ecir
+SFX   edir  dala edir
+SFX   edir  dalas edir
+SFX   edir  dalo edir
+SFX   edir  dalos edir
+SFX   edir  danla edir
+SFX   edir  danlas edir
+SFX   edir  danlo edir
+SFX   edir  danlos edir
+SFX   eguir  gala eguir
+SFX   eguir  galas eguir
+SFX   eguir  galo eguir
+SFX   eguir  galos eguir
+SFX   eguir  ganla eguir
+SFX   eguir  ganlas eguir
+SFX   eguir  ganlo eguir
+SFX   eguir  ganlos eguir
+SFX   e r  ala e r
+SFX   e r  alas e r
+SFX   e r  alo e r
+SFX   e r  alos e r
+SFX   e r  anla e r
+SFX   e r  anlas e r
+SFX   e r  anlo e r
+SFX   e r  anlos e r
+SFX   ener  ngala ener
+SFX   ener  ngalas ener
+SFX   ener  ngalo ener
+SFX   ener  ngalos ener
+SFX   ener  nganla ener
+SFX   ener  nganlas ener
+SFX   ener  nganlo ener
+SFX   ener  nganlos ener
+SFX   entir i ntala entir
+SFX   entir i ntalas entir
+SFX   entir i ntalo entir
+SFX   entir i ntalos entir
+SFX   entir i ntanla entir
+SFX   entir i ntanlas entir
+SFX   entir i ntanlo entir
+SFX   entir i ntanlos entir
+SFX   er  ala ver
+SFX   er  alas ver
+SFX   er  alo ver
+SFX   er  alos ver
+SFX   er  anla ver
+SFX   er  anlas ver
+SFX   er  anlo ver
+SFX   er  anlos ver
+SFX   erer i rala erer
+SFX   erer i ralas erer
+SFX   erer i ralo erer
+SFX   erer i ralos erer
+SFX   erer i ranla erer
+SFX   erer i ranlas erer
+SFX   erer i ranlo erer
+SFX   erer i ranlos erer
+SFX   ervir  rvala ervir
+SFX   ervir  rvalas ervir
+SFX   ervir  rvalo ervir
+SFX   ervir  rvalos ervir
+SFX   ervir  rvanla ervir
+SFX   ervir  rvanlas ervir
+SFX   ervir  rvanlo ervir
+SFX   ervir  rvanlos ervir
+SFX   oner  ngala oner
+SFX   oner  ngalas oner
+SFX   oner  ngalo oner
+SFX   oner  ngalos oner
+SFX   oner  nganla oner
+SFX   oner  nganlas oner
+SFX   oner  nganlo oner
+SFX   oner  nganlos oner
+SFX   rir  rala rir
+SFX   rir  ralas rir
+SFX   rir  ralo rir
+SFX   rir  ralos rir
+SFX   rir  ranla rir
+SFX   rir  ranlas rir
+SFX   rir  ranlo rir
+SFX   rir  ranlos rir
+SFX   ucir  zcalas ucir
+SFX   ucir  zcala ucir
+SFX   ucir  zcalos ucir
+SFX   ucir  zcalo ucir
+SFX   ucir  zcanlas ucir
+SFX   ucir  zcanla ucir
+SFX   ucir  zcanlos ucir
+SFX   ucir  zcanlo ucir
+SFX   uir  yalas uir
+SFX   uir  yala uir
+SFX   uir  yalos uir
+SFX   uir  yalo uir
+SFX   uir  yanlas uir
+SFX   uir  yanla uir
+SFX   uir  yanlos uir
+SFX   uir  yanlo uir
+
+SFX   Y 28
+SFX   acer  game acer
+SFX   acer  ganme acer
+SFX   acer  gannos acer
+SFX   acer  ganos acer
+SFX   aer  igame aer
+SFX   aer  iganme aer
+SFX   aer  igannos aer
+SFX   aer  iganos aer
+SFX   ecir  game ecir
+SFX   ecir  ganme ecir
+SFX   ecir  gannos ecir
+SFX   ecir  ganos ecir
+SFX   edir  dame edir
+SFX   edir  danme edir
+SFX   edir  dannos edir
+SFX   edir  danos edir
+SFX   eguir  game eguir
+SFX   eguir  ganme eguir
+SFX   eguir  gannos eguir
+SFX   eguir  ganos eguir
+SFX   er  ame ver
+SFX   er  anme ver
+SFX   er  annos ver
+SFX   er  anos ver
+SFX   ervir  rvame ervir
+SFX   ervir  rvanme ervir
+SFX   ervir  rvannos ervir
+SFX   ervir  rvanos ervir
+
+SFX   Y 20
+SFX   acer  gale acer
+SFX   acer  gales acer
+SFX   acer  ganle acer
+SFX   acer  ganles acer
+SFX   ecir  gale ecir
+SFX   ecir  gales ecir
+SFX   ecir  ganle ecir
+SFX   ecir  ganles ecir
+SFX   edir  dale edir
+SFX   edir  dales edir
+SFX   edir  danle edir
+SFX   edir  danles edir
+SFX   er  ale ver
+SFX   er  ales ver
+SFX   er  anle ver
+SFX   er  anles ver
+SFX   oner  ngale oner
+SFX   oner  ngales oner
+SFX   oner  nganle oner
+SFX   oner  nganles oner
+
+SFX   Y 72
+SFX   aer  igamela aer
+SFX   aer  igamelas aer
+SFX   aer  igamelo aer
+SFX   aer  igamelos aer
+SFX   aer  iganmela aer
+SFX   aer  iganmelas aer
+SFX   aer  iganmelo aer
+SFX   aer  iganmelos aer
+SFX   aer  igannosla aer
+SFX   aer  igannoslas aer
+SFX   aer  igannoslo aer
+SFX   aer  igannoslos aer
+SFX   aer  iganosla aer
+SFX   aer  iganoslas aer
+SFX   aer  iganoslo aer
+SFX   aer  iganoslos aer
+SFX   aer  igansela aer
+SFX   aer  iganselas aer
+SFX   aer  iganselo aer
+SFX   aer  iganselos aer
+SFX   aer  igasela aer
+SFX   aer  igaselas aer
+SFX   aer  igaselo aer
+SFX   aer  igaselos aer
+SFX   ecir  gamela ecir
+SFX   ecir  gamelas ecir
+SFX   ecir  gamelo ecir
+SFX   ecir  gamelos ecir
+SFX   ecir  ganmela ecir
+SFX   ecir  ganmelas ecir
+SFX   ecir  ganmelo ecir
+SFX   ecir  ganmelos ecir
+SFX   ecir  gannosla ecir
+SFX   ecir  gannoslas ecir
+SFX   ecir  gannoslo ecir
+SFX   ecir  gannoslos ecir
+SFX   ecir  ganosla ecir
+SFX   ecir  ganoslas ecir
+SFX   ecir  ganoslo ecir
+SFX   ecir  ganoslos ecir
+SFX   ecir  gansela ecir
+SFX   ecir  ganselas ecir
+SFX   ecir  ganselo ecir
+SFX   ecir  ganselos ecir
+SFX   ecir  gasela ecir
+SFX   ecir  gaselas ecir
+SFX   ecir  gaselo ecir
+SFX   ecir  gaselos ecir
+SFX   ertir i rtamela ertir
+SFX   ertir i rtamelas ertir
+SFX   ertir i rtamelo ertir
+SFX   ertir i rtamelos ertir
+SFX   ertir i rtanmela ertir
+SFX   ertir i rtanmelas ertir
+SFX   ertir i rtanmelo ertir
+SFX   ertir i rtanmelos ertir
+SFX   ertir i rtannosla ertir
+SFX   ertir i rtannoslas ertir
+SFX   ertir i rtannoslo ertir
+SFX   ertir i rtannoslos ertir
+SFX   ertir i rtanosla ertir
+SFX   ertir i rtanoslas ertir
+SFX   ertir i rtanoslo ertir
+SFX   ertir i rtanoslos ertir
+SFX   ertir i rtansela ertir
+SFX   ertir i rtanselas ertir
+SFX   ertir i rtanselo ertir
+SFX   ertir i rtanselos ertir
+SFX   ertir i rtasela ertir
+SFX   ertir i rtaselas ertir
+SFX   ertir i rtaselo ertir
+SFX   ertir i rtaselos ertir
+
+SFX   Y 4
+SFX   0 me r
+SFX   0 te r
+SFX   0 nos r
+SFX   0 os r
+
+SFX   Y 16
+SFX   ar  ndome ar
+SFX   ar  ndonos ar
+SFX   ar  ndoos ar
+SFX   ar  ndote ar
+SFX   er i ndome [^ae]er
+SFX   er i ndonos [^ae]er
+SFX   er i ndoos [^ae]er
+SFX   er i ndote [^ae]er
+SFX   er y ndome [ae]er
+SFX   er y ndonos [ae]er
+SFX   er y ndoos [ae]er
+SFX   er y ndote [ae]er
+SFX   r  ndome ir
+SFX   r  ndonos ir
+SFX   r  ndoos ir
+SFX   r  ndote ir
+
+SFX   Y 72
+SFX   ecir ici ndome ecir
+SFX   ecir ici ndonos ecir
+SFX   ecir ici ndoos ecir
+SFX   ecir ici ndote ecir
+SFX   edir idi ndome edir
+SFX   edir idi ndonos edir
+SFX   edir idi ndoos edir
+SFX   edir idi ndote edir
+SFX   eguir igui ndome eguir
+SFX   eguir igui ndonos eguir
+SFX   eguir igui ndoos eguir
+SFX   eguir igui ndote eguir
+SFX   e r i ndome e r
+SFX   e r i ndonos e r
+SFX   e r i ndoos e r
+SFX   e r i ndote e r
+SFX   enir ini ndome enir
+SFX   enir ini ndonos enir
+SFX   enir ini ndoos enir
+SFX   enir ini ndote enir
+SFX   entir inti ndome entir
+SFX   entir inti ndonos entir
+SFX   entir inti ndoos entir
+SFX   entir inti ndote entir
+SFX   e ir i  ndome e ir
+SFX   e ir i  ndonos e ir
+SFX   e ir i  ndoos e ir
+SFX   e ir i  ndote e ir
+SFX   er i ndome ver
+SFX   er i ndonos ver
+SFX   er i ndoos ver
+SFX   er i ndote ver
+SFX   erir iri ndome erir
+SFX   erir iri ndonos erir
+SFX   erir iri ndoos erir
+SFX   erir iri ndote erir
+SFX   ertir irti ndome ertir
+SFX   ertir irti ndonos ertir
+SFX   ertir irti ndoos ertir
+SFX   ertir irti ndote ertir
+SFX   ervir irvi ndome ervir
+SFX   ervir irvi ndonos ervir
+SFX   ervir irvi ndoos ervir
+SFX   ervir irvi ndote ervir
+SFX   er y ndome aer
+SFX   er y ndonos aer
+SFX   er y ndoos aer
+SFX   er y ndote aer
+SFX   estir isti ndome estir
+SFX   estir isti ndonos estir
+SFX   estir isti ndoos estir
+SFX   estir isti ndote estir
+SFX   etir iti ndome etir
+SFX   etir iti ndonos etir
+SFX   etir iti ndoos etir
+SFX   etir iti ndote etir
+SFX   ir y ndome uir
+SFX   ir y ndonos uir
+SFX   ir y ndoos uir
+SFX   ir y ndote uir
+SFX   orir uri ndome orir
+SFX   orir uri ndonos orir
+SFX   orir uri ndoos orir
+SFX   orir uri ndote orir
+SFX   ormir urmi ndome ormir
+SFX   ormir urmi ndonos ormir
+SFX   ormir urmi ndoos ormir
+SFX   ormir urmi ndote ormir
+SFX   r  ndome ucir
+SFX   r  ndonos ucir
+SFX   r  ndoos ucir
+SFX   r  ndote ucir
+
+SFX   Y 135
+SFX   abar  bate abar
+SFX   r os r
+SFX   acar  cate acar
+SFX   achar  chate achar
+SFX   aciar  ciate aciar
+SFX   adar  date adar
+SFX   agar  gate agar
+SFX   ajar  jate ajar
+SFX   alar  late alar
+SFX   allar  llate allar
+SFX   almar  lmate almar
+SFX   altar  ltate altar
+SFX   alvar  lvate alvar
+SFX   alzar  lzate alzar
+SFX   amar  mate amar
+SFX   ambiar  mbiate ambiar
+SFX   anar  nate anar
+SFX   ancar  ncate ancar
+SFX   anchar  nchate anchar
+SFX   andar  ndate andar
+SFX   angar  ngate angar
+SFX   antar  ntate antar
+SFX   anzar  nzate anzar
+SFX   a ar   ate a ar
+SFX   apar  pate apar
+SFX   arar  rate arar
+SFX   arcar  rcate arcar
+SFX   archar  rchate archar
+SFX   ardar  rdate ardar
+SFX   argar  rgate argar
+SFX   arrar  rrate arrar
+SFX   artar  rtate artar
+SFX   artir  rtete artir
+SFX   asar  sate asar
+SFX   ascar  scate ascar
+SFX   asmar  smate asmar
+SFX   astar  state astar
+SFX   astrar  strate astrar
+SFX   atar  tate atar
+SFX   avar  vate avar
+SFX   azar  zate azar
+SFX   ear  ate ear
+SFX   ecar  cate ecar
+SFX   echar  chate echar
+SFX   edar  date edar
+SFX   egar  gate egar
+SFX   eger  gete eger
+SFX   eglar  glate eglar
+SFX   egrar  grate egrar
+SFX   einar  inate einar
+SFX   ejar  jate ejar
+SFX   elar  late elar
+SFX   enar  nate enar
+SFX   encer  ncete encer
+SFX   entar  ntate entar
+SFX   entrar  ntrate entrar
+SFX   e ar   ate e ar
+SFX   erar  rate erar
+SFX   ercar  rcate ercar
+SFX   ergir  rgete ergir
+SFX   ervar  rvate ervar
+SFX   esar  sate esar
+SFX   esgar  sgate esgar
+SFX   estar  state estar
+SFX   eter  tete eter
+SFX   evar  vate evar
+SFX   ever  vete ever
+SFX   ibrar  brate ibrar
+SFX   icar  cate icar
+SFX   idar  date idar
+SFX   idir  dete idir
+SFX   igar  gate igar
+SFX   igir  gete igir
+SFX   ignar  gnate ignar
+SFX   ijar  jate ijar
+SFX   ilar  late ilar
+SFX   illar  llate illar
+SFX   imar  mate imar
+SFX   impiar  mpiate impiar
+SFX   inar  nate inar
+SFX   incar  ncate incar
+SFX   ingar  ngate ingar
+SFX   intar  ntate intar
+SFX   irar  rate irar
+SFX   ir  os ir
+SFX   istar  state istar
+SFX   itar  tate itar
+SFX   itir  tete itir
+SFX   izar  zate izar
+SFX   iznar  znate iznar
+SFX   obar  bate obar
+SFX   ocar  cate ocar
+SFX   ochar  chate ochar
+SFX   odar  date odar
+SFX   oder  dete oder
+SFX   ogar  gate ogar
+SFX   oger  gete oger
+SFX   ojar  jate ojar
+SFX   olar  late olar
+SFX   ollar  llate ollar
+SFX   omar  mate omar
+SFX   omer  mete omer
+SFX   omprar  mprate omprar
+SFX   onar  nate onar
+SFX   oncharse  nchate onchar
+SFX   onder  ndete onder
+SFX   ontar  ntate ontar
+SFX   orar  rate orar
+SFX   ormar  rmate ormar
+SFX   ornar  rnate ornar
+SFX   orrar  rrate orrar
+SFX   orrer  rrete orrer
+SFX   ortar  rtate ortar
+SFX   oyar  yate oyar
+SFX   ubir  bete ubir
+SFX   ubrir  brete ubrir
+SFX   ucarse  cate ucar
+SFX   uchar  chate uchar
+SFX   udar  date udar
+SFX   udir  dete udir
+SFX   udrir  drete udrir
+SFX   ufar  fate ufar
+SFX   ugiar  giate ugiar
+SFX   ulpar  lpate ulpar
+SFX   umar  mate umar
+SFX   umbar  mbate umbar
+SFX   umbrar  mbrate umbrar
+SFX   undir  ndete undir
+SFX   untar  ntate untar
+SFX   upar  pate upar
+SFX   urar  rate urar
+SFX   urlar  rlate urlar
+SFX   uscar  scate uscar
+SFX   ustar  state ustar
+SFX   ustrar  strate ustrar
+
+SFX   Y 30
+SFX   aer  ete aer
+SFX   r os [^i]r
+SFX   ecer  cete ecer
+SFX   egar i gate egar
+SFX   ender i ndete ender
+SFX   entar i ntate entar
+SFX   erder i rdete erder
+SFX   errar i rrate errar
+SFX   ertar i rtate ertar
+SFX   esar i sate esar
+SFX   iar  ate iar
+SFX   islar  slate islar
+SFX   obar u bate obar
+SFX   ocer  cete ocer
+SFX   olar u late olar
+SFX   olcar u lcate olcar
+SFX   oldar u ldate oldar
+SFX   olgar u lgate olgar
+SFX   oltar u ltate oltar
+SFX   olver u lvete olver
+SFX   onar u nate onar
+SFX   ontar u ntate ontar
+SFX   ordar u rdate ordar
+SFX   orzar u rzate orzar
+SFX   ostar u state ostar
+SFX   ostrar u strate ostrar
+SFX   over u vete over
+SFX   uar  ate uar
+SFX   unir  nete unir
+SFX   ir  os ir
+
+SFX   Y 17
+SFX   aer  ete aer
+SFX   r os [^i]r
+SFX   aler  lete aler
+SFX   cer zte cer
+SFX   edir  dete edir
+SFX   ir  os ir
+SFX   eguir  guete eguir
+SFX   e r  ete e r
+SFX   entir i ntete entir
+SFX   er te ner
+SFX   ertir i rtete ertir
+SFX   ervir  rvete ervir
+SFX   estir  stete estir
+SFX   ir te enir
+SFX   orir u rete orir
+SFX   ormir u rmete ormir
+SFX   r te ver
+
+SFX   Y 253
+SFX   abar  bense abar
+SFX   abar  bese abar
+SFX   ar  monos [^cgz]ar
+SFX   ablar  blense ablar
+SFX   ablar  blese ablar
+SFX   acar  quense acar
+SFX   acar  quese acar
+SFX   car qu monos car
+SFX   achar  chense achar
+SFX   achar  chese achar
+SFX   adar  dense adar
+SFX   adar  dese adar
+SFX   adrar  drense adrar
+SFX   adrar  drese adrar
+SFX   agar  guense agar
+SFX   agar  guese agar
+SFX   ar u monos gar
+SFX   ajar  jense ajar
+SFX   ajar  jese ajar
+SFX   alar  lense alar
+SFX   alar  lese alar
+SFX   allar  llense allar
+SFX   allar  llese allar
+SFX   almar  lmense almar
+SFX   almar  lmese almar
+SFX   altar  ltense altar
+SFX   altar  ltese altar
+SFX   alvar  lvense alvar
+SFX   alvar  lvese alvar
+SFX   alzar  lcense alzar
+SFX   alzar  lcese alzar
+SFX   zar c monos zar
+SFX   amar  mense amar
+SFX   amar  mese amar
+SFX   ambiar  mbiense ambiar
+SFX   ambiar  mbiese ambiar
+SFX   anar  nense anar
+SFX   anar  nese anar
+SFX   ancar  nquense ancar
+SFX   ancar  nquese ancar
+SFX   antar  ntense antar
+SFX   antar  ntese antar
+SFX   anzar  ncense anzar
+SFX   anzar  ncese anzar
+SFX   a ar   ense a ar
+SFX   a ar   ese a ar
+SFX   apar  pense apar
+SFX   apar  pese apar
+SFX   arar  rense arar
+SFX   arar  rese arar
+SFX   arcar  rquense arcar
+SFX   arcar  rquese arcar
+SFX   archar  rchense archar
+SFX   archar  rchese archar
+SFX   ardar  rdense ardar
+SFX   ardar  rdese ardar
+SFX   argar  rguense argar
+SFX   argar  rguese argar
+SFX   arrar  rrense arrar
+SFX   arrar  rrese arrar
+SFX   artar  rtense artar
+SFX   artar  rtese artar
+SFX   asar  sense asar
+SFX   asar  sese asar
+SFX   ascar  squense ascar
+SFX   ascar  squese ascar
+SFX   asgar  sguense asgar
+SFX   asgar  sguese asgar
+SFX   asmar  smense asmar
+SFX   asmar  smese asmar
+SFX   astar  stense astar
+SFX   astar  stese astar
+SFX   atar  tense atar
+SFX   atar  tese atar
+SFX   atir  tanse atir
+SFX   atir  tase atir
+SFX   ir  monos [^g]ir
+SFX   avar  vense avar
+SFX   avar  vese avar
+SFX   azar  cense azar
+SFX   azar  cese azar
+SFX   ear  ense ear
+SFX   ear  ese ear
+SFX   ecar  quense ecar
+SFX   ecar  quese ecar
+SFX   echar  chense echar
+SFX   echar  chese echar
+SFX   eciar  ciense eciar
+SFX   eciar  ciese eciar
+SFX   edar  dense edar
+SFX   edar  dese edar
+SFX   eer  anse eer
+SFX   eer  ase eer
+SFX   er  monos [^cg]er
+SFX   egar  guense egar
+SFX   egar  guese egar
+SFX   eger  janse eger
+SFX   eger  jase eger
+SFX   ger j monos ger
+SFX   eglar  glense eglar
+SFX   eglar  glese eglar
+SFX   egrar  grense egrar
+SFX   egrar  grese egrar
+SFX   eitar  itense eitar
+SFX   eitar  itese eitar
+SFX   ejar  jense ejar
+SFX   ejar  jese ejar
+SFX   enar  nense enar
+SFX   enar  nese enar
+SFX   encer  nzanse encer
+SFX   encer  nzase encer
+SFX   cer z monos cer
+SFX   ender  ndanse ender
+SFX   ender  ndase ender
+SFX   entar  ntense entar
+SFX   entar  ntese entar
+SFX   entrar  ntrense entrar
+SFX   entrar  ntrese entrar
+SFX   e ar   ense e ar
+SFX   e ar   ese e ar
+SFX   erar  rense erar
+SFX   erar  rese erar
+SFX   ercar  rquense ercar
+SFX   ercar  rquese ercar
+SFX   ergir  rjanse ergir
+SFX   ergir  rjase ergir
+SFX   gir j monos gir
+SFX   ervar  rvense ervar
+SFX   ervar  rvese ervar
+SFX   escar  squense escar
+SFX   escar  squese escar
+SFX   estar  stense estar
+SFX   estar  stese estar
+SFX   eter  tanse eter
+SFX   eter  tase eter
+SFX   evar  vense evar
+SFX   evar  vese evar
+SFX   ever  vanse ever
+SFX   ever  vase ever
+SFX   ezclar  zclense ezclar
+SFX   ezclar  zclese ezclar
+SFX   ibir  banse ibir
+SFX   ibir  base ibir
+SFX   ibrar  brense ibrar
+SFX   ibrar  brese ibrar
+SFX   icar  quense icar
+SFX   icar  quese icar
+SFX   idar  dense idar
+SFX   idar  dese idar
+SFX   idir  danse idir
+SFX   idir  dase idir
+SFX   igar  guense igar
+SFX   igar  guese igar
+SFX   igir  janse igir
+SFX   igir  jase igir
+SFX   ignar  gnense ignar
+SFX   ignar  gnese ignar
+SFX   ijar  jense ijar
+SFX   ijar  jese ijar
+SFX   illar  llense illar
+SFX   illar  llese illar
+SFX   imar  mense imar
+SFX   imar  mese imar
+SFX   impiar  mpiense impiar
+SFX   impiar  mpiese impiar
+SFX   inar  nense inar
+SFX   inar  nese inar
+SFX   incar  nquense incar
+SFX   incar  nquese incar
+SFX   intar  ntense intar
+SFX   intar  ntese intar
+SFX   irar  rense irar
+SFX   irar  rese irar
+SFX   itar  tense itar
+SFX   itar  tese itar
+SFX   itir  tanse itir
+SFX   itir  tase itir
+SFX   izar  cense izar
+SFX   izar  cese izar
+SFX   ocar  quense ocar
+SFX   ocar  quese ocar
+SFX   ochar  chense ochar
+SFX   ochar  chese ochar
+SFX   odar  dense odar
+SFX   odar  dese odar
+SFX   oder  danse oder
+SFX   oder  dase oder
+SFX   oger  janse oger
+SFX   oger  jase oger
+SFX   ojar  jense ojar
+SFX   ojar  jese ojar
+SFX   olar  lense olar
+SFX   olar  lese olar
+SFX   omar  mense omar
+SFX   omar  mese omar
+SFX   ombrar  mbrense ombrar
+SFX   ombrar  mbrese ombrar
+SFX   omer  manse omer
+SFX   omer  mase omer
+SFX   omprar  mprense omprar
+SFX   omprar  mprese omprar
+SFX   onar  nense onar
+SFX   onar  nese onar
+SFX   ontar  ntense ontar
+SFX   ontar  ntese ontar
+SFX   orar  rense orar
+SFX   orar  rese orar
+SFX   orcar  rquense orcar
+SFX   orcar  rquese orcar
+SFX   ormar  rmense ormar
+SFX   ormar  rmese ormar
+SFX   orrer  rranse orrer
+SFX   orrer  rrase orrer
+SFX   ortar  rtense ortar
+SFX   ortar  rtese ortar
+SFX   otar  tense otar
+SFX   otar  tese otar
+SFX   oyar  yense oyar
+SFX   oyar  yese oyar
+SFX   ubir  banse ubir
+SFX   ubir  base ubir
+SFX   ubrir  branse ubrir
+SFX   ubrir  brase ubrir
+SFX   uchar  chense uchar
+SFX   uchar  chese uchar
+SFX   udar  dense udar
+SFX   udar  dese udar
+SFX   ulpar  lpense ulpar
+SFX   ulpar  lpese ulpar
+SFX   ultar  ltense ultar
+SFX   ultar  ltese ultar
+SFX   umar  mense umar
+SFX   umar  mese umar
+SFX   umbar  mbense umbar
+SFX   umbar  mbese umbar
+SFX   umbrar  mbrense umbrar
+SFX   umbrar  mbrese umbrar
+SFX   umplir  mplanse umplir
+SFX   umplir  mplase umplir
+SFX   unciar  nciense unciar
+SFX   unciar  nciese unciar
+SFX   undir  ndanse undir
+SFX   undir  ndase undir
+SFX   untar  ntense untar
+SFX   untar  ntese untar
+SFX   upar  pense upar
+SFX   upar  pese upar
+SFX   urar  rense urar
+SFX   urar  rese urar
+SFX   urnar  rnense urnar
+SFX   urnar  rnese urnar
+SFX   uscar  squense uscar
+SFX   uscar  squese uscar
+
+SFX   Y 55
+SFX   aer  iganse aer
+SFX   aer  igase aer
+SFX   aer aig monos aer
+SFX   ecer  zcanse ecer
+SFX   ecer  zcase ecer
+SFX   cer zc monos ecer
+SFX   egar i guense egar
+SFX   egar i guese egar
+SFX   ar u monos gar
+SFX   endar i ndense endar
+SFX   endar i ndese endar
+SFX   ar  monos [^gz]ar
+SFX   ender i ndanse ender
+SFX   ender i ndase ender
+SFX   er  monos [^ac]er
+SFX   entar i ntense entar
+SFX   entar i ntese entar
+SFX   erder i rdanse erder
+SFX   erder i rdase erder
+SFX   errar i rrense errar
+SFX   errar i rrese errar
+SFX   ertar i rtense ertar
+SFX   ertar i rtese ertar
+SFX   erter i rtanse erter
+SFX   erter i rtase erter
+SFX   iar  ense iar
+SFX   iar  ese iar
+SFX   obar u bense obar
+SFX   obar u bese obar
+SFX   olar u lense olar
+SFX   olar u lese olar
+SFX   oltar u ltense oltar
+SFX   oltar u ltese oltar
+SFX   olver u lvanse olver
+SFX   olver u lvase olver
+SFX   ontar u ntense ontar
+SFX   ontar u ntese ontar
+SFX   ontrar u ntrense ontrar
+SFX   ontrar u ntrese ontrar
+SFX   ordar u rdense ordar
+SFX   ordar u rdese ordar
+SFX   orzar u rcense orzar
+SFX   orzar u rcese orzar
+SFX   zar c monos zar
+SFX   ostar u stense ostar
+SFX   ostar u stese ostar
+SFX   ostrar u strense ostrar
+SFX   ostrar u strese ostrar
+SFX   over u vanse over
+SFX   over u vase over
+SFX   uar  ense uar
+SFX   uar  ese uar
+SFX   unir  nanse unir
+SFX   unir  nase unir
+SFX   ir  monos ir
+
+SFX   Y 66
+SFX   cer g monos acer
+SFX   acer  ganse acer
+SFX   acer  gase acer
+SFX   er ig monos aer
+SFX   aer  iganse aer
+SFX   aer  igase aer
+SFX   er g monos [ln]er
+SFX   aler  lganse aler
+SFX   aler  lgase aler
+SFX   ir g monos [ln]ir
+SFX   alir  lganse alir
+SFX   alir  lgase alir
+SFX   ecir ig monos ecir
+SFX   ecir  ganse ecir
+SFX   ecir  gase ecir
+SFX   edir id monos edir
+SFX   edir  danse edir
+SFX   edir  dase edir
+SFX   eguir ig monos eguir
+SFX   eguir  ganse eguir
+SFX   eguir  gase eguir
+SFX   e r i monos e r
+SFX   e r  anse e r
+SFX   e r  ase e r
+SFX   ener  nganse ener
+SFX   ener  ngase ener
+SFX   enir  nganse enir
+SFX   enir  ngase enir
+SFX   entir i ntanse entir
+SFX   entir i ntase entir
+SFX   entir int monos entir
+SFX   e ir i  monos e ir
+SFX   e ir   anse e ir
+SFX   e ir   ase e ir
+SFX   er  anse ver
+SFX   er  ase ver
+SFX   r  monos ver
+SFX   erir i ranse erir
+SFX   erir i rase erir
+SFX   erir ir monos erir
+SFX   ervir irv monos ervir
+SFX   ervir  rvanse ervir
+SFX   ervir  rvase ervir
+SFX   ertir i rtanse ertir
+SFX   ertir i rtase ertir
+SFX   ertir irt monos ertir
+SFX   estir ist monos estir
+SFX   estir  stanse estir
+SFX   estir  stase estir
+SFX   etir it monos etir
+SFX   etir  tanse etir
+SFX   etir  tase etir
+SFX   oner  nganse oner
+SFX   oner  ngase oner
+SFX   orir u ranse orir
+SFX   orir u rase orir
+SFX   orir ur monos orir
+SFX   ormir u rmanse ormir
+SFX   ormir u rmase ormir
+SFX   ormir urm monos ormir
+SFX   ucir  zcanse ucir
+SFX   ucir  zcase ucir
+SFX   cir zc monos ucir
+SFX   uir  yanse uir
+SFX   uir  yase uir
+SFX   ir y monos uir
