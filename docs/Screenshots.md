@@ -10,19 +10,19 @@
 
 ## Tested Services
 
-### Slack
+### [Gitter](https://gitter.im)
 
 ![Gitter](screenshots/gitter.png)
 
-### Slack
+### [Slack](https://slack.com)
 
 ![Slack](screenshots/slack.png)
 
-### Telegram
+### [Telegram](https://web.telegram.org)
 
 ![Telegram](screenshots/telegram.png)
 
-### WhatsApp
+### [WhatsApp](https://web.whatsapp.com)
 
 ![WhatsApp](screenshots/WhatsApp.png)
 
