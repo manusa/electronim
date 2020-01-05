@@ -3,10 +3,14 @@ describe('Main module test suite', () => {
   let mockIpc;
   let mockSettings;
   let settingsModule;
+  let tabManagerModule;
   let main;
   beforeEach(() => {
     mockBrowserWindow = {
-      on: jest.fn(),
+      listeners: {},
+      on: jest.fn((eventName, func) => {
+        mockBrowserWindow.listeners[eventName] = func;
+      }),
       removeMenu: jest.fn()
     };
     mockIpc = {
@@ -31,8 +35,21 @@ describe('Main module test suite', () => {
     }));
     settingsModule = require('../../settings');
     jest.mock('../../spell-check');
-    jest.mock('../../tab-manager', () => ({}));
+    jest.mock('../../tab-manager', () => ({
+      getActiveTab: jest.fn()
+    }));
+    tabManagerModule = require('../../tab-manager');
     main = require('../');
+  });
+  describe('mainWindow evnets', () => {
+    test('maximize', () => {
+      // Given
+      main.init();
+      // When
+      mockBrowserWindow.listeners.maximize();
+      // Then
+      expect(tabManagerModule.getActiveTab).toHaveBeenCalledTimes(1);
+    });
   });
   describe('initTabListener ipc events', () => {
     describe('handleTabReorder', () => {

@@ -83,6 +83,10 @@ const init = () => {
     const [currentWidth, currentHeight] = mainWindow.getSize();
     updateSettings({width: currentWidth, height: currentHeight});
   });
+  mainWindow.on('maximize', () => {
+    // Hack to resize window contents when window is maximized (resize event is not triggered)
+    setTimeout(activateTab, 50, tabManager.getActiveTab());
+  });
   mainWindow.on('closed', () => app.quit());
   initTabListener();
   initSettingsListener();
