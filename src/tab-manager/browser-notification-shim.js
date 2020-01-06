@@ -14,6 +14,9 @@
    limitations under the License.
  */
 /* eslint-disable no-global-assign,no-native-reassign */
+
+// Delegate for Notification API as specified in: https://notifications.spec.whatwg.org/
+
 const {ipcRenderer} = require('electron');
 const {APP_EVENTS} = require('../constants');
 
@@ -96,10 +99,11 @@ Notification = function() {
       delegate.onshow = func;
     },
     get close() {
-      return delegate.close();
+      return delegate.close;
     }
   };
 };
 
+Notification.maxActions = NativeNotification.maxActions;
 Notification.permission = NativeNotification.permission;
 Notification.requestPermission = NativeNotification.requestPermission;
