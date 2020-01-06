@@ -10,8 +10,7 @@ const addTabs = (event, tabs) => {
   const activeTabMeta = tabs.find(({active}) => active === true);
   if (activeTabMeta) {
     const activeTabId = activeTabMeta.id;
-    const activeTabEl = getTab(activeTabId);
-    chromeTabs.setCurrentTab(activeTabEl);
+    chromeTabs.setCurrentTab(getTab(activeTabId));
     ipcRenderer.send(APP_EVENTS.activateTab, {id: activeTabId});
   }
 };
@@ -21,6 +20,10 @@ const doForTab = (tabId, func) => {
   if (tab) {
     func(tab);
   }
+};
+
+const setActiveTab = (event, {tabId}) => {
+  chromeTabs.setCurrentTab(getTab(tabId));
 };
 
 const setTabTitle = (event, {id, title}) => doForTab(id, tab =>
@@ -42,6 +45,7 @@ const init = () => {
   const $settingsButton = document.querySelector('.settings__button');
   $settingsButton.addEventListener('click', () => ipcRenderer.send(APP_EVENTS.settingsOpenDialog));
 
+  ipcRenderer.on(APP_EVENTS.activateTabInContainer, setActiveTab);
   ipcRenderer.on(APP_EVENTS.addTabs, addTabs);
   ipcRenderer.on(APP_EVENTS.setTabTitle, setTabTitle);
   ipcRenderer.on(APP_EVENTS.setTabFavicon, setTabFavicon);

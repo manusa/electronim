@@ -73,6 +73,8 @@ const addTabs = ipcSender => tabsMetadata => {
 
     tab.webContents.on('context-menu', handleContextMenu(tab));
 
+    tab.webContents.executeJavaScript(`window.tabId = '${id}';`);
+
     tabs[id.toString()] = tab;
   });
   ipcSender.send(APP_EVENTS.addTabs, tabsMetadata);

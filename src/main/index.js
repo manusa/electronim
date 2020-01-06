@@ -38,13 +38,22 @@ const initTabListener = () => {
     const currentSettings = loadSettings();
     const tabs = currentSettings.tabs.map(tab => ({...tab, active: tab.id === currentSettings.activeTab}));
     if (tabs.length > 0) {
-      tabManager.addTabs(event.sender)(tabs);
-      event.sender.send(APP_EVENTS.activateTab, {tabId: currentSettings.activeTab});
+      const ipcSender = event.sender;
+      tabManager.addTabs(ipcSender)(tabs);
+      ipcSender.send(APP_EVENTS.activateTab, {tabId: currentSettings.activeTab});
     } else {
       openSettingsDialog(mainWindow);
     }
   });
   ipc.on(APP_EVENTS.activateTab, (event, data) => activateTab(data.id));
+  ipc.on(APP_EVENTS.notificationClick, (event, {tabId}) => {
+    tabContainer.webContents.send(APP_EVENTS.activateTabInContainer, {tabId});
+    mainWindow.restore();
+    mainWindow.show();
+    if (tabId) {
+      activateTab(tabId);
+    }
+  });
   ipc.on(APP_EVENTS.settingsOpenDialog, () => openSettingsDialog(mainWindow));
   ipc.on(APP_EVENTS.tabReorder, handleTabReorder);
 };
