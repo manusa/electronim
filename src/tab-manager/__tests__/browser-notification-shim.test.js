@@ -1,7 +1,13 @@
 describe('Browser Notification Shim test suite', () => {
-  test('Native Notification should be shimmed and used as delegate', () => {
-    // Given
-    const NativeNotification = jest.fn();
+  let NativeNotification;
+  let electron;
+  beforeEach(() => {
+    jest.resetModules();
+    jest.mock('electron', () => ({
+      ipcRenderer: {send: jest.fn()}
+    }));
+    electron = require('electron');
+    NativeNotification = jest.fn();
     NativeNotification.maxActions = jest.fn();
     NativeNotification.permission = jest.fn();
     NativeNotification.requestPermission = jest.fn();
@@ -11,6 +17,9 @@ describe('Browser Notification Shim test suite', () => {
       timestamp: 'Timestamp', title: 'Title', vibrate: 'Vibrate', close: jest.fn()
     };
     window.Notification = NativeNotification;
+  });
+  test('Native Notification should be shimmed and used as delegate', () => {
+    // Given
     require('../browser-notification-shim');
     // When
     const notification = new Notification();
@@ -40,5 +49,27 @@ describe('Browser Notification Shim test suite', () => {
     expect(notification.vibrate).toBe('Vibrate');
     notification.close();
     expect(NativeNotification.prototype.close).toHaveBeenCalledTimes(1);
+  });
+  test('Notification should ALWAYS be clickable', () => {
+    // Given
+    require('../browser-notification-shim');
+    const notification = new Notification();
+    // When
+    notification.onclick(null);
+    // Then
+    expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+    expect(electron.ipcRenderer.send).toHaveBeenCalledWith('notificationClick', expect.any(Object));
+  });
+  test('Notification onclick setter, should add custom behavior', () => {
+    // Given
+    require('../browser-notification-shim');
+    const notification = new Notification();
+    const webAppOnclick = jest.fn();
+    notification.onclick = webAppOnclick;
+    // When
+    notification.onclick(null);
+    // Then
+    expect(webAppOnclick).toHaveBeenCalledTimes(1);
+    expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
   });
 });

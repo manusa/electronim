@@ -22,9 +22,16 @@ const {APP_EVENTS} = require('../constants');
 
 const NativeNotification = Notification;
 
+const bubbleNotification = () => ipcRenderer.send(APP_EVENTS.notificationClick, {tabId: window.tabId});
+
+const setDelegateMinimumBehavior = delegate => {
+  delegate.onclick = bubbleNotification;
+};
+
 // noinspection JSValidateTypes
 Notification = function() {
   const delegate = new NativeNotification(...arguments);
+  setDelegateMinimumBehavior(delegate);
   return {
     get actions() {
       return delegate.actions;
@@ -76,7 +83,7 @@ Notification = function() {
     },
     set onclick(func) {
       delegate.onclick = event => {
-        ipcRenderer.send(APP_EVENTS.notificationClick, {tabId: window.tabId});
+        bubbleNotification();
         func(event);
       };
     },
