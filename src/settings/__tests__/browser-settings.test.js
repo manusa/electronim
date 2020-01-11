@@ -54,6 +54,16 @@ describe('Settings in Browser test suite', () => {
       require('../browser-settings');
     });
   });
+  test('Form submit on enter is prevented', () => {
+    // Given
+    const event = new Event('keypress');
+    event.code = 'Enter';
+    event.preventDefault = jest.fn();
+    // When
+    document.querySelector('.settings .form').dispatchEvent(event);
+    // Then
+    expect(event.preventDefault).toHaveBeenCalledTimes(1);
+  });
   describe('Button events', () => {
     test('Submit should send form data', () => {
       // Given
