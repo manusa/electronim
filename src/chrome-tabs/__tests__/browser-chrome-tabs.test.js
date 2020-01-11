@@ -69,7 +69,7 @@ describe('ChromeTabs in Browser test suite', () => {
       // Given
       window.APP_EVENTS.tabReorder = 'reorder this tab';
       // When
-      $chromeTabs.dispatchEvent(new CustomEvent('tabReorder', {detail: {tabEl: {dataset: {tabId: 1337}}}}));
+      $chromeTabs.dispatchEvent(new Event('tabReorder'));
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('reorder this tab', {tabIds: []});
     });

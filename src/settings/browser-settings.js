@@ -92,9 +92,9 @@ const initNewTab = settings => {
     updateSaveButton();
   });
   newTabField.addEventListener('keypress', event => {
-    if (event.code === 'Enter') {
+    const {target} = event;
+    if (event.code === 'Enter' && validateUrl(target.value)) {
       event.preventDefault();
-      const {target} = event;
       tabs.innerHTML += tabTemplate(prependProtocol(target.value));
       initTabsListener(tabs);
       target.value = '';
