@@ -16,7 +16,7 @@
 const {BrowserWindow, app, ipcMain: ipc} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const {TABS_CONTAINER_HEIGHT, initTabContainer} = require('../chrome-tabs');
-const {loadSettings, updateSettings, updateTabs, openSettingsDialog} = require('../settings');
+const {loadSettings, updateSettings, updateTabUrls, openSettingsDialog} = require('../settings');
 const {loadDictionaries} = require('../spell-check');
 const tabManager = require('../tab-manager');
 
@@ -81,7 +81,7 @@ const closeSettings = () => {
 
 const saveSettings = (event, {tabs, dictionaries}) => {
   updateSettings({enabledDictionaries: [...dictionaries]});
-  updateTabs(tabs);
+  updateTabUrls(tabs);
   loadDictionaries();
   const currentBrowserView = mainWindow.getBrowserView();
   mainWindow.removeBrowserView(currentBrowserView);

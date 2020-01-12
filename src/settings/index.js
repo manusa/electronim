@@ -48,14 +48,14 @@ const writeSettings = settings => {
 
 const updateSettings = settings => writeSettings({...loadSettings(), ...settings});
 
-const updateTabs = newTabs => {
+const updateTabUrls = newTabUrls => {
   const {activeTab, tabs} = loadSettings();
   const currentTabUrls = tabs.map(({url}) => url);
   const updatedTabs = [];
-  updatedTabs.push(...tabs.filter(tab => newTabs.includes(tab.url)));
-  newTabs.filter(url => !currentTabUrls.includes(url)).forEach(url => updatedTabs.push({id: url, url}));
+  updatedTabs.push(...tabs.filter(tab => newTabUrls.includes(tab.url)));
+  newTabUrls.filter(url => !currentTabUrls.includes(url)).forEach(url => updatedTabs.push({id: url, url}));
   updateSettings({tabs: [...updatedTabs]});
-  if (!updatedTabs.map(({id}) => id).includes(activeTab)) {
+  if (updatedTabs.length > 0 && !updatedTabs.map(({id}) => id).includes(activeTab)) {
     updateSettings({activeTab: updatedTabs[0].id});
   }
 };
@@ -69,4 +69,4 @@ const openSettingsDialog = mainWindow => {
   settingsView.webContents.loadURL(`file://${__dirname}/index.html`);
 };
 
-module.exports = {loadSettings, updateSettings, updateTabs, openSettingsDialog};
+module.exports = {loadSettings, updateSettings, updateTabUrls, openSettingsDialog};
