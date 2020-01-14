@@ -56,6 +56,14 @@ describe('Tab Manager module test suite', () => {
       // Then
       expect(result).toBeUndefined();
     });
+    test('getTab, null id, should return null', () => {
+      // Given
+      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      // When
+      const result = tabManager.getTab();
+      // Then
+      expect(result).toBeNull();
+    });
   });
   describe('addTabs', () => {
     test('Tab webContents should be configured and loaded', () => {
