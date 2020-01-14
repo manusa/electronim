@@ -40,7 +40,7 @@ const extractFavicon = async browserView => {
   return favicons;
 };
 
-const handlePageFaviconUpdated = (browserView, ipcSender, tabId) => async (e, favicons) => {
+const handlePageFaviconUpdated = (browserView, ipcSender, tabId) => async (e, favicons = []) => {
   if (favicons.length === 0) {
     favicons = await extractFavicon(browserView);
   }
