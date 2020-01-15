@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {BrowserView, Menu, MenuItem} = require('electron');
+const {app, BrowserView, Menu, MenuItem} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const settings = require('../settings');
 const {contextMenuHandler} = require('../spell-check');
@@ -63,13 +63,14 @@ const handleContextMenu = browserView => async (event, params) => {
   menu.popup({x, y});
 };
 
+// Required for Service Workers -> https://github.com/electron/electron/issues/16196
+const setGlobalUserAgentFallback = userAgent => (app.userAgentFallback = userAgent);
+
 const cleanUserAgent = browserView => {
-  const currentChromeMajorVersion = /Chrome\/(?<version>[0-9]+)./g.exec(browserView.webContents.userAgent)
-    .groups.version;
   browserView.webContents.userAgent = browserView.webContents.userAgent
     .replace(/ElectronIM\/.*? /g, '')
-    .replace(/Electron\/.*? /g, '')
-    .replace(/Chrome\/(\S+)/g, `Chrome/${currentChromeMajorVersion}`);
+    .replace(/Electron\/.*? /g, '');
+  setGlobalUserAgentFallback(browserView.webContents.userAgent);
 };
 
 const addTabs = ipcSender => tabsMetadata => {
