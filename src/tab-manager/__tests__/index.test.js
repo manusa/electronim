@@ -90,7 +90,7 @@ describe('Tab Manager module test suite', () => {
       // When
       const result = tabManager.getTab(1337).webContents.userAgent;
       // Then
-      expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
+      expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79 Safari/537.36');
     });
     describe('Event listeners', () => {
       let events;

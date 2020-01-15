@@ -64,9 +64,12 @@ const handleContextMenu = browserView => async (event, params) => {
 };
 
 const cleanUserAgent = browserView => {
+  const currentChromeMajorVersion = /Chrome\/(?<version>[0-9]+)./g.exec(browserView.webContents.userAgent)
+    .groups.version;
   browserView.webContents.userAgent = browserView.webContents.userAgent
     .replace(/ElectronIM\/.*? /g, '')
-    .replace(/Electron\/.*? /g, '');
+    .replace(/Electron\/.*? /g, '')
+    .replace(/Chrome\/(\S+)/g, `Chrome/${currentChromeMajorVersion}`);
 };
 
 const addTabs = ipcSender => tabsMetadata => {
