@@ -65,9 +65,7 @@ const initTabListener = () => {
     tabContainer.webContents.send(APP_EVENTS.activateTabInContainer, {tabId});
     mainWindow.restore();
     mainWindow.show();
-    if (tabId) {
-      activateTab(tabId);
-    }
+    activateTab(tabId);
   });
   ipc.on(APP_EVENTS.settingsOpenDialog, () => openSettingsDialog(mainWindow));
   ipc.on(APP_EVENTS.tabReorder, handleTabReorder);

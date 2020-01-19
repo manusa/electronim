@@ -16,8 +16,10 @@
 describe('Main module test suite', () => {
   let mockBrowserWindow;
   let mockIpc;
+  let mockTabContainer;
   let mockSettings;
   let settingsModule;
+  let spellCheckModule;
   let tabManagerModule;
   let main;
   beforeEach(() => {
@@ -34,6 +36,7 @@ describe('Main module test suite', () => {
         mockIpc.listeners[eventName] = func;
       })
     };
+    mockTabContainer = {};
     mockSettings = {};
     jest.resetModules();
     jest.mock('electron', () => ({
@@ -41,23 +44,24 @@ describe('Main module test suite', () => {
       ipcMain: mockIpc
     }));
     jest.mock('../../chrome-tabs', () => ({
-      initTabContainer: jest.fn()
+      TABS_CONTAINER_HEIGHT: 46,
+      initTabContainer: () => mockTabContainer
     }));
-    jest.mock('../../settings', () => ({
-      loadSettings: jest.fn(() => mockSettings),
-      openSettingsDialog: jest.fn(),
-      updateSettings: jest.fn()
-    }));
+    require('../../chrome-tabs');
+    jest.mock('../../settings');
     settingsModule = require('../../settings');
+    settingsModule.loadSettings.mockImplementation(() => mockSettings);
+    settingsModule.openSettingsDialog.mockImplementation();
+    settingsModule.updateSettings.mockImplementation();
     jest.mock('../../spell-check');
-    jest.mock('../../tab-manager', () => ({
-      getActiveTab: jest.fn()
-    }));
+    spellCheckModule = require('../../spell-check');
+    jest.mock('../../tab-manager');
     tabManagerModule = require('../../tab-manager');
+    tabManagerModule.getActiveTab.mockImplementation();
     main = require('../');
   });
-  describe('mainWindow evnets', () => {
-    test('maximize', () => {
+  describe('mainWindow events', () => {
+    test('maximize, should activate current tab (Will force a BrowserView resize)', () => {
       // Given
       main.init();
       // When
@@ -65,8 +69,92 @@ describe('Main module test suite', () => {
       // Then
       expect(tabManagerModule.getActiveTab).toHaveBeenCalledTimes(1);
     });
+    test('resize, should store new size in configuration file', () => {
+      // Given
+      mockBrowserWindow.getSize = jest.fn(() => ([13, 37]));
+      main.init();
+      // When
+      mockBrowserWindow.listeners.resize();
+      // Then
+      expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
+    });
   });
   describe('initTabListener ipc events', () => {
+    describe('tabsReady', () => {
+      let addTabsNested;
+      beforeEach(() => {
+        addTabsNested = jest.fn();
+        tabManagerModule.addTabs.mockImplementation(() => addTabsNested);
+      });
+      test('No tabs in settings, should open settings dialog', () => {
+        // Given
+        settingsModule.loadSettings.mockImplementation(() => ({tabs: []}));
+        main.init();
+        // When
+        mockIpc.listeners.tabsReady({});
+        // Then
+        expect(tabManagerModule.addTabs).not.toHaveBeenCalled();
+        expect(addTabsNested).not.toHaveBeenCalled();
+        expect(settingsModule.openSettingsDialog).toHaveBeenCalledTimes(1);
+      });
+      test('Previous saved tabs in loaded settings, should add tabs to manager and activate them as they are added', () => {
+        // Given
+        const event = {sender: {send: jest.fn()}};
+        settingsModule.loadSettings.mockImplementation(() => ({tabs: [{id: '1337', otherInfo: 'A Tab'}]}));
+        main.init();
+        // When
+        mockIpc.listeners.tabsReady(event);
+        // Then
+        expect(tabManagerModule.addTabs).toHaveBeenCalledWith(event.sender);
+        expect(addTabsNested).toHaveBeenCalledTimes(1);
+        expect(addTabsNested).toHaveBeenCalledWith([{id: '1337', otherInfo: 'A Tab', active: false}]);
+        expect(settingsModule.openSettingsDialog).not.toHaveBeenCalled();
+      });
+    });
+    describe('activateTab', () => {
+      test('no active tab, should do nothing', () => {
+        // Given
+        mockBrowserWindow.setBrowserView = jest.fn();
+        tabManagerModule.getTab = jest.fn(() => null);
+        main.init();
+        // When
+        mockIpc.listeners.activateTab({}, {id: 'not here'});
+        // Then
+        expect(mockBrowserWindow.setBrowserView).not.toHaveBeenCalled();
+      });
+      test('active tab, should resize tab and set it as the main window browser view', () => {
+        // Given
+        mockTabContainer.setBounds = jest.fn();
+        const activeTab = {
+          setBounds: jest.fn()
+        };
+        tabManagerModule.getTab = jest.fn(id => (id === 'validId' ? activeTab : null));
+        mockBrowserWindow.setBrowserView = jest.fn();
+        mockBrowserWindow.addBrowserView = jest.fn();
+        mockBrowserWindow.getContentBounds = jest.fn(() => ({width: 13, height: 83}));
+        main.init();
+        // When
+        mockIpc.listeners.activateTab({}, {id: 'validId'});
+        // Then
+        expect(activeTab.setBounds).toHaveBeenCalledWith({x: 0, y: 46, width: 13, height: 37});
+        expect(mockBrowserWindow.setBrowserView).toHaveBeenCalledWith(mockTabContainer);
+        expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledWith(activeTab);
+      });
+    });
+    test('notificationClick, should restore window and activate tab', () => {
+      // Given
+      mockTabContainer.webContents = {send: jest.fn()};
+      mockBrowserWindow.restore = jest.fn();
+      mockBrowserWindow.show = jest.fn();
+      main.init();
+      // When
+      mockIpc.listeners.notificationClick({}, {tabId: 'validId'});
+      // Then
+      expect(mockTabContainer.webContents.send).toHaveBeenCalledWith('activateTabInContainer', {tabId: 'validId'});
+      expect(mockBrowserWindow.restore).toHaveBeenCalledTimes(1);
+      expect(mockBrowserWindow.show).toHaveBeenCalledTimes(1);
+      expect(tabManagerModule.getTab).toHaveBeenCalledWith('validId');
+    });
     describe('handleTabReorder', () => {
       test('Several tabs, order changed, should update settings', () => {
         // Given
@@ -80,13 +168,48 @@ describe('Main module test suite', () => {
         expect(settingsModule.updateSettings).toHaveBeenCalledWith({tabs: [{id: '313373'}, {id: '1337'}]});
       });
     });
-    test('settingsOpenDialog', () => {
+    test('settingsOpenDialog, should open settings dialog', () => {
       // Given
       main.init();
       // When
       mockIpc.listeners.settingsOpenDialog();
       // Then
       expect(settingsModule.openSettingsDialog).toHaveBeenCalledTimes(1);
+    });
+  });
+  describe('initSettingsListener ipc events', () => {
+    let settingsView;
+    beforeEach(() => {
+      settingsView = {destroy: jest.fn()};
+      mockBrowserWindow.getBrowserView = jest.fn(() => settingsView);
+    });
+    test('saveSettings, should reload settings and reset all views', () => {
+      // Given
+      mockBrowserWindow.removeBrowserView = jest.fn();
+      mockTabContainer.destroy = jest.fn();
+      main.init();
+      // When
+      mockIpc.listeners.settingsSave({}, {tabs: [], dictionaries: []});
+      // Then
+      expect(spellCheckModule.loadDictionaries).toHaveBeenCalledTimes(2);
+      expect(settingsModule.updateSettings).toHaveBeenCalledTimes(1);
+      expect(settingsModule.updateTabUrls).toHaveBeenCalledTimes(1);
+      expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledTimes(1);
+      expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledWith(settingsView);
+      expect(tabManagerModule.removeAll).toHaveBeenCalledTimes(1);
+      expect(settingsView.destroy).toHaveBeenCalledTimes(1);
+      expect(mockTabContainer.destroy).toHaveBeenCalledTimes(1);
+    });
+    test('closeSettings, should destroy settings view and activate current tab', () => {
+      // Given
+      main.init();
+      // When
+      mockIpc.listeners.settingsCancel();
+      // Then
+      expect(settingsModule.updateSettings).not.toHaveBeenCalled();
+      expect(settingsModule.updateTabUrls).not.toHaveBeenCalled();
+      expect(tabManagerModule.getActiveTab).toHaveBeenCalledTimes(1);
+      expect(settingsView.destroy).toHaveBeenCalledTimes(1);
     });
   });
 });
