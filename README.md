@@ -30,8 +30,10 @@ You can also follow our comprehensive [setup guide](docs/Setup.md).
 
 ## Features
 
-- Multi-platform
-- Spellchecker
+- Multi-platform: ElectronIM is available for Linux, Mac and Windows.
+- Desktop notifications: ElectronIM will notify you using your native system notifications.
+- Spellchecker: ElectronIM contains spellchecker dictionaries for many languages,
+  if your language is not supported, just [create an issue](https://github.com/manusa/electronim/issues/new).
 - Supports any web based IM solution
 - Drag-and-drop tab reordering
 
