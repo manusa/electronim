@@ -37,8 +37,11 @@ const activateTab = tabId => {
     tabManager.setActiveTab(tabId);
     activeTab.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
     mainWindow.addBrowserView(activeTab);
+    activeTab.webContents.focus();
   }
 };
+
+const handleTabReload = event => event.sender.reloadIgnoringCache();
 
 const handleTabReorder = (event, {tabIds}) => {
   const currentTabs = loadSettings().tabs.reduce((acc, tab) => {
@@ -67,6 +70,7 @@ const initTabListener = () => {
     mainWindow.show();
     activateTab(tabId);
   });
+  ipc.on(APP_EVENTS.reload, handleTabReload);
   ipc.on(APP_EVENTS.settingsOpenDialog, () => openSettingsDialog(mainWindow));
   ipc.on(APP_EVENTS.tabReorder, handleTabReorder);
 };

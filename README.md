@@ -48,6 +48,12 @@ Inspired by [Rambox](https://github.com/ramboxapp/community-edition) and
 having an all-in-one instant messaging app that didn't require registration and provided 
 spell checking for free.
 
+
+## Documentation
+
+0. [Setup Guide](docs/Setup.md)
+0. [Keyboard Shortcuts](docs/Keyboard-shortcuts.md)
+
 ## Acknowledgements
 
 - [Electron](https://electronjs.org/)

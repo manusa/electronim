@@ -15,7 +15,9 @@
  */
 require('../main/preload');
 const {webFrame} = require('electron');
+const {initKeyboardShortcuts} = require('./browser-keyboard-shortcuts');
 require('./browser-notification-shim');
 const {initSpellChecker} = require('./browser-spell-check');
 
+initKeyboardShortcuts();
 initSpellChecker(webFrame);

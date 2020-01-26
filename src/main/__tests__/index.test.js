@@ -126,7 +126,8 @@ describe('Main module test suite', () => {
         // Given
         mockTabContainer.setBounds = jest.fn();
         const activeTab = {
-          setBounds: jest.fn()
+          setBounds: jest.fn(),
+          webContents: {focus: jest.fn()}
         };
         tabManagerModule.getTab = jest.fn(id => (id === 'validId' ? activeTab : null));
         mockBrowserWindow.setBrowserView = jest.fn();
@@ -139,6 +140,7 @@ describe('Main module test suite', () => {
         expect(activeTab.setBounds).toHaveBeenCalledWith({x: 0, y: 46, width: 13, height: 37});
         expect(mockBrowserWindow.setBrowserView).toHaveBeenCalledWith(mockTabContainer);
         expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledWith(activeTab);
+        expect(activeTab.webContents.focus).toHaveBeenCalledTimes(1);
       });
     });
     test('notificationClick, should restore window and activate tab', () => {
@@ -154,6 +156,14 @@ describe('Main module test suite', () => {
       expect(mockBrowserWindow.restore).toHaveBeenCalledTimes(1);
       expect(mockBrowserWindow.show).toHaveBeenCalledTimes(1);
       expect(tabManagerModule.getTab).toHaveBeenCalledWith('validId');
+    });
+    test('handleReload', () => {
+      const event = {sender: {reloadIgnoringCache: jest.fn()}};
+      main.init();
+      // When
+      mockIpc.listeners.reload(event);
+      // Then
+      expect(event.sender.reloadIgnoringCache).toHaveBeenCalledTimes(1);
     });
     describe('handleTabReorder', () => {
       test('Several tabs, order changed, should update settings', () => {
