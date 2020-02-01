@@ -44,6 +44,8 @@ jobs:
   linux:
     name: Linux Artifact
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2.0.0
@@ -53,20 +55,16 @@ jobs:
           node-version: '13.x'
       - name: Install
         run: npm install
-      - name: Create artifact
-        run: |
-          npm run package-linux
-          cd dist
-          tar -czvf electronim-linux-x64.tar.gz electronim-linux-x64/
-      - name: Upload Release Asset
-        run: |
-          VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
-          RELEASE_ID=$(curl https://api.github.com/repos/manusa/electronim/releases/tags/$VERSION | jq -r ".id")
-          curl \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Content-Type: application/tar+gzip" \
-            --data-binary "@dist/electronim-linux-x64.tar.gz" \
-            "https://uploads.github.com/repos/manusa/electronim/releases/$RELEASE_ID/assets?name=electronim-linux-x64.tar.gz"
+      - name: Change Package version
+        run: ./utils/version-from-tag.js
+      - name: Prepare Electron Builder
+        run: ./utils/prepare-electron-builder.js
+      - name: Build Linux
+        run: npm run build:linux
+      - name: Upload tar.gx
+        run: ./utils/upload-artifact.js electronim-linux-x64.tar.gz
+      - name: Upload AppImage
+        run: ./utils/upload-artifact.js electronim-linux-x86_64.AppImage
   macOS:
     name: macOS Artifact
     runs-on: ubuntu-latest

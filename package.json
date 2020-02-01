@@ -12,7 +12,10 @@
     "test": "jest --coverage",
     "package-linux": "electron-packager . electronim --overwrite --asar=true --platform=linux --arch=x64 --prune=true --out=dist",
     "package-mac": "electron-packager . electronim --overwrite --asar=true --platform=darwin --arch=x64 --prune=true --out=dist",
-    "package-win": "electron-packager . electronim --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=dist --version-string.CompanyName=\"Marc Nuri\" --version-string.FileDescription=ElectronIM --version-string.ProductName=\"ElectronIM\""
+    "package-win": "electron-packager . electronim --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=dist --version-string.CompanyName=\"Marc Nuri\" --version-string.FileDescription=ElectronIM --version-string.ProductName=\"ElectronIM\"",
+    "build:linux": "electron-builder --linux",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win"
   },
   "publishConfig": {
     "access": "public"
@@ -47,11 +50,37 @@
     "url": "https://github.com/manusa/electronim/issues"
   },
   "homepage": "https://github.com/manusa/electronim#readme",
-  "build":{
+  "build": {
     "appId": "com.marcnuri.electronim",
     "productName": "ElectronIM",
     "copyright": "Copyright 2019 Marc Nuri",
+    "directories": {
+      "output": "dist"
+    },
+    "linux": {
+      "artifactName": "electronim-linux-${arch}.${ext}",
+      "executableName": "electornim",
+      "category": "Network",
+      "desktop": {
+        "Terminal": "false",
+        "Type": "Application",
+        "Categories": "GTK;GNOME;Network;Email;Chat;InstantMessaging;"
+      },
+      "target": [
+        "AppImage",
+        "snap",
+        "tar.gz"
+      ]
+    },
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg",
+        "tar.gz"
+      ]
+    },
     "win": {
+      "artifactName": "electronim-win-${arch}.${ext}",
       "target": [
         "zip",
         "portable"
@@ -59,6 +88,7 @@
     }
   },
   "devDependencies": {
+    "electron-builder": "^22.3.2",
     "electron-packager": "^14.1.1",
     "eslint": "^6.8.0",
     "eslint-plugin-jest": "^23.1.1",
