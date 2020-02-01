@@ -1,7 +1,7 @@
 {
   "name": "electronim",
   "version": "0.0.0",
-  "description": "Electron based multi IM client",
+  "description": "Free/Libre open source Electron based multi instant messaging (IM) client.",
   "main": "src/index.js",
   "bin": {
     "electronim": "bin.js"
@@ -23,9 +23,14 @@
   },
   "keywords": [
     "electron",
+    "electronim",
     "IM",
     "chat",
-    "tabs"
+    "tabs",
+    "messaging",
+    "telegram",
+    "whatsapp",
+    "slack"
   ],
   "author": {
     "name": "Marc Nuri",
@@ -42,6 +47,17 @@
     "url": "https://github.com/manusa/electronim/issues"
   },
   "homepage": "https://github.com/manusa/electronim#readme",
+  "build":{
+    "appId": "com.marcnuri.electronim",
+    "productName": "ElectronIM",
+    "copyright": "Copyright 2019 Marc Nuri",
+    "win": {
+      "target": [
+        "zip",
+        "portable"
+      ]
+    }
+  },
   "devDependencies": {
     "electron-packager": "^14.1.1",
     "eslint": "^6.8.0",

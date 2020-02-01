@@ -35,7 +35,7 @@ jobs:
         run: |
           VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\/v//')
           echo New Version is $VERSION
-          npm version --no-git-tag-version ${VERSION}
+          ./utils/version-from-tag.js
       - name: Publish
         run: |
           export NPM_TOKEN=${{ secrets.NPM_TOKEN }}
