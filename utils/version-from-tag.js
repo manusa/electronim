@@ -3,11 +3,13 @@
 
 const childProcess = require('child_process');
 const errorHandler = require('./error-handler');
-const refPrefix = 'refs\\/tags\\/v';
+const refPrefix = 'refs/tags/v';
 
 const extractVersionFromTag = () => {
+  console.log(process.env);
   const githubRef = process.env.GITHUB_REF;
-  if (githubRef && githubRef.startsWith('refs\\/tags\\/v')) {
+  if (githubRef && githubRef.startsWith(refPrefix)) {
+    console.log(`replaced stuff ${githubRef.replace(refPrefix, '')}`);
     return githubRef.replace(refPrefix, '');
   }
   return null;
