@@ -73,6 +73,7 @@
       ]
     },
     "mac": {
+      "artifactName": "electronim-mac.${ext}",
       "category": "public.app-category.utilities",
       "target": [
         "dmg",
