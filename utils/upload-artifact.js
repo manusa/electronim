@@ -17,11 +17,11 @@ const uploadArtifact = () => {
   const releaseId = childProcess.execSync(`curl https://api.github.com/repos/manusa/electronim/releases/tags/v${version} | jq -r ".id"`)
     .toString('utf8').replace(/\\r?\\n/g, '').trim();
   console.log(`Uploading ${artifactFileName} with version ${version} to release ${releaseId}`);
-  const assetId = childProcess.execSync(`curl                                                                                \\
+  const assetId = childProcess.execSync(`curl                                                                 \\
             -H "Authorization: token $GITHUB_TOKEN"                                                                    \\
             -H "Content-Type: application/tar+gzip"                                                                    \\
             --data-binary "@dist/${artifactFileName}"                                                                  \\
-            "https://uploads.github.com/repos/manusa/electronim/releases/${releaseId}/assets?name=${artifactFileName}"
+            "https://uploads.github.com/repos/manusa/electronim/releases/${releaseId}/assets?name=${artifactFileName}" \\
             | jq -r ".id"`)
     .toString('utf8').replace(/\\r?\\n/g, '').trim();
   console.log(`Artifact ${artifactFileName} with version ${version} to release ${releaseId} successfully uploaded as asset ${assetId}`);
