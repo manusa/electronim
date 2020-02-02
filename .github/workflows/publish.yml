@@ -62,9 +62,9 @@ jobs:
       - name: Build Linux
         run: npm run build:linux
       - name: Upload tar.gz
-        run: ./utils/upload-artifact.js electronim-linux-x64.tar.gz
+        run: ./utils/upload-artifact.js electronim-linux-x64.tar.gz application/tar+gzip
       - name: Upload AppImage
-        run: ./utils/upload-artifact.js electronim-linux-x86_64.AppImage
+        run: ./utils/upload-artifact.js electronim-linux-x86_64.AppImage application/octet-stream
   macOS:
     name: macOS Artifact
     runs-on: ubuntu-latest
@@ -84,7 +84,7 @@ jobs:
       - name: Build macOS
         run: npm run build:mac
       - name: Upload tar.gz
-        run: ./utils/upload-artifact.js electronim-mac.tar.gz
+        run: ./utils/upload-artifact.js electronim-mac.tar.gz  application/tar+gzip
   windows:
     name: Windows Artifact
     runs-on: windows-latest
@@ -104,6 +104,6 @@ jobs:
       - name: Build Windows
         run: npm run build:win
       - name: Upload zip
-        run: node .\utils\upload-artifact.js electronim-win-x64.zip
+        run: node .\utils\upload-artifact.js electronim-win-x64.zip application/zip
       - name: Upload Portable exe
-        run: node .\utils\upload-artifact.js electronim-win.exe
+        run: node .\utils\upload-artifact.js electronim-win.exe  application/octet-stream
