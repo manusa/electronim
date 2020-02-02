@@ -68,6 +68,8 @@ jobs:
   macOS:
     name: macOS Artifact
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2.0.0
@@ -88,6 +90,8 @@ jobs:
   windows:
     name: Windows Artifact
     runs-on: windows-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2.0.0
