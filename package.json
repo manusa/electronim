@@ -88,6 +88,7 @@
     }
   },
   "devDependencies": {
+    "axios": "^0.19.2",
     "electron-builder": "^22.3.2",
     "electron-packager": "^14.1.1",
     "eslint": "^6.8.0",

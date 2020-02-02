@@ -84,7 +84,7 @@ jobs:
       - name: Build macOS
         run: npm run build:mac
       - name: Upload tar.gz
-        run: ./utils/upload-artifact.js electronim-mac.tar.gz  application/tar+gzip
+        run: ./utils/upload-artifact.js electronim-mac.tar.gz application/tar+gzip
   windows:
     name: Windows Artifact
     runs-on: windows-latest
@@ -106,4 +106,4 @@ jobs:
       - name: Upload zip
         run: node .\utils\upload-artifact.js electronim-win-x64.zip application/zip
       - name: Upload Portable exe
-        run: node .\utils\upload-artifact.js electronim-win.exe  application/octet-stream
+        run: node .\utils\upload-artifact.js electronim-win.exe application/octet-stream
