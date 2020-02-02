@@ -1,32 +1,62 @@
 #!/usr/bin/env node
 /* eslint-disable no-console,no-useless-escape */
-const childProcess = require('child_process');
+const axios = require('axios');
+const fs = require('fs');
 const path = require('path');
 const errorHandler = require('./error-handler');
 const {extractVersionFromTag} = require('./common');
 
-const uploadArtifact = () => {
+const validateArgs = () => {
   if (process.argv.length < 4) {
     console.error('No artifact name or mime type specified');
     process.exit(1);
   }
-  const artifactFileName = process.argv[2];
-  const mimeType = process.argv[3];
-  const version = extractVersionFromTag();
+};
+
+const validateVersion = version => {
   if (!version) {
     console.error('No version specified');
     process.exit(1);
   }
-  const releaseId = childProcess.execSync(`curl https://api.github.com/repos/manusa/electronim/releases/tags/v${version} | jq -r ".id"`)
-    .toString('utf8').replace(/\\r?\\n/g, '').trim();
+  return version;
+};
+
+const validateFile = artifactFile => {
+  if (!fs.existsSync(artifactFile)) {
+    console.error(`File ${artifactFile} doesn't exist`);
+    process.exit(1);
+  }
+  return artifactFile;
+};
+
+const getReleaseId = async version => {
+  const {data: {id}} = await axios.get(`https://api.github.com/repos/manusa/electronim/releases/tags/v${version}`);
+  return id;
+};
+
+const uploadArtifact = async () => {
+  validateArgs();
+  const version = validateVersion(extractVersionFromTag());
+  const artifactFileName = process.argv[2];
+  const artifactFile = validateFile(path.join('dist', artifactFileName));
+  const mimeType = process.argv[3];
+  const releaseId = await getReleaseId(version);
   console.log(`Uploading ${artifactFileName} with version ${version} to release ${releaseId}`);
-  const assetId = childProcess.execSync(`curl                                                                 \\
-            -H "Authorization: token $GITHUB_TOKEN"                                                                    \\
-            -H "Content-Type: ${mimeType}"                                                                             \\
-            --data-binary "@${path.join('dist', artifactFileName)}"                                                    \\
-            "https://uploads.github.com/repos/manusa/electronim/releases/${releaseId}/assets?name=${artifactFileName}" \\
-            | jq -r ".id"`)
-    .toString('utf8').replace(/\\r?\\n/g, '').trim();
+  const artifactStream = fs.createReadStream(artifactFile);
+  artifactStream.on('error', errorHandler);
+  const {size: artifactSize} = fs.statSync(artifactFile);
+  const {data: {id: assetId}} = await axios({
+    method: 'POST',
+    url: `https://uploads.github.com/repos/manusa/electronim/releases/${releaseId}/assets?name=${artifactFileName}`,
+    headers: {
+      'Content-Type': mimeType,
+      'Content-Length': artifactSize,
+      Authorization: `token ${process.env.GITHUB_TOKEN}`
+    },
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity,
+    data: artifactStream
+  });
   if (!assetId) {
     console.error(`Error uploading artifact ${artifactFileName} to release ${releaseId}`);
     process.exit(1);
@@ -35,4 +65,4 @@ const uploadArtifact = () => {
 };
 
 process.on('unhandledRejection', errorHandler);
-uploadArtifact();
+uploadArtifact().then(() => process.exit(0)).catch(errorHandler);
