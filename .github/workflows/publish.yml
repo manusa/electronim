@@ -95,8 +95,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '13.x'
-      - name: Setup Wine
-        run: apt-get -y install wine
       - name: Install
         run: npm install
       - name: Change Package version
@@ -106,6 +104,6 @@ jobs:
       - name: Build Windows
         run: npm run build:win
       - name: Upload zip
-        run: ./utils/upload-artifact.js electronim-win-x64.zip
+        run: node .\utils\upload-artifact.js electronim-win-x64.zip
       - name: Upload Portable exe
-        run: ./utils/upload-artifact.js electronim-win.exe
+        run: node .\utils\upload-artifact.js electronim-win.exe
