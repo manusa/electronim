@@ -17,8 +17,7 @@ const uploadArtifact = () => {
     console.error('No version specified');
     process.exit(1);
   }
-  const releaseId = childProcess.execSync(`curl https://api.github.com/repos/manusa/electronim/releases/tags/v${version} | jq -r ".id"`,
-    {stdio: 'inherit'})
+  const releaseId = childProcess.execSync(`curl https://api.github.com/repos/manusa/electronim/releases/tags/v${version} | jq -r ".id"`)
     .toString('utf8').replace(/\\r?\\n/g, '').trim();
   console.log(`Uploading ${artifactFileName} with version ${version} to release ${releaseId}`);
   const assetId = childProcess.execSync(`curl                                                                 \\
@@ -26,8 +25,7 @@ const uploadArtifact = () => {
             -H "Content-Type: ${mimeType}"                                                                             \\
             --data-binary "@${path.join('dist', artifactFileName)}"                                                    \\
             "https://uploads.github.com/repos/manusa/electronim/releases/${releaseId}/assets?name=${artifactFileName}" \\
-            | jq -r ".id"`,
-  {stdio: 'inherit'})
+            | jq -r ".id"`)
     .toString('utf8').replace(/\\r?\\n/g, '').trim();
   if (!assetId) {
     console.error(`Error uploading artifact ${artifactFileName} to release ${releaseId}`);
