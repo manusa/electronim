@@ -85,8 +85,6 @@ jobs:
         run: npm run build:mac
       - name: Upload tar.gz
         run: ./utils/upload-artifact.js electronim-mac.tar.gz
-      - name: Upload dmg
-        run: ./utils/upload-artifact.js electronim-mac.dmg
   windows:
     name: Windows Artifact
     runs-on: windows-latest
@@ -97,20 +95,17 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '13.x'
+      - name: Setup Wine
+        run: apt-get -y install wine
       - name: Install
         run: npm install
-      - name: Create artifact
-        run: |
-          npm run package-win
-          cd dist
-          7z a electronim-win32-ia32.zip electronim-win32-ia32/
-      - name: Upload Release Asset
-        run: |
-          $VERSION = $Env:GITHUB_REF -replace 'refs/tags/',''
-          $RELEASE_INFO = Invoke-WebRequest "https://api.github.com/repos/manusa/electronim/releases/tags/$VERSION" | ConvertFrom-Json
-          $RELEASE_ID = $RELEASE_INFO.id
-          curl `
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" `
-            -H "Content-Type: application/zip" `
-            --data-binary "@dist/electronim-win32-ia32.zip" `
-            "https://uploads.github.com/repos/manusa/electronim/releases/$RELEASE_ID/assets?name=electronim-windows-ia32.zip"
+      - name: Change Package version
+        run: ./utils/version-from-tag.js
+      - name: Prepare Electron Builder
+        run: ./utils/prepare-electron-builder.js
+      - name: Build Windows
+        run: npm run build:win
+      - name: Upload zip
+        run: ./utils/upload-artifact.js electronim-win-x64.zip
+      - name: Upload Portable exe
+        run: ./utils/upload-artifact.js electronim-win.exe
