@@ -59,7 +59,7 @@
     },
     "linux": {
       "artifactName": "electronim-linux-${arch}.${ext}",
-      "executableName": "electornim",
+      "executableName": "electronim",
       "category": "Network",
       "desktop": {
         "Terminal": "false",
