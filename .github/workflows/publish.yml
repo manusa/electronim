@@ -66,6 +66,7 @@ jobs:
       - name: Publish Snap
         run: |
           sudo apt-get install snapd
+          sudo chown root:root / # Snapcraft requires '/' to be root owned
           sudo snap install snapcraft --classic
           echo $SNAPCRAFT_LOGIN | base64 --decode --ignore-garbage > snapcraft.login
           snapcraft login --with snapcraft.login
