@@ -72,20 +72,6 @@
         "network",
         "network-bind",
         "opengl",
-        {
-          "personal-files": {
-            "read": [
-              "$HOME/.electronim",
-              "$HOME/.electronim/settings.json",
-              "$HOME/Downloads"
-            ],
-            "write": [
-              "$HOME/.electronim",
-              "$HOME/.electronim/settings.json",
-              "$HOME/Downloads"
-            ]
-          }
-        },
         "pulseaudio",
         "removable-media",
         "screencast-legacy",
