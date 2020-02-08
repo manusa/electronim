@@ -70,7 +70,7 @@ jobs:
           sudo snap install snapcraft --classic
           echo $SNAPCRAFT_LOGIN | base64 --decode --ignore-garbage > snapcraft.login
           snapcraft login --with snapcraft.login
-          snapcraft push --release=stabe ./dist/electronim-linux-amd64.snap
+          snapcraft push --release=stable ./dist/electronim-linux-amd64.snap
   macOS:
     name: macOS Artifact
     runs-on: ubuntu-latest
