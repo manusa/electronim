@@ -78,6 +78,9 @@
         "unity7",
         "wayland",
         "x11"
+      ],
+      "after": [
+        "desktop-gtk3"
       ]
     },
     "linux": {
