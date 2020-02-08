@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      SNAPCRAFT_LOGIN: {{ SNAPCRAFT_LOGIN }}
+      SNAPCRAFT_LOGIN: ${{ SNAPCRAFT_LOGIN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2.0.0
