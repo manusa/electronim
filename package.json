@@ -57,6 +57,43 @@
     "directories": {
       "output": "dist"
     },
+    "snap": {
+      "summary": "Free/Libre open source Electron based multi instant messaging (IM) client.",
+      "plugs": [
+        "alsa",
+        "browser-support",
+        "camera",
+        "desktop",
+        "desktop-legacy",
+        "device-buttons",
+        "display-control",
+        "home",
+        "io-ports-control",
+        "network",
+        "network-bind",
+        "opengl",
+        {
+          "personal-files": {
+            "read": [
+              "$HOME/.electronim",
+              "$HOME/.electronim/settings.json",
+              "$HOME/Downloads"
+            ],
+            "write": [
+              "$HOME/.electronim",
+              "$HOME/.electronim/settings.json",
+              "$HOME/Downloads"
+            ]
+          }
+        },
+        "pulseaudio",
+        "removable-media",
+        "screencast-legacy",
+        "unity7",
+        "wayland",
+        "x11"
+      ]
+    },
     "linux": {
       "artifactName": "electronim-linux-${arch}.${ext}",
       "executableName": "electronim",
