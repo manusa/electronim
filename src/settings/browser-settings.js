@@ -14,6 +14,15 @@
    limitations under the License.
  */
 /* eslint-disable no-undef */
+const settings = () => document.querySelector('.settings');
+const settingsForm = () => settings().querySelector('.form');
+const newTabField = () => settings().querySelector('.settings__new-tab .input');
+const newTabAddButton = () => settings().querySelector('.settings__new-tab .button');
+const tabs = () => settings().querySelector('.settings__tabs');
+const dictionaries = () => settings().querySelector('.settings__dictionaries');
+const submitButton = () => settings().querySelector('.settings__submit');
+const cancelButton = () => settings().querySelector('.settings__cancel');
+
 const prependProtocol = url => {
   if (url && !url.match(/^https?:\/\/.+/)) {
     return `https://${url}`;
@@ -34,39 +43,40 @@ const validateUrl = url => {
   return false;
 };
 
-const validateNewTab = ({target}) => {
-  target.classList.remove('is-success', 'is-danger');
-  if (validateUrl(target.value)) {
-    target.classList.add('is-success');
-  } else {
-    target.classList.add('is-danger');
+const validateNewTab = () => {
+  const newTabInputElement = newTabField();
+  const newTabAddButtonElement = newTabAddButton();
+  newTabInputElement.classList.remove('is-success', 'is-danger');
+  newTabAddButtonElement.setAttribute('disabled', 'disabled');
+  if (newTabInputElement.value.length > 0 && validateUrl(newTabInputElement.value)) {
+    newTabInputElement.classList.add('is-success');
+    newTabAddButtonElement.removeAttribute('disabled');
+  } else if (newTabInputElement.value.length > 0) {
+    newTabInputElement.classList.add('is-danger');
   }
 };
 
 const updateSaveButton = () => {
-  const settings = document.querySelector('.settings');
-  const newTabField = settings.querySelector('.settings__new-tab');
-  const settingsForm = settings.querySelector('.form');
-  const submit = settings.querySelector('.settings__submit');
   let enabled = true;
-  if (newTabField.value.length > 0) {
+  if (newTabField().value.length > 0) {
     enabled = false;
   }
-  if (new FormData(settingsForm).getAll('tabs').length === 0) {
+  if (new FormData(settingsForm()).getAll('tabs').length === 0) {
     enabled = false;
   }
   if (enabled) {
-    submit.removeAttribute('disabled');
+    submitButton().removeAttribute('disabled');
   } else {
-    submit.setAttribute('disabled', 'true');
+    submitButton().setAttribute('disabled', 'true');
   }
 };
 
-const initTabsListener = tabs => {
-  const content = tabs.innerHTML;
-  tabs.innerHTML = '';
-  tabs.innerHTML = content;
-  tabs.querySelectorAll('.icon')
+const initTabsListener = () => {
+  const tabsElement = tabs();
+  const content = tabsElement.innerHTML;
+  tabsElement.innerHTML = '';
+  tabsElement.innerHTML = content;
+  tabsElement.querySelectorAll('.icon')
     .forEach(icon => icon.addEventListener('click', ({target}) => {
       target.closest('.settings__tab').remove();
       updateSaveButton();
@@ -78,41 +88,43 @@ const tabTemplate = url => `
       <div class='control'>
           <input type='text' readonly class='input' name='tabs' value='${url}' />
       </div>
-        <span class='icon is-medium'>
-          <i class='fas fa-trash'></i>
-        </span>
+      <span class='icon is-medium'>
+        <i class='fas fa-trash'></i>
+      </span>
     </div>
   `;
 
-const initNewTab = settings => {
-  const newTabField = settings.querySelector('.settings__new-tab');
-  const tabs = settings.querySelector('.settings__tabs');
-  newTabField.addEventListener('input', event => {
-    validateNewTab(event);
+const initNewTab = () => {
+  newTabField().addEventListener('input', () => {
+    validateNewTab();
     updateSaveButton();
   });
-  newTabField.addEventListener('keypress', event => {
+  const addTab = () => {
+    const newTabFieldElement = newTabField();
+    tabs().innerHTML += tabTemplate(prependProtocol(newTabFieldElement.value));
+    initTabsListener();
+    newTabFieldElement.value = '';
+    validateNewTab();
+    updateSaveButton();
+  };
+  newTabField().addEventListener('keypress', event => {
     const {target} = event;
     if (event.code === 'Enter' && validateUrl(target.value)) {
       event.preventDefault();
-      tabs.innerHTML += tabTemplate(prependProtocol(target.value));
-      initTabsListener(tabs);
-      target.value = '';
-      updateSaveButton();
+      addTab();
     }
   });
+  newTabAddButton().addEventListener('click', addTab);
 };
 
-const initTabsSettings = settings => {
-  const tabs = settings.querySelector('.settings__tabs');
-  tabs.innerHTML = window.tabs.map(({url}) => url).map(tabTemplate).join('');
-  initTabsListener(tabs);
+const initTabsSettings = () => {
+  tabs().innerHTML = window.tabs.map(({url}) => url).map(tabTemplate).join('');
+  initTabsListener();
 };
 
-const initSpellCheckerSettings = settings => {
-  const dictionaries = settings.querySelector('.settings__dictionaries');
+const initSpellCheckerSettings = () => {
   const {available, enabled} = window.dictionaries;
-  dictionaries.innerHTML = Object.entries(available)
+  dictionaries().innerHTML = Object.entries(available)
     .sort(([, {name: name1}], [, {name: name2}]) => name1.localeCompare(name2))
     .map(([key, {name}]) => `
       <div class='control'>
@@ -124,11 +136,9 @@ const initSpellCheckerSettings = settings => {
     `).join('');
 };
 
-const initButtons = settings => {
-  const settingsForm = settings.querySelector('.form');
-  const submit = settings.querySelector('.settings__submit');
-  submit.addEventListener('click', () => {
-    const formData = new FormData(settingsForm);
+const initButtons = () => {
+  submitButton().addEventListener('click', () => {
+    const formData = new FormData(settingsForm());
     ipcRenderer.send(APP_EVENTS.settingsSave, {
       tabs: formData.getAll('tabs'),
       dictionaries: formData.getAll('dictionaries')
@@ -136,17 +146,13 @@ const initButtons = settings => {
   });
   updateSaveButton();
 
-  const cancel = settings.querySelector('.settings__cancel');
-  cancel.addEventListener('click', () => ipcRenderer.send(APP_EVENTS.settingsCancel));
+  cancelButton().addEventListener('click', () => ipcRenderer.send(APP_EVENTS.settingsCancel));
 };
 
 const init = () => {
-  const settings = document.querySelector('.settings');
-  const settingsForm = settings.querySelector('.form');
-  settingsForm.addEventListener('keypress', event => (event.code === 'Enter' ? event.preventDefault() : true));
-  settingsForm.addEventListener('submit', event => event.preventDefault());
-
-  [initNewTab, initSpellCheckerSettings, initTabsSettings, initButtons].forEach(f => f.call(this, settings));
+  settingsForm().addEventListener('keypress', event => (event.code === 'Enter' ? event.preventDefault() : true));
+  settingsForm().addEventListener('submit', event => event.preventDefault());
+  [initNewTab, initSpellCheckerSettings, initTabsSettings, initButtons].forEach(f => f.call(this));
 };
 
 init();

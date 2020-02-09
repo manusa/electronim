@@ -18,15 +18,23 @@ body {
     padding: 15px 0;
 }
 
-.settings__tab {
+.settings__new-tab, .settings__tab {
     display: inline-flex;
     align-items: center;
     width: 100%;
 }
 
-.settings__tab .control{
+.settings__new-tab button.button {
+    border: 0;
+    width: 32px;
+    padding: 0;
+}
+
+.settings__new-tab .control,
+.settings__tab .control {
     flex: 1;
 }
+
 .settings__tab .icon {
     cursor: pointer;
 }

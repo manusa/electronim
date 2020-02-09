@@ -19,7 +19,10 @@ const mockDOM = () => {
   $root.innerHTML = `
     <div class="settings">
         <form class="form">
-            <input class="settings__new-tab" />
+            <div class="settings__new-tab">
+                <input class="input" />
+                <button class="button" disabled />
+            </div>
             <div class="settings__tabs"></div>
             <div class="settings__dictionaries"></div>
             <button class="settings__submit" />
@@ -87,8 +90,10 @@ describe('Settings in Browser test suite', () => {
   });
   describe('New tab field', () => {
     let $input;
+    let $addTabButton;
     beforeEach(() => {
-      $input = document.querySelector('.settings__new-tab');
+      $input = document.querySelector('.settings__new-tab .input');
+      $addTabButton = document.querySelector('.settings__new-tab .button');
     });
     test('Regular key press (No Enter), should only update input value', () => {
       // Given
@@ -132,6 +137,7 @@ describe('Settings in Browser test suite', () => {
         expect(event.preventDefault).toHaveBeenCalledTimes(1);
         expect(document.querySelector('.settings__tabs').innerHTML).toContain('https://info.cern.ch');
         expect($input.value).toBe('');
+        expect($addTabButton.getAttribute('disabled')).toBe('disabled');
         expect(document.querySelector('.settings__submit').getAttribute('disabled')).toBeNull();
       });
       test('Valid URL wth protocol, should add new url', () => {
@@ -143,6 +149,7 @@ describe('Settings in Browser test suite', () => {
         expect(event.preventDefault).toHaveBeenCalledTimes(1);
         expect(document.querySelector('.settings__tabs').innerHTML).toContain('http://info.cern.ch');
         expect($input.value).toBe('');
+        expect($addTabButton.getAttribute('disabled')).toBe('disabled');
         expect(document.querySelector('.settings__submit').getAttribute('disabled')).toBeNull();
       });
     });
@@ -158,6 +165,7 @@ describe('Settings in Browser test suite', () => {
         $input.dispatchEvent(event);
         // Then
         expect($input.classList.contains('is-success')).toBe(true);
+        expect($addTabButton.getAttribute('disabled')).toBeNull();
         expect($input.classList.contains('is-danger')).toBe(false);
       });
       test('Invalid URL, should add danger class', () => {
@@ -167,8 +175,21 @@ describe('Settings in Browser test suite', () => {
         $input.dispatchEvent(event);
         // Then
         expect($input.classList.contains('is-danger')).toBe(true);
+        expect($addTabButton.getAttribute('disabled')).toBe('disabled');
         expect($input.classList.contains('is-success')).toBe(false);
       });
+    });
+    test('addTabButton, click with valid URL, should add tab', () => {
+      // Given
+      const event = new Event('click');
+      $input.value = 'info.cern.ch';
+      // When
+      $addTabButton.dispatchEvent(event);
+      // Then
+      expect(document.querySelector('.settings__tabs').innerHTML).toContain('https://info.cern.ch');
+      expect($input.value).toBe('');
+      expect($addTabButton.getAttribute('disabled')).toBe('disabled');
+      expect(document.querySelector('.settings__submit').getAttribute('disabled')).toBeNull();
     });
   });
   describe('Tab events', () => {
