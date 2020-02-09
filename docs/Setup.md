@@ -1,6 +1,10 @@
 # Setup
 
-## Download ElectronIM
+## Install
+
+There are several options available to install ElectronIM
+
+### Platform packaged ElectronIM
 
 Download the latest release for your platform from our releases page:
 https://github.com/manusa/electronim/releases/latest
@@ -12,6 +16,18 @@ Run the appropriate executable in the extracted directory for your platform:
 * Windows: `electronim.exe`
 * MacOS: `electronim.app`
 * Linux: `electronim`
+
+### [Snapcraft](https://snapcraft.io/electronim) package
+
+A Snap package is available for systems with `snapd` installed.
+Snapcraft is installed by default in Ubuntu, but is also available for most Linux distributions
+(check Snapcraft website for the [installation guide](https://snapcraft.io/docs/installing-snapd) for your platform).
+
+Once snapd is installed in your system, run the following command to install ElectronIM:
+
+```
+sudo snap install electronim
+```
 
 ## Settings
 

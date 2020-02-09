@@ -5,6 +5,7 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=manusa_electronim&metric=coverage)](https://sonarcloud.io/dashboard?id=manusa_electronim)
 [![npm](https://img.shields.io/npm/v/electronim)](https://www.npmjs.com/package/electronim)
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/manusa/electronim?sort=semver)](https://github.com/manusa/electronim/releases/latest)
+[![electronim](https://snapcraft.io//electronim/badge.svg)](https://snapcraft.io/electronim)
 
 
 Free/Libre open source Electron based multi instant messaging (IM) client.
@@ -12,6 +13,8 @@ Free/Libre open source Electron based multi instant messaging (IM) client.
 Combine all your IM applications (or whatever you want) in a single browser (Electron) window.
 
 ## Quickstart
+
+Detailed guides for installation can be followed in our comprehensive [setup guide](docs/Setup.md).
 
 Download the latest binary version for your platform:
 [releases](https://github.com/manusa/electronim/releases/latest)
@@ -26,7 +29,6 @@ npx electronim
 npm install -g electronim
 elecronim
 ```
-You can also follow our comprehensive [setup guide](docs/Setup.md).
 
 ## Features
 
