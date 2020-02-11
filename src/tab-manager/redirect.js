@@ -22,6 +22,7 @@ const isOAuth = matchUrls([
   /^https:\/\/.+\.google\.com\/o\/oauth2\/.*/,
   /^https:\/\/.+\.google\.com\/accounts\/signin.*/,
   /^https:\/\/.+\.google\.com\/signin\/oauth.*/,
+  /^https:\/\/accounts\.google\.com\/.*/,
   /^https:\/\/(.+\.)?github\.com\/login\/oauth.*/
 ]);
 
