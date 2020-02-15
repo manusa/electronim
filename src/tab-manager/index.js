@@ -18,9 +18,12 @@ const {APP_EVENTS} = require('../constants');
 const settings = require('../settings');
 const {contextMenuHandler} = require('../spell-check');
 const {handleRedirect} = require('./redirect');
+const {latestChromium, replaceChromeVersion, sanitizeUserAgent} = require('./user-agent');
 
 let activeTab = null;
 const tabs = {};
+let latestChromiumVersion;
+latestChromium().then(version => (latestChromiumVersion = version));
 
 const webPreferences = {
   preload: `${__dirname}/preload.js`
@@ -67,10 +70,12 @@ const handleContextMenu = browserView => async (event, params) => {
 const setGlobalUserAgentFallback = userAgent => (app.userAgentFallback = userAgent);
 
 const cleanUserAgent = browserView => {
-  browserView.webContents.userAgent = browserView.webContents.userAgent
-    .replace(/ElectronIM\/.*? /g, '')
-    .replace(/Electron\/.*? /g, '');
-  setGlobalUserAgentFallback(browserView.webContents.userAgent);
+  let validUserAgent = sanitizeUserAgent(browserView.webContents.userAgent);
+  if (latestChromiumVersion) {
+    validUserAgent = replaceChromeVersion(latestChromiumVersion)(validUserAgent);
+  }
+  browserView.webContents.userAgent = validUserAgent;
+  setGlobalUserAgentFallback(validUserAgent);
 };
 
 const addTabs = ipcSender => tabsMetadata => {

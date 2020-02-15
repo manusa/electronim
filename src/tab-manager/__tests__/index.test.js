@@ -17,6 +17,7 @@ describe('Tab Manager module test suite', () => {
   let mockBrowserView;
   let mockMenu;
   let mockMenuItem;
+  let userAgent;
   let tabManager;
   beforeEach(() => {
     mockBrowserView = {
@@ -25,7 +26,7 @@ describe('Tab Manager module test suite', () => {
         executeJavaScript: jest.fn(),
         on: jest.fn(),
         loadURL: jest.fn(),
-        userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36'
+        userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36'
       }
     };
     mockMenu = {};
@@ -38,6 +39,8 @@ describe('Tab Manager module test suite', () => {
     }));
     jest.mock('../../settings');
     jest.mock('../../spell-check');
+    userAgent = require('../user-agent');
+    userAgent.latestChromium = jest.fn(async () => '79.0.1337.79');
     tabManager = require('../');
   });
   describe('getTab', () => {
