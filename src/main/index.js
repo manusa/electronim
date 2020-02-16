@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {BrowserWindow, app, ipcMain: ipc} = require('electron');
+const {BrowserWindow, Notification, app, ipcMain: ipc} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const {TABS_CONTAINER_HEIGHT, initTabContainer} = require('../chrome-tabs');
 const {loadSettings, updateSettings, updateTabUrls, openSettingsDialog} = require('../settings');
@@ -116,7 +116,15 @@ const init = () => {
   mainWindow.on('closed', () => app.quit());
   initTabListener();
   initSettingsListener();
-  tabContainer = initTabContainer(mainWindow);
+  tabManager.initBrowserVersions()
+    .then(() => (tabContainer = initTabContainer(mainWindow)))
+    .catch(() => {
+      new Notification({
+        title: 'ElectronIM: No network available',
+        urgency: 'critical'
+      }).show();
+      tabContainer = initTabContainer(mainWindow);
+    });
   return mainWindow;
 };
 

@@ -57,6 +57,11 @@ describe('Main module test suite', () => {
     spellCheckModule = require('../../spell-check');
     jest.mock('../../tab-manager');
     tabManagerModule = require('../../tab-manager');
+    tabManagerModule.initBrowserVersions.mockImplementation(() => ({
+      then: func => {
+        func.call();
+        return {catch: () => {}};
+      }}));
     tabManagerModule.getActiveTab.mockImplementation();
     main = require('../');
   });

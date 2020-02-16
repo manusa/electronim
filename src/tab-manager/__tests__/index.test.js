@@ -19,7 +19,7 @@ describe('Tab Manager module test suite', () => {
   let mockMenuItem;
   let userAgent;
   let tabManager;
-  beforeEach(() => {
+  beforeEach(async () => {
     mockBrowserView = {
       setAutoResize: jest.fn(),
       webContents: {
@@ -40,7 +40,6 @@ describe('Tab Manager module test suite', () => {
     jest.mock('../../settings');
     jest.mock('../../spell-check');
     userAgent = require('../user-agent');
-    userAgent.latestChromium = jest.fn(async () => '79.0.1337.79');
     tabManager = require('../');
   });
   describe('getTab', () => {
@@ -88,14 +87,25 @@ describe('Tab Manager module test suite', () => {
       expect(mockBrowserView.webContents.executeJavaScript).toHaveBeenCalledTimes(1);
       expect(mockBrowserView.webContents.executeJavaScript).toHaveBeenCalledWith('window.tabId = \'1337\';');
     });
-    test('cleanUserAgent, should remove non-standard tokens from user-agent header', () => {
-      // Given
-      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
-      // When
-      const result = tabManager.getTab(1337).webContents.userAgent;
-      // Then
-      expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
-      expect(require('electron').app.userAgentFallback).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
+    describe('cleanUserAgent', () => {
+      test(' chromium version available, should remove non-standard tokens from user-agent header and set version', () => {
+        // Given
+        userAgent.BROWSER_VERSIONS.chromium = '79.0.1337.79';
+        // When
+        tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+        // Then
+        const result = tabManager.getTab(1337).webContents.userAgent;
+        expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
+        expect(require('electron').app.userAgentFallback).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
+      });
+      test(' chromium not version available, should remove non-standard tokens from user-agent header', () => {
+        // When
+        tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+        // Then
+        const result = tabManager.getTab(1337).webContents.userAgent;
+        expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/WillBeReplacedByLatestChromium Safari/537.36');
+        expect(require('electron').app.userAgentFallback).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/WillBeReplacedByLatestChromium Safari/537.36');
+      });
     });
     describe('Event listeners', () => {
       let events;

@@ -18,12 +18,10 @@ const {APP_EVENTS} = require('../constants');
 const settings = require('../settings');
 const {contextMenuHandler} = require('../spell-check');
 const {handleRedirect} = require('./redirect');
-const {latestChromium, replaceChromeVersion, sanitizeUserAgent} = require('./user-agent');
+const {initBrowserVersions, userAgentForView} = require('./user-agent');
 
 let activeTab = null;
 const tabs = {};
-let latestChromiumVersion;
-latestChromium().then(version => (latestChromiumVersion = version));
 
 const webPreferences = {
   preload: `${__dirname}/preload.js`
@@ -70,10 +68,7 @@ const handleContextMenu = browserView => async (event, params) => {
 const setGlobalUserAgentFallback = userAgent => (app.userAgentFallback = userAgent);
 
 const cleanUserAgent = browserView => {
-  let validUserAgent = sanitizeUserAgent(browserView.webContents.userAgent);
-  if (latestChromiumVersion) {
-    validUserAgent = replaceChromeVersion(latestChromiumVersion)(validUserAgent);
-  }
+  const validUserAgent = userAgentForView(browserView);
   browserView.webContents.userAgent = validUserAgent;
   setGlobalUserAgentFallback(validUserAgent);
 };
@@ -121,5 +116,5 @@ const removeAll = () => {
 const reload = () => Object.values(tabs).forEach(browserView => browserView.webContents.reload());
 
 module.exports = {
-  addTabs, getTab, getActiveTab, setActiveTab, reload, removeAll
+  addTabs, getTab, getActiveTab, initBrowserVersions, setActiveTab, reload, removeAll
 };

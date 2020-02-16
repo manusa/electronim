@@ -22,44 +22,61 @@ describe('User Agent module test suite', () => {
     axios = require('axios');
     userAgent = require('../user-agent');
   });
-  describe('latestChromium', () => {
-    test('validResponse, should return a valid version,', async () => {
+  describe('initBrowserVersions', () => {
+    test('valid responses, should return a valid version for all browsers,', async () => {
       // Given
       axios.get.mockImplementationOnce(async () => ({data: [
         {os: 'linux', versions: [{channel: 'other', version: '5uck5'}, {channel: 'stable', version: '1337'}]},
         {os: 'win'}
       ]}));
+      axios.get.mockImplementationOnce(async () => ({data: {
+        FIREFOX_DEVEDITION: '313373',
+        LATEST_FIREFOX_VERSION: 'ff.1337'
+      }}));
       // When
-      const result = await userAgent.latestChromium();
+      await userAgent.initBrowserVersions();
       // Then
-      expect(result).toBe('1337');
+      expect(userAgent.BROWSER_VERSIONS.chromium).toBe('1337');
+      expect(userAgent.BROWSER_VERSIONS.firefox).toBe('ff.1337');
     });
     test('invalidResponse, should return null,', async () => {
       // Given
-      axios.get.mockImplementationOnce(async () => ({data: [
+      axios.get.mockImplementation(async () => ({data: [
         {os: 'win'}, 'not Valid'
       ]}));
       // When
-      const result = await userAgent.latestChromium();
+      await userAgent.initBrowserVersions();
       // Then
-      expect(result).toBeNull();
+      expect(userAgent.BROWSER_VERSIONS.chromium).toBeNull();
+      expect(userAgent.BROWSER_VERSIONS.firefox).toBeNull();
     });
   });
-  test('replaceChromeVersion, should replace Chrome version in user-agent header', () => {
-    // Given
-    const latestChromeVersion = '1337.1337.1337';
-    const dirtyUserAgent = 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36';
-    // When
-    const result = userAgent.replaceChromeVersion(latestChromeVersion)(dirtyUserAgent);
-    // Then
-    expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/1337.1337.1337 Safari/537.36');
-  });
-  test('cleanUserAgent, should remove non-standard tokens from user-agent header', () => {
-    // Given
-    const dirtyUserAgent = 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36';
-    // When
-    const result = userAgent.sanitizeUserAgent(dirtyUserAgent);
-    // Then
-    expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
+  describe('userAgentForView', () => {
+    test('chromium version not available, should remove non-standard tokens from user-agent header', () => {
+      // Given
+      userAgent.BROWSER_VERSIONS.chromium = null;
+      const browserView = {
+        webContents: {
+          userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36'
+        }
+      };
+      // When
+      const result = userAgent.userAgentForView(browserView);
+      // Then
+      expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
+    });
+    test('chromium version available, should replace Chrome version in user-agent header', () => {
+      // Given
+      userAgent.BROWSER_VERSIONS.chromium = '1337.1337.1337';
+      const browserView = {
+        webContents: {
+          userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36'
+        }
+      };
+      // When
+      const result = userAgent.userAgentForView(browserView);
+      // Then
+      expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/1337.1337.1337 Safari/537.36');
+    });
   });
 });

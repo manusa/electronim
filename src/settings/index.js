@@ -17,7 +17,6 @@ const {BrowserView} = require('electron');
 const fs = require('fs');
 const path = require('path');
 const HOME_DIR = require('os').homedir();
-
 const APP_DIR = '.electronim';
 const SETTINGS_FILE = 'settings.json';
 const DEFAULT_SETTINGS = {tabs: [], enabledDictionaries: ['en-US']};
