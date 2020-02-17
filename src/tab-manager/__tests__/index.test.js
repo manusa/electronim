@@ -39,7 +39,7 @@ describe('Tab Manager module test suite', () => {
     }));
     jest.mock('../../settings');
     jest.mock('../../spell-check');
-    userAgent = require('../user-agent');
+    userAgent = require('../../user-agent');
     tabManager = require('../');
   });
   describe('getTab', () => {

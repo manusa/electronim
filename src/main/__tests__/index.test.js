@@ -15,12 +15,15 @@
  */
 describe('Main module test suite', () => {
   let mockBrowserWindow;
+  let mockNotification;
+  let mockApp;
   let mockIpc;
   let mockTabContainer;
   let mockSettings;
   let settingsModule;
   let spellCheckModule;
   let tabManagerModule;
+  let userAgentModule;
   let main;
   beforeEach(() => {
     mockBrowserWindow = {
@@ -30,6 +33,8 @@ describe('Main module test suite', () => {
       }),
       removeMenu: jest.fn()
     };
+    mockNotification = jest.fn();
+    mockApp = {};
     mockIpc = {
       listeners: {},
       on: jest.fn((eventName, func) => {
@@ -41,6 +46,8 @@ describe('Main module test suite', () => {
     jest.resetModules();
     jest.mock('electron', () => ({
       BrowserWindow: jest.fn(() => mockBrowserWindow),
+      Notification: jest.fn(() => mockNotification),
+      app: mockApp,
       ipcMain: mockIpc
     }));
     jest.mock('../../chrome-tabs', () => ({
@@ -57,13 +64,33 @@ describe('Main module test suite', () => {
     spellCheckModule = require('../../spell-check');
     jest.mock('../../tab-manager');
     tabManagerModule = require('../../tab-manager');
-    tabManagerModule.initBrowserVersions.mockImplementation(() => ({
-      then: func => {
-        func.call();
-        return {catch: () => {}};
-      }}));
     tabManagerModule.getActiveTab.mockImplementation();
+    jest.mock('../../user-agent');
+    userAgentModule = require('../../user-agent');
+    userAgentModule.userAgentForView.mockImplementation(() => 'UserAgent String');
+    userAgentModule.initBrowserVersions.mockImplementation(() => ({then: func => {
+      func.call();
+      return {catch: () => {}};
+    }}));
     main = require('../');
+  });
+  describe('init - environment preparation', () => {
+    test('initBrowserVersions, successful, should be set to defaultUserAgent', () => {
+      // When
+      main.init();
+      // Then
+      expect(mockApp.userAgentFallback).toBe('UserAgent String');
+    });
+    test('initBrowserVersions, throws error, should be set to defaultUserAgent and show Notification', () => {
+      // Given
+      userAgentModule.initBrowserVersions.mockImplementation(() => ({then: () => ({catch: func => func.call()})}));
+      mockNotification.show = jest.fn();
+      // When
+      main.init();
+      // Then
+      expect(mockApp.userAgentFallback).toBe('UserAgent String');
+      expect(mockNotification.show).toHaveBeenCalledTimes(1);
+    });
   });
   describe('mainWindow events', () => {
     test('maximize, should activate current tab (Will force a BrowserView resize)', () => {

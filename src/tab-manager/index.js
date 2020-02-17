@@ -18,7 +18,7 @@ const {APP_EVENTS} = require('../constants');
 const settings = require('../settings');
 const {contextMenuHandler} = require('../spell-check');
 const {handleRedirect} = require('./redirect');
-const {initBrowserVersions, userAgentForView} = require('./user-agent');
+const {userAgentForView} = require('../user-agent');
 
 let activeTab = null;
 const tabs = {};
@@ -67,8 +67,8 @@ const handleContextMenu = browserView => async (event, params) => {
 // Required for Service Workers -> https://github.com/electron/electron/issues/16196
 const setGlobalUserAgentFallback = userAgent => (app.userAgentFallback = userAgent);
 
-const cleanUserAgent = browserView => {
-  const validUserAgent = userAgentForView(browserView);
+const cleanUserAgent = (browserView, url) => {
+  const validUserAgent = userAgentForView(browserView, url);
   browserView.webContents.userAgent = validUserAgent;
   setGlobalUserAgentFallback(validUserAgent);
 };
@@ -78,7 +78,7 @@ const addTabs = ipcSender => tabsMetadata => {
     const tab = new BrowserView({webPreferences});
     tab.setAutoResize({width: true, height: true});
 
-    cleanUserAgent(tab);
+    cleanUserAgent(tab, url);
     tab.webContents.loadURL(url);
 
     const handleRedirectForCurrentUrl = handleRedirect(tab);
@@ -116,5 +116,5 @@ const removeAll = () => {
 const reload = () => Object.values(tabs).forEach(browserView => browserView.webContents.reload());
 
 module.exports = {
-  addTabs, getTab, getActiveTab, initBrowserVersions, setActiveTab, reload, removeAll
+  addTabs, getTab, getActiveTab, setActiveTab, reload, removeAll
 };

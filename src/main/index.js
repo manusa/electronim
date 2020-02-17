@@ -19,6 +19,7 @@ const {TABS_CONTAINER_HEIGHT, initTabContainer} = require('../chrome-tabs');
 const {loadSettings, updateSettings, updateTabUrls, openSettingsDialog} = require('../settings');
 const {loadDictionaries} = require('../spell-check');
 const tabManager = require('../tab-manager');
+const {initBrowserVersions, userAgentForView} = require('../user-agent');
 
 const webPreferences = {
   preload: `${__dirname}/preload.js`,
@@ -98,6 +99,11 @@ const initSettingsListener = () => {
   ipc.on(APP_EVENTS.settingsCancel, closeSettings);
 };
 
+const browserVersionsReady = () => {
+  app.userAgentFallback = userAgentForView(mainWindow);
+  tabContainer = initTabContainer(mainWindow);
+};
+
 const init = () => {
   loadDictionaries();
   const {width = 800, height = 600} = loadSettings();
@@ -116,14 +122,14 @@ const init = () => {
   mainWindow.on('closed', () => app.quit());
   initTabListener();
   initSettingsListener();
-  tabManager.initBrowserVersions()
-    .then(() => (tabContainer = initTabContainer(mainWindow)))
+  initBrowserVersions()
+    .then(browserVersionsReady)
     .catch(() => {
       new Notification({
         title: 'ElectronIM: No network available',
         urgency: 'critical'
       }).show();
-      tabContainer = initTabContainer(mainWindow);
+      browserVersionsReady();
     });
   return mainWindow;
 };

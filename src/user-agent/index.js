@@ -48,28 +48,30 @@ const initBrowserVersions = async () => {
   ]);
 };
 
-const replaceChromeVersion = userAgent =>
-  userAgent.replace(/Chrome\/.*? /g, `Chrome/${BROWSER_VERSIONS.chromium} `);
+const replaceChromeVersion = userAgent => (BROWSER_VERSIONS.chromium ?
+  userAgent.replace(/Chrome\/.*? /g, `Chrome/${BROWSER_VERSIONS.chromium} `)
+  : userAgent);
 
 const sanitizeUserAgent = userAgent => userAgent
   .replace(/ElectronIM\/.*? /g, '')
   .replace(/Electron\/.*? /g, '');
 
-// eslint-disable-next-line no-unused-vars
-const firefoxUserAgent = browserView => {
-  let userAgent = browserView.webContents.userAgent;
+const defaultUserAgent = userAgent => sanitizeUserAgent(replaceChromeVersion(userAgent));
+
+const firefoxUserAgent = userAgent => {
   if (BROWSER_VERSIONS.firefox) {
-    userAgent = userAgent.replace(/AppleWebKit.*/, `Gecko/20100101 Firefox/${BROWSER_VERSIONS.firefox}`);
+    userAgent = userAgent.replace(/\) AppleWebKit.*/,
+      `; rv:${BROWSER_VERSIONS.firefox}) Gecko/20100101 Firefox/${BROWSER_VERSIONS.firefox}`);
   }
   return userAgent;
 };
 
-const userAgentForView = browserView => {
-  let validUserAgent = sanitizeUserAgent(browserView.webContents.userAgent);
-  if (BROWSER_VERSIONS.chromium) {
-    validUserAgent = replaceChromeVersion(validUserAgent);
+const userAgentForView = (browserViewOrWindow, url = '') => {
+  let ret = defaultUserAgent(browserViewOrWindow.webContents.userAgent);
+  if (url.match(/https?:\/\/[^/]+google\.com.*/)) {
+    ret = firefoxUserAgent(browserViewOrWindow.webContents.userAgent);
   }
-  return validUserAgent;
+  return ret;
 };
 
 module.exports = {

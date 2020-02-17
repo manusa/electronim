@@ -20,7 +20,7 @@ describe('User Agent module test suite', () => {
     jest.resetModules();
     jest.mock('axios');
     axios = require('axios');
-    userAgent = require('../user-agent');
+    userAgent = require('../index');
   });
   describe('initBrowserVersions', () => {
     test('valid responses, should return a valid version for all browsers,', async () => {
@@ -52,7 +52,7 @@ describe('User Agent module test suite', () => {
     });
   });
   describe('userAgentForView', () => {
-    test('chromium version not available, should remove non-standard tokens from user-agent header', () => {
+    test('default and chromium version not available, should remove non-standard tokens from user-agent header', () => {
       // Given
       userAgent.BROWSER_VERSIONS.chromium = null;
       const browserView = {
@@ -65,7 +65,7 @@ describe('User Agent module test suite', () => {
       // Then
       expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
     });
-    test('chromium version available, should replace Chrome version in user-agent header', () => {
+    test('default and chromium version available, should replace Chrome version in user-agent header', () => {
       // Given
       userAgent.BROWSER_VERSIONS.chromium = '1337.1337.1337';
       const browserView = {
@@ -77,6 +77,34 @@ describe('User Agent module test suite', () => {
       const result = userAgent.userAgentForView(browserView);
       // Then
       expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/1337.1337.1337 Safari/537.36');
+    });
+    test('non-matching url provided and chromium version available, should replace Chrome version in user-agent header', () => {
+      // Given
+      userAgent.BROWSER_VERSIONS.chromium = '1337.1337.1337';
+      const browserView = {
+        webContents: {
+          userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36'
+        }
+      };
+      const nonMatchingUrl = 'https://some-url-com/google.com';
+      // When
+      const result = userAgent.userAgentForView(browserView, nonMatchingUrl);
+      // Then
+      expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/1337.1337.1337 Safari/537.36');
+    });
+    test('google service, should return Firefox user-agent header', () => {
+      // Given
+      userAgent.BROWSER_VERSIONS.firefox = '133.7';
+      const browserView = {
+        webContents: {
+          userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36'
+        }
+      };
+      const nonMatchingUrl = 'https://hangouts.google.com';
+      // When
+      const result = userAgent.userAgentForView(browserView, nonMatchingUrl);
+      // Then
+      expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:133.7) Gecko/20100101 Firefox/133.7');
     });
   });
 });
