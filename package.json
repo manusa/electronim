@@ -102,8 +102,20 @@
       "artifactName": "electronim-mac.${ext}",
       "category": "public.app-category.utilities",
       "target": [
+        "dmg",
         "tar.gz"
-      ]
+      ],
+      "entitlements": "build-config/entitlements.mac.plist",
+      "entitlementsInherit": "build-config/entitlements.mac.plist"
+    },
+    "dmg": {
+      "title": "ElectronIM",
+      "iconSize": 128,
+      "contents": [
+        {"x": 380, "y": 240, "type": "link", "path": "/Applications"},
+        {"x": 122, "y": 240, "type": "file"}
+      ],
+      "sign": false
     },
     "win": {
       "artifactName": "electronim-win-${arch}.${ext}",

@@ -91,6 +91,8 @@ jobs:
         run: ./utils/prepare-electron-builder.js
       - name: Build macOS
         run: npm run build:mac
+      - name: Upload dmg
+        run: ./utils/upload-artifact.js electronim-mac.dmg application/octet-stream
       - name: Upload tar.gz
         run: ./utils/upload-artifact.js electronim-mac.tar.gz application/tar+gzip
   windows:
