@@ -73,7 +73,7 @@ jobs:
           snapcraft push --release=stable ./dist/electronim-linux-amd64.snap
   macOS:
     name: macOS Artifact
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:

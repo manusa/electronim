@@ -48,3 +48,51 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
           SONAR_SCANNER_OPTS: "-server"
+  linux-build:
+    name: Linux Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.0.0
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '13.x'
+      - name: Install
+        run: npm install
+      - name: Build
+        run: |
+          ./utils/prepare-electron-builder.js
+          npm run build:linux
+  macos-build:
+    name: macOS Build
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.0.0
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '13.x'
+      - name: Install
+        run: npm install
+      - name: Build
+        run: |
+          ./utils/prepare-electron-builder.js
+          npm run build:mac
+  windows-build:
+    name: Windows Build
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.0.0
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '13.x'
+      - name: Install
+        run: npm install
+      - name: Build
+        run: |
+          node .\utils\prepare-electron-builder.js
+          npm run build:win
