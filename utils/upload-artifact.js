@@ -30,7 +30,13 @@ const validateFile = artifactFile => {
 };
 
 const getReleaseId = async version => {
-  const {data: {id}} = await axios.get(`https://api.github.com/repos/manusa/electronim/releases/tags/v${version}`);
+  const {data: {id}} = await axios({
+    method: 'GET',
+    url: `https://api.github.com/repos/manusa/electronim/releases/tags/v${version}`,
+    headers: {
+      Authorization: `token ${process.env.GITHUB_TOKEN}`
+    }
+  });
   return id;
 };
 
