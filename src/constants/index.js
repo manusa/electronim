@@ -26,7 +26,10 @@ const APP_EVENTS = {
   setTabFavicon: 'setTabFavicon',
   setTabTitle: 'setTabTitle',
   tabsReady: 'tabsReady',
-  tabReorder: 'tabReorder'
+  tabReorder: 'tabReorder',
+  zoomIn: 'zoomIn',
+  zoomOut: 'zoomOut',
+  zoomReset: 'zoomReset'
 };
 
 module.exports = {

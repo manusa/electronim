@@ -18,7 +18,9 @@ describe('Browser Keyboard Shortcuts test suite', () => {
   let browserKeyboardShortcuts;
   beforeEach(() => {
     global.APP_EVENTS = {
-      reload: 'reload'
+      reload: 'reload',
+      zoomIn: 'zoomIn',
+      zoomOut: 'zoomOut'
     };
     mockIpcRenderer = {
       send: jest.fn()
@@ -29,14 +31,15 @@ describe('Browser Keyboard Shortcuts test suite', () => {
     }));
     browserKeyboardShortcuts = require('../browser-keyboard-shortcuts');
   });
-  test('initKeyboardShortcuts should add window event listener', () => {
+  test('initKeyboardShortcuts should add window event listeners', () => {
     // Given
     jest.spyOn(window, 'addEventListener');
     // When
     browserKeyboardShortcuts.initKeyboardShortcuts();
     // Then
-    expect(window.addEventListener).toHaveBeenCalledTimes(1);
+    expect(window.addEventListener).toHaveBeenCalledTimes(2);
     expect(window.addEventListener).toHaveBeenCalledWith('keyup', expect.any(Function));
+    expect(window.addEventListener).toHaveBeenCalledWith('load', expect.any(Function));
   });
   describe('Events with NO key modifier', () => {
     test('F5, should send reload app event', () => {
@@ -77,6 +80,66 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('reload');
+    });
+  });
+  describe('Mouse wheel events', () => {
+    test('ctrl+scrollUp, should send zoomIn event', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      window.dispatchEvent(new Event('load'));
+      // When
+      document.dispatchEvent(new WheelEvent('wheel', {ctrlKey: true, deltaY: -100}));
+      // Then
+      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('zoomIn');
+    });
+    test('cmd+scrollUp, should send zoomIn event', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      window.dispatchEvent(new Event('load'));
+      // When
+      document.dispatchEvent(new WheelEvent('wheel', {metaKey: true, deltaY: -100}));
+      // Then
+      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('zoomIn');
+    });
+    test('scrollUp, should not send events', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      window.dispatchEvent(new Event('load'));
+      // When
+      document.dispatchEvent(new WheelEvent('wheel', {deltaY: -100}));
+      // Then
+      expect(mockIpcRenderer.send).not.toHaveBeenCalled();
+    });
+    test('ctrl+scrollDown, should send zoomOut event', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      window.dispatchEvent(new Event('load'));
+      // When
+      document.dispatchEvent(new WheelEvent('wheel', {ctrlKey: true, deltaY: 100}));
+      // Then
+      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('zoomOut');
+    });
+    test('cmd+scrollDown, should send zoomOut event', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      window.dispatchEvent(new Event('load'));
+      // When
+      document.dispatchEvent(new WheelEvent('wheel', {metaKey: true, deltaY: 100}));
+      // Then
+      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('zoomOut');
+    });
+    test('scrollDown, should not send events', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      window.dispatchEvent(new Event('load'));
+      // When
+      document.dispatchEvent(new WheelEvent('wheel', {deltaY: 100}));
+      // Then
+      expect(mockIpcRenderer.send).not.toHaveBeenCalled();
     });
   });
 });

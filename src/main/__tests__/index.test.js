@@ -197,6 +197,52 @@ describe('Main module test suite', () => {
       // Then
       expect(event.sender.reloadIgnoringCache).toHaveBeenCalledTimes(1);
     });
+    test('handleZoomIn', () => {
+      const event = {sender: {
+        getZoomFactor: jest.fn(() => 0),
+        setZoomFactor: jest.fn()
+      }};
+      main.init();
+      // When
+      mockIpc.listeners.zoomIn(event);
+      // Then
+      expect(event.sender.setZoomFactor).toHaveBeenCalledTimes(1);
+      expect(event.sender.setZoomFactor).toHaveBeenCalledWith(0.1);
+    });
+    describe('handleZoomOut', () => {
+      test('with valid initial zoom factor, should zoom out', () => {
+        const event = {sender: {
+          getZoomFactor: jest.fn(() => 0.200001),
+          setZoomFactor: jest.fn()
+        }};
+        main.init();
+        // When
+        mockIpc.listeners.zoomOut(event);
+        // Then
+        expect(event.sender.setZoomFactor).toHaveBeenCalledTimes(1);
+        expect(event.sender.setZoomFactor).toHaveBeenCalledWith(0.100001);
+      });
+      test('with invalid initial zoom factor, should do nothing', () => {
+        const event = {sender: {
+          getZoomFactor: jest.fn(() => 0.199999999999999),
+          setZoomFactor: jest.fn()
+        }};
+        main.init();
+        // When
+        mockIpc.listeners.zoomOut(event);
+        // Then
+        expect(event.sender.setZoomFactor).not.toHaveBeenCalled();
+      });
+    });
+    test('handleZoomReset', () => {
+      const event = {sender: {setZoomFactor: jest.fn()}};
+      main.init();
+      // When
+      mockIpc.listeners.zoomReset(event);
+      // Then
+      expect(event.sender.setZoomFactor).toHaveBeenCalledTimes(1);
+      expect(event.sender.setZoomFactor).toHaveBeenCalledWith(1);
+    });
     describe('handleTabReorder', () => {
       test('Several tabs, order changed, should update settings', () => {
         // Given

@@ -44,6 +44,17 @@ const activateTab = tabId => {
 
 const handleTabReload = event => event.sender.reloadIgnoringCache();
 
+const handleZoomIn = event => event.sender.setZoomFactor(event.sender.getZoomFactor() + 0.1);
+
+const handleZoomOut = event => {
+  const newFactor = event.sender.getZoomFactor() - 0.1;
+  if (newFactor >= 0.1) {
+    event.sender.setZoomFactor(newFactor);
+  }
+};
+
+const handleZoomReset = event => event.sender.setZoomFactor(1);
+
 const handleTabReorder = (event, {tabIds}) => {
   const currentTabs = loadSettings().tabs.reduce((acc, tab) => {
     acc[tab.id] = tab; return acc;
@@ -74,6 +85,9 @@ const initTabListener = () => {
   ipc.on(APP_EVENTS.reload, handleTabReload);
   ipc.on(APP_EVENTS.settingsOpenDialog, () => openSettingsDialog(mainWindow));
   ipc.on(APP_EVENTS.tabReorder, handleTabReorder);
+  ipc.on(APP_EVENTS.zoomIn, handleZoomIn);
+  ipc.on(APP_EVENTS.zoomOut, handleZoomOut);
+  ipc.on(APP_EVENTS.zoomReset, handleZoomReset);
 };
 
 const closeSettings = () => {

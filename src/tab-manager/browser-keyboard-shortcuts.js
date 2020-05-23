@@ -22,7 +22,10 @@ const codeActionMap = {
 
 const controlCodeActionMap = {
   r: APP_EVENTS.reload,
-  R: APP_EVENTS.reload
+  R: APP_EVENTS.reload,
+  '+': APP_EVENTS.zoomIn,
+  '-': APP_EVENTS.zoomOut,
+  0: APP_EVENTS.zoomReset
 };
 
 const commandCodeActionMap = {
@@ -48,6 +51,16 @@ const initKeyboardShortcuts = () => {
     } else if (event.ctrlKey === false && event.metaKey === true) {
       triggerCommandCodeActionMap(event.key);
     }
+  });
+  window.addEventListener('load', () => {
+    document.addEventListener('wheel', event => {
+      const ctrlOrCommand = event.ctrlKey || event.metaKey;
+      if (ctrlOrCommand && event.deltaY < 0) {
+        ipcRenderer.send(APP_EVENTS.zoomIn);
+      } else if (ctrlOrCommand && event.deltaY > 0) {
+        ipcRenderer.send(APP_EVENTS.zoomOut);
+      }
+    });
   });
 };
 
