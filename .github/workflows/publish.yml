@@ -19,25 +19,6 @@ on:
     - '*'
 
 jobs:
-  npm:
-    name: NPM Publish
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2.0.0
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: '13.x'
-      - name: Install
-        run: npm install
-      - name: Change Package version
-        run: ./utils/version-from-tag.js
-      - name: Publish
-        run: |
-          export NPM_TOKEN=${{ secrets.NPM_TOKEN }}
-          echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> .npmrc
-          npm publish
   linux:
     name: Linux Artifact
     runs-on: ubuntu-latest
