@@ -60,6 +60,7 @@ const ACTIONS = {
   ADD: 'ADD',
   REMOVE: 'REMOVE',
   TOGGLE_DICTIONARY: 'TOGGLE_DICTIONARY',
+  TOGGLE_TAB_SANDBOX: 'TOGGLE_TAB_SANDBOX',
   UPDATE_NEW_TAB_VALUE: 'UPDATE_NEW_TAB_VALUE'
 };
 
@@ -99,6 +100,17 @@ const reducer = (state, action) => {
       }
       return newState;
     }
+    case ACTIONS.TOGGLE_TAB_SANDBOX: {
+      const newState = {...state, tabs: []};
+      state.tabs.forEach(tab => {
+        const newTab = {...tab};
+        if (newTab.id === action.payload.id) {
+          newTab.sandboxed = !newTab.sandboxed;
+        }
+        newState.tabs.push(newTab);
+      });
+      return newState;
+    }
     case ACTIONS.UPDATE_NEW_TAB_VALUE: {
       return {...state,
         newTabValid: validateUrl(action.payload),
@@ -115,10 +127,12 @@ const TabEntry = ({dispatch, id, url, sandboxed}) => (html`
     <div class='control'>
       <input type='text' readonly class='input' name='tabs' value='${url}' />
     </div>
-    <span class='icon is-medium sandbox'>
+    <span class='icon is-medium sandbox' title='Use isolated session when lock is on'
+      onclick=${() => dispatch({type: ACTIONS.TOGGLE_TAB_SANDBOX, payload: {id}})}>
       <i class='fas ${sandboxed ? 'fa-lock' : 'fa-lock-open'}'></i>
     </span>
-    <span class='icon is-medium' onclick=${() => dispatch({type: ACTIONS.REMOVE, payload: {id}})}>
+    <span class='icon is-medium' title='Delete tab'
+      onclick=${() => dispatch({type: ACTIONS.REMOVE, payload: {id}})}>
       <i class='fas fa-trash'></i>
     </span>
   </div>
