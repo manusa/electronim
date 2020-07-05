@@ -47,14 +47,8 @@ const writeSettings = settings => {
 
 const updateSettings = settings => writeSettings({...loadSettings(), ...settings});
 
-const updateTabUrls = newTabs => {
-  const {activeTab, tabs} = loadSettings();
-  const newTabIds = newTabs.map(({id}) => id);
-  const currentTabIds = tabs.map(({id}) => id);
-  const updatedTabs = [];
-  updatedTabs.push(...tabs.filter(tab => newTabIds.includes(tab.id)));
-  newTabs.filter(newTab => !currentTabIds.includes(newTab.id))
-    .forEach(newTab => updatedTabs.push(newTab));
+const updateTabUrls = updatedTabs => {
+  const {activeTab} = loadSettings();
   updateSettings({tabs: [...updatedTabs]});
   if (updatedTabs.length > 0 && !updatedTabs.map(({id}) => id).includes(activeTab)) {
     updateSettings({activeTab: updatedTabs[0].id});

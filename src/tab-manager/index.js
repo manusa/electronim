@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {app, BrowserView, Menu, MenuItem} = require('electron');
+const {app, BrowserView, Menu, MenuItem, session} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const settings = require('../settings');
 const {contextMenuHandler} = require('../spell-check');
@@ -74,8 +74,12 @@ const cleanUserAgent = (browserView, url) => {
 };
 
 const addTabs = ipcSender => tabsMetadata => {
-  tabsMetadata.forEach(({id, url}) => {
-    const tab = new BrowserView({webPreferences});
+  tabsMetadata.forEach(({id, url, sandboxed = false}) => {
+    const tabPreferences = {...webPreferences};
+    if (sandboxed) {
+      tabPreferences.session = session.fromPartition(`persist:${id}`, {cache: true});
+    }
+    const tab = new BrowserView({webPreferences: tabPreferences});
     tab.setAutoResize({width: true, height: true});
 
     cleanUserAgent(tab, url);

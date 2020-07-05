@@ -35,7 +35,8 @@ describe('Tab Manager module test suite', () => {
       app: {},
       BrowserView: jest.fn(() => mockBrowserView),
       Menu: jest.fn(() => mockMenu),
-      MenuItem: jest.fn(() => mockMenuItem)
+      MenuItem: jest.fn(() => mockMenuItem),
+      session: {fromPartition: jest.fn(() => ({}))}
     }));
     jest.mock('../../settings');
     jest.mock('../../spell-check');
@@ -69,6 +70,22 @@ describe('Tab Manager module test suite', () => {
     });
   });
   describe('addTabs', () => {
+    test('not sandboxed, should use shared session', () => {
+      // When
+      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      // Then
+      expect(require('electron').session.fromPartition).not.toHaveBeenCalled();
+      expect(require('electron').BrowserView).toBeCalledWith({
+        webPreferences: expect.not.objectContaining({session: expect.anything()})});
+    });
+    test('sandboxed, should use isolated session', () => {
+      // When
+      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', sandboxed: true}]);
+      // Then
+      expect(require('electron').session.fromPartition).toHaveBeenCalledTimes(1);
+      expect(require('electron').BrowserView).toBeCalledWith({
+        webPreferences: expect.objectContaining({session: expect.anything()})});
+    });
     test('Tab webContents should be configured and loaded', () => {
       // Given
       const mockIpcSender = {send: jest.fn()};
@@ -88,7 +105,7 @@ describe('Tab Manager module test suite', () => {
       expect(mockBrowserView.webContents.executeJavaScript).toHaveBeenCalledWith('window.tabId = \'1337\';');
     });
     describe('cleanUserAgent', () => {
-      test(' chromium version available, should remove non-standard tokens from user-agent header and set version', () => {
+      test('chromium version available, should remove non-standard tokens from user-agent header and set version', () => {
         // Given
         userAgent.BROWSER_VERSIONS.chromium = '79.0.1337.79';
         // When
@@ -98,7 +115,7 @@ describe('Tab Manager module test suite', () => {
         expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
         expect(require('electron').app.userAgentFallback).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
       });
-      test(' chromium not version available, should remove non-standard tokens from user-agent header', () => {
+      test('chromium not version available, should remove non-standard tokens from user-agent header', () => {
         // When
         tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
         // Then

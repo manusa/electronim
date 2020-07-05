@@ -32,7 +32,8 @@ describe('Settings in Browser test suite', () => {
       es: {name: 'Spanish'}
     }, enabled: ['en']};
     mockTabs = [
-      {url: 'https://initial-tab.com'}
+      {url: 'https://initial-tab.com', sandboxed: true},
+      {url: 'https://initial-tab-2.com'}
     ];
     mockIpcRenderer = {
       send: jest.fn()
@@ -58,7 +59,10 @@ describe('Settings in Browser test suite', () => {
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('Save my settings',
-        {tabs: [{url: 'https://initial-tab.com'}], enabledDictionaries: ['en']});
+        {tabs: [
+          {url: 'https://initial-tab.com', sandboxed: true},
+          {url: 'https://initial-tab-2.com'}
+        ], enabledDictionaries: ['en']});
     });
     test('Cancel should send cancel event', () => {
       // Given
@@ -89,7 +93,7 @@ describe('Settings in Browser test suite', () => {
       fireEvent.input($input, {target: {value: 'A'}});
       // Then
       await waitFor(() => expect($input.value).toBe('A'));
-      expect($tabContainer.childElementCount).toBe(1);
+      expect($tabContainer.childElementCount).toBe(2);
     });
     describe('keydown event, Enter key with URLS', () => {
       test('Empty URL, should do nothing', async () => {
@@ -98,7 +102,7 @@ describe('Settings in Browser test suite', () => {
         // When
         fireEvent.keyDown($input, {code: 'Enter'});
         // Then
-        expect($tabContainer.childElementCount).toBe(1);
+        expect($tabContainer.childElementCount).toBe(2);
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
         expect($submitButton.hasAttribute('disabled')).toBe(false);
       });
@@ -108,10 +112,10 @@ describe('Settings in Browser test suite', () => {
         // When
         fireEvent.keyDown($input, {code: 'Enter'});
         // Then
-        expect($tabContainer.childElementCount).toBe(1);
+        expect($tabContainer.childElementCount).toBe(2);
         await waitFor(() =>
           expect($input.classList.contains('is-danger')).toBe(true));
-        expect($tabContainer.querySelectorAll('.settings__tab input').length).toBe(1);
+        expect($tabContainer.querySelectorAll('.settings__tab input').length).toBe(2);
         expect($input.value).toBe('invalid:1337:url');
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
         expect($submitButton.hasAttribute('disabled')).toBe(true);
@@ -123,9 +127,9 @@ describe('Settings in Browser test suite', () => {
         fireEvent.keyDown($input, {code: 'Enter'});
         // Then
         await waitFor(() =>
-          expect($tabContainer.childElementCount).toBe(2));
+          expect($tabContainer.childElementCount).toBe(3));
         expect($input.classList.contains('is-success')).toBe(false);
-        expect($tabContainer.querySelectorAll('.settings__tab input')[1].value)
+        expect($tabContainer.querySelectorAll('.settings__tab input')[2].value)
           .toBe('https://info.cern.ch');
         expect($input.value).toBe('');
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
@@ -138,10 +142,10 @@ describe('Settings in Browser test suite', () => {
         fireEvent.keyDown($input, {code: 'Enter'});
         // Then
         await waitFor(() =>
-          expect($tabContainer.childElementCount).toBe(2));
+          expect($tabContainer.childElementCount).toBe(3));
         await waitFor(() =>
           expect($input.classList.contains('is-success')).toBe(false));
-        expect($tabContainer.querySelectorAll('.settings__tab input')[1].value)
+        expect($tabContainer.querySelectorAll('.settings__tab input')[2].value)
           .toBe('http://info.cern.ch');
         expect($input.value).toBe('');
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
@@ -177,8 +181,8 @@ describe('Settings in Browser test suite', () => {
       fireEvent.click($addTabButton);
       // Then
       await waitFor(() =>
-        expect($tabContainer.childElementCount).toBe(2));
-      expect($tabContainer.querySelectorAll('.settings__tab input')[1].value)
+        expect($tabContainer.childElementCount).toBe(3));
+      expect($tabContainer.querySelectorAll('.settings__tab input')[2].value)
         .toBe('https://info.cern.ch');
       expect($input.value).toBe('');
       expect($addTabButton.hasAttribute('disabled')).toBe(true);
@@ -186,6 +190,26 @@ describe('Settings in Browser test suite', () => {
     });
   });
   describe('Tab events', () => {
+    test('Lock icon click, sandboxed session, should unlock', async () => {
+      // Given
+      const $lockIcon = document.querySelector('.settings__tabs .icon .fa-lock');
+      // When
+      fireEvent.click($lockIcon);
+      // Then
+      await waitFor(() =>
+        expect($lockIcon.classList.contains('fa-lock')).toBe(false));
+      expect($lockIcon.classList.contains('fa-lock-open')).toBe(true);
+    });
+    test('Lock-open icon click, sandboxed session, should lock', async () => {
+      // Given
+      const $lockOpenIcon = document.querySelector('.settings__tabs .icon .fa-lock-open');
+      // When
+      fireEvent.click($lockOpenIcon);
+      // Then
+      await waitFor(() =>
+        expect($lockOpenIcon.classList.contains('fa-lock-open')).toBe(false));
+      expect($lockOpenIcon.classList.contains('fa-lock')).toBe(true);
+    });
     test('Trash icon click, should remove tab', async () => {
       // Given
       const $tabContainer = document.querySelector('.settings__tabs');

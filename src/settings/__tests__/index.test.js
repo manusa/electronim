@@ -109,21 +109,21 @@ describe('Settings module test suite', () => {
       expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
         '{\n  "tabs": [],\n  "enabledDictionaries": []\n}');
     });
-    test('New tab URLs provided and existing tabs, should save array with merged tabs', () => {
+    test('New tab URLs provided and existing tabs, should save new tabs', () => {
       // Given
       fs.existsSync.mockImplementation(() => true);
       fs.readFileSync.mockImplementation(
         () => '{"enabledDictionaries":[], "tabs": [{"id": "1", "url": "http://to-be-kept", "otherSetting": 1337}]}');
       // When
       settings.updateTabUrls([
-        {id: '1', url: 'http://to-be-kept'},
+        {id: '1', url: 'http://to-be-kept', sandboxed: true},
         {id: '1337', url: 'http://new-tab'}
       ]);
       // Then
       expect(fs.readFileSync).toHaveBeenCalledTimes(3);
       expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
         '{\n  "tabs": [\n' +
-        '    {\n      "id": "1",\n      "url": "http://to-be-kept",\n      "otherSetting": 1337\n    },\n' +
+        '    {\n      "id": "1",\n      "url": "http://to-be-kept",\n      "sandboxed": true\n    },\n' +
         '    {\n      "id": "1337",\n      "url": "http://new-tab"\n    }\n  ],\n' +
         '  "enabledDictionaries": []\n}');
     });
