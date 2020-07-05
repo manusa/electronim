@@ -13,23 +13,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+const {fireEvent, waitFor} = require('@testing-library/dom');
+
 const mockDOM = () => {
   document.body.innerHTML = '';
   const $root = document.createElement('div');
-  $root.innerHTML = `
-    <div class="settings">
-        <form class="form">
-            <div class="settings__new-tab">
-                <input class="input" />
-                <button class="button" disabled />
-            </div>
-            <div class="settings__tabs"></div>
-            <div class="settings__dictionaries"></div>
-            <button class="settings__submit" />
-            <button class="settings__cancel" />
-        </form>
-    </div>
-    `;
+  $root.innerHTML = '<div class="settings container is-fluid"></div>';
   document.body.append($root);
 };
 
@@ -41,13 +30,16 @@ describe('Settings in Browser test suite', () => {
     mockDictionaries = {available: {
       en: {name: 'English'},
       es: {name: 'Spanish'}
-    }, enabled: []};
+    }, enabled: ['en']};
     mockTabs = [
       {url: 'https://initial-tab.com'}
     ];
     mockIpcRenderer = {
       send: jest.fn()
     };
+    window.preact = require('preact');
+    window.preactHooks = require('preact/hooks');
+    window.htm = require('htm');
     window.APP_EVENTS = {};
     window.dictionaries = mockDictionaries;
     window.tabs = mockTabs;
@@ -57,151 +49,176 @@ describe('Settings in Browser test suite', () => {
       require('../browser-settings');
     });
   });
-  test('Form submit on enter is prevented', () => {
-    // Given
-    const event = new Event('keypress');
-    event.code = 'Enter';
-    event.preventDefault = jest.fn();
-    // When
-    document.querySelector('.settings .form').dispatchEvent(event);
-    // Then
-    expect(event.preventDefault).toHaveBeenCalledTimes(1);
-  });
-  describe('Button events', () => {
+  describe('Main Button events', () => {
     test('Submit should send form data', () => {
       // Given
       window.APP_EVENTS = {settingsSave: 'Save my settings'};
       // When
-      document.querySelector('.settings__submit').dispatchEvent(new Event('click'));
+      fireEvent.click(document.querySelector('.settings__submit'));
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('Save my settings',
-        {tabs: ['https://initial-tab.com'], dictionaries: []});
+        {tabs: [{url: 'https://initial-tab.com'}], enabledDictionaries: ['en']});
     });
     test('Cancel should send cancel event', () => {
       // Given
       window.APP_EVENTS = {settingsCancel: 'Cancel my settings'};
       // When
-      document.querySelector('.settings__cancel').dispatchEvent(new Event('click'));
+      fireEvent.click(document.querySelector('.settings__cancel'));
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('Cancel my settings');
     });
   });
-  describe('New tab field', () => {
+  describe('New tab Input field', () => {
+    let $tabContainer;
     let $input;
     let $addTabButton;
+    let $submitButton;
     beforeEach(() => {
       $input = document.querySelector('.settings__new-tab .input');
       $addTabButton = document.querySelector('.settings__new-tab .button');
+      $tabContainer = document.querySelector('.settings__tabs');
+      $submitButton = document.querySelector('.settings__submit');
     });
-    test('Regular key press (No Enter), should only update input value', () => {
-      // Given
-      const event = new Event('keypress');
-      event.code = 'A';
-      event.preventDefault = jest.fn();
+    test('key* events, Regular key press (No Enter), should only update input value', async () => {
       // When
-      $input.dispatchEvent(event);
+      fireEvent.keyDown($input, {code: 'A'});
+      fireEvent.keyPress($input, {code: 'A'});
+      fireEvent.keyUp($input, {code: 'A'});
+      fireEvent.input($input, {target: {value: 'A'}});
       // Then
-      expect(event.preventDefault).not.toHaveBeenCalled();
+      await waitFor(() => expect($input.value).toBe('A'));
+      expect($tabContainer.childElementCount).toBe(1);
     });
-    describe('Enter key with URLS', () => {
-      let event;
-      beforeEach(() => {
-        event = new Event('keypress');
-        event.code = 'Enter';
-        event.preventDefault = jest.fn();
-      });
-      test('Empty URL, should do nothing', () => {
+    describe('keydown event, Enter key with URLS', () => {
+      test('Empty URL, should do nothing', async () => {
         // Given
-        $input.value = '';
+        fireEvent.input($input, {target: {value: ''}});
         // When
-        $input.dispatchEvent(event);
+        fireEvent.keyDown($input, {code: 'Enter'});
         // Then
-        expect(event.preventDefault).not.toHaveBeenCalled();
+        expect($tabContainer.childElementCount).toBe(1);
+        expect($addTabButton.hasAttribute('disabled')).toBe(true);
+        expect($submitButton.hasAttribute('disabled')).toBe(false);
       });
-      test('Invalid URL, should do nothing', () => {
+      test('Invalid URL, should set input invalid', async () => {
         // Given
-        $input.value = 'invalid:1337:url';
+        fireEvent.input($input, {target: {value: 'invalid:1337:url'}});
         // When
-        $input.dispatchEvent(event);
+        fireEvent.keyDown($input, {code: 'Enter'});
         // Then
-        expect(event.preventDefault).not.toHaveBeenCalled();
+        expect($tabContainer.childElementCount).toBe(1);
+        await waitFor(() =>
+          expect($input.classList.contains('is-danger')).toBe(true));
+        expect($tabContainer.querySelectorAll('.settings__tab input').length).toBe(1);
+        expect($input.value).toBe('invalid:1337:url');
+        expect($addTabButton.hasAttribute('disabled')).toBe(true);
+        expect($submitButton.hasAttribute('disabled')).toBe(true);
       });
-      test('Valid URL without protocol, should add new url', () => {
+      test('Valid URL without protocol, should add new url with default protocol', async () => {
         // Given
-        $input.value = 'info.cern.ch';
+        fireEvent.input($input, {target: {value: 'info.cern.ch'}});
         // When
-        $input.dispatchEvent(event);
+        fireEvent.keyDown($input, {code: 'Enter'});
         // Then
-        expect(event.preventDefault).toHaveBeenCalledTimes(1);
-        expect(document.querySelector('.settings__tabs').innerHTML).toContain('https://info.cern.ch');
+        await waitFor(() =>
+          expect($tabContainer.childElementCount).toBe(2));
+        expect($input.classList.contains('is-success')).toBe(false);
+        expect($tabContainer.querySelectorAll('.settings__tab input')[1].value)
+          .toBe('https://info.cern.ch');
         expect($input.value).toBe('');
-        expect($addTabButton.getAttribute('disabled')).toBe('disabled');
-        expect(document.querySelector('.settings__submit').getAttribute('disabled')).toBeNull();
+        expect($addTabButton.hasAttribute('disabled')).toBe(true);
+        expect($submitButton.hasAttribute('disabled')).toBe(false);
       });
-      test('Valid URL wth protocol, should add new url', () => {
+      test('Valid URL wth protocol, should add new url with specified protocol', async () => {
         // Given
-        $input.value = 'http://info.cern.ch';
+        fireEvent.input($input, {target: {value: 'http://info.cern.ch'}});
         // When
-        $input.dispatchEvent(event);
+        fireEvent.keyDown($input, {code: 'Enter'});
         // Then
-        expect(event.preventDefault).toHaveBeenCalledTimes(1);
-        expect(document.querySelector('.settings__tabs').innerHTML).toContain('http://info.cern.ch');
+        await waitFor(() =>
+          expect($tabContainer.childElementCount).toBe(2));
+        await waitFor(() =>
+          expect($input.classList.contains('is-success')).toBe(false));
+        expect($tabContainer.querySelectorAll('.settings__tab input')[1].value)
+          .toBe('http://info.cern.ch');
         expect($input.value).toBe('');
-        expect($addTabButton.getAttribute('disabled')).toBe('disabled');
-        expect(document.querySelector('.settings__submit').getAttribute('disabled')).toBeNull();
+        expect($addTabButton.hasAttribute('disabled')).toBe(true);
+        expect($submitButton.hasAttribute('disabled')).toBe(false);
       });
     });
     describe('input event', () => {
-      let event;
-      beforeEach(() => {
-        event = new Event('input');
-      });
-      test('Valid URL, should add success class', () => {
-        // Given
-        $input.value = 'http://info.cern.ch';
+      test('Valid URL, should add success class', async () => {
         // When
-        $input.dispatchEvent(event);
+        fireEvent.input($input, {target: {value: 'http://info.cern.ch'}});
         // Then
-        expect($input.classList.contains('is-success')).toBe(true);
-        expect($addTabButton.getAttribute('disabled')).toBeNull();
+        await waitFor(() =>
+          expect($input.classList.contains('is-success')).toBe(true));
         expect($input.classList.contains('is-danger')).toBe(false);
+        expect($addTabButton.hasAttribute('disabled')).toBe(false);
+        expect($submitButton.hasAttribute('disabled')).toBe(true);
       });
-      test('Invalid URL, should add danger class', () => {
-        // Given
-        $input.value = 'http://invalid:1337:url';
+      test('Invalid URL, should add danger class', async () => {
         // When
-        $input.dispatchEvent(event);
+        fireEvent.input($input, {target: {value: 'http://invalid:1337:url'}});
         // Then
-        expect($input.classList.contains('is-danger')).toBe(true);
-        expect($addTabButton.getAttribute('disabled')).toBe('disabled');
+        await waitFor(() =>
+          expect($input.classList.contains('is-danger')).toBe(true));
         expect($input.classList.contains('is-success')).toBe(false);
+        expect($addTabButton.hasAttribute('disabled')).toBe(true);
+        expect($submitButton.hasAttribute('disabled')).toBe(true);
       });
     });
-    test('addTabButton, click with valid URL, should add tab', () => {
+    test('addTabButton, click with valid URL, should add tab', async () => {
       // Given
-      const event = new Event('click');
-      $input.value = 'info.cern.ch';
+      fireEvent.input($input, {target: {value: 'info.cern.ch'}});
       // When
-      $addTabButton.dispatchEvent(event);
+      fireEvent.click($addTabButton);
       // Then
-      expect(document.querySelector('.settings__tabs').innerHTML).toContain('https://info.cern.ch');
+      await waitFor(() =>
+        expect($tabContainer.childElementCount).toBe(2));
+      expect($tabContainer.querySelectorAll('.settings__tab input')[1].value)
+        .toBe('https://info.cern.ch');
       expect($input.value).toBe('');
-      expect($addTabButton.getAttribute('disabled')).toBe('disabled');
-      expect(document.querySelector('.settings__submit').getAttribute('disabled')).toBeNull();
+      expect($addTabButton.hasAttribute('disabled')).toBe(true);
+      expect($submitButton.hasAttribute('disabled')).toBe(false);
     });
   });
   describe('Tab events', () => {
-    test('Icon click, should remove tab', () => {
+    test('Trash icon click, should remove tab', async () => {
       // Given
-      const $tabs = document.querySelector('.settings__tabs');
-      expect($tabs.childElementCount).toBe(1);
-      const $icon = $tabs.querySelector('.icon');
+      const $tabContainer = document.querySelector('.settings__tabs');
+      const $trashIcon = $tabContainer.querySelector('.icon .fa-trash');
       // When
-      $icon.dispatchEvent(new Event('click'));
+      fireEvent.click($trashIcon);
       // Then
-      expect($tabs.childElementCount).toBe(0);
+      await waitFor(() =>
+        expect($tabContainer.childElementCount).toBe(0));
+    });
+  });
+  describe('Dictionary events', () => {
+    let $dictionaries;
+    beforeEach(() => {
+      $dictionaries = document.querySelector('.settings__dictionaries');
+    });
+    test('toggle active dictionary, should uncheck dictionary', async () => {
+      // Given
+      const $enDict = $dictionaries.querySelector('input[value=en]');
+      expect($enDict.checked).toBe(true);
+      // When
+      fireEvent.click($enDict);
+      // Then
+      waitFor(() => expect($enDict.checked).toBe(false));
+    });
+    test('toggle inactive dictionary, should check dictionary', async () => {
+      // Given
+      const $esDict = $dictionaries.querySelector('input[value=es]');
+      expect($esDict.checked).toBe(false);
+      // When
+      fireEvent.click($esDict);
+      // Then
+      waitFor(() => expect($esDict.checked).toBe(true));
     });
   });
 });

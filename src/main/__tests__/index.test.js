@@ -277,7 +277,7 @@ describe('Main module test suite', () => {
       mockTabContainer.destroy = jest.fn();
       main.init();
       // When
-      mockIpc.listeners.settingsSave({}, {tabs: [], dictionaries: []});
+      mockIpc.listeners.settingsSave({}, {tabs: [], enabledDictionaries: []});
       // Then
       expect(spellCheckModule.loadDictionaries).toHaveBeenCalledTimes(2);
       expect(settingsModule.updateSettings).toHaveBeenCalledTimes(1);

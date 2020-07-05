@@ -14,14 +14,10 @@
    limitations under the License.
  */
 /* eslint-disable no-undef */
+const {h, render} = window.preact;
+const {useReducer} = window.preactHooks;
+const html = window.htm.bind(h);
 const settings = () => document.querySelector('.settings');
-const settingsForm = () => settings().querySelector('.form');
-const newTabField = () => settings().querySelector('.settings__new-tab .input');
-const newTabAddButton = () => settings().querySelector('.settings__new-tab .button');
-const tabs = () => settings().querySelector('.settings__tabs');
-const dictionaries = () => settings().querySelector('.settings__dictionaries');
-const submitButton = () => settings().querySelector('.settings__submit');
-const cancelButton = () => settings().querySelector('.settings__cancel');
 
 const prependProtocol = url => {
   if (url && !url.match(/^https?:\/\/.+/)) {
@@ -43,116 +39,174 @@ const validateUrl = url => {
   return false;
 };
 
-const validateNewTab = () => {
-  const newTabInputElement = newTabField();
-  const newTabAddButtonElement = newTabAddButton();
-  newTabInputElement.classList.remove('is-success', 'is-danger');
-  newTabAddButtonElement.setAttribute('disabled', 'disabled');
-  if (newTabInputElement.value.length > 0 && validateUrl(newTabInputElement.value)) {
-    newTabInputElement.classList.add('is-success');
-    newTabAddButtonElement.removeAttribute('disabled');
-  } else if (newTabInputElement.value.length > 0) {
-    newTabInputElement.classList.add('is-danger');
+const newTabClass = state => {
+  if (state.newTabValue.length === 0) {
+    return '';
+  }
+  return state.newTabValid ? 'is-success' : 'is-danger';
+};
+
+const newId = () => (new Date().getTime().toString(36) + Math.random().toString(36).slice(2));
+
+const initialState = {
+  dictionaries: window.dictionaries,
+  tabs: window.tabs,
+  newTabValid: false,
+  newTabValue: '',
+  canSave: window.tabs.length > 0
+};
+
+const ACTIONS = {
+  ADD: 'ADD',
+  REMOVE: 'REMOVE',
+  TOGGLE_DICTIONARY: 'TOGGLE_DICTIONARY',
+  UPDATE_NEW_TAB_VALUE: 'UPDATE_NEW_TAB_VALUE'
+};
+
+const dictionariesEnabled = state => state.dictionaries.enabled;
+const dictionariesAvailable = state => state.dictionaries.available;
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case ACTIONS.ADD: {
+      if (!validateUrl(state.newTabValue)) {
+        return {...state};
+      }
+      return {...state,
+        newTabValid: false,
+        newTabValue: '',
+        tabs: [...state.tabs, {
+          id: newId(),
+          sandboxed: false,
+          url: prependProtocol(state.newTabValue)
+        }],
+        canSave: true
+      };
+    }
+    case ACTIONS.REMOVE: {
+      return {...state,
+        tabs: state.tabs.filter(tab => tab.id !== action.payload.id),
+        canSave: state.tabs.filter(tab => tab.id !== action.payload.id).length > 0
+      };
+    }
+    case ACTIONS.TOGGLE_DICTIONARY: {
+      const newState = {...state};
+      if (dictionariesEnabled(newState).includes(action.payload)) {
+        newState.dictionaries.enabled = [...dictionariesEnabled(newState)
+          .filter(key => key !== action.payload)];
+      } else {
+        newState.dictionaries.enabled = [...dictionariesEnabled(newState), action.payload];
+      }
+      return newState;
+    }
+    case ACTIONS.UPDATE_NEW_TAB_VALUE: {
+      return {...state,
+        newTabValid: validateUrl(action.payload),
+        newTabValue: action.payload,
+        canSave: action.payload.length === 0 && state.tabs.length > 0
+      };
+    }
+    default: return {...state};
   }
 };
 
-const updateSaveButton = () => {
-  let enabled = true;
-  if (newTabField().value.length > 0) {
-    enabled = false;
-  }
-  if (new FormData(settingsForm()).getAll('tabs').length === 0) {
-    enabled = false;
-  }
-  if (enabled) {
-    submitButton().removeAttribute('disabled');
-  } else {
-    submitButton().setAttribute('disabled', 'true');
-  }
-};
-
-const initTabsListener = () => {
-  const tabsElement = tabs();
-  const content = tabsElement.innerHTML;
-  tabsElement.innerHTML = '';
-  tabsElement.innerHTML = content;
-  tabsElement.querySelectorAll('.icon')
-    .forEach(icon => icon.addEventListener('click', ({target}) => {
-      target.closest('.settings__tab').remove();
-      updateSaveButton();
-    }));
-};
-
-const tabTemplate = url => `
-    <div class='field settings__tab'>
-      <div class='control'>
-          <input type='text' readonly class='input' name='tabs' value='${url}' />
-      </div>
-      <span class='icon is-medium'>
-        <i class='fas fa-trash'></i>
-      </span>
+const TabEntry = ({dispatch, id, url, sandboxed}) => (html`
+  <div class='field settings__tab'>
+    <div class='control'>
+      <input type='text' readonly class='input' name='tabs' value='${url}' />
     </div>
-  `;
+    <span class='icon is-medium sandbox'>
+      <i class='fas ${sandboxed ? 'fa-lock' : 'fa-lock-open'}'></i>
+    </span>
+    <span class='icon is-medium' onclick=${() => dispatch({type: ACTIONS.REMOVE, payload: {id}})}>
+      <i class='fas fa-trash'></i>
+    </span>
+  </div>
+`);
 
-const initNewTab = () => {
-  newTabField().addEventListener('input', () => {
-    validateNewTab();
-    updateSaveButton();
+const DictionaryEntry = ({dispatch, dictionaryKey, name, enabled = false}) => (html`
+  <div class='control'>
+    <label class='checkbox'>
+        <input type='checkbox' name='dictionaries'
+          value='${dictionaryKey}' checked=${enabled}
+          onclick=${() => dispatch({type: ACTIONS.TOGGLE_DICTIONARY, payload: dictionaryKey})}
+        />
+        ${name} (${dictionaryKey})
+    </label>
+  </div>
+`);
+
+const Settings = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const enabledDictionaries = dictionariesEnabled(state);
+  const availableDictionaries = dictionariesAvailable(state);
+  const onNewTabInput = ({target: {value}}) => dispatch({
+    type: ACTIONS.UPDATE_NEW_TAB_VALUE,
+    payload: value
   });
-  const addTab = () => {
-    const newTabFieldElement = newTabField();
-    tabs().innerHTML += tabTemplate(prependProtocol(newTabFieldElement.value));
-    initTabsListener();
-    newTabFieldElement.value = '';
-    validateNewTab();
-    updateSaveButton();
-  };
-  newTabField().addEventListener('keypress', event => {
-    const {target} = event;
-    if (event.code === 'Enter' && validateUrl(target.value)) {
-      event.preventDefault();
+  const addTab = () => dispatch({type: ACTIONS.ADD});
+  const onNewKeyDown = ({code}) => {
+    if (code === 'Enter') {
       addTab();
     }
+  };
+  const save = () => ipcRenderer.send(APP_EVENTS.settingsSave, {
+    tabs: state.tabs,
+    enabledDictionaries
   });
-  newTabAddButton().addEventListener('click', addTab);
-};
-
-const initTabsSettings = () => {
-  tabs().innerHTML = window.tabs.map(({url}) => url).map(tabTemplate).join('');
-  initTabsListener();
-};
-
-const initSpellCheckerSettings = () => {
-  const {available, enabled} = window.dictionaries;
-  dictionaries().innerHTML = Object.entries(available)
-    .sort(([, {name: name1}], [, {name: name2}]) => name1.localeCompare(name2))
-    .map(([key, {name}]) => `
-      <div class='control'>
-        <label class='checkbox'>
-            <input type='checkbox' name='dictionaries' value='${key}' ${enabled.includes(key) ? 'checked' : ''}>
-            ${name}
-        </label>
+  const cancel = () => ipcRenderer.send(APP_EVENTS.settingsCancel);
+  return html`
+  <h1 class="title">Settings</h1>
+  <div class="container">
+    <div class="form">
+      <label class="label">Tabs</label>
+      <div class="settings__new-tab container field">
+        <div class="control">
+          <input type="text"
+            class="input ${newTabClass(state)}"
+            placeholder="https://web.whatsapp.com"
+            value=${state.newTabValue}
+            oninput=${onNewTabInput}
+            onkeydown=${onNewKeyDown}
+          />
+        </div>
+        <button class="button" disabled=${!state.newTabValid} onclick=${addTab}>
+          <span class='icon is-medium'>
+            <em class='fas fa-plus'></em>
+          </span>
+        </button>
       </div>
-    `).join('');
+      <div class="settings__tabs container field">
+        ${state.tabs.map(tab => (html`
+          <${TabEntry} dispatch=${dispatch} ...${tab} />
+      `))}
+      </div>
+      <div class="field">
+        <label class="label">Spell checker languages</label>
+        <div class="settings__dictionaries container">${
+  Object.entries(availableDictionaries)
+    .sort(([, {name: name1}], [, {name: name2}]) => name1.localeCompare(name2))
+    .map(([key, {name}]) => (html`
+      <${DictionaryEntry} dispatch=${dispatch} dictionaryKey=${key} name=${name}
+        enabled=${enabledDictionaries.includes(key)}
+      />
+    `))} 
+        </div>
+      </div>
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="settings__submit button is-link"
+            disabled=${!state.canSave} onclick=${save}>Ok</button>
+      </div>
+        <div class="control">
+          <button class="settings__cancel button is-link is-light" onclick=${cancel}>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+`;
 };
 
-const initButtons = () => {
-  submitButton().addEventListener('click', () => {
-    const formData = new FormData(settingsForm());
-    ipcRenderer.send(APP_EVENTS.settingsSave, {
-      tabs: formData.getAll('tabs'),
-      dictionaries: formData.getAll('dictionaries')
-    });
-  });
-  updateSaveButton();
-
-  cancelButton().addEventListener('click', () => ipcRenderer.send(APP_EVENTS.settingsCancel));
-};
-
-const init = () => {
-  settingsForm().addEventListener('keypress', event => (event.code === 'Enter' ? event.preventDefault() : true));
-  settingsForm().addEventListener('submit', event => event.preventDefault());
-  [initNewTab, initSpellCheckerSettings, initTabsSettings, initButtons].forEach(f => f.call(this));
-};
-
-init();
+render(html`<${Settings} />`, settings());
