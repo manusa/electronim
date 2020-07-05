@@ -65,3 +65,4 @@ spell checking for free.
 - [Font Awesome Free](https://github.com/FortAwesome/Font-Awesome)
 - [Nodehun](https://github.com/Wulf/nodehun/)
 - [Woorm's dictionary repo](https://github.com/wooorm/dictionaries)
+- [Preact](https://preactjs.com)

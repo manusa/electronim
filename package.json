@@ -135,6 +135,7 @@
     }
   },
   "devDependencies": {
+    "@testing-library/dom": "^7.20.0",
     "electron-builder": "^22.6.1",
     "electron-packager": "^14.2.1",
     "eslint": "^7.1.0",
@@ -167,6 +168,8 @@
     "dictionary-uk": "^2.1.1",
     "draggabilly": "^2.2.0",
     "electron": "^9.0.0",
-    "nodehun": "^3.0.1"
+    "htm": "^3.0.4",
+    "nodehun": "^3.0.1",
+    "preact": "^10.4.5"
   }
 }

@@ -96,8 +96,8 @@ const closeSettings = () => {
   settingsView.destroy();
 };
 
-const saveSettings = (event, {tabs, dictionaries}) => {
-  updateSettings({enabledDictionaries: [...dictionaries]});
+const saveSettings = (event, {tabs, enabledDictionaries}) => {
+  updateSettings({enabledDictionaries: [...enabledDictionaries]});
   updateTabUrls(tabs);
   loadDictionaries();
   const currentBrowserView = mainWindow.getBrowserView();

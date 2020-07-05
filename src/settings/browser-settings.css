@@ -45,3 +45,7 @@ body {
     flex-wrap: wrap;
     max-height: 100px;
 }
+
+.settings__dictionaries .control input[type="checkbox"] {
+    margin-right: 6px;
+}
