@@ -27,7 +27,10 @@ const handleContextMenu = (mainWindow, browserView) => (event, params) => {
   const {webContents} = browserView;
   const menu = new Menu();
   menu.append(new MenuItem({label: 'Settings', click: () => openSettingsDialog(mainWindow)}));
-  menu.append(new MenuItem({label: 'DevTools', click: () => webContents.openDevTools()}));
+  menu.append(new MenuItem({
+    label: 'DevTools',
+    click: () => webContents.openDevTools({mode: 'detach', activate: true})
+  }));
   const {x, y} = params;
   menu.popup({x, y});
 };
