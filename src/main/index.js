@@ -33,11 +33,11 @@ const activateTab = tabId => {
   const activeTab = tabManager.getTab(tabId);
   if (activeTab) {
     const {width, height} = mainWindow.getContentBounds();
-    tabContainer.setBounds({x: 0, y: 0, width, height: TABS_CONTAINER_HEIGHT});
     mainWindow.setBrowserView(tabContainer);
-    tabManager.setActiveTab(tabId);
-    activeTab.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
     mainWindow.addBrowserView(activeTab);
+    tabManager.setActiveTab(tabId);
+    tabContainer.setBounds({x: 0, y: 0, width, height: TABS_CONTAINER_HEIGHT});
+    activeTab.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
     activeTab.webContents.focus();
   }
 };
