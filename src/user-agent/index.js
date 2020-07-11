@@ -68,7 +68,7 @@ const firefoxUserAgent = userAgent => {
 
 const userAgentForView = (browserViewOrWindow, url = '') => {
   let ret = defaultUserAgent(browserViewOrWindow.webContents.userAgent);
-  if (url.match(/https?:\/\/[^/]+google\.com.*/)) {
+  if (url.match(/https?:\/\/[^/]+google\.com.*/)) { // NOSONAR
     ret = firefoxUserAgent(browserViewOrWindow.webContents.userAgent);
   }
   return ret;

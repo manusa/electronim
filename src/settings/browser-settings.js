@@ -46,7 +46,9 @@ const newTabClass = state => {
   return state.newTabValid ? 'is-success' : 'is-danger';
 };
 
-const newId = () => (new Date().getTime().toString(36) + Math.random().toString(36).slice(2));
+const newId = () => (
+  new Date().getTime().toString(36) + Math.random().toString(36).slice(2) // NOSONAR
+);
 
 const initialState = {
   dictionaries: window.dictionaries,

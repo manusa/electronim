@@ -19,11 +19,11 @@ const matchUrls = regexList => (browserViewUrl, url) =>
   regexList.some(regex => browserViewUrl.href.match(regex) || url.href.match(regex));
 
 const isOAuth = matchUrls([
-  /^https:\/\/.+\.google\.com\/o\/oauth2\/.*/,
-  /^https:\/\/.+\.google\.com\/accounts\/signin.*/,
-  /^https:\/\/.+\.google\.com\/signin\/oauth.*/,
-  /^https:\/\/accounts\.google\.com\/.*/,
-  /^https:\/\/(.+\.)?github\.com\/login\/oauth.*/
+  /^https:\/\/.+\.google\.com\/o\/oauth2\/.*/, // NOSONAR
+  /^https:\/\/.+\.google\.com\/accounts\/signin.*/, // NOSONAR
+  /^https:\/\/.+\.google\.com\/signin\/oauth.*/, // NOSONAR
+  /^https:\/\/accounts\.google\.com\/.*/, // NOSONAR
+  /^https:\/\/(.+\.)?github\.com\/login\/oauth.*/ // NOSONAR
 ]);
 
 const isSameOrigin = (browserViewUrl, url) => url.origin === browserViewUrl.origin;
