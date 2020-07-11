@@ -56,6 +56,7 @@ spell checking for free.
 
 0. [Setup Guide](docs/Setup.md)
 0. [Keyboard Shortcuts](docs/Keyboard-shortcuts.md)
+0. [Troubleshooting](docs/Troubleshooting.md)
 
 ## Acknowledgements
 
