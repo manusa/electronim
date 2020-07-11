@@ -124,19 +124,25 @@ const reducer = (state, action) => {
   }
 };
 
+const SettingsButton = ({icon, disabled = false, title, onclick}) => (html`
+  <button class='settings__button button' disabled=${disabled} onclick=${onclick}>
+    <span class='icon is-medium' title='${title}'>
+      <i class='fas ${icon}'></i>
+    </span>
+  </button>
+`);
 const TabEntry = ({dispatch, id, url, sandboxed}) => (html`
-  <div class='field settings__tab'>
+  <div class='settings__tab field '>
     <div class='control'>
       <input type='text' readonly class='input' name='tabs' value='${url}' />
     </div>
-    <span class='icon is-medium sandbox' title='Use isolated session when lock is on'
-      onclick=${() => dispatch({type: ACTIONS.TOGGLE_TAB_SANDBOX, payload: {id}})}>
-      <i class='fas ${sandboxed ? 'fa-lock' : 'fa-lock-open'}'></i>
-    </span>
-    <span class='icon is-medium' title='Delete tab'
-      onclick=${() => dispatch({type: ACTIONS.REMOVE, payload: {id}})}>
-      <i class='fas fa-trash'></i>
-    </span>
+    <${SettingsButton} icon=${sandboxed ? 'fa-lock' : 'fa-lock-open'}
+      title='Use isolated session when lock is on'
+      onclick=${() => dispatch({type: ACTIONS.TOGGLE_TAB_SANDBOX, payload: {id}})}
+    />
+    <${SettingsButton} icon='fa-trash' title='Delete tab'
+      onclick=${() => dispatch({type: ACTIONS.REMOVE, payload: {id}})}
+    />
   </div>
 `);
 
@@ -186,11 +192,7 @@ const Settings = () => {
             onkeydown=${onNewKeyDown}
           />
         </div>
-        <button class="button" disabled=${!state.newTabValid} onclick=${addTab}>
-          <span class='icon is-medium'>
-            <em class='fas fa-plus'></em>
-          </span>
-        </button>
+        <${SettingsButton} icon='fa-plus' onclick=${addTab} disabled=${!state.newTabValid} />
       </div>
       <div class="settings__tabs container field">
         ${state.tabs.map(tab => (html`

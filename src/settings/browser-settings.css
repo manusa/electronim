@@ -18,25 +18,25 @@ body {
     padding: 15px 0;
 }
 
+.settings__button.button {
+    background: none;
+    border-color: transparent;
+}
+
+.settings__button.button:hover {
+    border-color: #dbdbdb;
+}
+
 .settings__new-tab, .settings__tab {
     display: inline-flex;
     align-items: center;
     width: 100%;
 }
 
-.settings__new-tab button.button {
-    border: 0;
-    width: 32px;
-    padding: 0;
-}
-
 .settings__new-tab .control,
 .settings__tab .control {
+    margin-right: 6px;
     flex: 1;
-}
-
-.settings__tab .icon {
-    cursor: pointer;
 }
 
 .settings__dictionaries {
