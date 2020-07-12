@@ -55,18 +55,26 @@ const handleZoomOut = event => {
 
 const handleZoomReset = event => event.sender.setZoomFactor(1);
 
-const handleTabReorder = (event, {tabIds}) => {
-  const currentTabs = loadSettings().tabs.reduce((acc, tab) => {
+const handleTabReorder = (event, {tabIds: visibleTabIds}) => {
+  const currentTabs = loadSettings().tabs;
+  const hiddenTabIds = currentTabs.map(({id}) => id)
+    .filter(tabId => !visibleTabIds.includes(tabId));
+  const currentTabMap = currentTabs.reduce((acc, tab) => {
     acc[tab.id] = tab; return acc;
   }, {});
-  const tabs = tabIds.map(tabId => currentTabs[tabId]);
+  const tabs = [
+    ...visibleTabIds.map(tabId => currentTabMap[tabId]),
+    ...hiddenTabIds.map(tabId => currentTabMap[tabId])
+  ];
   updateSettings({tabs});
 };
 
 const initTabListener = () => {
   ipc.on(APP_EVENTS.tabsReady, event => {
     const currentSettings = loadSettings();
-    const tabs = currentSettings.tabs.map(tab => ({...tab, active: tab.id === currentSettings.activeTab}));
+    const tabs = currentSettings.tabs
+      .filter(tab => !tab.disabled)
+      .map(tab => ({...tab, active: tab.id === currentSettings.activeTab}));
     if (tabs.length > 0) {
       const ipcSender = event.sender;
       tabManager.addTabs(ipcSender)(tabs);

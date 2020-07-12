@@ -26,20 +26,22 @@ describe('Settings in Browser test suite', () => {
   let mockDictionaries;
   let mockTabs;
   let mockIpcRenderer;
+  let spyUseReducer;
   beforeEach(() => {
     mockDictionaries = {available: {
       en: {name: 'English'},
       es: {name: 'Spanish'}
     }, enabled: ['en']};
     mockTabs = [
-      {url: 'https://initial-tab.com', sandboxed: true},
-      {url: 'https://initial-tab-2.com'}
+      {id: '1', url: 'https://initial-tab.com', sandboxed: true},
+      {id: '2', url: 'https://initial-tab-2.com'}
     ];
     mockIpcRenderer = {
       send: jest.fn()
     };
     window.preact = require('preact');
     window.preactHooks = require('preact/hooks');
+    spyUseReducer = jest.spyOn(window.preactHooks, 'useReducer');
     window.htm = require('htm');
     window.APP_EVENTS = {};
     window.dictionaries = mockDictionaries;
@@ -60,8 +62,8 @@ describe('Settings in Browser test suite', () => {
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('Save my settings',
         {tabs: [
-          {url: 'https://initial-tab.com', sandboxed: true},
-          {url: 'https://initial-tab-2.com'}
+          {id: '1', url: 'https://initial-tab.com', sandboxed: true},
+          {id: '2', url: 'https://initial-tab-2.com'}
         ], enabledDictionaries: ['en']});
     });
     test('Cancel should send cancel event', () => {
@@ -80,7 +82,7 @@ describe('Settings in Browser test suite', () => {
     let $addTabButton;
     let $submitButton;
     beforeEach(() => {
-      $input = document.querySelector('.settings__new-tab .input');
+      $input = document.querySelector('.settings__new-tab input[type="text"].input');
       $addTabButton = document.querySelector('.settings__new-tab .button');
       $tabContainer = document.querySelector('.settings__tabs');
       $submitButton = document.querySelector('.settings__submit');
@@ -115,7 +117,7 @@ describe('Settings in Browser test suite', () => {
         expect($tabContainer.childElementCount).toBe(2);
         await waitFor(() =>
           expect($input.classList.contains('is-danger')).toBe(true));
-        expect($tabContainer.querySelectorAll('.settings__tab input').length).toBe(2);
+        expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input').length).toBe(2);
         expect($input.value).toBe('invalid:1337:url');
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
         expect($submitButton.hasAttribute('disabled')).toBe(true);
@@ -129,7 +131,7 @@ describe('Settings in Browser test suite', () => {
         await waitFor(() =>
           expect($tabContainer.childElementCount).toBe(3));
         expect($input.classList.contains('is-success')).toBe(false);
-        expect($tabContainer.querySelectorAll('.settings__tab input')[2].value)
+        expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input')[2].value)
           .toBe('https://info.cern.ch');
         expect($input.value).toBe('');
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
@@ -145,7 +147,7 @@ describe('Settings in Browser test suite', () => {
           expect($tabContainer.childElementCount).toBe(3));
         await waitFor(() =>
           expect($input.classList.contains('is-success')).toBe(false));
-        expect($tabContainer.querySelectorAll('.settings__tab input')[2].value)
+        expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input')[2].value)
           .toBe('http://info.cern.ch');
         expect($input.value).toBe('');
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
@@ -182,7 +184,7 @@ describe('Settings in Browser test suite', () => {
       // Then
       await waitFor(() =>
         expect($tabContainer.childElementCount).toBe(3));
-      expect($tabContainer.querySelectorAll('.settings__tab input')[2].value)
+      expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input')[2].value)
         .toBe('https://info.cern.ch');
       expect($input.value).toBe('');
       expect($addTabButton.hasAttribute('disabled')).toBe(true);
@@ -214,11 +216,41 @@ describe('Settings in Browser test suite', () => {
       // Given
       const $tabContainer = document.querySelector('.settings__tabs');
       const $trashIcon = $tabContainer.querySelector('.icon .fa-trash');
+      const initialChildren = $tabContainer.childElementCount;
+      expect(initialChildren).toBeGreaterThan(0);
       // When
       fireEvent.click($trashIcon);
       // Then
       await waitFor(() =>
-        expect($tabContainer.childElementCount).toBe(0));
+        expect($tabContainer.childElementCount).toBe(initialChildren - 1));
+    });
+    describe('Expand/Collapse icon click', () => {
+      test('collapsed tab, should expand tab', async () => {
+        // Given
+        const $expandIcon = document.querySelector('.settings__tab[data-id="1"] .icon .fa-chevron-right');
+        const $collapsedTab = $expandIcon.closest('.settings__tab');
+        expect($collapsedTab.classList.contains('settings__tab--expanded')).toBe(false);
+        // When
+        fireEvent.click($expandIcon);
+        // Then
+        await waitFor(() =>
+          expect($expandIcon.classList.contains('fa-chevron-down')).toBe(true));
+        expect($collapsedTab.classList.contains('settings__tab--expanded')).toBe(true);
+      });
+      test('expanded tab, should collapse tab', async () => {
+        // Given
+        const dispatch = spyUseReducer.mock.results.reverse()[0].value[1];
+        await dispatch({type: 'TOGGLE_TAB_EXPANDED', payload: '2'});
+        const $collapseIcon = document.querySelector('.settings__tab[data-id="2"] .icon .fa-chevron-down');
+        const $expandedTab = $collapseIcon.closest('.settings__tab');
+        expect($expandedTab.classList.contains('settings__tab--expanded')).toBe(true);
+        // When
+        fireEvent.click($collapseIcon);
+        // Then
+        await waitFor(() =>
+          expect($collapseIcon.classList.contains('fa-chevron-right')).toBe(true));
+        expect($expandedTab.classList.contains('settings__tab--expanded')).toBe(false);
+      });
     });
   });
   describe('Dictionary events', () => {

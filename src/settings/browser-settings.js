@@ -53,6 +53,7 @@ const newId = () => (
 const initialState = {
   dictionaries: window.dictionaries,
   tabs: window.tabs,
+  expandedTabs: [],
   newTabValid: false,
   newTabValue: '',
   canSave: window.tabs.length > 0
@@ -62,7 +63,8 @@ const ACTIONS = {
   ADD: 'ADD',
   REMOVE: 'REMOVE',
   TOGGLE_DICTIONARY: 'TOGGLE_DICTIONARY',
-  TOGGLE_TAB_SANDBOX: 'TOGGLE_TAB_SANDBOX',
+  TOGGLE_TAB_EXPANDED: 'TOGGLE_TAB_EXPANDED',
+  TOGGLE_TAB_PROPERTY: 'TOGGLE_TAB_PROPERTY',
   UPDATE_NEW_TAB_VALUE: 'UPDATE_NEW_TAB_VALUE'
 };
 
@@ -102,12 +104,21 @@ const reducer = (state, action) => {
       }
       return newState;
     }
-    case ACTIONS.TOGGLE_TAB_SANDBOX: {
+    case ACTIONS.TOGGLE_TAB_EXPANDED: {
+      if (state.expandedTabs.includes(action.payload)) {
+        return {...state,
+          expandedTabs: state.expandedTabs.filter(id => id !== action.payload)};
+      }
+      return {...state,
+        expandedTabs: [...state.expandedTabs, action.payload]
+      };
+    }
+    case ACTIONS.TOGGLE_TAB_PROPERTY: {
       const newState = {...state, tabs: []};
       state.tabs.forEach(tab => {
         const newTab = {...tab};
         if (newTab.id === action.payload.id) {
-          newTab.sandboxed = !newTab.sandboxed;
+          newTab[action.payload.property] = !newTab[action.payload.property];
         }
         newState.tabs.push(newTab);
       });
@@ -124,6 +135,9 @@ const reducer = (state, action) => {
   }
 };
 
+const toggleTabProperty = (dispatch, property, id) =>
+  () => dispatch({type: ACTIONS.TOGGLE_TAB_PROPERTY, payload: {id, property}});
+
 const SettingsButton = ({icon, disabled = false, title, onclick}) => (html`
   <button class='settings__button button' disabled=${disabled} onclick=${onclick}>
     <span class='icon is-medium' title='${title}'>
@@ -131,31 +145,61 @@ const SettingsButton = ({icon, disabled = false, title, onclick}) => (html`
     </span>
   </button>
 `);
-const TabEntry = ({dispatch, id, url, sandboxed}) => (html`
-  <div class='settings__tab field '>
-    <div class='control'>
-      <input type='text' readonly class='input' name='tabs' value='${url}' />
-    </div>
-    <${SettingsButton} icon=${sandboxed ? 'fa-lock' : 'fa-lock-open'}
-      title='Use isolated session when lock is on'
-      onclick=${() => dispatch({type: ACTIONS.TOGGLE_TAB_SANDBOX, payload: {id}})}
+
+const ExpandButton = ({dispatch, id, expanded = false}) => {
+  const properties = {
+    icon: expanded ? 'fa-chevron-down' : 'fa-chevron-right',
+    title: expanded ? 'Collapse' : 'Expand',
+    onclick: () => dispatch({type: ACTIONS.TOGGLE_TAB_EXPANDED, payload: id})
+  };
+  return html`
+    <${SettingsButton} ...${properties} />
+  `;
+};
+
+const Checkbox = ({label, checked, value, onclick}) => (html`
+  <div class='control'>
+    <label class='checkbox'>
+      <input type='checkbox' checked=${checked} value=${value} onclick=${onclick} />
+      ${label}
+    </label>
+  </div>
+`);
+
+const TabAdvancedSettings = ({dispatch, id, disabled = false}) => (html`
+  <div class="settings__tab-advanced container">
+    <${Checkbox} label="Disabled" checked=${disabled} value=${id}
+      onclick=${toggleTabProperty(dispatch, 'disabled', id)}
     />
-    <${SettingsButton} icon='fa-trash' title='Delete tab'
-      onclick=${() => dispatch({type: ACTIONS.REMOVE, payload: {id}})}
+  </div>
+`);
+
+const TabEntry = ({dispatch, id, expanded, url, sandboxed, ...tab}) => (html`
+  <div class='settings__tab ${expanded && 'settings__tab--expanded'} panel-block' data-id=${id}>
+    <div class='settings__tab-main'>
+      <${ExpandButton} dispatch=${dispatch} id=${id} expanded=${expanded} />
+      <div class='control'>
+        <input type='text' readonly class='input' name='tabs' value='${url}' />
+      </div>
+      <${SettingsButton} icon=${sandboxed ? 'fa-lock' : 'fa-lock-open'}
+        title='Use isolated session when lock is on'
+        onclick=${toggleTabProperty(dispatch, 'sandboxed', id)}
+      />
+      <${SettingsButton} icon='fa-trash' title='Delete tab'
+        onclick=${() => dispatch({type: ACTIONS.REMOVE, payload: {id}})}
+      /> 
+    </div>
+    <${TabAdvancedSettings} dispatch=${dispatch} id=${id} expanded=${expanded}
+      ...${tab}
     />
   </div>
 `);
 
 const DictionaryEntry = ({dispatch, dictionaryKey, name, enabled = false}) => (html`
-  <div class='control'>
-    <label class='checkbox'>
-        <input type='checkbox' name='dictionaries'
-          value='${dictionaryKey}' checked=${enabled}
-          onclick=${() => dispatch({type: ACTIONS.TOGGLE_DICTIONARY, payload: dictionaryKey})}
-        />
-        ${name} (${dictionaryKey})
-    </label>
-  </div>
+  <${Checkbox} label=${`${name} (${dictionaryKey})`} checked=${enabled}
+    value=${dictionaryKey}
+    onclick=${() => dispatch({type: ACTIONS.TOGGLE_DICTIONARY, payload: dictionaryKey})}
+  />
 `);
 
 const Settings = () => {
@@ -181,27 +225,33 @@ const Settings = () => {
   <h1 class="title">Settings</h1>
   <div class="container">
     <div class="form">
-      <label class="label">Tabs</label>
-      <div class="settings__new-tab container field">
-        <div class="control">
-          <input type="text"
-            class="input ${newTabClass(state)}"
-            placeholder="https://web.whatsapp.com"
-            value=${state.newTabValue}
-            oninput=${onNewTabInput}
-            onkeydown=${onNewKeyDown}
-          />
+      <nav class="panel">
+        <p class="panel-heading">Tabs</p>
+        <div class="settings__new-tab panel-block">
+          <div class="control">
+            <input type="text"
+              class="input ${newTabClass(state)}"
+              placeholder="https://web.whatsapp.com"
+              value=${state.newTabValue}
+              oninput=${onNewTabInput}
+              onkeydown=${onNewKeyDown}
+            />
+          </div>
+          <${SettingsButton} icon='fa-plus' onclick=${addTab} disabled=${!state.newTabValid} /> 
         </div>
-        <${SettingsButton} icon='fa-plus' onclick=${addTab} disabled=${!state.newTabValid} />
-      </div>
-      <div class="settings__tabs container field">
-        ${state.tabs.map(tab => (html`
-          <${TabEntry} dispatch=${dispatch} ...${tab} />
-      `))}
-      </div>
-      <div class="field">
-        <label class="label">Spell checker languages</label>
-        <div class="settings__dictionaries container">${
+        <div class="settings__tabs container field">
+          ${state.tabs.map(tab => (html`
+            <${TabEntry}
+              dispatch=${dispatch} expanded=${state.expandedTabs.includes(tab.id)}
+              ...${tab}
+            />
+        `))}
+        </div>
+      </nav>
+      <nav class="panel">
+        <p class="panel-heading">Spell checker languages</p>
+        <div class="panel-block">
+          <div class="settings__dictionaries container">${
   Object.entries(availableDictionaries)
     .sort(([, {name: name1}], [, {name: name2}]) => name1.localeCompare(name2))
     .map(([key, {name}]) => (html`
@@ -209,8 +259,9 @@ const Settings = () => {
         enabled=${enabledDictionaries.includes(key)}
       />
     `))} 
+          </div>
         </div>
-      </div>
+      </nav>
       <div class="field is-grouped">
         <div class="control">
           <button class="settings__submit button is-link"
