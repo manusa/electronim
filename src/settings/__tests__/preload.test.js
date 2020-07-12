@@ -20,7 +20,7 @@ describe('Settings Module preload test suite', () => {
     mockSpellCheck = {
       AVAILABLE_DICTIONARIES: 'someAvailableDictionaries', getEnabledDictionaries: jest.fn(() => '1337')
     };
-    mockSettings = {loadSettings: jest.fn(() => ({tabs: ['1337']}))};
+    mockSettings = {loadSettings: jest.fn(() => ({tabs: ['1337'], disableNotificationsGlobally: false}))};
     jest.resetModules();
     jest.mock('../../main/preload', () => {
       global.mainPreloadLoaded = true;
@@ -39,5 +39,6 @@ describe('Settings Module preload test suite', () => {
     expect(window.dictionaries.enabled).toBe('1337');
     expect(mockSettings.loadSettings).toHaveBeenCalledTimes(1);
     expect(window.tabs).toEqual(['1337']);
+    expect(window.disableNotificationsGlobally).toBe(false);
   });
 });

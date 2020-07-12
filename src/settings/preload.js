@@ -32,3 +32,5 @@ window.dictionaries = {
 };
 
 window.tabs = [...settings.tabs];
+
+window.disableNotificationsGlobally = settings.disableNotificationsGlobally;

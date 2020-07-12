@@ -135,7 +135,9 @@
     }
   },
   "jest": {
-    "setupFilesAfterEnv": ["jest-extended"]
+    "setupFilesAfterEnv": [
+      "jest-extended"
+    ]
   },
   "devDependencies": {
     "@testing-library/dom": "^7.20.0",

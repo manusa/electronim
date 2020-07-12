@@ -47,14 +47,6 @@ const writeSettings = settings => {
 
 const updateSettings = settings => writeSettings({...loadSettings(), ...settings});
 
-const updateTabUrls = updatedTabs => {
-  const {activeTab} = loadSettings();
-  updateSettings({tabs: [...updatedTabs]});
-  if (updatedTabs.length > 0 && !updatedTabs.map(({id}) => id).includes(activeTab)) {
-    updateSettings({activeTab: updatedTabs[0].id});
-  }
-};
-
 const openSettingsDialog = mainWindow => {
   const settingsView = new BrowserView({webPreferences});
   mainWindow.setBrowserView(settingsView);
@@ -64,4 +56,4 @@ const openSettingsDialog = mainWindow => {
   settingsView.webContents.loadURL(`file://${__dirname}/index.html`);
 };
 
-module.exports = {loadSettings, updateSettings, updateTabUrls, openSettingsDialog};
+module.exports = {loadSettings, updateSettings, openSettingsDialog};

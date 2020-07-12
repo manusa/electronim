@@ -34,7 +34,7 @@ describe('Settings in Browser test suite', () => {
     }, enabled: ['en']};
     mockTabs = [
       {id: '1', url: 'https://initial-tab.com', sandboxed: true},
-      {id: '2', url: 'https://initial-tab-2.com'}
+      {id: '2', url: 'https://initial-tab-2.com', disableNotifications: true}
     ];
     mockIpcRenderer = {
       send: jest.fn()
@@ -47,6 +47,7 @@ describe('Settings in Browser test suite', () => {
     window.dictionaries = mockDictionaries;
     window.tabs = mockTabs;
     window.ipcRenderer = mockIpcRenderer;
+    window.disableNotificationsGlobally = false;
     mockDOM();
     jest.isolateModules(() => {
       require('../browser-settings');
@@ -61,10 +62,14 @@ describe('Settings in Browser test suite', () => {
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('Save my settings',
-        {tabs: [
-          {id: '1', url: 'https://initial-tab.com', sandboxed: true},
-          {id: '2', url: 'https://initial-tab-2.com'}
-        ], enabledDictionaries: ['en']});
+        {
+          tabs: [
+            {id: '1', url: 'https://initial-tab.com', sandboxed: true},
+            {id: '2', url: 'https://initial-tab-2.com', disableNotifications: true}
+          ],
+          enabledDictionaries: ['en'],
+          disableNotificationsGlobally: false
+        });
     });
     test('Cancel should send cancel event', () => {
       // Given
@@ -74,6 +79,17 @@ describe('Settings in Browser test suite', () => {
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('Cancel my settings');
+    });
+    test('Toggle global notifications should check input', async () => {
+      // Given
+      const $notificationCheckbox = document.querySelector('.settings__global-notifications input');
+      expect($notificationCheckbox.checked).toBe(false);
+      // When
+      fireEvent.click($notificationCheckbox);
+      // Then
+      await waitFor(() => {
+        expect($notificationCheckbox.checked).toBe(true);
+      });
     });
   });
   describe('New tab Input field', () => {
@@ -211,6 +227,26 @@ describe('Settings in Browser test suite', () => {
       await waitFor(() =>
         expect($lockOpenIcon.classList.contains('fa-lock-open')).toBe(false));
       expect($lockOpenIcon.classList.contains('fa-lock')).toBe(true);
+    });
+    test('Notification disabled icon click, should enable notification', async () => {
+      // Given
+      const $notificationEnabledIcon = document.querySelector('.settings__tabs .icon .fa-bell-slash');
+      // When
+      fireEvent.click($notificationEnabledIcon);
+      // Then
+      await waitFor(() =>
+        expect($notificationEnabledIcon.classList.contains('fa-bell-slash')).toBe(false));
+      expect($notificationEnabledIcon.classList.contains('fa-bell')).toBe(true);
+    });
+    test('Notification enabled icon click, should disable notification', async () => {
+      // Given
+      const $notificationEnabledIcon = document.querySelector('.settings__tabs .icon .fa-bell');
+      // When
+      fireEvent.click($notificationEnabledIcon);
+      // Then
+      await waitFor(() =>
+        expect($notificationEnabledIcon.classList.contains('fa-bell')).toBe(false));
+      expect($notificationEnabledIcon.classList.contains('fa-bell-slash')).toBe(true);
     });
     test('Trash icon click, should remove tab', async () => {
       // Given

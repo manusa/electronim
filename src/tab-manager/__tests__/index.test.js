@@ -19,6 +19,7 @@ describe('Tab Manager module test suite', () => {
   let mockMenuItem;
   let userAgent;
   let tabManager;
+  let mockSettings;
   beforeEach(async () => {
     mockBrowserView = {
       setAutoResize: jest.fn(),
@@ -38,7 +39,14 @@ describe('Tab Manager module test suite', () => {
       MenuItem: jest.fn(() => mockMenuItem),
       session: {fromPartition: jest.fn(() => ({}))}
     }));
-    jest.mock('../../settings');
+    mockSettings = {
+      loadSettings: jest.fn(() => ({
+        tabs: [{id: '1337', disableNotifications: false}],
+        disableNotificationsGlobally: false
+      })),
+      updateSettings: jest.fn()
+    };
+    jest.mock('../../settings', () => mockSettings);
     jest.mock('../../spell-check');
     userAgent = require('../../user-agent');
     tabManager = require('../');
@@ -235,6 +243,47 @@ describe('Tab Manager module test suite', () => {
       tabManager.removeAll();
       // Then
       expect(mockBrowserView.destroy).toHaveBeenCalledTimes(1);
+    });
+  });
+  describe('canNotify', () => {
+    test('Global notifications enabled, Notifications for this tab enabled, should return true', () => {
+      // Given
+      // When
+      const result = tabManager.canNotify('1337');
+      // Then
+      expect(result).toBe(true);
+    });
+    test('Global notifications disabled, Notifications for this tab enabled, should return false', () => {
+      // Given
+      mockSettings.loadSettings = jest.fn(() => ({
+        tabs: [{id: '1337', disableNotifications: false}],
+        disableNotificationsGlobally: true
+      }));
+      // When
+      const result = tabManager.canNotify('1337');
+      // Then
+      expect(result).toBe(false);
+    });
+    test('Global notifications enabled, Notifications for this tab disabled, should return false', () => {
+      // Given
+      mockSettings.loadSettings = jest.fn(() => ({
+        tabs: [{id: '1337', disableNotifications: true}],
+        disableNotificationsGlobally: false
+      }));
+      // When
+      const result = tabManager.canNotify('1337');
+      // Then
+      expect(result).toBe(false);
+    });
+    test('Notifications undefined in settings, should return true (Opt-out setting)', () => {
+      // Given
+      mockSettings.loadSettings = jest.fn(() => ({
+        tabs: [{id: '1337'}]
+      }));
+      // When
+      const result = tabManager.canNotify('1337');
+      // Then
+      expect(result).toBe(true);
     });
   });
 });
