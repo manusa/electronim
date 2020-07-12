@@ -13,7 +13,9 @@
 #   limitations under the License.
 name: Tests
 
-on: [push]
+on:
+  push:
+  pull_request:
 
 env:
   SONAR_SCANNER_VERSION: 4.2.0.1873
