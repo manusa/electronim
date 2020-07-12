@@ -132,7 +132,10 @@ describe('Main module test suite', () => {
       test('Previous saved tabs in loaded settings, should add tabs to manager and activate them as they are added', () => {
         // Given
         const event = {sender: {send: jest.fn()}};
-        settingsModule.loadSettings.mockImplementation(() => ({tabs: [{id: '1337', otherInfo: 'A Tab'}]}));
+        settingsModule.loadSettings.mockImplementation(() => ({tabs: [
+          {id: '1337', otherInfo: 'A Tab'},
+          {id: 'disabled-1337', disabled: true, otherInfo: 'I should be ignored'}
+        ]}));
         main.init();
         // When
         mockIpc.listeners.tabsReady(event);
@@ -268,6 +271,19 @@ describe('Main module test suite', () => {
         mockIpc.listeners.tabReorder({}, {tabIds: ['313373', '1337']});
         // Then
         expect(settingsModule.updateSettings).toHaveBeenCalledWith({tabs: [{id: '313373'}, {id: '1337'}]});
+      });
+      test('Several tabs with hidden, order changed, should update settings keeping hidden tags', () => {
+        // Given
+        mockSettings = {
+          tabs: [{id: '1337'}, {id: 'hidden'}, {id: '313373'}, {id: 'hidden-too'}]
+        };
+        main.init();
+        // When
+        mockIpc.listeners.tabReorder({}, {tabIds: ['313373', '1337']});
+        // Then
+        expect(settingsModule.updateSettings).toHaveBeenCalledWith({tabs: [
+          {id: '313373'}, {id: '1337'}, {id: 'hidden'}, {id: 'hidden-too'}
+        ]});
       });
     });
     test('settingsOpenDialog, should open settings dialog', () => {

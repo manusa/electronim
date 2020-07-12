@@ -13,9 +13,18 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+:root {
+    --default-spacing: 6px;
+    --border-color: #dbdbdb;
+}
+
 body {
     margin:0;
     padding: 15px 0;
+}
+
+.control .checkbox {
+    user-select: none;
 }
 
 .settings__button.button {
@@ -24,18 +33,41 @@ body {
 }
 
 .settings__button.button:hover {
-    border-color: #dbdbdb;
+    border-color: var(--border-color);
 }
 
-.settings__new-tab, .settings__tab {
+.settings__button.button:not(:last-child) {
+    margin-right: var(--default-spacing);
+}
+
+.settings__tab {
+    flex-direction: column;
+}
+
+.settings__new-tab, .settings__tab-main, .settings__tab-advanced {
     display: inline-flex;
     align-items: center;
     width: 100%;
 }
 
+.settings__tab .settings__tab-advanced {
+    transform: scaleY(0);
+    height: 0;
+    margin: 0;
+    transition: margin 0.3s  ease-out, transform 0.3s ease-out;
+    overflow: hidden;
+}
+
+.settings__tab--expanded .settings__tab-advanced {
+    transform: scaleY(1);
+    height: 100%;
+    --margin: calc(2 * var(--default-spacing));
+    margin: var(--margin) var(--margin) var(--default-spacing) var(--margin);
+}
+
 .settings__new-tab .control,
 .settings__tab .control {
-    margin-right: 6px;
+    margin-right: var(--default-spacing);
     flex: 1;
 }
 
@@ -47,5 +79,5 @@ body {
 }
 
 .settings__dictionaries .control input[type="checkbox"] {
-    margin-right: 6px;
+    margin-right: var(--default-spacing);
 }
