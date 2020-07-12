@@ -134,13 +134,17 @@
       ]
     }
   },
+  "jest": {
+    "setupFilesAfterEnv": ["jest-extended"]
+  },
   "devDependencies": {
     "@testing-library/dom": "^7.20.0",
     "electron-builder": "^22.7.0",
     "electron-packager": "^15.0.0",
     "eslint": "^7.4.0",
     "eslint-plugin-jest": "^23.18.0",
-    "jest": "^26.1.0"
+    "jest": "^26.1.0",
+    "jest-extended": "^0.11.5"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.1",

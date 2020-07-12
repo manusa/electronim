@@ -144,26 +144,28 @@ describe('Main module test suite', () => {
       });
     });
     describe('activateTab', () => {
+      let activeTab;
+      beforeEach(() => {
+        activeTab = {
+          setBounds: jest.fn(),
+          webContents: {focus: jest.fn()}
+        };
+        mockTabContainer.setBounds = jest.fn();
+        mockBrowserWindow.setBrowserView = jest.fn();
+        mockBrowserWindow.addBrowserView = jest.fn();
+        tabManagerModule.getTab = jest.fn(id => (id === 'validId' ? activeTab : null));
+      });
       test('no active tab, should do nothing', () => {
         // Given
-        mockBrowserWindow.setBrowserView = jest.fn();
-        tabManagerModule.getTab = jest.fn(() => null);
         main.init();
         // When
         mockIpc.listeners.activateTab({}, {id: 'not here'});
         // Then
         expect(mockBrowserWindow.setBrowserView).not.toHaveBeenCalled();
+        expect(mockBrowserWindow.addBrowserView).not.toHaveBeenCalled();
       });
       test('active tab, should resize tab and set it as the main window browser view', () => {
         // Given
-        mockTabContainer.setBounds = jest.fn();
-        const activeTab = {
-          setBounds: jest.fn(),
-          webContents: {focus: jest.fn()}
-        };
-        tabManagerModule.getTab = jest.fn(id => (id === 'validId' ? activeTab : null));
-        mockBrowserWindow.setBrowserView = jest.fn();
-        mockBrowserWindow.addBrowserView = jest.fn();
         mockBrowserWindow.getContentBounds = jest.fn(() => ({width: 13, height: 83}));
         main.init();
         // When
@@ -173,6 +175,18 @@ describe('Main module test suite', () => {
         expect(mockBrowserWindow.setBrowserView).toHaveBeenCalledWith(mockTabContainer);
         expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledWith(activeTab);
         expect(activeTab.webContents.focus).toHaveBeenCalledTimes(1);
+      });
+      test('#23, setBounds should be called AFTER adding view to BrowserWindow', () => {
+        // Given
+        mockBrowserWindow.getContentBounds = jest.fn(() => ({width: 13, height: 83}));
+        main.init();
+        // When
+        mockIpc.listeners.activateTab({}, {id: 'validId'});
+        // Then
+        expect(mockBrowserWindow.setBrowserView).toHaveBeenCalledBefore(mockTabContainer.setBounds);
+        expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledBefore(mockTabContainer.setBounds);
+        expect(mockBrowserWindow.setBrowserView).toHaveBeenCalledBefore(activeTab.setBounds);
+        expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledBefore(activeTab.setBounds);
       });
     });
     test('notificationClick, should restore window and activate tab', () => {
