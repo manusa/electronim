@@ -56,7 +56,8 @@ const initialState = {
   expandedTabs: [],
   newTabValid: false,
   newTabValue: '',
-  canSave: window.tabs.length > 0
+  canSave: window.tabs.length > 0,
+  disableNotificationsGlobally: window.disableNotificationsGlobally
 };
 
 const ACTIONS = {
@@ -65,6 +66,7 @@ const ACTIONS = {
   TOGGLE_DICTIONARY: 'TOGGLE_DICTIONARY',
   TOGGLE_TAB_EXPANDED: 'TOGGLE_TAB_EXPANDED',
   TOGGLE_TAB_PROPERTY: 'TOGGLE_TAB_PROPERTY',
+  TOGGLE_GLOBAL_NOTIFICATIONS: 'TOGGLE_GLOBAL_NOTIFICATIONS',
   UPDATE_NEW_TAB_VALUE: 'UPDATE_NEW_TAB_VALUE'
 };
 
@@ -83,6 +85,7 @@ const reducer = (state, action) => {
         tabs: [...state.tabs, {
           id: newId(),
           sandboxed: false,
+          disableNotifications: false,
           url: prependProtocol(state.newTabValue)
         }],
         canSave: true
@@ -123,6 +126,11 @@ const reducer = (state, action) => {
         newState.tabs.push(newTab);
       });
       return newState;
+    }
+    case ACTIONS.TOGGLE_GLOBAL_NOTIFICATIONS: {
+      return {...state,
+        disableNotificationsGlobally: !state.disableNotificationsGlobally
+      };
     }
     case ACTIONS.UPDATE_NEW_TAB_VALUE: {
       return {...state,
@@ -174,7 +182,7 @@ const TabAdvancedSettings = ({dispatch, id, disabled = false}) => (html`
   </div>
 `);
 
-const TabEntry = ({dispatch, id, expanded, url, sandboxed, ...tab}) => (html`
+const TabEntry = ({dispatch, id, expanded, url, sandboxed, disableNotifications, ...tab}) => (html`
   <div class='settings__tab ${expanded && 'settings__tab--expanded'} panel-block' data-id=${id}>
     <div class='settings__tab-main'>
       <${ExpandButton} dispatch=${dispatch} id=${id} expanded=${expanded} />
@@ -184,6 +192,10 @@ const TabEntry = ({dispatch, id, expanded, url, sandboxed, ...tab}) => (html`
       <${SettingsButton} icon=${sandboxed ? 'fa-lock' : 'fa-lock-open'}
         title='Use isolated session when lock is on'
         onclick=${toggleTabProperty(dispatch, 'sandboxed', id)}
+      />
+      <${SettingsButton} icon=${disableNotifications ? 'fa-bell-slash' : 'fa-bell'}
+        title=${disableNotifications ? 'Notifications disabled. Click to enable' : 'Notifications enabled. Click to disable'}
+        onclick=${toggleTabProperty(dispatch, 'disableNotifications', id)}
       />
       <${SettingsButton} icon='fa-trash' title='Delete tab'
         onclick=${() => dispatch({type: ACTIONS.REMOVE, payload: {id}})}
@@ -216,9 +228,11 @@ const Settings = () => {
       addTab();
     }
   };
+  const toggleNotifications = () => dispatch({type: ACTIONS.TOGGLE_GLOBAL_NOTIFICATIONS});
   const save = () => ipcRenderer.send(APP_EVENTS.settingsSave, {
     tabs: state.tabs,
-    enabledDictionaries
+    enabledDictionaries,
+    disableNotificationsGlobally: state.disableNotificationsGlobally
   });
   const cancel = () => ipcRenderer.send(APP_EVENTS.settingsCancel);
   return html`
@@ -262,11 +276,24 @@ const Settings = () => {
           </div>
         </div>
       </nav>
+      <nav class="panel">
+        <p class="panel-heading">Other settings</p>
+        <div class="panel-block">
+          <div class="settings__global-notifications container">
+            <${Checkbox}
+              label="Disable notifications globally"
+              checked=${state.disableNotificationsGlobally}
+              value=${state.disableNotificationsGlobally}
+              onclick=${toggleNotifications}
+            />
+          </div>
+        </div>
+      </nav>
       <div class="field is-grouped">
         <div class="control">
           <button class="settings__submit button is-link"
             disabled=${!state.canSave} onclick=${save}>Ok</button>
-      </div>
+        </div>
         <div class="control">
           <button class="settings__cancel button is-link is-light" onclick=${cancel}>
             Cancel

@@ -16,7 +16,7 @@
 const {BrowserWindow, Notification, app, ipcMain: ipc} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const {TABS_CONTAINER_HEIGHT, initTabContainer} = require('../chrome-tabs');
-const {loadSettings, updateSettings, updateTabUrls, openSettingsDialog} = require('../settings');
+const {loadSettings, updateSettings, openSettingsDialog} = require('../settings');
 const {loadDictionaries} = require('../spell-check');
 const tabManager = require('../tab-manager');
 const {initBrowserVersions, userAgentForView} = require('../user-agent');
@@ -84,6 +84,9 @@ const initTabListener = () => {
     }
   });
   ipc.on(APP_EVENTS.activateTab, (event, data) => activateTab(data.id));
+  ipc.on(APP_EVENTS.canNotify, (event, tabId) => {
+    event.returnValue = tabManager.canNotify(tabId);
+  });
   ipc.on(APP_EVENTS.notificationClick, (event, {tabId}) => {
     tabContainer.webContents.send(APP_EVENTS.activateTabInContainer, {tabId});
     mainWindow.restore();
@@ -104,9 +107,12 @@ const closeSettings = () => {
   settingsView.destroy();
 };
 
-const saveSettings = (event, {tabs, enabledDictionaries}) => {
-  updateSettings({enabledDictionaries: [...enabledDictionaries]});
-  updateTabUrls(tabs);
+const saveSettings = (event, {tabs, enabledDictionaries, disableNotificationsGlobally}) => {
+  let {activeTab} = loadSettings();
+  if (tabs.length > 0 && !tabs.some(tab => tab.id === activeTab)) {
+    activeTab = tabs[0].id;
+  }
+  updateSettings({tabs, enabledDictionaries: [...enabledDictionaries], activeTab, disableNotificationsGlobally});
   loadDictionaries();
   const currentBrowserView = mainWindow.getBrowserView();
   mainWindow.removeBrowserView(currentBrowserView);
@@ -153,6 +159,7 @@ const init = () => {
       }).show();
       browserVersionsReady();
     });
+
   return mainWindow;
 };
 

@@ -119,6 +119,12 @@ const removeAll = () => {
 
 const reload = () => Object.values(tabs).forEach(browserView => browserView.webContents.reload());
 
+const canNotify = tabId => {
+  const {tabs: tabsSettings, disableNotificationsGlobally} = settings.loadSettings();
+  const currentTab = tabsSettings.find(tab => tab.id === tabId);
+  return !(currentTab.disableNotifications || disableNotificationsGlobally);
+};
+
 module.exports = {
-  addTabs, getTab, getActiveTab, setActiveTab, reload, removeAll
+  addTabs, getTab, getActiveTab, setActiveTab, canNotify, reload, removeAll
 };

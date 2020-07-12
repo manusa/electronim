@@ -25,6 +25,7 @@ const APP_EVENTS = {
   settingsSave: 'settingsSave',
   setTabFavicon: 'setTabFavicon',
   setTabTitle: 'setTabTitle',
+  canNotify: 'canNotify',
   tabsReady: 'tabsReady',
   tabReorder: 'tabReorder',
   zoomIn: 'zoomIn',

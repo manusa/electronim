@@ -192,6 +192,17 @@ describe('Main module test suite', () => {
         expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledBefore(activeTab.setBounds);
       });
     });
+    test('canNotify, should call to the canNotify method of the tabManager', () => {
+      // Given
+      const mockIpcMainEvent = {returnValue: null};
+      tabManagerModule.canNotify = jest.fn(() => 'yepe');
+      main.init();
+      // When
+      mockIpc.listeners.canNotify(mockIpcMainEvent, 'validId');
+      // Then
+      expect(tabManagerModule.canNotify).toHaveBeenCalledWith('validId');
+      expect(mockIpcMainEvent.returnValue).toBe('yepe');
+    });
     test('notificationClick, should restore window and activate tab', () => {
       // Given
       mockTabContainer.webContents = {send: jest.fn()};
@@ -304,14 +315,17 @@ describe('Main module test suite', () => {
     test('saveSettings, should reload settings and reset all views', () => {
       // Given
       mockBrowserWindow.removeBrowserView = jest.fn();
+      mockSettings = {activeTab: 42};
       mockTabContainer.destroy = jest.fn();
       main.init();
       // When
-      mockIpc.listeners.settingsSave({}, {tabs: [], enabledDictionaries: []});
+      mockIpc.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
       // Then
       expect(spellCheckModule.loadDictionaries).toHaveBeenCalledTimes(2);
       expect(settingsModule.updateSettings).toHaveBeenCalledTimes(1);
-      expect(settingsModule.updateTabUrls).toHaveBeenCalledTimes(1);
+      expect(settingsModule.updateSettings).toHaveBeenCalledWith(
+        expect.objectContaining({activeTab: 1337})
+      );
       expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledTimes(1);
       expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledWith(settingsView);
       expect(tabManagerModule.removeAll).toHaveBeenCalledTimes(1);
@@ -325,7 +339,6 @@ describe('Main module test suite', () => {
       mockIpc.listeners.settingsCancel();
       // Then
       expect(settingsModule.updateSettings).not.toHaveBeenCalled();
-      expect(settingsModule.updateTabUrls).not.toHaveBeenCalled();
       expect(tabManagerModule.getActiveTab).toHaveBeenCalledTimes(1);
       expect(settingsView.destroy).toHaveBeenCalledTimes(1);
     });
