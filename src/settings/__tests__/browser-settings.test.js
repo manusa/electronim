@@ -27,6 +27,7 @@ describe('Settings in Browser test suite', () => {
   let mockTabs;
   let mockIpcRenderer;
   let spyUseReducer;
+  let dispatch;
   beforeEach(() => {
     mockDictionaries = {available: {
       en: {name: 'English'},
@@ -34,7 +35,7 @@ describe('Settings in Browser test suite', () => {
     }, enabled: ['en']};
     mockTabs = [
       {id: '1', url: 'https://initial-tab.com', sandboxed: true},
-      {id: '2', url: 'https://initial-tab-2.com', disableNotifications: true}
+      {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true}
     ];
     mockIpcRenderer = {
       send: jest.fn()
@@ -52,6 +53,7 @@ describe('Settings in Browser test suite', () => {
     jest.isolateModules(() => {
       require('../browser-settings');
     });
+    dispatch = spyUseReducer.mock.results.reverse()[0].value[1];
   });
   describe('Main Button events', () => {
     test('Submit should send form data', () => {
@@ -65,7 +67,7 @@ describe('Settings in Browser test suite', () => {
         {
           tabs: [
             {id: '1', url: 'https://initial-tab.com', sandboxed: true},
-            {id: '2', url: 'https://initial-tab-2.com', disableNotifications: true}
+            {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true}
           ],
           enabledDictionaries: ['en'],
           disableNotificationsGlobally: false
@@ -208,26 +210,6 @@ describe('Settings in Browser test suite', () => {
     });
   });
   describe('Tab events', () => {
-    test('Lock icon click, sandboxed session, should unlock', async () => {
-      // Given
-      const $lockIcon = document.querySelector('.settings__tabs .icon .fa-lock');
-      // When
-      fireEvent.click($lockIcon);
-      // Then
-      await waitFor(() =>
-        expect($lockIcon.classList.contains('fa-lock')).toBe(false));
-      expect($lockIcon.classList.contains('fa-lock-open')).toBe(true);
-    });
-    test('Lock-open icon click, sandboxed session, should lock', async () => {
-      // Given
-      const $lockOpenIcon = document.querySelector('.settings__tabs .icon .fa-lock-open');
-      // When
-      fireEvent.click($lockOpenIcon);
-      // Then
-      await waitFor(() =>
-        expect($lockOpenIcon.classList.contains('fa-lock-open')).toBe(false));
-      expect($lockOpenIcon.classList.contains('fa-lock')).toBe(true);
-    });
     test('Notification disabled icon click, should enable notification', async () => {
       // Given
       const $notificationEnabledIcon = document.querySelector('.settings__tabs .icon .fa-bell-slash');
@@ -275,7 +257,6 @@ describe('Settings in Browser test suite', () => {
       });
       test('expanded tab, should collapse tab', async () => {
         // Given
-        const dispatch = spyUseReducer.mock.results.reverse()[0].value[1];
         await dispatch({type: 'TOGGLE_TAB_EXPANDED', payload: '2'});
         const $collapseIcon = document.querySelector('.settings__tab[data-id="2"] .icon .fa-chevron-down');
         const $expandedTab = $collapseIcon.closest('.settings__tab');
@@ -286,6 +267,52 @@ describe('Settings in Browser test suite', () => {
         await waitFor(() =>
           expect($collapseIcon.classList.contains('fa-chevron-right')).toBe(true));
         expect($expandedTab.classList.contains('settings__tab--expanded')).toBe(false);
+      });
+      describe('Advanced settings', () => {
+        test('Disable checkbox click, enabled tab, should disable', async () => {
+          // Given
+          await dispatch({type: 'TOGGLE_TAB_EXPANDED', payload: '1'});
+          const $disableCheckBox = document.querySelector('.settings__tab-advanced .checkbox .fa-eye');
+          // When
+          fireEvent.click($disableCheckBox);
+          // Then
+          await waitFor(() =>
+            expect($disableCheckBox.classList.contains('fa-eye')).toBe(false));
+          expect($disableCheckBox.classList.contains('fa-eye-slash')).toBe(true);
+        });
+        test('Disable checkbox click, disabled tab, should enable', async () => {
+          // Given
+          await dispatch({type: 'TOGGLE_TAB_EXPANDED', payload: '2'});
+          const $disableCheckBox = document.querySelector('.settings__tab-advanced .checkbox .fa-eye-slash');
+          // When
+          fireEvent.click($disableCheckBox);
+          // Then
+          await waitFor(() =>
+            expect($disableCheckBox.classList.contains('fa-eye-slash')).toBe(false));
+          expect($disableCheckBox.classList.contains('fa-eye')).toBe(true);
+        });
+        test('Sandbox checkbox click, sandboxed session, should unlock', async () => {
+          // Given
+          await dispatch({type: 'TOGGLE_TAB_EXPANDED', payload: '1'});
+          const $lockCheckBox = document.querySelector('.settings__tab-advanced .checkbox .fa-lock');
+          // When
+          fireEvent.click($lockCheckBox);
+          // Then
+          await waitFor(() =>
+            expect($lockCheckBox.classList.contains('fa-lock')).toBe(false));
+          expect($lockCheckBox.classList.contains('fa-lock-open')).toBe(true);
+        });
+        test('Sandbox checkbox click, non-sandboxed session, should lock', async () => {
+          // Given
+          await dispatch({type: 'TOGGLE_TAB_EXPANDED', payload: '2'});
+          const $lockCheckBox = document.querySelector('.settings__tab-advanced .checkbox .fa-lock-open');
+          // When
+          fireEvent.click($lockCheckBox);
+          // Then
+          await waitFor(() =>
+            expect($lockCheckBox.classList.contains('fa-lock-open')).toBe(false));
+          expect($lockCheckBox.classList.contains('fa-lock')).toBe(true);
+        });
       });
     });
   });

@@ -27,6 +27,11 @@ body {
     user-select: none;
 }
 
+.control .checkbox .checkbox__icon {
+    width: calc(1em + var(--default-spacing));
+    text-align: center;
+}
+
 .settings__button.button {
     background: none;
     border-color: transparent;

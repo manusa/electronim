@@ -157,7 +157,7 @@ const SettingsButton = ({icon, disabled = false, title, onclick}) => (html`
 const ExpandButton = ({dispatch, id, expanded = false}) => {
   const properties = {
     icon: expanded ? 'fa-chevron-down' : 'fa-chevron-right',
-    title: expanded ? 'Collapse' : 'Expand',
+    title: expanded ? 'Collapse' : 'Expand (show advanced settings)',
     onclick: () => dispatch({type: ACTIONS.TOGGLE_TAB_EXPANDED, payload: id})
   };
   return html`
@@ -165,34 +165,38 @@ const ExpandButton = ({dispatch, id, expanded = false}) => {
   `;
 };
 
-const Checkbox = ({label, checked, value, onclick}) => (html`
+const Checkbox = ({label, title = '', icon, checked, value, onclick}) => (html`
   <div class='control'>
-    <label class='checkbox'>
-      <input type='checkbox' checked=${checked} value=${value} onclick=${onclick} />
-      ${label}
+    <label class='checkbox' title=${title}>
+      <input type='checkbox' checked=${checked} title=${title} value=${value} onclick=${onclick} />
+      ${icon && html`<i class='checkbox__icon fas ${icon}'></i>`} ${label} 
     </label>
   </div>
 `);
 
-const TabAdvancedSettings = ({dispatch, id, disabled = false}) => (html`
+const TabAdvancedSettings = (
+  {dispatch, id, disabled = false, sandboxed = false}
+) => (html`
   <div class="settings__tab-advanced container">
-    <${Checkbox} label="Disabled" checked=${disabled} value=${id}
+    <${Checkbox} label="Disable" checked=${disabled} value=${id}
+      icon=${disabled ? 'fa-eye-slash' : 'fa-eye'}
       onclick=${toggleTabProperty(dispatch, 'disabled', id)}
+    />
+    <${Checkbox} label="Sandbox" checked=${sandboxed} value=${id}
+      title='Use an isolated/sandboxed session for this tab'
+      icon=${sandboxed ? 'fa-lock' : 'fa-lock-open'}
+      onclick=${toggleTabProperty(dispatch, 'sandboxed', id)}
     />
   </div>
 `);
 
-const TabEntry = ({dispatch, id, expanded, url, sandboxed, disableNotifications, ...tab}) => (html`
+const TabEntry = ({dispatch, id, expanded, url, disableNotifications = false, ...tab}) => (html`
   <div class='settings__tab ${expanded && 'settings__tab--expanded'} panel-block' data-id=${id}>
     <div class='settings__tab-main'>
       <${ExpandButton} dispatch=${dispatch} id=${id} expanded=${expanded} />
       <div class='control'>
         <input type='text' readonly class='input' name='tabs' value='${url}' />
       </div>
-      <${SettingsButton} icon=${sandboxed ? 'fa-lock' : 'fa-lock-open'}
-        title='Use isolated session when lock is on'
-        onclick=${toggleTabProperty(dispatch, 'sandboxed', id)}
-      />
       <${SettingsButton} icon=${disableNotifications ? 'fa-bell-slash' : 'fa-bell'}
         title=${disableNotifications ? 'Notifications disabled. Click to enable' : 'Notifications enabled. Click to disable'}
         onclick=${toggleTabProperty(dispatch, 'disableNotifications', id)}
@@ -282,6 +286,7 @@ const Settings = () => {
           <div class="settings__global-notifications container">
             <${Checkbox}
               label="Disable notifications globally"
+              icon=${state.disableNotificationsGlobally ? 'fa-bell-slash' : 'fa-bell'}
               checked=${state.disableNotificationsGlobally}
               value=${state.disableNotificationsGlobally}
               onclick=${toggleNotifications}
