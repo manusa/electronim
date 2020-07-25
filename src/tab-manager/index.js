@@ -96,7 +96,9 @@ const addTabs = ipcSender => tabsMetadata => {
 
     tab.webContents.on('context-menu', handleContextMenu(tab));
 
-    tab.webContents.executeJavaScript(`window.tabId = '${id}';`);
+    const registerIdInTab = () => tab.webContents.executeJavaScript(`window.tabId = '${id}';`);
+    tab.webContents.on('dom-ready', registerIdInTab);
+    registerIdInTab();
 
     tabs[id.toString()] = tab;
   });
@@ -122,7 +124,10 @@ const reload = () => Object.values(tabs).forEach(browserView => browserView.webC
 const canNotify = tabId => {
   const {tabs: tabsSettings, disableNotificationsGlobally} = settings.loadSettings();
   const currentTab = tabsSettings.find(tab => tab.id === tabId);
-  return !(currentTab.disableNotifications || disableNotificationsGlobally);
+  if (disableNotificationsGlobally === true) {
+    return false;
+  }
+  return currentTab ? !currentTab.disableNotifications : true;
 };
 
 module.exports = {
