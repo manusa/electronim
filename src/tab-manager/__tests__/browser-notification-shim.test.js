@@ -1,16 +1,14 @@
 describe('Browser Notification Shim test suite', () => {
   let NativeNotification;
   let electron;
-  let mockedElectron;
   beforeEach(() => {
     jest.resetModules();
-    mockedElectron = {
+    jest.mock('electron', () => ({
       ipcRenderer: {
         send: jest.fn(),
         sendSync: jest.fn(() => true)
       }
-    };
-    jest.mock('electron', () => mockedElectron);
+    }));
     electron = require('electron');
     NativeNotification = jest.fn();
     NativeNotification.maxActions = jest.fn();
@@ -82,7 +80,7 @@ describe('Browser Notification Shim test suite', () => {
   describe('Notifications for this particular tab are disabled', () => {
     test('notification should not delegate, and should return empty object', () => {
       // Given
-      mockedElectron.ipcRenderer.sendSync = jest.fn(() => false);
+      electron.ipcRenderer.sendSync = jest.fn(() => false);
       require('../browser-notification-shim');
       // When
       const notification = new Notification();

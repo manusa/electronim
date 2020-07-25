@@ -89,12 +89,23 @@ describe('Settings module test suite', () => {
       // Given
       fs.existsSync.mockImplementationOnce(() => false);
       // When
-      settings.updateSettings({tabs: [{id: 1337}], otherSetting: '1337'});
+      settings.updateSettings({tabs: [{id: 1337}], activeTab: 1337, otherSetting: '1337'});
       // Then
       expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
       expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
         '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
-        '  "otherSetting": "1337"\n}');
+        '  "activeTab": 1337,\n  "otherSetting": "1337"\n}');
+    });
+    test('object and saved settings with activeTab removed, should update activeTab', () => {
+      // Given
+      fs.existsSync.mockImplementationOnce(() => false);
+      // When
+      settings.updateSettings({tabs: [{id: 1337}], activeTab: 31337});
+      // Then
+      expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
+      expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
+        '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
+        '  "activeTab": 1337\n}');
     });
   });
   describe('openSettingsDialog', () => {

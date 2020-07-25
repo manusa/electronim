@@ -315,7 +315,6 @@ describe('Main module test suite', () => {
     test('saveSettings, should reload settings and reset all views', () => {
       // Given
       mockBrowserWindow.removeBrowserView = jest.fn();
-      mockSettings = {activeTab: 42};
       mockTabContainer.destroy = jest.fn();
       main.init();
       // When
@@ -323,9 +322,6 @@ describe('Main module test suite', () => {
       // Then
       expect(spellCheckModule.loadDictionaries).toHaveBeenCalledTimes(2);
       expect(settingsModule.updateSettings).toHaveBeenCalledTimes(1);
-      expect(settingsModule.updateSettings).toHaveBeenCalledWith(
-        expect.objectContaining({activeTab: 1337})
-      );
       expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledTimes(1);
       expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledWith(settingsView);
       expect(tabManagerModule.removeAll).toHaveBeenCalledTimes(1);

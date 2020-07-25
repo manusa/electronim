@@ -107,12 +107,8 @@ const closeSettings = () => {
   settingsView.destroy();
 };
 
-const saveSettings = (event, {tabs, enabledDictionaries, disableNotificationsGlobally}) => {
-  let {activeTab} = loadSettings();
-  if (tabs.length > 0 && !tabs.some(tab => tab.id === activeTab)) {
-    activeTab = tabs[0].id;
-  }
-  updateSettings({tabs, enabledDictionaries: [...enabledDictionaries], activeTab, disableNotificationsGlobally});
+const saveSettings = (event, settings) => {
+  updateSettings(settings);
   loadDictionaries();
   const currentBrowserView = mainWindow.getBrowserView();
   mainWindow.removeBrowserView(currentBrowserView);

@@ -29,6 +29,17 @@ const webPreferences = {
 const appDir = path.join(HOME_DIR, APP_DIR);
 const settingsPath = path.join(appDir, SETTINGS_FILE);
 
+const containsTabId = settings => tabId =>
+  settings.tabs.map(({id}) => id).includes(tabId);
+
+const ensureActiveTab = settings => {
+  let {activeTab} = settings;
+  if (settings.tabs.length > 0 && !containsTabId(settings)(activeTab)) {
+    activeTab = settings.tabs[0].id;
+  }
+  return {...settings, activeTab};
+};
+
 const initAppDir = () => fs.mkdirSync(appDir, {recursive: true});
 
 const loadSettings = () => {
@@ -45,7 +56,8 @@ const writeSettings = settings => {
   fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
 };
 
-const updateSettings = settings => writeSettings({...loadSettings(), ...settings});
+const updateSettings = settings =>
+  writeSettings(ensureActiveTab({...loadSettings(), ...settings}));
 
 const openSettingsDialog = mainWindow => {
   const settingsView = new BrowserView({webPreferences});
