@@ -128,21 +128,32 @@ const browserVersionsReady = () => {
   tabContainer = initTabContainer(mainWindow);
 };
 
+const handleMainWindowResize = () => {
+  const [windowWidth, widnowHeight] = mainWindow.getSize();
+  updateSettings({width: windowWidth, height: widnowHeight});
+  const {width: contentWidth, height: contentHeight} = mainWindow.getContentBounds();
+  let totalHeight = 0;
+  const isLast = (idx, array) => idx === array.length - 1;
+  mainWindow.getBrowserViews().forEach((bv, idx, array) => {
+    const {x: currentX, y: currentY} = bv.getBounds();
+    let {height: currentHeight} = bv.getBounds();
+    if (isLast(idx, array)) {
+      currentHeight = contentHeight - totalHeight;
+    }
+    bv.setBounds({x: currentX, y: currentY, width: contentWidth, height: currentHeight});
+    totalHeight += currentHeight;
+  });
+};
+
 const init = () => {
   loadDictionaries();
   const {width = 800, height = 600} = loadSettings();
   mainWindow = new BrowserWindow({
-    width, height, resizable: true, maximizable: false, webPreferences
+    width, height, resizable: true, maximizable: true, webPreferences
   });
   mainWindow.removeMenu();
-  mainWindow.on('resize', () => {
-    const [currentWidth, currentHeight] = mainWindow.getSize();
-    updateSettings({width: currentWidth, height: currentHeight});
-  });
-  mainWindow.on('maximize', () => {
-    // Hack to resize window contents when window is maximized (resize event is not triggered)
-    setTimeout(activateTab, 50, tabManager.getActiveTab());
-  });
+  mainWindow.on('resize', handleMainWindowResize);
+  mainWindow.on('maximize', handleMainWindowResize);
   mainWindow.on('closed', () => app.quit());
   initTabListener();
   initSettingsListener();

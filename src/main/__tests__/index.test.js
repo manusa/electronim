@@ -93,22 +93,58 @@ describe('Main module test suite', () => {
     });
   });
   describe('mainWindow events', () => {
-    test('maximize, should activate current tab (Will force a BrowserView resize)', () => {
+    beforeEach(() => {
+      mockBrowserWindow.getSize = jest.fn(() => ([13, 37]));
+      mockBrowserWindow.getContentBounds = jest.fn(() => ({x: 0, y: 0, width: 10, height: 34}));
+    });
+    test('maximize, should set browserview to fit window and store new size in configuration file', () => {
       // Given
+      const singleView = {
+        getBounds: jest.fn(() => ({x: 0, y: 0, width: 1, height: 1})),
+        setBounds: jest.fn()
+      };
+      mockBrowserWindow.getBrowserViews = jest.fn(() => ([singleView]));
       main.init();
       // When
       mockBrowserWindow.listeners.maximize();
       // Then
-      expect(tabManagerModule.getActiveTab).toHaveBeenCalledTimes(1);
-    });
-    test('resize, should store new size in configuration file', () => {
-      // Given
-      mockBrowserWindow.getSize = jest.fn(() => ([13, 37]));
-      main.init();
-      // When
-      mockBrowserWindow.listeners.resize();
-      // Then
       expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
+      expect(singleView.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
+    });
+    describe('resize', () => {
+      test('single view, should set browserview to fit window and store new size in configuration file', () => {
+        // Given
+        const singleView = {
+          getBounds: jest.fn(() => ({x: 0, y: 0, width: 1, height: 1})),
+          setBounds: jest.fn()
+        };
+        mockBrowserWindow.getBrowserViews = jest.fn(() => ([singleView]));
+        main.init();
+        // When
+        mockBrowserWindow.listeners.resize();
+        // Then
+        expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
+        expect(singleView.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
+      });
+      test('multiple views, should set last browserview to fit window and store new size in configuration file', () => {
+        // Given
+        const topBar = {
+          getBounds: jest.fn(() => ({x: 0, y: 0, width: 1, height: 1})),
+          setBounds: jest.fn()
+        };
+        const content = {
+          getBounds: jest.fn(() => ({x: 1337, y: 1337, width: 1, height: 1})),
+          setBounds: jest.fn()
+        };
+        mockBrowserWindow.getBrowserViews = jest.fn(() => ([topBar, content]));
+        main.init();
+        // When
+        mockBrowserWindow.listeners.resize();
+        // Then
+        expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
+        expect(topBar.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 1});
+        expect(content.setBounds).toHaveBeenCalledWith({x: 1337, y: 1337, width: 10, height: 33});
+      });
     });
   });
   describe('initTabListener ipc events', () => {
