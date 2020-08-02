@@ -62,9 +62,8 @@ spell checking for free.
 
 - [Electron](https://electronjs.org/)
 - [Bulma](https://github.com/jgthms/bulma)
+- [Preact](https://github.com/preactjs/preact)
 - [Chrome tabs](https://github.com/adamschwartz/chrome-tabs#readme)
-- [Draggabilly](https://github.com/desandro/draggabilly)
 - [Font Awesome Free](https://github.com/FortAwesome/Font-Awesome)
 - [Nodehun](https://github.com/Wulf/nodehun/)
 - [Woorm's dictionary repo](https://github.com/wooorm/dictionaries)
-- [Preact](https://preactjs.com)

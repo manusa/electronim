@@ -78,7 +78,6 @@ const initTabListener = () => {
     if (tabs.length > 0) {
       const ipcSender = event.sender;
       tabManager.addTabs(ipcSender)(tabs);
-      ipcSender.send(APP_EVENTS.activateTab, {tabId: currentSettings.activeTab});
     } else {
       openSettingsDialog(mainWindow);
     }

@@ -62,7 +62,7 @@ describe('Settings module test suite', () => {
     test('settings exist, should load settings from file system and merge with defaults', () => {
       // Given
       fs.existsSync.mockImplementationOnce(() => true);
-      fs.readFileSync.mockImplementationOnce(() => '{"tabs": [{"id": "1"}], "otherSetting": 1337}');
+      fs.readFileSync.mockImplementationOnce(() => '{"tabs": [{"id": "1"}], "activeTab": "1", "otherSetting": 1337}');
       // When
       const result = settings.loadSettings();
       // Then
@@ -71,7 +71,18 @@ describe('Settings module test suite', () => {
       expect(fs.readFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'));
       expect(result.tabs).toEqual([{id: '1'}]);
       expect(result.enabledDictionaries).toEqual(['en-US']);
+      expect(result.activeTab).toBe('1');
       expect(result.otherSetting).toBe(1337);
+    });
+    test('settings exist disabled tab as active, should load settings from file and ensure active tab is enabled', () => {
+      // Given
+      fs.existsSync.mockImplementationOnce(() => true);
+      fs.readFileSync.mockImplementationOnce(() => '{"tabs": [{"id": "1", "disabled": true}, {"id": "2"}], "activeTab": "1"}');
+      // When
+      const result = settings.loadSettings();
+      // Then
+      expect(result.tabs).toEqual([{id: '1', disabled: true}, {id: '2'}]);
+      expect(result.activeTab).toBe('2');
     });
   });
   describe('updateSettings', () => {

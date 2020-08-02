@@ -29,13 +29,13 @@ const webPreferences = {
 const appDir = path.join(HOME_DIR, APP_DIR);
 const settingsPath = path.join(appDir, SETTINGS_FILE);
 
-const containsTabId = settings => tabId =>
-  settings.tabs.map(({id}) => id).includes(tabId);
+const containsTabId = tabs => tabId => tabs.map(({id}) => id).includes(tabId);
 
 const ensureActiveTab = settings => {
   let {activeTab} = settings;
-  if (settings.tabs.length > 0 && !containsTabId(settings)(activeTab)) {
-    activeTab = settings.tabs[0].id;
+  const enabledTabs = settings.tabs.filter(({disabled}) => !disabled);
+  if (enabledTabs.length > 0 && !containsTabId(enabledTabs)(activeTab)) {
+    activeTab = enabledTabs[0].id;
   }
   return {...settings, activeTab};
 };
@@ -48,7 +48,7 @@ const loadSettings = () => {
   if (fs.existsSync(settingsPath)) {
     loadedSettings = JSON.parse(fs.readFileSync(settingsPath));
   }
-  return Object.assign(DEFAULT_SETTINGS, loadedSettings);
+  return ensureActiveTab(Object.assign(DEFAULT_SETTINGS, loadedSettings));
 };
 
 const writeSettings = settings => {
