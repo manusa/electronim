@@ -37,6 +37,7 @@ const handleContextMenu = (mainWindow, browserView) => (event, params) => {
 
 const initTabContainer = mainWindow => {
   const tabContainer = new BrowserView({webPreferences});
+  tabContainer.isTabContainer = true;
   mainWindow.addBrowserView(tabContainer);
   tabContainer.setAutoResize({width: true, horizontal: true});
   tabContainer.webContents.loadURL(`file://${__dirname}/index.html`,

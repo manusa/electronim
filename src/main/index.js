@@ -29,15 +29,25 @@ const webPreferences = {
 let mainWindow;
 let tabContainer;
 
+const isNotTabContainer = bv => bv.isTabContainer !== true;
+
+const resetMainWindow = () => {
+  const currentViews = mainWindow.getBrowserViews();
+  currentViews.filter(isNotTabContainer).forEach(bv => mainWindow.removeBrowserView(bv));
+  if (mainWindow.getBrowserViews().length === 0) {
+    mainWindow.setBrowserView(tabContainer);
+  }
+};
+
 const activateTab = tabId => {
   const activeTab = tabManager.getTab(tabId);
   if (activeTab) {
     const {width, height} = mainWindow.getContentBounds();
-    mainWindow.setBrowserView(tabContainer);
+    resetMainWindow();
     mainWindow.addBrowserView(activeTab);
-    tabManager.setActiveTab(tabId);
     tabContainer.setBounds({x: 0, y: 0, width, height: TABS_CONTAINER_HEIGHT});
     activeTab.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
+    tabManager.setActiveTab(tabId);
     activeTab.webContents.focus();
   }
 };

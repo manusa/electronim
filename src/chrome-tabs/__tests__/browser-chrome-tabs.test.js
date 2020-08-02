@@ -135,11 +135,17 @@ describe('ChromeTabs in Browser test suite', () => {
         }
       });
     });
-    test('click, should request tab activation', () => {
+    test('click, on inactive tab, should request tab activation', () => {
+      // When
+      fireEvent.click($chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"'));
+      // Then
+      expect(mockIpcRenderer.send).toHaveBeenNthCalledWith(3, 'activateTab', {id: 313373});
+    });
+    test('click, on active tab, should do nothing', () => {
       // When
       fireEvent.click($chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"'));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('activateTab', {id: 1337});
+      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(2);
     });
     test('dragOver, should invoke preventDefault to allow drop', () => {
       // Given
