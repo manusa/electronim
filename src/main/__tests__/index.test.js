@@ -190,6 +190,7 @@ describe('Main module test suite', () => {
           webContents: {focus: jest.fn()}
         };
         mockTabContainer.setBounds = jest.fn();
+        mockBrowserWindow.getBrowserViews = jest.fn(() => ([]));
         mockBrowserWindow.setBrowserView = jest.fn();
         mockBrowserWindow.addBrowserView = jest.fn();
         tabManagerModule.getTab = jest.fn(id => (id === 'validId' ? activeTab : null));

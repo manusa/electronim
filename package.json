@@ -172,7 +172,7 @@
     "dictionary-sv": "^3.0.1",
     "dictionary-tr": "^1.3.3",
     "dictionary-uk": "^2.1.1",
-    "electron": "^9.1.0",
+    "electron": "^9.1.2",
     "htm": "^3.0.4",
     "nodehun": "^3.0.1",
     "preact": "^10.4.5"

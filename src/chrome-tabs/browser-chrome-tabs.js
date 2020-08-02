@@ -128,8 +128,10 @@ const isInVisibleArea = event =>
 
 const Tab = ({dispatch, numberOfTabs, idx, id, active, favicon, offsetX = 0, title, url, width}) => {
   const tabClick = () => {
-    sendActivateTab(id);
-    dispatchActivateTab(dispatch)(id);
+    if (active !== true) {
+      sendActivateTab(id);
+      dispatchActivateTab(dispatch)(id);
+    }
   };
   const [draggedId, setDraggedId] = useState(id);
   const [originX, setOriginX] = useState(0);
