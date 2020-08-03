@@ -123,7 +123,7 @@ const tabStyle = (width, idx, offsetX) =>
   `left: ${offsetX}px`;
 
 const isInVisibleArea = event =>
-  event.clientX >= 0 && event.clientY >= 0 &&
+  event.clientX > 0 && event.clientY > 0 &&
   event.clientX <= window.innerWidth && event.clientY <= window.innerHeight;
 
 const Tab = ({dispatch, numberOfTabs, idx, id, active, favicon, offsetX = 0, title, url, width}) => {

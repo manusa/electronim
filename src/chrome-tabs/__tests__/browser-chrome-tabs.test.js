@@ -137,13 +137,13 @@ describe('ChromeTabs in Browser test suite', () => {
     });
     test('click, on inactive tab, should request tab activation', () => {
       // When
-      fireEvent.click($chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"'));
+      fireEvent.click($chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"]'));
       // Then
       expect(mockIpcRenderer.send).toHaveBeenNthCalledWith(3, 'activateTab', {id: 313373});
     });
     test('click, on active tab, should do nothing', () => {
       // When
-      fireEvent.click($chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"'));
+      fireEvent.click($chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"]'));
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(2);
     });
@@ -158,7 +158,7 @@ describe('ChromeTabs in Browser test suite', () => {
     });
     test('dragStart, should activate tab and set initial drag values', () => {
       // Given
-      const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"');
+      const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"]');
       const event = new MouseEvent('dragstart', {
         clientX: 100, clientY: 0});
       Object.defineProperty(event, 'dataTransfer', {value: {
@@ -172,19 +172,19 @@ describe('ChromeTabs in Browser test suite', () => {
     });
     test('drag, same position, should keep positions moving current tab left', async () => {
       // Given
-      const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"');
-      const event = new MouseEvent('drag', {clientX: 100, clientY: 0});
+      const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"]');
+      const event = new MouseEvent('drag', {clientX: 100, clientY: 1});
       // When
       fireEvent($tab, event);
       // Then
       await waitFor(() =>
-        expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"').style.left).toBe('100px'));
+        expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"]').style.left).toBe('100px'));
       expect($chromeTabs.querySelectorAll('.chrome-tab')[0].dataset.tabId).toBe('1337');
     });
     test('drag, one position right, should switch positions in array', async () => {
       // Given
-      const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"');
-      const event = new MouseEvent('drag', {clientX: 200, clientY: 0});
+      const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"]');
+      const event = new MouseEvent('drag', {clientX: 200, clientY: 1});
       // When
       fireEvent($tab, event);
       // Then
@@ -196,7 +196,7 @@ describe('ChromeTabs in Browser test suite', () => {
     });
     test('drag, one position right out of window, should leave tabs as before drag started', async () => {
       // Given
-      const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"');
+      const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"]');
       const event = new MouseEvent('drag', {clientX: 200, clientY: -100});
       // When
       fireEvent($tab, event);
