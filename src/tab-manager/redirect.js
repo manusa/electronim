@@ -23,7 +23,8 @@ const isOAuth = matchUrls([
   /^https:\/\/.+\.google\.com\/accounts\/signin.*/, // NOSONAR
   /^https:\/\/.+\.google\.com\/signin\/oauth.*/, // NOSONAR
   /^https:\/\/accounts\.google\.com\/.*/, // NOSONAR
-  /^https:\/\/(.+\.)?github\.com\/login\/oauth.*/ // NOSONAR
+  /^https:\/\/(.+\.)?github\.com\/login\/oauth.*/, // NOSONAR
+  /^https:\/\/auth\.redhat\.com\/auth\/.*/ // NOSONAR
 ]);
 
 const isSameOrigin = (browserViewUrl, url) => url.origin === browserViewUrl.origin;

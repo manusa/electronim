@@ -71,5 +71,16 @@ describe('Tab Manager Redirect module test suite', () => {
         expect(result).toBe(false);
       });
     });
+    describe('Red Hat OAuth', () => {
+      test('From Slack to OAuth, should return false', () => {
+        // Given
+        mockBrowserViewUrl = 'https://alex.slack.com';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockBrowserView,
+          new URL('https://auth.redhat.com/auth/realms/EmployeeIDP/login-actions/authenticate?execution=1337'));
+        // Then
+        expect(result).toBe(false);
+      });
+    });
   });
 });
