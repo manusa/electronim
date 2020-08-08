@@ -32,13 +32,16 @@ elecronim
 
 ## Features
 
-- Multi-platform: ElectronIM is available for Linux, Mac and Windows.
-- Desktop notifications: ElectronIM will notify you using your native system notifications.
+- ⚛️Multi-platform: ElectronIM is available for Linux 🐧, Mac 🍏 and Windows.
+- 🔔 Desktop notifications: ElectronIM will notify you using your native system notifications.
 - Spellchecker: ElectronIM contains spellchecker dictionaries for many languages,
   if your language is not supported, just [file an issue](https://github.com/manusa/electronim/issues/new).
 - Supports any web based IM solution
 - Drag-and-drop tab reordering
-- Configurable context for tabs (Isolated/sandboxed or shared)
+- 🔒 Configurable context for tabs (Isolated/sandboxed or shared)
+- 🔕 Notifications can be disabled for individual Applications
+- 💤 Notifications can be disabled globally (Do not disturb)
+- ⌨️Keyboard [shortcuts](docs/Keyboard-shortcuts.md)
 
 ## [Screenshot](docs/Screenshots.md)
 
