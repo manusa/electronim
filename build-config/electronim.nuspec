@@ -40,5 +40,7 @@ Check the GitHub repository (https://github.com/manusa/electronim) for documenta
   <files>
     <file src="..\dist\electronim-win-x64.zip" target="lib\electronim-win-x64.zip" />
     <file src=".\chocolateyInstall.ps1" target="lib\chocolateyInstall.ps1" />
+    <file src=".\VERIFICATION.txt" target="VERIFICATION.txt" />
+    <file src="..\LICENSE" target="LICENSE.txt" />
   </files>
 </package>
