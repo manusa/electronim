@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Do not remove this test for UTF-8: if “Ω” doesn’t appear as greek uppercase omega letter enclosed in quotation marks, you should use an editor that supports UTF-8, not this one. -->
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>electronim</id>
+    <version>0.0.0</version>
+    <title>ElectronIM</title>
+    <authors>Marc Nuri</authors>
+    <projectUrl>https://github.com/manusa/electronim</projectUrl>
+    <copyright>2020 Marc Nuri</copyright>
+    <licenseUrl>https://github.com/manusa/electronim/blob/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/manusa/electronim</projectSourceUrl>
+    <packageSourceUrl>https://github.com/manusa/electronim/tree/master/build-config</packageSourceUrl>
+    <docsUrl>https://github.com/manusa/electronim/blob/master/README.md</docsUrl>
+    <bugTrackerUrl>https://github.com/manusa/electronim/issues</bugTrackerUrl>
+    <tags>instant-messaging electron multiplatform im multi-platform</tags>
+    <summary>Electron based multi IM (Instant Messaging) client - Improve your productivity by combining all your instant messaging applications (or whatever you want) into a single browser (Electron) window.</summary>
+    <description>
+## Free/Libre open source Electron based multi instant messaging (IM) client.
+
+Improve your productivity by combining all your instant messaging applications (or whatever you want) into a single browser (Electron) window.
+
+### Features
+
+- ⚛ Multi-platform: ElectronIM is available for Linux 🐧, Mac 🍏 and Windows.
+- 🔔 Desktop notifications: ElectronIM will notify you using your native system notifications.
+- Spellchecker: ElectronIM contains spellchecker dictionaries for many languages, if your language is not supported, just [file an issue](https://github.com/manusa/electronim/issues/new).
+- Supports any web based IM solution
+- Drag-and-drop tab reordering
+- 🔒 Configurable context for tabs (Isolated/sandboxed or shared)
+- 🔕 Notifications can be disabled for individual Applications
+- 💤 Notifications can be disabled globally (Do not disturb)
+- ⌨ Keyboard [shortcuts](docs/Keyboard-shortcuts.md)
+- Drag-and-drop tab reordering
+
+Check the GitHub repository (https://github.com/manusa/electronim) for documentation and source code.
+    </description>
+  </metadata>
+  <files>
+    <file src="..\dist\electronim-win-x64.zip" target="lib\electronim-win-x64.zip" />
+    <file src=".\chocolateyInstall.ps1" target="lib\chocolateyInstall.ps1" />
+  </files>
+</package>

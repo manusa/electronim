@@ -99,3 +99,9 @@ jobs:
         run: |
           node .\utils\prepare-electron-builder.js
           npm run build:win
+      - name: Choco Script tests
+        run: |
+          powershell
+          choco pack --version=$(node -p "require('./package').version") build-config/electronim.nuspec
+          choco install electronim -dvy -s .
+

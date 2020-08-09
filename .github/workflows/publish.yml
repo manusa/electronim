@@ -76,27 +76,3 @@ jobs:
         run: ./utils/upload-artifact.js electronim-mac.dmg application/octet-stream
       - name: Upload tar.gz
         run: ./utils/upload-artifact.js electronim-mac.tar.gz application/tar+gzip
-  windows:
-    name: Windows Artifact
-    runs-on: windows-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2.0.0
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: '13.x'
-      - name: Install
-        run: npm install
-      - name: Change Package version
-        run: node .\utils\version-from-tag.js
-      - name: Prepare Electron Builder
-        run: node .\utils\prepare-electron-builder.js
-      - name: Build Windows
-        run: npm run build:win
-      - name: Upload zip
-        run: node .\utils\upload-artifact.js electronim-win-x64.zip application/zip
-      - name: Upload Portable exe
-        run: node .\utils\upload-artifact.js electronim-win.exe application/octet-stream
