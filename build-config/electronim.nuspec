@@ -31,7 +31,7 @@ Improve your productivity by combining all your instant messaging applications (
 - 🔒 Configurable context for tabs (Isolated/sandboxed or shared)
 - 🔕 Notifications can be disabled for individual Applications
 - 💤 Notifications can be disabled globally (Do not disturb)
-- ⌨ Keyboard [shortcuts](docs/Keyboard-shortcuts.md)
+- ⌨ Keyboard [shortcuts](https://github.com/manusa/electronim/blob/master/docs/Keyboard-shortcuts.md)
 - Drag-and-drop tab reordering
 
 Check the GitHub repository (https://github.com/manusa/electronim) for documentation and source code.
