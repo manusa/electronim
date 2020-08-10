@@ -138,8 +138,8 @@ const browserVersionsReady = () => {
 };
 
 const handleMainWindowResize = () => {
-  const [windowWidth, widnowHeight] = mainWindow.getSize();
-  updateSettings({width: windowWidth, height: widnowHeight});
+  const [windowWidth, windowHeight] = mainWindow.getSize();
+  updateSettings({width: windowWidth, height: windowHeight});
   const {width: contentWidth, height: contentHeight} = mainWindow.getContentBounds();
   let totalHeight = 0;
   const isLast = (idx, array) => idx === array.length - 1;
