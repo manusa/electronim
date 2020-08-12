@@ -140,7 +140,7 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/dom": "^7.20.0",
+    "@testing-library/dom": "^7.22.1",
     "electron-builder": "^22.7.0",
     "electron-packager": "^15.0.0",
     "eslint": "^7.4.0",
