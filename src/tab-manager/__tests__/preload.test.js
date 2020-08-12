@@ -27,6 +27,7 @@ describe('Tab Manager Module preload test suite', () => {
     });
     jest.mock('electron', () => mockElectron);
     jest.mock('../browser-keyboard-shortcuts', () => mockKeyboardShortcuts);
+    jest.mock('../browser-mediadevices-shim', () => ({}));
     jest.mock('../browser-notification-shim', () => ({}));
     jest.mock('../browser-spell-check', () => mockSpellCheck);
   });
