@@ -63,6 +63,13 @@ const Style = () => html`
       background: rgba(30,30,30,.75);
       color: #fff;
       z-index: 999999;
+    }
+    .${ROOT_CLASS} .${ROOT_CLASS}__overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -143,12 +150,14 @@ const Container = ({resolve, reject}) => {
   };
   return html`
     <${Style}/>
-    <div class="${ROOT_CLASS}__sources" onclick=${cancel}>
-      <${NoSourcesFound} sources=${sources}/>
-      <${LoadingSources} sources=${sources}/>
-      ${sources !== null && sources.map(source => (html`
-        <${Source} resolve=${resolve} ...${source} />
-      `))}
+    <div class="${ROOT_CLASS}__overlay" onclick=${cancel}>
+      <div class="${ROOT_CLASS}__sources" >
+        <${NoSourcesFound} sources=${sources}/>
+        <${LoadingSources} sources=${sources}/>
+        ${sources !== null && sources.map(source => (html`
+          <${Source} resolve=${resolve} ...${source} />
+        `))}
+      </div>
     </div>
   `;
 };

@@ -97,13 +97,27 @@ describe('Browser mediaDevices shim test suite', () => {
       expect(preact.render).toHaveBeenCalledTimes(2);
       await expect(promise).resolves.toBe('313373');
     });
-    test('cancel, should remove selector and do nothing', async () => {
+    test('click on sources, should cancel: remove selector and do nothing', async () => {
       // Given
       const promise = window.navigator.mediaDevices.getDisplayMedia();
       await waitFor(() =>
         expect(document.querySelector('.electron-desktop-capturer-root__sources')).not.toBeNull());
       // When
       fireEvent.click(document.querySelector('.electron-desktop-capturer-root__sources'));
+      // Then
+      await waitFor(() =>
+        expect(document.querySelector('.electron-desktop-capturer-root__sources')).toBeNull());
+      expect(window.navigator.mediaDevices.getUserMedia).not.toHaveBeenCalled();
+      expect(preact.render).toHaveBeenCalledTimes(2);
+      await expect(promise).rejects.toEqual(new Error('Screen share aborted by user'));
+    });
+    test('click on overlay, should cancel: remove selector and do nothing', async () => {
+      // Given
+      const promise = window.navigator.mediaDevices.getDisplayMedia();
+      await waitFor(() =>
+        expect(document.querySelector('.electron-desktop-capturer-root__sources')).not.toBeNull());
+      // When
+      fireEvent.click(document.querySelector('.electron-desktop-capturer-root__overlay'));
       // Then
       await waitFor(() =>
         expect(document.querySelector('.electron-desktop-capturer-root__sources')).toBeNull());
