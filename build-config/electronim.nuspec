@@ -25,14 +25,16 @@ Improve your productivity by combining all your instant messaging applications (
 
 - ⚛ Multi-platform: ElectronIM is available for Linux 🐧, Mac 🍏 and Windows.
 - 🔔 Desktop notifications: ElectronIM will notify you using your native system notifications.
-- Spellchecker: ElectronIM contains spellchecker dictionaries for many languages, if your language is not supported, just [file an issue](https://github.com/manusa/electronim/issues/new).
+- Spellchecker: ElectronIM contains spellchecker dictionaries for many languages,
+  if your language is not supported, just [file an issue](https://github.com/manusa/electronim/issues/new).
 - Supports any web based IM solution
 - Drag-and-drop tab reordering
-- 🔒 Configurable context for tabs (Isolated/sandboxed or shared)
+- 🔒 Configurable context for tabs (Isolated/sandboxed or shared). i.e. You can have multiple
+  tabs/instances of the same service/web application if the context is sandboxed.
 - 🔕 Notifications can be disabled for individual Applications
 - 💤 Notifications can be disabled globally (Do not disturb)
 - ⌨ Keyboard [shortcuts](https://github.com/manusa/electronim/blob/master/docs/Keyboard-shortcuts.md)
-- Drag-and-drop tab reordering
+- 🖥️ Screen sharing
 
 Check the GitHub repository (https://github.com/manusa/electronim) for documentation and source code.
     </description>

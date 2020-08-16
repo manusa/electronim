@@ -14,7 +14,7 @@
 
 ### Electron
 
-- [ ] Screen sharing [#12](https://github.com/manusa/electronim/issues/12)
+- [x] Screen sharing [#12](https://github.com/manusa/electronim/issues/12)
 - [x] Disable individual applications [#5](https://github.com/manusa/electronim/issues/5)
 
 ### NFR

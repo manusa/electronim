@@ -38,10 +38,12 @@ elecronim
   if your language is not supported, just [file an issue](https://github.com/manusa/electronim/issues/new).
 - Supports any web based IM solution
 - Drag-and-drop tab reordering
-- 🔒 Configurable context for tabs (Isolated/sandboxed or shared)
+- 🔒 Configurable context for tabs (Isolated/sandboxed or shared). i.e. You can have multiple
+  tabs/instances of the same service/web application if the context is sandboxed.
 - 🔕 Notifications can be disabled for individual Applications
 - 💤 Notifications can be disabled globally (Do not disturb)
 - ⌨ Keyboard [shortcuts](docs/Keyboard-shortcuts.md)
+- 🖥️ Screen sharing
 
 ## [Screenshot](docs/Screenshots.md)
 
