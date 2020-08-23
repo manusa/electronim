@@ -56,14 +56,12 @@ const Toolbar = () => {
 `;
 };
 
-const Help = () => {
-  return html`
+const Help = () => html`
     <div class="help-content">
       <${Toc} />
       <${Content} />
     </div>
     <${Toolbar} />
   `;
-};
 
 render(html`<${Help} />`, helpRoot());

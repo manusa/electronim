@@ -16,12 +16,20 @@
 const path = require('path');
 const DOCS_DIR = path.resolve(__dirname, '../../../docs');
 describe('Help module test suite', () => {
+  let mockBrowserView;
   let help;
   beforeEach(() => {
+    mockBrowserView = {
+      loadURL: jest.fn()
+    };
+    jest.resetModules();
+    jest.mock('electron', () => ({
+      BrowserView: jest.fn(() => mockBrowserView)
+    }));
     help = require('../');
   });
-  describe('fixRelative', () => {
-    test('Complex', () => {
+  describe('fixRelativeUrls', () => {
+    test('Combination of absolute and relative paths', () => {
       // Given
       const input = `
         <img src\t   =  'relativePath'/>
@@ -29,7 +37,7 @@ describe('Help module test suite', () => {
         <a href="http://test/some-path" />
       `;
       // When
-      const result = help.fixRelative(input);
+      const result = help.fixRelativeUrls(input);
       // Then
       expect(result).toBe(`
         <img src	   =  '${DOCS_DIR}/relativePath'/>
@@ -37,6 +45,29 @@ describe('Help module test suite', () => {
         <a href="http://test/some-path" />
       `);
     });
+  });
+  test('loadDocs, should load object with documentation', () => {
+    // When
+    const docs = help.loadDocs();
+    // Then
+    expect(Object.keys(docs)).toContain('Setup.md');
+    expect(docs['Setup.md']).toMatch(/There are several options available/i);
+  });
+  test('openHelpDialog, should open dialog and add event listeners', () => {
+    // Given
+    mockBrowserView.setBounds = jest.fn();
+    mockBrowserView.setAutoResize = jest.fn();
+    mockBrowserView.webContents = {loadURL: jest.fn(), on: jest.fn()};
+    const mainWindow = {
+      getContentBounds: jest.fn(() => ({width: 13, height: 37})),
+      setBrowserView: jest.fn()
+    };
+    // When
+    help.openHelpDialog(mainWindow)();
+    // Then
+    expect(mockBrowserView.webContents.loadURL).toHaveBeenCalledTimes(1);
+    expect(mockBrowserView.webContents.loadURL).toHaveBeenCalledWith(expect.stringMatching(/.+?\/index.html$/));
+    expect(mockBrowserView.webContents.on).toHaveBeenCalledWith('will-navigate', expect.any(Function));
   });
 });
 

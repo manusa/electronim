@@ -27,7 +27,7 @@ const webPreferences = {
 };
 
 // Visible for testing
-const fixRelative = s => s.replace(
+const fixRelativeUrls = s => s.replace(
   /((src|href)\s*?=\s*?['"](?!http))([^'"]+)(['"])/gi,
   `$1${DOCS_DIR}/$3$4`
 );
@@ -35,7 +35,7 @@ const fixRelative = s => s.replace(
 const loadDocs = () => fs.readdirSync(DOCS_DIR)
   .filter(fileName => fileName.endsWith('.md'))
   .reduce((acc, fileName) => {
-    acc[fileName] = fixRelative(md.render(fs.readFileSync(path.resolve(DOCS_DIR, fileName), 'utf8')));
+    acc[fileName] = fixRelativeUrls(md.render(fs.readFileSync(path.resolve(DOCS_DIR, fileName), 'utf8')));
     return acc;
   }, {});
 
@@ -47,7 +47,6 @@ const openHelpDialog = mainWindow => () => {
   helpView.webContents.on('will-navigate', handleRedirectForCurrentUrl);
   helpView.webContents.on('new-window', handleRedirectForCurrentUrl);
   showDialog(mainWindow, helpView);
-  helpView.webContents.openDevTools();
 };
 
-module.exports = {fixRelative, openHelpDialog, loadDocs};
+module.exports = {fixRelativeUrls, openHelpDialog, loadDocs};

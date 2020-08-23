@@ -132,11 +132,6 @@ describe('Settings module test suite', () => {
       // When
       settings.openSettingsDialog(mainWindow);
       // Then
-      expect(mockBrowserView.setBounds).toHaveBeenCalledTimes(1);
-      expect(mockBrowserView.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 13, height: 37});
-      expect(mockBrowserView.setAutoResize).toHaveBeenCalledTimes(1);
-      expect(mockBrowserView.setAutoResize)
-        .toHaveBeenCalledWith({width: true, horizontal: true, height: true, vertical: true});
       expect(mockBrowserView.webContents.loadURL).toHaveBeenCalledTimes(1);
       expect(mockBrowserView.webContents.loadURL).toHaveBeenCalledWith(expect.stringMatching(/.+?\/index.html$/));
     });
