@@ -17,8 +17,8 @@ const {app, BrowserView, Menu, MenuItem, session} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const settings = require('../settings');
 const {contextMenuHandler} = require('../spell-check');
-const {handleRedirect} = require('./redirect');
 const {userAgentForView} = require('../user-agent');
+const {handleRedirect} = require('./redirect');
 
 let activeTab = null;
 const tabs = {};

@@ -343,7 +343,7 @@ describe('Main module test suite', () => {
       expect(settingsModule.openSettingsDialog).toHaveBeenCalledTimes(1);
     });
   });
-  describe('initSettingsListener ipc events', () => {
+  describe('initDialogListeners ipc events', () => {
     let settingsView;
     beforeEach(() => {
       settingsView = {destroy: jest.fn()};
@@ -365,11 +365,11 @@ describe('Main module test suite', () => {
       expect(settingsView.destroy).toHaveBeenCalledTimes(1);
       expect(mockTabContainer.destroy).toHaveBeenCalledTimes(1);
     });
-    test('closeSettings, should destroy settings view and activate current tab', () => {
+    test('closeDialog, should destroy dialog view and activate current tab', () => {
       // Given
       main.init();
       // When
-      mockIpc.listeners.settingsCancel();
+      mockIpc.listeners.closeDialog();
       // Then
       expect(settingsModule.updateSettings).not.toHaveBeenCalled();
       expect(tabManagerModule.getActiveTab).toHaveBeenCalledTimes(1);

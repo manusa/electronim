@@ -14,6 +14,7 @@
    limitations under the License.
  */
 const {BrowserView, Menu, MenuItem} = require('electron');
+const {openHelpDialog} = require('../help');
 const {openSettingsDialog} = require('../settings');
 
 const TABS_CONTAINER_HEIGHT = 46;
@@ -27,6 +28,7 @@ const handleContextMenu = (mainWindow, browserView) => (event, params) => {
   const {webContents} = browserView;
   const menu = new Menu();
   menu.append(new MenuItem({label: 'Settings', click: () => openSettingsDialog(mainWindow)}));
+  menu.append(new MenuItem({label: 'Help', click: openHelpDialog(mainWindow)}));
   menu.append(new MenuItem({
     label: 'DevTools',
     click: () => webContents.openDevTools({mode: 'detach', activate: true})

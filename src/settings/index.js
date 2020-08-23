@@ -17,6 +17,8 @@ const {BrowserView} = require('electron');
 const fs = require('fs');
 const path = require('path');
 const HOME_DIR = require('os').homedir();
+const {showDialog} = require('../browser-window');
+
 const APP_DIR = '.electronim';
 const SETTINGS_FILE = 'settings.json';
 const DEFAULT_SETTINGS = {tabs: [], enabledDictionaries: ['en-US']};
@@ -61,11 +63,8 @@ const updateSettings = settings =>
 
 const openSettingsDialog = mainWindow => {
   const settingsView = new BrowserView({webPreferences});
-  mainWindow.setBrowserView(settingsView);
-  const {width, height} = mainWindow.getContentBounds();
-  settingsView.setBounds({x: 0, y: 0, width, height});
-  settingsView.setAutoResize({width: true, horizontal: true, height: true, vertical: true});
   settingsView.webContents.loadURL(`file://${__dirname}/index.html`);
+  showDialog(mainWindow, settingsView);
 };
 
 module.exports = {loadSettings, updateSettings, openSettingsDialog};

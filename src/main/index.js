@@ -110,7 +110,7 @@ const initTabListener = () => {
   ipc.on(APP_EVENTS.zoomReset, handleZoomReset);
 };
 
-const closeSettings = () => {
+const closeDialog = () => {
   const settingsView = mainWindow.getBrowserView();
   activateTab(tabManager.getActiveTab());
   settingsView.destroy();
@@ -127,9 +127,9 @@ const saveSettings = (event, settings) => {
   viewsToDestroy.forEach(view => view.destroy());
 };
 
-const initSettingsListener = () => {
+const initDialogListeners = () => {
   ipc.on(APP_EVENTS.settingsSave, saveSettings);
-  ipc.on(APP_EVENTS.settingsCancel, closeSettings);
+  ipc.on(APP_EVENTS.closeDialog, closeDialog);
 };
 
 const browserVersionsReady = () => {
@@ -165,7 +165,7 @@ const init = () => {
   mainWindow.on('maximize', handleMainWindowResize);
   mainWindow.on('closed', () => app.quit());
   initTabListener();
-  initSettingsListener();
+  initDialogListeners();
   initBrowserVersions()
     .then(browserVersionsReady)
     .catch(() => {

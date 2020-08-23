@@ -73,9 +73,9 @@ describe('Settings in Browser test suite', () => {
           disableNotificationsGlobally: false
         });
     });
-    test('Cancel should send cancel event', () => {
+    test('Cancel should send close dialog event', () => {
       // Given
-      window.APP_EVENTS = {settingsCancel: 'Cancel my settings'};
+      window.APP_EVENTS = {closeDialog: 'Cancel my settings'};
       // When
       fireEvent.click(document.querySelector('.settings__cancel'));
       // Then
