@@ -13,26 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const APP_EVENTS = {
-  activateTab: 'activateTab',
-  activateTabInContainer: 'activateTabInContainer',
-  addTabs: 'addTabs',
-  closeDialog: 'closeDialog',
-  dictionaryGetMisspelled: 'dictionaryGetMisspelled',
-  notificationClick: 'notificationClick',
-  reload: 'reload',
-  settingsOpenDialog: 'settingsOpenDialog',
-  settingsSave: 'settingsSave',
-  setTabFavicon: 'setTabFavicon',
-  setTabTitle: 'setTabTitle',
-  canNotify: 'canNotify',
-  tabsReady: 'tabsReady',
-  tabReorder: 'tabReorder',
-  zoomIn: 'zoomIn',
-  zoomOut: 'zoomOut',
-  zoomReset: 'zoomReset'
-};
+require('../main/preload');
+window.preact = require('preact');
+window.preactHooks = require('preact/hooks');
+window.htm = require('htm');
 
-module.exports = {
-  APP_EVENTS
-};
+window.docs = require('./').loadDocs();

@@ -13,26 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const APP_EVENTS = {
-  activateTab: 'activateTab',
-  activateTabInContainer: 'activateTabInContainer',
-  addTabs: 'addTabs',
-  closeDialog: 'closeDialog',
-  dictionaryGetMisspelled: 'dictionaryGetMisspelled',
-  notificationClick: 'notificationClick',
-  reload: 'reload',
-  settingsOpenDialog: 'settingsOpenDialog',
-  settingsSave: 'settingsSave',
-  setTabFavicon: 'setTabFavicon',
-  setTabTitle: 'setTabTitle',
-  canNotify: 'canNotify',
-  tabsReady: 'tabsReady',
-  tabReorder: 'tabReorder',
-  zoomIn: 'zoomIn',
-  zoomOut: 'zoomOut',
-  zoomReset: 'zoomReset'
+const showDialog = (window, browserView) => {
+  window.setBrowserView(browserView);
+  const {width, height} = window.getContentBounds();
+  browserView.setBounds({x: 0, y: 0, width, height});
+  browserView.setAutoResize({width: true, horizontal: true, height: true, vertical: true});
 };
 
-module.exports = {
-  APP_EVENTS
-};
+module.exports = {showDialog};

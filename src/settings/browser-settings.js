@@ -238,7 +238,7 @@ const Settings = () => {
     enabledDictionaries,
     disableNotificationsGlobally: state.disableNotificationsGlobally
   });
-  const cancel = () => ipcRenderer.send(APP_EVENTS.settingsCancel);
+  const cancel = () => ipcRenderer.send(APP_EVENTS.closeDialog);
   return html`
   <h1 class="title">Settings</h1>
   <div class="container">
