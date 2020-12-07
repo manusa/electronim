@@ -115,7 +115,7 @@ const setActiveTab = tabId => {
 };
 
 const removeAll = () => {
-  Object.values(tabs).forEach(browserView => browserView.destroy());
+  Object.values(tabs).forEach(browserView => browserView.webContents.destroy());
   Object.keys(tabs).forEach(key => delete tabs[key]);
 };
 

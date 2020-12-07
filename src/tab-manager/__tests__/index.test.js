@@ -27,7 +27,8 @@ describe('Tab Manager module test suite', () => {
         executeJavaScript: jest.fn(),
         on: jest.fn(),
         loadURL: jest.fn(),
-        userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36'
+        userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36',
+        destroy: jest.fn()
       }
     };
     mockMenu = {};
@@ -228,21 +229,18 @@ describe('Tab Manager module test suite', () => {
   });
   describe('removeAll', () => {
     test('No tabs, should do nothing', () => {
-      // Given
-      mockBrowserView.destroy = jest.fn();
       // When
       tabManager.removeAll();
       // Then
-      expect(mockBrowserView.destroy).not.toHaveBeenCalled();
+      expect(mockBrowserView.webContents.destroy).not.toHaveBeenCalled();
     });
     test('Existing tabs, should delete all tabs entries and destroy their BrowserView', () => {
       // Given
-      mockBrowserView.destroy = jest.fn();
       tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // When
       tabManager.removeAll();
       // Then
-      expect(mockBrowserView.destroy).toHaveBeenCalledTimes(1);
+      expect(mockBrowserView.webContents.destroy).toHaveBeenCalledTimes(1);
     });
   });
   describe('canNotify', () => {

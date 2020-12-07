@@ -120,7 +120,7 @@ describe('Settings module test suite', () => {
     });
   });
   describe('openSettingsDialog', () => {
-    test('', () => {
+    test('should load settings URL', () => {
       // Given
       mockBrowserView.setBounds = jest.fn();
       mockBrowserView.setAutoResize = jest.fn();

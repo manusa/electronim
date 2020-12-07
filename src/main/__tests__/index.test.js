@@ -346,13 +346,13 @@ describe('Main module test suite', () => {
   describe('initDialogListeners ipc events', () => {
     let settingsView;
     beforeEach(() => {
-      settingsView = {destroy: jest.fn()};
+      settingsView = {webContents: {destroy: jest.fn()}};
       mockBrowserWindow.getBrowserView = jest.fn(() => settingsView);
     });
     test('saveSettings, should reload settings and reset all views', () => {
       // Given
       mockBrowserWindow.removeBrowserView = jest.fn();
-      mockTabContainer.destroy = jest.fn();
+      mockTabContainer.webContents = {destroy: jest.fn()};
       main.init();
       // When
       mockIpc.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
@@ -362,8 +362,8 @@ describe('Main module test suite', () => {
       expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledTimes(1);
       expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledWith(settingsView);
       expect(tabManagerModule.removeAll).toHaveBeenCalledTimes(1);
-      expect(settingsView.destroy).toHaveBeenCalledTimes(1);
-      expect(mockTabContainer.destroy).toHaveBeenCalledTimes(1);
+      expect(settingsView.webContents.destroy).toHaveBeenCalledTimes(1);
+      expect(mockTabContainer.webContents.destroy).toHaveBeenCalledTimes(1);
     });
     test('closeDialog, should destroy dialog view and activate current tab', () => {
       // Given
@@ -373,7 +373,7 @@ describe('Main module test suite', () => {
       // Then
       expect(settingsModule.updateSettings).not.toHaveBeenCalled();
       expect(tabManagerModule.getActiveTab).toHaveBeenCalledTimes(1);
-      expect(settingsView.destroy).toHaveBeenCalledTimes(1);
+      expect(settingsView.webContents.destroy).toHaveBeenCalledTimes(1);
     });
   });
 });

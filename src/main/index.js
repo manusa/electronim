@@ -113,7 +113,7 @@ const initTabListener = () => {
 const closeDialog = () => {
   const settingsView = mainWindow.getBrowserView();
   activateTab(tabManager.getActiveTab());
-  settingsView.destroy();
+  settingsView.webContents.destroy();
 };
 
 const saveSettings = (event, settings) => {
@@ -124,7 +124,7 @@ const saveSettings = (event, settings) => {
   tabManager.removeAll();
   const viewsToDestroy = [currentBrowserView, tabContainer];
   tabContainer = initTabContainer(mainWindow);
-  viewsToDestroy.forEach(view => view.destroy());
+  viewsToDestroy.forEach(view => view.webContents.destroy());
 };
 
 const initDialogListeners = () => {
