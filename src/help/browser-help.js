@@ -50,7 +50,7 @@ const Toolbar = () => {
   return html`
     <div class="toolbar">
       <button class="button is-link is-light" onclick=${close}>
-        close
+        Close
       </button>
     </div>
 `;

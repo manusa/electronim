@@ -20,6 +20,19 @@
   overflow: hidden;
 }
 
+.toolbar {
+  position: absolute;
+  top: 0;
+  left: calc(var(--default-spacing) * 3);
+  right: calc(var(--default-spacing) * 3);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: var(--default-spacing);
+  height: var(--toolbar-height);
+}
+
 .help-root {
   position: fixed;
   top: 0;
@@ -27,6 +40,7 @@
   bottom: 0;
   right: 0;
   margin: 0;
+  z-index: 0;
 }
 
 .help-content {
@@ -35,9 +49,10 @@
   padding: calc(var(--default-spacing) * 2);
   display: block;
   top: 0;
-  bottom: var(--toolbar-height);
+  bottom: 0;
   left: 0;
   right: 0;
+  z-index: 1;
 }
 
 @media screen and (min-width:  768px) {
@@ -103,16 +118,4 @@
   padding: 0 1em;
   color: #6a737d;
   border-left: .25em solid #dfe2e5;
-}
-
-.toolbar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: var(--default-spacing);
-  height: var(--toolbar-height);
 }
