@@ -18,7 +18,7 @@ const {createEvent, fireEvent, waitFor} = require('@testing-library/dom');
 const mockDOM = () => {
   document.body.innerHTML = '';
   const $root = document.createElement('div');
-  $root.innerHTML = '<div class="tab-container container"></div>';
+  $root.innerHTML = '<div class="tab-container"></div>';
   document.body.append($root);
 };
 
