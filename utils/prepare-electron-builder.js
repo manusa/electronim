@@ -12,8 +12,15 @@ const electronToDevDependencies = () => {
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
 };
 
+const licenseForChocolatey = () => {
+  const packageLicense = path.join(__dirname, '..', 'LICENSE');
+  const packageLicenseTxt = path.join(__dirname, '..', 'build-config', 'LICENSE.txt');
+  fs.copyFileSync(packageLicense, packageLicenseTxt);
+};
+
 const prepareElectronBuilder = () => {
   electronToDevDependencies();
+  licenseForChocolatey();
 };
 
 process.on('unhandledRejection', errorHandler);
