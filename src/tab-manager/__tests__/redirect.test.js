@@ -82,5 +82,45 @@ describe('Tab Manager Redirect module test suite', () => {
         expect(result).toBe(false);
       });
     });
+    describe('Skype OAuth', () => {
+      test('From Skype to OAuth, should return false', () => {
+        // Given
+        mockBrowserViewUrl = 'https://web.skype.com';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockBrowserView,
+          new URL('https://login.skype.com/login/oauth/microsoft?client_id=313373'));
+        // Then
+        expect(result).toBe(false);
+      });
+      test('From Skype OAuth to Microsoft, should return false', () => {
+        // Given
+        mockBrowserViewUrl = 'https://web.skype.com';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockBrowserView,
+          new URL('https://login.live.com/login.srf?wa=wsignin1.0&rpsnv=13&ct=1610780563'));
+        // Then
+        expect(result).toBe(false);
+      });
+    });
+    describe('Teams OAuth', () => {
+      test('From Teams to Microsoft Online, should return false', () => {
+        // Given
+        mockBrowserViewUrl = 'https://teams.microsoft.com';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockBrowserView,
+          new URL('https://login.microsoftonline.com/common/oauth2/authorize?response_type=id_token'));
+        // Then
+        expect(result).toBe(false);
+      });
+      test('From Teams to Microsoft Login, should return false', () => {
+        // Given
+        mockBrowserViewUrl = 'https://teams.microsoft.com';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockBrowserView,
+          new URL('https://login.live.com/Me.htm?v=3'));
+        // Then
+        expect(result).toBe(false);
+      });
+    });
   });
 });

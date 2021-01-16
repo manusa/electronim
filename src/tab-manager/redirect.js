@@ -25,12 +25,11 @@ const isOAuth = matchUrls([
   /^https:\/\/accounts\.google\.com\/.*/, // NOSONAR
   /^https:\/\/(.+\.)?github\.com\/login\/oauth.*/, // NOSONAR
   /^https:\/\/auth\.redhat\.com\/auth\/.*/, // NOSONAR
-  /^https:\/\/login\.microsoftonline\.com\/[^\/]+\/oauth2\/.*/, // NOSONAR
-  /^https:\/\/login\.microsoftonline\.com\/common\/SAS\/.*/, // NOSONAR
-  /^https:\/\/login\.microsoftonline\.com\/kmsi\/.*/, // NOSONAR
-  /^https:\/\/account\.live\.com\/proofs\/remind.*/, // NOSONAR
-  /^https:\/\/lw\.skype\.com\/login\/oauth\/.*/, // NOSONAR
-  /^https:\/\/web\.skype\.com\/Auth\/PostHandler/, // NOSONAR
+  /^https:\/\/account\.live\.com\/.*/, // NOSONAR
+  /^https:\/\/login\.live\.com\/.*/, // NOSONAR
+  /^https:\/\/login\.microsoftonline\.com\/.*/, // NOSONAR
+  /^https:\/\/.+\.skype\.com\/login\/.*/, // NOSONAR
+  /^https:\/\/.+\.skype\.com\/Auth\/.*/, // NOSONAR
   /^https:\/\/idbroker\.webex\.com\/idb\/oauth2\/.*/ // NOSONAR
 ]);
 
