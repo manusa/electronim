@@ -38,7 +38,12 @@ describe('Tab Manager module test suite', () => {
       BrowserView: jest.fn(() => mockBrowserView),
       Menu: jest.fn(() => mockMenu),
       MenuItem: jest.fn(() => mockMenuItem),
-      session: {fromPartition: jest.fn(() => ({}))}
+      session: {
+        fromPartition: jest.fn(() => ({
+          userAgentInterceptor: true
+        })),
+        defaultSession: {userAgentInterceptor: true}
+      }
     }));
     mockSettings = {
       loadSettings: jest.fn(() => ({
@@ -85,7 +90,7 @@ describe('Tab Manager module test suite', () => {
       // Then
       expect(require('electron').session.fromPartition).not.toHaveBeenCalled();
       expect(require('electron').BrowserView).toBeCalledWith({
-        webPreferences: expect.not.objectContaining({session: expect.anything()})});
+        webPreferences: expect.objectContaining({session: expect.anything()})});
     });
     test('sandboxed, should use isolated session', () => {
       // When

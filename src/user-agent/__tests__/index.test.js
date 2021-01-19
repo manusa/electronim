@@ -29,15 +29,17 @@ describe('User Agent module test suite', () => {
         {os: 'linux', versions: [{channel: 'other', version: '5uck5'}, {channel: 'stable', version: '1337'}]},
         {os: 'win'}
       ]}));
-      axios.get.mockImplementationOnce(async () => ({data: {
+      axios.get.mockImplementation(async () => ({data: {
         FIREFOX_DEVEDITION: '313373',
-        LATEST_FIREFOX_VERSION: 'ff.1337'
+        LATEST_FIREFOX_VERSION: 'ff.1337',
+        FIREFOX_ESR: 'ff.1337.esr'
       }}));
       // When
       await userAgent.initBrowserVersions();
       // Then
       expect(userAgent.BROWSER_VERSIONS.chromium).toBe('1337');
       expect(userAgent.BROWSER_VERSIONS.firefox).toBe('ff.1337');
+      expect(userAgent.BROWSER_VERSIONS.firefoxESR).toBe('ff.1337.esr');
     });
     test('invalidResponse, should return null,', async () => {
       // Given
@@ -92,19 +94,81 @@ describe('User Agent module test suite', () => {
       // Then
       expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/1337.1337.1337 Safari/537.36');
     });
-    test('google service, should return Firefox user-agent header', () => {
-      // Given
-      userAgent.BROWSER_VERSIONS.firefox = '133.7';
-      const browserView = {
-        webContents: {
-          userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36'
+  });
+  describe('addUserAgentInterceptor', () => {
+    let session;
+    beforeEach(() => {
+      session = {
+        webRequest: {
+          onBeforeSendHeaders: jest.fn()
         }
       };
-      const nonMatchingUrl = 'https://hangouts.google.com';
+    });
+    test('userAgentInterceptor = true, should return (interceptor only added once)', () => {
+      // Given
+      session.userAgentInterceptor = true;
       // When
-      const result = userAgent.userAgentForView(browserView, nonMatchingUrl);
+      userAgent.addUserAgentInterceptor(session);
       // Then
-      expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:133.7) Gecko/20100101 Firefox/133.7');
+      expect(session.webRequest.onBeforeSendHeaders).not.toHaveBeenCalled();
+    });
+    test('userAgentInterceptor = undefined, should add interceptor', () => {
+      // When
+      userAgent.addUserAgentInterceptor(session);
+      // Then
+      expect(session.userAgentInterceptor).toEqual(true);
+      expect(session.webRequest.onBeforeSendHeaders).toHaveBeenCalledTimes(1);
+    });
+    test('onBeforeSendHeaders interceptor,filter', () => {
+      // When
+      userAgent.addUserAgentInterceptor(session);
+      // Then
+      expect(session.webRequest.onBeforeSendHeaders.mock.calls[0][0].urls)
+        .toEqual(['*://*.google.com/*']);
+    });
+    test('onBeforeSendHeaders interceptor, with standard URl', () => {
+      // Given
+      const details = {
+        url: 'https://www.example.com',
+        requestHeaders: {}
+      };
+      const callback = jest.fn();
+      userAgent.addUserAgentInterceptor(session);
+      // When
+      session.webRequest.onBeforeSendHeaders.mock.calls[0][1](details, callback);
+      // Then
+      expect(details.requestHeaders).toBeEmpty();
+    });
+    describe('onBeforeSendHeaders', () => {
+      let details;
+      const callback = jest.fn();
+      beforeEach(() => {
+        userAgent.BROWSER_VERSIONS.firefoxESR = '133.7';
+        details = {
+          requestHeaders: {
+            'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36'
+          }
+        };
+        userAgent.addUserAgentInterceptor(session);
+      });
+      test('onBeforeSendHeaders interceptor, with Google URl', () => {
+        // Given
+        details.url = 'https://accounts.google.com';
+        // When
+        session.webRequest.onBeforeSendHeaders.mock.calls[0][1](details, callback);
+        // Then
+        expect(details.requestHeaders['User-Agent'])
+          .toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:133.7) Gecko/20100101 Firefox/133.7');
+      });
+      test('onBeforeSendHeaders interceptor, with Google meet URl', () => {
+        // Given
+        details.url = 'https://meet.google.com';
+        // When
+        session.webRequest.onBeforeSendHeaders.mock.calls[0][1](details, callback);
+        // Then
+        expect(details.requestHeaders['User-Agent'])
+          .toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36');
+      });
     });
   });
 });
