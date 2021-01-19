@@ -17,7 +17,7 @@ const {app, BrowserView, Menu, MenuItem, session} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const settings = require('../settings');
 const {contextMenuHandler} = require('../spell-check');
-const {userAgentForView} = require('../user-agent');
+const {userAgentForView, addUserAgentInterceptor} = require('../user-agent');
 const {handleRedirect} = require('./redirect');
 
 let activeTab = null;
@@ -67,8 +67,8 @@ const handleContextMenu = browserView => async (event, params) => {
 // Required for Service Workers -> https://github.com/electron/electron/issues/16196
 const setGlobalUserAgentFallback = userAgent => (app.userAgentFallback = userAgent);
 
-const cleanUserAgent = (browserView, url) => {
-  const validUserAgent = userAgentForView(browserView, url);
+const cleanUserAgent = browserView => {
+  const validUserAgent = userAgentForView(browserView);
   browserView.webContents.userAgent = validUserAgent;
   setGlobalUserAgentFallback(validUserAgent);
 };
@@ -78,11 +78,14 @@ const addTabs = ipcSender => tabsMetadata => {
     const tabPreferences = {...webPreferences};
     if (sandboxed) {
       tabPreferences.session = session.fromPartition(`persist:${id}`, {cache: true});
+    } else {
+      tabPreferences.session = session.defaultSession;
     }
+    addUserAgentInterceptor(tabPreferences.session);
     const tab = new BrowserView({webPreferences: tabPreferences});
     tab.setAutoResize({width: true, height: true});
 
-    cleanUserAgent(tab, url);
+    cleanUserAgent(tab);
     tab.webContents.loadURL(url);
 
     const handleRedirectForCurrentUrl = handleRedirect(tab);

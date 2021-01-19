@@ -19,7 +19,12 @@ const FIREFOX_VERSIONS = 'https://product-details.mozilla.org/1.0/firefox_versio
 
 const BROWSER_VERSIONS = {
   chromium: null,
-  firefox: null
+  firefox: null,
+  firefoxESR: null // Extended support release
+};
+
+const USER_AGENT_INTERCEPTOR_FILTER = {
+  urls: ['*://*.google.com/*']
 };
 
 const latestChromium = async () => {
@@ -36,6 +41,11 @@ const latestFirefox = async () => {
   return versions && versions.LATEST_FIREFOX_VERSION ? versions.LATEST_FIREFOX_VERSION : null;
 };
 
+const latestFirefoxESR = async () => {
+  const {data: versions} = await axios.get(FIREFOX_VERSIONS);
+  return versions && versions.FIREFOX_ESR ? versions.FIREFOX_ESR : null;
+};
+
 const initBrowserVersions = async () => {
   const setVersion = browser => version => {
     if (version) {
@@ -44,7 +54,8 @@ const initBrowserVersions = async () => {
   };
   await Promise.all([
     latestChromium().then(setVersion('chromium')),
-    latestFirefox().then(setVersion('firefox'))
+    latestFirefox().then(setVersion('firefox')),
+    latestFirefoxESR().then(setVersion('firefoxESR'))
   ]);
 };
 
@@ -58,24 +69,34 @@ const sanitizeUserAgent = userAgent => userAgent
 
 const defaultUserAgent = userAgent => sanitizeUserAgent(replaceChromeVersion(userAgent));
 
-const firefoxUserAgent = userAgent => {
-  if (BROWSER_VERSIONS.firefox) {
+const firefoxUserAgent = userAgent => firefoxVersion => {
+  if (firefoxVersion) {
     userAgent = userAgent.replace(/\) AppleWebKit.*/,
-      `; rv:${BROWSER_VERSIONS.firefox}) Gecko/20100101 Firefox/${BROWSER_VERSIONS.firefox}`);
+      `; rv:${firefoxVersion}) Gecko/20100101 Firefox/${firefoxVersion}`);
   }
   return userAgent;
 };
 
-const userAgentForView = (browserViewOrWindow, url = '') => {
-  let ret = defaultUserAgent(browserViewOrWindow.webContents.userAgent);
-  if (url.match(/https?:\/\/[^/]+google\.com.*/)) { // NOSONAR
-    ret = firefoxUserAgent(browserViewOrWindow.webContents.userAgent);
+const userAgentForView = browserViewOrWindow => defaultUserAgent(browserViewOrWindow.webContents.userAgent);
+
+const addUserAgentInterceptor = session => {
+  if (!session.userAgentInterceptor) {
+    session.webRequest.onBeforeSendHeaders(USER_AGENT_INTERCEPTOR_FILTER, (details, callback) => {
+      if (
+        details.url.match(/https?:\/\/[^/]+google\.com.*/) // NOSONAR
+        && !details.url.match(/https?:\/\/meet.google\.com.*/)
+      ) {
+        details.requestHeaders['User-Agent'] = firefoxUserAgent(details.requestHeaders['User-Agent'])(BROWSER_VERSIONS.firefoxESR);
+      }
+      callback({requestHeaders: details.requestHeaders});
+    });
+    session.userAgentInterceptor = true;
   }
-  return ret;
 };
 
 module.exports = {
   BROWSER_VERSIONS,
   initBrowserVersions,
-  userAgentForView
+  userAgentForView,
+  addUserAgentInterceptor
 };
