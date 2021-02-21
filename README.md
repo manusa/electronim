@@ -27,7 +27,7 @@ npx electronim
 
 ```
 npm install -g electronim
-elecronim
+electronim
 ```
 
 ## Features
