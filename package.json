@@ -151,7 +151,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
     "axios": "^0.21.1",
-    "bulma": "^0.9.1",
+    "bulma": "^0.9.2",
     "chrome-tabs": "^5.4.0",
     "dictionary-ca": "^2.1.1",
     "dictionary-ca-valencia": "^2.3.0",
