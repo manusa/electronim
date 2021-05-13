@@ -30,7 +30,8 @@ const isOAuth = matchUrls([
   /^https:\/\/login\.microsoftonline\.com\/.*/, // NOSONAR
   /^https:\/\/.+\.skype\.com\/login\/.*/, // NOSONAR
   /^https:\/\/.+\.skype\.com\/Auth\/.*/, // NOSONAR
-  /^https:\/\/idbroker\.webex\.com\/idb\/oauth2\/.*/ // NOSONAR
+  /^https:\/\/idbroker\.webex\.com\/idb\/oauth2\/.*/, // NOSONAR
+  /^https:\/\/.+\.twitter\.com\/login.*/ // NOSONAR
 ]);
 
 const isSameOrigin = (browserViewUrl, url) => url.origin === browserViewUrl.origin;

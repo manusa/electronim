@@ -122,5 +122,23 @@ describe('Tab Manager Redirect module test suite', () => {
         expect(result).toBe(false);
       });
     });
+    describe('Twitter login', () => {
+      test('From Tweet Deck to Twitter, should return false', () => {
+        // Given
+        mockBrowserViewUrl = 'https://tweetdeck.twitter.com';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockBrowserView, new URL('https://mobile.twitter.com/login?hide_message=true&redirect_after_login=https%3A%2F%2Ftweetdeck.twitter.com%2F%3Fvia_twitter_login%3Dtrue'));
+        // Then
+        expect(result).toBe(false);
+      });
+      test('From Twitter to Tweet Deck , should return false', () => {
+        // Given
+        mockBrowserViewUrl = 'https://mobile.twitter.com/login';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockBrowserView, new URL('https://tweetdeck.twitter.com?via_twitter_login=true'));
+        // Then
+        expect(result).toBe(false);
+      });
+    });
   });
 });
