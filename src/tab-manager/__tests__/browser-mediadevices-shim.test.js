@@ -39,11 +39,11 @@ describe('Browser mediaDevices shim test suite', () => {
       }
     }));
     electron = require('electron');
-    preact = require('preact');
-    jest.spyOn(preact, 'render');
     window.navigator.mediaDevices.getUserMedia = jest.fn(um => um.video.mandatory.chromeMediaSourceId);
     document.body.innerHTML = '';
     jest.isolateModules(() => {
+      preact = require('preact');
+      jest.spyOn(preact, 'render');
       require('../browser-mediadevices-shim');
     });
   });
