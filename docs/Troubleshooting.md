@@ -27,12 +27,14 @@ In order to make ElectronIM work in macOS you can do this:
  - Go to the top bar menu, and click on the apple icon (Apple menu)
  
  - Select **System Preferences**
- ![Solution1-1](screenshots/troubleshooting-macos-security2.png)
- 
+
+![Solution1-1](screenshots/troubleshooting-macos-security2.png)
+
  - In the window that appears, select **Security & Privacy**
  
  - Inside the new window, select the tab **General**. The bottom contents of the window should display a message stating that the application has been blocked, and a button to let the [admin] user open it:
-  ![Solution1-2](screenshots/troubleshooting-macos-security3.png)
- 
+
+![Solution1-2](screenshots/troubleshooting-macos-security3.png)
+
  - Click on the button (it will ask for credentials).
  
