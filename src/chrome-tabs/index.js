@@ -20,6 +20,7 @@ const {openSettingsDialog} = require('../settings');
 const TABS_CONTAINER_HEIGHT = 46;
 
 const webPreferences = {
+  contextIsolation: false,
   preload: `${__dirname}/preload.js`,
   partition: 'persist:electronim'
 };

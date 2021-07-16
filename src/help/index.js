@@ -23,6 +23,7 @@ const {showDialog} = require('../browser-window');
 const DOCS_DIR = path.resolve(__dirname, '../../docs');
 
 const webPreferences = {
+  contextIsolation: false,
   preload: `${__dirname}/preload.js`
 };
 

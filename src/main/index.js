@@ -22,6 +22,7 @@ const tabManager = require('../tab-manager');
 const {initBrowserVersions, userAgentForView} = require('../user-agent');
 
 const webPreferences = {
+  contextIsolation: false,
   preload: `${__dirname}/preload.js`,
   partition: 'persist:electronim'
 };

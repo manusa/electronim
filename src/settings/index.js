@@ -24,6 +24,7 @@ const SETTINGS_FILE = 'settings.json';
 const DEFAULT_SETTINGS = {tabs: [], enabledDictionaries: ['en-US']};
 
 const webPreferences = {
+  contextIsolation: false,
   preload: `${__dirname}/preload.js`,
   partition: 'persist:electronim'
 };

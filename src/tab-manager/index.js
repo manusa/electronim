@@ -24,6 +24,7 @@ let activeTab = null;
 const tabs = {};
 
 const webPreferences = {
+  contextIsolation: false,
   preload: `${__dirname}/preload.js`
 };
 
