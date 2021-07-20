@@ -143,8 +143,8 @@
   "devDependencies": {
     "@testing-library/dom": "^8.1.0",
     "electron-builder": "^22.11.7",
-    "electron-packager": "^15.2.0",
-    "eslint": "^7.30.0",
+    "electron-packager": "^15.3.0",
+    "eslint": "^7.31.0",
     "eslint-plugin-jest": "^24.3.6",
     "jest": "^27.0.6",
     "jest-extended": "^0.11.5"
