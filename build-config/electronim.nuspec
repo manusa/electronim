@@ -24,8 +24,9 @@ Improve your productivity by combining all your instant messaging applications (
 ### Features
 
 - ⚛ Multi-platform: ElectronIM is available for Linux 🐧, Mac 🍏 and Windows.
+- 🌍 Based on Chromium 91
 - 🔔 Desktop notifications: ElectronIM will notify you using your native system notifications.
-- Spellchecker: ElectronIM contains spellchecker dictionaries for many languages,
+- 🧐 Spellchecker: ElectronIM contains spellchecker dictionaries for many languages,
   if your language is not supported, just [file an issue](https://github.com/manusa/electronim/issues/new).
 - Supports any web based IM solution
 - Drag-and-drop tab reordering
