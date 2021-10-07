@@ -34,7 +34,10 @@ describe('Main module test suite', () => {
       removeMenu: jest.fn()
     };
     mockNotification = jest.fn();
-    mockApp = {};
+    mockApp = {
+      getPath: jest.fn(),
+      setPath: jest.fn()
+    };
     mockIpc = {
       listeners: {},
       on: jest.fn((eventName, func) => {
@@ -90,6 +93,13 @@ describe('Main module test suite', () => {
       // Then
       expect(mockApp.userAgentFallback).toBe('UserAgent String');
       expect(mockNotification.show).toHaveBeenCalledTimes(1);
+    });
+    test('fixUserDataLocation, should set a location in lower-case (Electron <14 compatible)', () => {
+      // Given
+      mockApp.getPath.mockImplementation(() => 'ImMixed-Case/WithSome\\Separator$');
+      // When
+      main.init();
+      expect(mockApp.setPath).toHaveBeenCalledWith('userData', 'immixed-case/withsome\\separator$');
     });
   });
   describe('mainWindow events', () => {

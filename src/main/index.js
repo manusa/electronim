@@ -33,6 +33,13 @@ let tabContainer;
 
 const isNotTabContainer = bv => bv.isTabContainer !== true;
 
+const fixUserDataLocation = () => {
+  const userDataPath = app.getPath('userData');
+  if (userDataPath && userDataPath.length > 0) {
+    app.setPath('userData', userDataPath.toLowerCase());
+  }
+};
+
 const resetMainWindow = () => {
   const currentViews = mainWindow.getBrowserViews();
   currentViews.filter(isNotTabContainer).forEach(bv => mainWindow.removeBrowserView(bv));
@@ -157,6 +164,7 @@ const handleMainWindowResize = () => {
 };
 
 const init = () => {
+  fixUserDataLocation();
   loadDictionaries();
   const {width = 800, height = 600} = loadSettings();
   mainWindow = new BrowserWindow({
