@@ -88,7 +88,11 @@ const loadDictionaries = () => {
   if (!fakeRendererWorker) {
     fakeRendererWorker = new BrowserWindow({
       show: false,
-      webPreferences: {contextIsolation: false, nodeIntegration: true}
+      webPreferences: {
+        contextIsolation: false,
+        nativeWindowOpen: true,
+        nodeIntegration: true
+      }
     });
     ipcMain.handle(APP_EVENTS.dictionaryGetMisspelled, handleGetMisspelled);
   }

@@ -23,6 +23,7 @@ const {initBrowserVersions, userAgentForView} = require('../user-agent');
 
 const webPreferences = {
   contextIsolation: false,
+  nativeWindowOpen: true,
   preload: `${__dirname}/preload.js`,
   partition: 'persist:electronim'
 };

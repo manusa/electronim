@@ -25,6 +25,7 @@ const DEFAULT_SETTINGS = {tabs: [], enabledDictionaries: ['en-US']};
 
 const webPreferences = {
   contextIsolation: false,
+  nativeWindowOpen: true,
   preload: `${__dirname}/preload.js`,
   partition: 'persist:electronim'
 };
