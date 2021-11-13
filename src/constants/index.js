@@ -13,6 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+const fs = require('fs');
+const path = require('path');
+
+const ROOT_DIR = path.resolve(__dirname, '../../');
+
 const APP_EVENTS = {
   activateTab: 'activateTab',
   activateTabInContainer: 'activateTabInContainer',
@@ -33,6 +38,8 @@ const APP_EVENTS = {
   zoomReset: 'zoomReset'
 };
 
+const ELECTRONIM_VERSION = JSON.parse(fs.readFileSync(path.resolve(ROOT_DIR, 'package.json'), 'utf8')).version;
+
 module.exports = {
-  APP_EVENTS
+  APP_EVENTS, ELECTRONIM_VERSION
 };

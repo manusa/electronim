@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {APP_EVENTS, ipcRenderer, docs} = window;
+const {APP_EVENTS, ELECTRONIM_VERSION, ipcRenderer, docs} = window;
 const {h, render} = window.preact;
 // const {useReducer} = window.preactHooks;
 const html = window.htm.bind(h);
@@ -37,11 +37,18 @@ const Toc = () => html`
   </div>
 `;
 
+const Footer = () => html`
+  <div class="documents-footer">
+      ElectronIM version ${ELECTRONIM_VERSION}
+  </div>
+`;
+
 const Content = () => html`
   <div class="documents-container">
     <${Document} id="Setup.md"/>
     <${Document} id="Keyboard-shortcuts.md"/>
     <${Document} id="Troubleshooting.md"/>
+    <${Footer}/>
   </div>
 `;
 
@@ -55,6 +62,7 @@ const Toolbar = () => {
     </div>
 `;
 };
+
 
 const Help = () => html`
     <div class="help-content">

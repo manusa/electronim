@@ -14,7 +14,8 @@
    limitations under the License.
  */
 const {ipcRenderer} = require('electron');
-const {APP_EVENTS} = require('../constants');
+const {APP_EVENTS, ELECTRONIM_VERSION} = require('../constants');
 
 window.ipcRenderer = ipcRenderer;
 window.APP_EVENTS = APP_EVENTS;
+window.ELECTRONIM_VERSION = ELECTRONIM_VERSION;
