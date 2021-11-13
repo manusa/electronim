@@ -136,7 +136,7 @@
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "jest-extended"
+      "jest-extended/all"
     ],
     "testEnvironment": "jsdom"
   },
@@ -147,7 +147,7 @@
     "eslint": "^8.2.0",
     "eslint-plugin-jest": "^25.2.4",
     "jest": "^27.3.1",
-    "jest-extended": "^0.11.5"
+    "jest-extended": "^1.1.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",
