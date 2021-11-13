@@ -19,6 +19,6 @@ describe('Constants module test suite', () => {
     constants = require('../');
   });
   test('module, should reade package.json version', () => {
-    expect(constants.ELECTRONIM_VERSION).toMatch(/[0-9]+\.[0-9]+\.[0-9]+/);
+    expect(constants.ELECTRONIM_VERSION).toMatch(/^\d+\.\d+\.\d+$/);
   });
 });
