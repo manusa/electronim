@@ -281,7 +281,7 @@ const Settings = () => {
         </div>
       </nav>
       <nav class="panel">
-        <p class="panel-heading">Other settings</p>
+        <p class="panel-heading">Other</p>
         <div class="panel-block">
           <div class="settings__global-notifications container">
             <${Checkbox}
@@ -292,6 +292,9 @@ const Settings = () => {
               onclick=${toggleNotifications}
             />
           </div>
+        </div>
+        <div class="panel-block is-italic">
+          ElectronIM version ${ELECTRONIM_VERSION}
         </div>
       </nav>
       <div class="field is-grouped">

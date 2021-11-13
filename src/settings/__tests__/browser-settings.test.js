@@ -45,6 +45,7 @@ describe('Settings in Browser test suite', () => {
     spyUseReducer = jest.spyOn(window.preactHooks, 'useReducer');
     window.htm = require('htm');
     window.APP_EVENTS = {};
+    window.ELECTRONIM_VERSION = '1.33.7';
     window.dictionaries = mockDictionaries;
     window.tabs = mockTabs;
     window.ipcRenderer = mockIpcRenderer;

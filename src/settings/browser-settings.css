@@ -83,12 +83,6 @@ body {
     max-height: 100px;
 }
 
-.settings__global-notifications {
-    display: inline-flex;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
 .settings__dictionaries .control input[type="checkbox"] {
     margin-right: var(--default-spacing);
 }
