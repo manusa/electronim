@@ -141,7 +141,7 @@
     "testEnvironment": "jsdom"
   },
   "devDependencies": {
-    "@testing-library/dom": "^8.7.2",
+    "@testing-library/dom": "^8.11.1",
     "electron-builder": "^22.11.7",
     "electron-packager": "^15.4.0",
     "eslint": "^7.32.0",
