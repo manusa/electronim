@@ -18,17 +18,17 @@ describe('Main Module preload test suite', () => {
   let mockConstants;
   beforeEach(() => {
     mockElectron = {ipcRenderer: 'somethingUnique'};
-    mockConstants = {APP_EVENTS: 'someUniqueObject'};
+    mockConstants = {APP_EVENTS: 'someUniqueObject', ELECTRONIM_VERSION: '1.33.7'};
     jest.resetModules();
     jest.mock('electron', () => mockElectron);
     jest.mock('../../constants', () => mockConstants);
   });
   test('preload', () => {
-    // Given
     // When
     require('../preload');
     // Then
     expect(window.ipcRenderer).toBe(mockElectron.ipcRenderer);
     expect(window.APP_EVENTS).toBe(mockConstants.APP_EVENTS);
+    expect(window.ELECTRONIM_VERSION).toBe(mockConstants.ELECTRONIM_VERSION);
   });
 });
