@@ -144,13 +144,13 @@
     "@testing-library/dom": "^8.11.1",
     "electron-builder": "^22.14.5",
     "electron-packager": "^15.4.0",
-    "eslint": "^8.3.0",
-    "eslint-plugin-jest": "^25.2.4",
-    "jest": "^27.3.1",
-    "jest-extended": "^1.1.0"
+    "eslint": "^8.6.0",
+    "eslint-plugin-jest": "^25.3.4",
+    "jest": "^27.4.7",
+    "jest-extended": "^1.2.0"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.3",
+    "@fortawesome/fontawesome-free": "^5.15.4",
     "axios": "^0.24.0",
     "bulma": "^0.9.3",
     "chrome-tabs": "^5.4.0",
@@ -175,8 +175,8 @@
     "dictionary-uk": "^2.1.1",
     "electron": "^15.3.2",
     "htm": "^3.1.0",
-    "markdown-it": "^12.2.0",
+    "markdown-it": "^12.3.2",
     "nodehun": "^3.0.2",
-    "preact": "^10.5.15"
+    "preact": "^10.6.4"
   }
 }
