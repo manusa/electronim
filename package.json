@@ -141,13 +141,13 @@
     "testEnvironment": "jsdom"
   },
   "devDependencies": {
-    "@testing-library/dom": "^8.11.1",
+    "@testing-library/dom": "^8.13.0",
     "electron-builder": "^22.14.5",
     "electron-packager": "^15.4.0",
-    "eslint": "^8.6.0",
-    "eslint-plugin-jest": "^25.3.4",
-    "jest": "^27.4.7",
-    "jest-extended": "^1.2.0"
+    "eslint": "^8.13.0",
+    "eslint-plugin-jest": "^26.1.4",
+    "jest": "^27.5.1",
+    "jest-extended": "^2.0.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
