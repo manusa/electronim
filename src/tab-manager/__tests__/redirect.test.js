@@ -139,6 +139,24 @@ describe('Tab Manager Redirect module test suite', () => {
         // Then
         expect(result).toBe(false);
       });
+      test('From Tweet Deck to logout, should return false', () => {
+        // Given
+        mockBrowserViewUrl = 'https://tweetdeck.twitter.com';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockBrowserView, new URL('https://mobile.twitter.com/logout'));
+        // Then
+        expect(result).toBe(false);
+      });
+    });
+    describe('Zoom login', () => {
+      test('From Zoom home to login (profile), should return false', () => {
+        // Given
+        mockBrowserViewUrl = 'https://zoom.us/signin';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockBrowserView, new URL('https://us04web.zoom.us/profile'));
+        // Then
+        expect(result).toBe(false);
+      });
     });
   });
 });

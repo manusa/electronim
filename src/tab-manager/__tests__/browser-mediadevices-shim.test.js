@@ -30,9 +30,12 @@ describe('Browser mediaDevices shim test suite', () => {
     mockThumbnail = {
       toDataURL: jest.fn()
     };
+    global.APP_EVENTS = {
+      desktopCapturerGetSources: 'desktopCapturerGetSources'
+    };
     jest.mock('electron', () => ({
-      desktopCapturer: {
-        getSources: jest.fn(async () => [
+      ipcRenderer: {
+        invoke: jest.fn(async () => [
           {id: '1337', name: '1337', thumbnail: mockThumbnail},
           {id: '313373', name: 'Other Window', thumbnail: mockThumbnail}
         ])
@@ -56,17 +59,17 @@ describe('Browser mediaDevices shim test suite', () => {
       const $sources = document.querySelector('.electron-desktop-capturer-root');
       expect($sources).not.toBeNull();
       expect(await screen.findByText('Loading sources...')).not.toBeNull();
-      expect(electron.desktopCapturer.getSources).not.toHaveBeenCalled();
+      expect(electron.ipcRenderer.invoke).not.toHaveBeenCalled();
     });
     test('mediaDevices.getDisplayMedia, should render no sources found', async () => {
       // Given
-      electron.desktopCapturer.getSources = jest.fn(() => []);
+      electron.ipcRenderer.invoke = jest.fn(() => []);
       // When
       window.navigator.mediaDevices.getDisplayMedia();
       // Then
       expect(preact.render).toHaveBeenCalledTimes(1);
       expect(await screen.findByText('No sources found')).not.toBeNull();
-      expect(electron.desktopCapturer.getSources).toHaveBeenCalled();
+      expect(electron.ipcRenderer.invoke).toHaveBeenCalled();
     });
     test('mediaDevices.getDisplayMedia, should render media selector when sources are loaded', async () => {
       // When
@@ -75,7 +78,7 @@ describe('Browser mediaDevices shim test suite', () => {
       expect(preact.render).toHaveBeenCalledTimes(1);
       await waitFor(() =>
         expect(document.querySelector('.electron-desktop-capturer-root__source')).not.toBeNull());
-      expect(electron.desktopCapturer.getSources).toHaveBeenCalled();
+      expect(electron.ipcRenderer.invoke).toHaveBeenCalled();
       expect(document.querySelectorAll('.electron-desktop-capturer-root__source')).toHaveLength(2);
       expect(mockThumbnail.toDataURL).toHaveBeenCalledTimes(2);
     });

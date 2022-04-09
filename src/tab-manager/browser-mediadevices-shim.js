@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {desktopCapturer} = require('electron');
+const {ipcRenderer} = require('electron');
 const {h, render} = require('preact');
 const {useEffect, useState} = require('preact/hooks');
 const htm = require('htm');
@@ -22,6 +22,11 @@ const html = htm.bind(h);
 const ROOT_CLASS = 'electron-desktop-capturer-root';
 const DEFAULT_SOURCES_OPTIONS = {
   types: ['screen', 'window']
+};
+
+const desktopCapturer = {
+  // eslint-disable-next-line no-undef
+  getSources: opts => ipcRenderer.invoke(APP_EVENTS.desktopCapturerGetSources, opts)
 };
 
 let currentRoot = null;

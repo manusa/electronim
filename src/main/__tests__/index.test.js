@@ -17,6 +17,7 @@ describe('Main module test suite', () => {
   let mockBrowserWindow;
   let mockNotification;
   let mockApp;
+  let mockDesktopCapturer;
   let mockIpc;
   let mockTabContainer;
   let mockSettings;
@@ -38,7 +39,9 @@ describe('Main module test suite', () => {
       getPath: jest.fn(),
       setPath: jest.fn()
     };
+    mockDesktopCapturer = {};
     mockIpc = {
+      handle: jest.fn(),
       listeners: {},
       on: jest.fn((eventName, func) => {
         mockIpc.listeners[eventName] = func;
@@ -51,6 +54,7 @@ describe('Main module test suite', () => {
       BrowserWindow: jest.fn(() => mockBrowserWindow),
       Notification: jest.fn(() => mockNotification),
       app: mockApp,
+      desktopCapturer: mockDesktopCapturer,
       ipcMain: mockIpc
     }));
     jest.mock('../../chrome-tabs', () => ({
@@ -100,6 +104,19 @@ describe('Main module test suite', () => {
       // When
       main.init();
       expect(mockApp.setPath).toHaveBeenCalledWith('userData', 'immixed-case/withsome\\separator$');
+    });
+    test('initDesktopCapturerHandler, should regiser desktopCapturer', () => {
+      // Given
+      const opts = {the: 'opts'};
+      mockDesktopCapturer.getSources = jest.fn();
+      mockIpc.handle.mockImplementation((channel, listener) => {
+        listener.call(null, {}, opts);
+      });
+      // When
+      main.init();
+      // Then
+      expect(mockIpc.handle).toHaveBeenCalledWith('desktopCapturerGetSources', expect.any(Function));
+      expect(mockDesktopCapturer.getSources).toHaveBeenCalledWith(opts);
     });
   });
   describe('mainWindow events', () => {

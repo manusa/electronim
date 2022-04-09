@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {BrowserWindow, Notification, app, ipcMain: ipc} = require('electron');
+const {BrowserWindow, Notification, app, desktopCapturer, ipcMain: ipc} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const {TABS_CONTAINER_HEIGHT, initTabContainer} = require('../chrome-tabs');
 const {loadSettings, updateSettings, openSettingsDialog} = require('../settings');
@@ -119,6 +119,10 @@ const initTabListener = () => {
   ipc.on(APP_EVENTS.zoomReset, handleZoomReset);
 };
 
+const initDesktopCapturerHandler = () => {
+  ipc.handle(APP_EVENTS.desktopCapturerGetSources, (_event, opts) => desktopCapturer.getSources(opts));
+};
+
 const closeDialog = () => {
   const settingsView = mainWindow.getBrowserView();
   activateTab(tabManager.getActiveTab());
@@ -175,6 +179,7 @@ const init = () => {
   mainWindow.on('maximize', handleMainWindowResize);
   mainWindow.on('closed', () => app.quit());
   initTabListener();
+  initDesktopCapturerHandler();
   initDialogListeners();
   initBrowserVersions()
     .then(browserVersionsReady)

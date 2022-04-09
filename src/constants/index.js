@@ -23,6 +23,7 @@ const APP_EVENTS = {
   activateTabInContainer: 'activateTabInContainer',
   addTabs: 'addTabs',
   closeDialog: 'closeDialog',
+  desktopCapturerGetSources: 'desktopCapturerGetSources',
   dictionaryGetMisspelled: 'dictionaryGetMisspelled',
   notificationClick: 'notificationClick',
   reload: 'reload',
