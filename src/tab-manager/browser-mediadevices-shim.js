@@ -121,7 +121,7 @@ const Style = () => html`
 `;
 
 // eslint-disable-next-line no-unused-vars
-const Source = ({id, name, thumbnail, display_id, appIcon, resolve}) => {
+const Source = ({id, name, thumbnail, _display_id, _appIcon, resolve}) => {
   const selectStream = async event => {
     event.preventDefault();
     event.stopPropagation();

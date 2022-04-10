@@ -109,7 +109,7 @@ describe('Main module test suite', () => {
       // Given
       const opts = {the: 'opts'};
       mockDesktopCapturer.getSources = jest.fn();
-      mockIpc.handle.mockImplementation((channel, listener) => {
+      mockIpc.handle.mockImplementation((_channel, listener) => {
         listener.call(null, {}, opts);
       });
       // When

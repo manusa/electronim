@@ -79,7 +79,7 @@ const AVAILABLE_DICTIONARIES = {
 
 let fakeRendererWorker;
 
-const handleGetMisspelled = async (event, words) =>
+const handleGetMisspelled = async (_event, words) =>
   await fakeRendererWorker.webContents.executeJavaScript(`getMisspelled(${JSON.stringify(words)})`);
 
 const getEnabledDictionaries = () => loadSettings().enabledDictionaries;
@@ -99,7 +99,7 @@ const loadDictionaries = () => {
   fakeRendererWorker.loadURL(`file://${__dirname}/dictionary.renderer/index.html`);
 };
 
-const contextMenuHandler = async (event, {misspelledWord}, webContents) => {
+const contextMenuHandler = async (_event, {misspelledWord}, webContents) => {
   const {MenuItem} = require('electron');
   const ret = [];
   if (misspelledWord && misspelledWord.length > 0) {

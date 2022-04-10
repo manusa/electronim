@@ -48,7 +48,7 @@ window.reloadDictionaries = () => {
         // Error is ignored
       }
       if (dictionary) {
-        dictionary((err, {aff, dic}) => {
+        dictionary((_err, {aff, dic}) => {
           dictionaries.push(new Nodehun(aff, dic));
         });
       }

@@ -29,7 +29,7 @@ const webPreferences = {
   preload: `${__dirname}/preload.js`
 };
 
-const handlePageTitleUpdated = (ipcSender, tabId) => (e, title) => {
+const handlePageTitleUpdated = (ipcSender, tabId) => (_e, title) => {
   ipcSender.send(APP_EVENTS.setTabTitle, {id: tabId, title: title});
 };
 
@@ -43,7 +43,7 @@ const extractFavicon = async browserView => {
   return favicons;
 };
 
-const handlePageFaviconUpdated = (browserView, ipcSender, tabId) => async (e, favicons = []) => {
+const handlePageFaviconUpdated = (browserView, ipcSender, tabId) => async (_e, favicons = []) => {
   if (favicons.length === 0) {
     favicons = await extractFavicon(browserView);
   }

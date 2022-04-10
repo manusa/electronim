@@ -83,7 +83,7 @@ const reducer = (state, action) => {
 
 const dispatchActivateTab = dispatch => id => dispatch({type: ACTIONS.ACTIVATE_TAB, payload: id});
 
-const dispatchAddTabs = dispatch => (event, tabs) => {
+const dispatchAddTabs = dispatch => (_event, tabs) => {
   dispatch({type: ACTIONS.SET_TABS, payload: tabs});
   const activeTabMeta = tabs.find(({active}) => active === true);
   if (tabs.length > 0 && activeTabMeta) {
@@ -91,13 +91,13 @@ const dispatchAddTabs = dispatch => (event, tabs) => {
   }
 };
 
-const dispatchSetTabTitle = dispatch => (event, {id, title}) => {
+const dispatchSetTabTitle = dispatch => (_event, {id, title}) => {
   dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {
     id, property: 'title', value: title
   }});
 };
 
-const dispatchSetTabFavicon = dispatch => (event, {id, favicon}) => {
+const dispatchSetTabFavicon = dispatch => (_event, {id, favicon}) => {
   dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {
     id, property: 'favicon', value: favicon
   }});
@@ -258,7 +258,7 @@ const TabContainer = () => {
   useLayoutEffect(() => {
     ipcRenderer.on(APP_EVENTS.addTabs, dispatchAddTabs(dispatch));
     ipcRenderer.on(APP_EVENTS.activateTabInContainer,
-      (event, {tabId}) => dispatchActivateTab(dispatch)(tabId));
+      (_event, {tabId}) => dispatchActivateTab(dispatch)(tabId));
     ipcRenderer.on(APP_EVENTS.setTabTitle, dispatchSetTabTitle(dispatch));
     ipcRenderer.on(APP_EVENTS.setTabFavicon, dispatchSetTabFavicon(dispatch));
     sendTabsReady();

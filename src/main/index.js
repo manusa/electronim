@@ -74,7 +74,7 @@ const handleZoomOut = event => {
 
 const handleZoomReset = event => event.sender.setZoomFactor(1);
 
-const handleTabReorder = (event, {tabIds: visibleTabIds}) => {
+const handleTabReorder = (_event, {tabIds: visibleTabIds}) => {
   const currentTabs = loadSettings().tabs;
   const hiddenTabIds = currentTabs.map(({id}) => id)
     .filter(tabId => !visibleTabIds.includes(tabId));
@@ -101,11 +101,11 @@ const initTabListener = () => {
       openSettingsDialog(mainWindow);
     }
   });
-  ipc.on(APP_EVENTS.activateTab, (event, data) => activateTab(data.id));
+  ipc.on(APP_EVENTS.activateTab, (_event, data) => activateTab(data.id));
   ipc.on(APP_EVENTS.canNotify, (event, tabId) => {
     event.returnValue = tabManager.canNotify(tabId);
   });
-  ipc.on(APP_EVENTS.notificationClick, (event, {tabId}) => {
+  ipc.on(APP_EVENTS.notificationClick, (_event, {tabId}) => {
     tabContainer.webContents.send(APP_EVENTS.activateTabInContainer, {tabId});
     mainWindow.restore();
     mainWindow.show();
@@ -129,7 +129,7 @@ const closeDialog = () => {
   settingsView.webContents.destroy();
 };
 
-const saveSettings = (event, settings) => {
+const saveSettings = (_event, settings) => {
   updateSettings(settings);
   loadDictionaries();
   const currentBrowserView = mainWindow.getBrowserView();

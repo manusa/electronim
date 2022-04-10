@@ -26,7 +26,7 @@ const webPreferences = {
   partition: 'persist:electronim'
 };
 
-const handleContextMenu = (mainWindow, browserView) => (event, params) => {
+const handleContextMenu = (mainWindow, browserView) => (_event, params) => {
   const {webContents} = browserView;
   const menu = new Menu();
   menu.append(new MenuItem({label: 'Settings', click: () => openSettingsDialog(mainWindow)}));
