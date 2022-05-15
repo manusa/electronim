@@ -138,15 +138,23 @@
     "setupFilesAfterEnv": [
       "jest-extended/all"
     ],
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "testEnvironmentOptions": {
+      "customExportConditions": [
+        "node",
+        "node-addons"
+      ]
+    }
   },
   "devDependencies": {
     "@testing-library/dom": "^8.13.0",
     "electron-builder": "^23.0.3",
-    "electron-packager": "^15.4.0",
-    "eslint": "^8.13.0",
-    "eslint-plugin-jest": "^26.1.4",
-    "jest": "^27.5.1",
+    "electron-packager": "^15.5.1",
+    "eslint": "^8.15.0",
+    "eslint-plugin-jest": "^26.2.2",
+    "jest": "^28.1.0",
+    "jest-environment-jsdom": "^28.1.0",
+    "jest-environment-node": "^28.1.0",
     "jest-extended": "^2.0.0"
   },
   "dependencies": {
