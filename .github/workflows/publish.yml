@@ -27,9 +27,9 @@ jobs:
       SNAPCRAFT_LOGIN: ${{ secrets.SNAPCRAFT_LOGIN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.0.0
+        uses: actions/checkout@v3
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: '16.x'
       - name: Install
@@ -59,13 +59,15 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.0.0
+        uses: actions/checkout@v3
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: '16.x'
       - name: Install
         run: npm install
+      - name: Install macOS only requirement (Electron Builder) # TODO: Move to prepare-electron-builder.js script
+        run: npm install dmg-license
       - name: Change Package version
         run: ./utils/version-from-tag.js
       - name: Prepare Electron Builder
