@@ -89,7 +89,7 @@ describe('Tab Manager module test suite', () => {
       tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // Then
       expect(require('electron').session.fromPartition).not.toHaveBeenCalled();
-      expect(require('electron').BrowserView).toBeCalledWith({
+      expect(require('electron').BrowserView).toHaveBeenCalledWith({
         webPreferences: expect.objectContaining({session: expect.anything()})});
     });
     test('sandboxed, should use isolated session', () => {
@@ -97,7 +97,7 @@ describe('Tab Manager module test suite', () => {
       tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', sandboxed: true}]);
       // Then
       expect(require('electron').session.fromPartition).toHaveBeenCalledTimes(1);
-      expect(require('electron').BrowserView).toBeCalledWith({
+      expect(require('electron').BrowserView).toHaveBeenCalledWith({
         webPreferences: expect.objectContaining({session: expect.anything()})});
     });
     test('Tab webContents should be configured and loaded', () => {

@@ -101,7 +101,7 @@ describe('Browser Notification Shim test suite', () => {
       const notification = new Notification();
       // Then
       expect(notification).toEqual({});
-      expect(NativeNotification).not.toBeCalled();
+      expect(NativeNotification).not.toHaveBeenCalled();
     });
   });
 });
