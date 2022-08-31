@@ -80,7 +80,7 @@ const AVAILABLE_DICTIONARIES = {
 let fakeRendererWorker;
 
 const handleGetMisspelled = async (_event, words) =>
-  await fakeRendererWorker.webContents.executeJavaScript(`getMisspelled(${JSON.stringify(words)})`);
+  fakeRendererWorker.webContents.executeJavaScript(`getMisspelled(${JSON.stringify(words)})`);
 
 const getEnabledDictionaries = () => loadSettings().enabledDictionaries;
 
@@ -97,6 +97,8 @@ const loadDictionaries = () => {
     ipcMain.handle(APP_EVENTS.dictionaryGetMisspelled, handleGetMisspelled);
   }
   fakeRendererWorker.loadURL(`file://${__dirname}/dictionary.renderer/index.html`);
+  // Uncomment to debug problems with dictionaries
+  // fakeRendererWorker.webContents.openDevTools();
 };
 
 const contextMenuHandler = async (_event, {misspelledWord}, webContents) => {
