@@ -259,9 +259,11 @@ describe('Settings in Browser test suite', () => {
       test('expanded tab, should collapse tab', async () => {
         // Given
         await dispatch({type: 'TOGGLE_TAB_EXPANDED', payload: '2'});
-        const $collapseIcon = document.querySelector('.settings__tab[data-id="2"] .icon .fa-chevron-down');
-        const $expandedTab = $collapseIcon.closest('.settings__tab');
+        const $tabIcon = document.querySelector('.settings__tab[data-id="2"] .icon');
+        await waitFor(() => expect($tabIcon.title).toEqual('Collapse'));
+        const $expandedTab = $tabIcon.closest('.settings__tab');
         expect($expandedTab.classList.contains('settings__tab--expanded')).toBe(true);
+        const $collapseIcon = $tabIcon.querySelector('.fa-chevron-down');
         // When
         fireEvent.click($collapseIcon);
         // Then
