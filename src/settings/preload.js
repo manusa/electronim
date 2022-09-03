@@ -13,18 +13,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const preact = require('preact');
-const preactHooks = require('preact/hooks');
-const htm = require('htm');
 require('../main/preload');
+
 const {AVAILABLE_DICTIONARIES, getEnabledDictionaries} = require('../spell-check');
 const {loadSettings} = require('./');
 
 const settings = loadSettings();
 
-window.preact = preact;
-window.preactHooks = preactHooks;
-window.htm = htm;
+window.preact = require('preact');
+window.preactHooks = require('preact/hooks');
+window.html = require('htm').bind(window.preact.h);
+window.TopBar = require('../components').topBar(window.html);
 
 window.dictionaries = {
   available: AVAILABLE_DICTIONARIES,

@@ -43,7 +43,8 @@ describe('Settings in Browser test suite', () => {
     window.preact = require('preact');
     window.preactHooks = require('preact/hooks');
     spyUseReducer = jest.spyOn(window.preactHooks, 'useReducer');
-    window.htm = require('htm');
+    window.html = require('htm').bind(window.preact.h);
+    window.TopBar = require('../../components').topBar(window.html);
     window.APP_EVENTS = {};
     window.ELECTRONIM_VERSION = '1.33.7';
     window.dictionaries = mockDictionaries;
@@ -211,6 +212,26 @@ describe('Settings in Browser test suite', () => {
     });
   });
   describe('Tab events', () => {
+    describe('Disable icon click', () => {
+      let $disableIcon;
+      beforeEach(() => {
+        $disableIcon = document.querySelector('.settings__tabs .icon .fa-eye');
+      });
+      test('with enabled tab, should disable', async () => {
+        // When
+        fireEvent.click($disableIcon);
+        // Then
+        await waitFor(() => expect($disableIcon.classList.contains('fa-eye')).toBe(false));
+        expect($disableIcon.classList.contains('fa-eye-slash')).toBe(true);
+      });
+      test('with disabled tab, should enable', async () => {
+        // When
+        fireEvent.click($disableIcon);
+        // Then
+        await waitFor(() => expect($disableIcon.classList.contains('fa-eye-slash')).toBe(false));
+        expect($disableIcon.classList.contains('fa-eye')).toBe(true);
+      });
+    });
     test('Notification disabled icon click, should enable notification', async () => {
       // Given
       const $notificationEnabledIcon = document.querySelector('.settings__tabs .icon .fa-bell-slash');
@@ -272,28 +293,6 @@ describe('Settings in Browser test suite', () => {
         expect($expandedTab.classList.contains('settings__tab--expanded')).toBe(false);
       });
       describe('Advanced settings', () => {
-        test('Disable checkbox click, enabled tab, should disable', async () => {
-          // Given
-          await dispatch({type: 'TOGGLE_TAB_EXPANDED', payload: '1'});
-          const $disableCheckBox = document.querySelector('.settings__tab-advanced .checkbox .fa-eye');
-          // When
-          fireEvent.click($disableCheckBox);
-          // Then
-          await waitFor(() =>
-            expect($disableCheckBox.classList.contains('fa-eye')).toBe(false));
-          expect($disableCheckBox.classList.contains('fa-eye-slash')).toBe(true);
-        });
-        test('Disable checkbox click, disabled tab, should enable', async () => {
-          // Given
-          await dispatch({type: 'TOGGLE_TAB_EXPANDED', payload: '2'});
-          const $disableCheckBox = document.querySelector('.settings__tab-advanced .checkbox .fa-eye-slash');
-          // When
-          fireEvent.click($disableCheckBox);
-          // Then
-          await waitFor(() =>
-            expect($disableCheckBox.classList.contains('fa-eye-slash')).toBe(false));
-          expect($disableCheckBox.classList.contains('fa-eye')).toBe(true);
-        });
         test('Sandbox checkbox click, sandboxed session, should unlock', async () => {
           // Given
           await dispatch({type: 'TOGGLE_TAB_EXPANDED', payload: '1'});
@@ -316,6 +315,26 @@ describe('Settings in Browser test suite', () => {
             expect($lockCheckBox.classList.contains('fa-lock-open')).toBe(false));
           expect($lockCheckBox.classList.contains('fa-lock')).toBe(true);
         });
+      });
+    });
+    describe('URL edit', () => {
+      let $input;
+      let $submitButton;
+      beforeEach(() => {
+        $input = document.querySelector('.settings__tab[data-id="1"] .input');
+        $submitButton = document.querySelector('.settings__submit');
+      });
+      test('with valid URL, should enable save button', async () => {
+        // When
+        fireEvent.input($input, {target: {value: 'https://info.cern.ch'}});
+        // Then
+        await waitFor(() => expect($submitButton.hasAttribute('disabled')).toBe(false));
+      });
+      test('with invalid URL, should disable save button', async () => {
+        // When
+        fireEvent.input($input, {target: {value: 'missing-protocol-info.cern.ch'}});
+        // Then
+        await waitFor(() => expect($submitButton.hasAttribute('disabled')).toBe(true));
       });
     });
   });
