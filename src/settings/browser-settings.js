@@ -33,7 +33,9 @@ const validateUrl = (url, allowNoProtocol = true) => {
     return false;
   }
   try {
-    return new URL(url);
+    // eslint-disable-next-line no-unused-vars
+    const ignored = new URL(url);
+    return true;
   } catch (error) {
     /* error is ignored */
   }
