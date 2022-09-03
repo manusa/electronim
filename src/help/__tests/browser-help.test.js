@@ -29,8 +29,8 @@ describe('Help in Browser test suite', () => {
       send: jest.fn()
     };
     window.preact = require('preact');
-    window.preactHooks = require('preact/hooks');
-    window.htm = require('htm');
+    window.html = require('htm').bind(window.preact.h);
+    window.TopBar = require('../../components').topBar(window.html);
     window.APP_EVENTS = {closeDialog: 'close the dialog'};
     window.ELECTRONIM_VERSION = '1.33.7';
     window.docs = {

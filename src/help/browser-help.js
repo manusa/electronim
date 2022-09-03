@@ -13,11 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {APP_EVENTS, ELECTRONIM_VERSION, ipcRenderer, docs} = window;
-const {h, render} = window.preact;
-// const {useReducer} = window.preactHooks;
-const html = window.htm.bind(h);
+const {APP_EVENTS, ELECTRONIM_VERSION, docs, html, ipcRenderer, preact: {render}, TopBar} = window;
+
 const helpRoot = () => document.querySelector('.help-root');
+const close = () => ipcRenderer.send(APP_EVENTS.closeDialog);
 
 const Document = ({id}) => html`
   <a id=${id} />
@@ -52,24 +51,18 @@ const Content = () => html`
   </div>
 `;
 
-const Toolbar = () => {
-  const close = () => ipcRenderer.send(APP_EVENTS.closeDialog);
-  return html`
-    <div class="toolbar">
-      <button class="button is-link is-light" onclick=${close}>
-        Close
-      </button>
-    </div>
-`;
-};
-
-
 const Help = () => html`
+    <${TopBar} fixed=${true} title='Help'
+      endComponents=${html`
+        <div class='navbar-item'>
+          <button class="button is-link is-light" onclick=${close}>Close</button>
+        </div>
+      `}
+    />
     <div class="help-content">
       <${Toc} />
       <${Content} />
     </div>
-    <${Toolbar} />
   `;
 
 render(html`<${Help} />`, helpRoot());
