@@ -14,16 +14,23 @@
    limitations under the License.
  */
 require('../main/preload');
+const components = require('../components');
+
+components.bulma();
+components.fontAwesome();
+components.addStylesheet('./browser-settings.css');
+
+window.preact = require('preact');
+window.preactHooks = require('preact/hooks');
+window.html = require('htm').bind(window.preact.h);
+window.TopBar = components.topBar(window.html);
+
 
 const {AVAILABLE_DICTIONARIES, getEnabledDictionaries} = require('../spell-check');
 const {loadSettings} = require('./');
 
 const settings = loadSettings();
 
-window.preact = require('preact');
-window.preactHooks = require('preact/hooks');
-window.html = require('htm').bind(window.preact.h);
-window.TopBar = require('../components').topBar(window.html);
 
 window.dictionaries = {
   available: AVAILABLE_DICTIONARIES,

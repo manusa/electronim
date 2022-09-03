@@ -13,7 +13,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+require('../main/preload');
+const components = require('../components');
+
+components.chromeTabs();
+components.bulma();
+components.fontAwesome();
+components.addStylesheet('./browser-chrome-tabs.css');
+
 window.preact = require('preact');
 window.preactHooks = require('preact/hooks');
 window.htm = require('htm');
-require('../main/preload');
