@@ -14,9 +14,8 @@
    limitations under the License.
  */
 /* eslint-disable no-undef */
-const {h, render} = window.preact;
-const {useReducer} = window.preactHooks;
-const html = window.htm.bind(h);
+const {html, preact: {render}, preactHooks: {useReducer}, TopBar} = window;
+
 const settings = () => document.querySelector('.settings');
 
 const prependProtocol = url => {
@@ -26,8 +25,10 @@ const prependProtocol = url => {
   return url;
 };
 
-const validateUrl = url => {
-  url = prependProtocol(url);
+const validateUrl = (url, allowNoProtocol = true) => {
+  if (allowNoProtocol) {
+    url = prependProtocol(url);
+  }
   if (!url && !url.match(/^https?:\/\/.+/)) {
     return false;
   }
@@ -56,6 +57,7 @@ const initialState = {
   expandedTabs: [],
   newTabValid: false,
   newTabValue: '',
+  invalidTabs: new Set(),
   canSave: window.tabs.length > 0,
   disableNotificationsGlobally: window.disableNotificationsGlobally
 };
@@ -63,6 +65,7 @@ const initialState = {
 const ACTIONS = {
   ADD: 'ADD',
   REMOVE: 'REMOVE',
+  SET_TAB_PROPERTY: 'SET_TAB_PROPERTY',
   TOGGLE_DICTIONARY: 'TOGGLE_DICTIONARY',
   TOGGLE_TAB_EXPANDED: 'TOGGLE_TAB_EXPANDED',
   TOGGLE_TAB_PROPERTY: 'TOGGLE_TAB_PROPERTY',
@@ -84,6 +87,7 @@ const reducer = (state, action) => {
         newTabValue: '',
         tabs: [...state.tabs, {
           id: newId(),
+          disabled: false,
           sandboxed: false,
           disableNotifications: false,
           url: prependProtocol(state.newTabValue)
@@ -96,6 +100,22 @@ const reducer = (state, action) => {
         tabs: state.tabs.filter(tab => tab.id !== action.payload.id),
         canSave: state.tabs.filter(tab => tab.id !== action.payload.id).length > 0
       };
+    }
+    case ACTIONS.SET_TAB_PROPERTY: {
+      const newState = {...state, tabs: []};
+      state.tabs.forEach(tab => {
+        const newTab = {...tab};
+        if (newTab.id === action.payload.id) {
+          newTab[action.payload.property] = action.payload.value;
+          if (!validateUrl(newTab.url, false)) {
+            newState.invalidTabs.add(newTab.id);
+          } else {
+            newState.invalidTabs.delete(newTab.id);
+          }
+        }
+        newState.tabs.push(newTab);
+      });
+      return newState;
     }
     case ACTIONS.TOGGLE_DICTIONARY: {
       const newState = {...state};
@@ -143,6 +163,8 @@ const reducer = (state, action) => {
   }
 };
 
+const setTabProperty = ({dispatch, property, value, id}) =>
+  dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {id, property, value}});
 const toggleTabProperty = (dispatch, property, id) =>
   () => dispatch({type: ACTIONS.TOGGLE_TAB_PROPERTY, payload: {id, property}});
 
@@ -174,29 +196,36 @@ const Checkbox = ({label, title = '', icon, checked, value, onclick}) => (html`
   </div>
 `);
 
+const disabledIcon = disabled => (disabled === true ? 'fa-eye-slash' : 'fa-eye');
+const sandboxedIcon = sandboxed => (sandboxed === true ? 'fa-lock' : 'fa-lock-open');
+
 const TabAdvancedSettings = (
-  {dispatch, id, disabled = false, sandboxed = false}
+  {dispatch, id, sandboxed = false}
 ) => (html`
   <div class="settings__tab-advanced container">
-    <${Checkbox} label="Disable" checked=${disabled} value=${id}
-      icon=${disabled ? 'fa-eye-slash' : 'fa-eye'}
-      onclick=${toggleTabProperty(dispatch, 'disabled', id)}
-    />
     <${Checkbox} label="Sandbox" checked=${sandboxed} value=${id}
       title='Use an isolated/sandboxed session for this tab'
-      icon=${sandboxed ? 'fa-lock' : 'fa-lock-open'}
+      icon=${sandboxedIcon(sandboxed)}
       onclick=${toggleTabProperty(dispatch, 'sandboxed', id)}
     />
   </div>
 `);
 
-const TabEntry = ({dispatch, id, expanded, url, disableNotifications = false, ...tab}) => (html`
+const TabEntry = ({
+  dispatch, invalidTabs, id, expanded, url, disabled, disableNotifications = false, ...tab
+}) => (html`
   <div class='settings__tab ${expanded && 'settings__tab--expanded'} panel-block' data-id=${id}>
     <div class='settings__tab-main'>
       <${ExpandButton} dispatch=${dispatch} id=${id} expanded=${expanded} />
       <div class='control'>
-        <input type='text' readonly class='input' name='tabs' value='${url}' />
+        <input type='text' class=${`input ${invalidTabs.has(id) ? 'is-danger' : ''}`} name='tabs'
+          oninput=${({target: {value}}) => setTabProperty({dispatch, property: 'url', value, id})}
+          value=${url} />
       </div>
+      <${SettingsButton} icon=${disabledIcon(disabled)}
+        title=${disabled ? 'Tab disabled. Click to enable' : 'Tab enabled. Click to disable'}
+        onclick=${toggleTabProperty(dispatch, 'disabled', id)}
+      />
       <${SettingsButton} icon=${disableNotifications ? 'fa-bell-slash' : 'fa-bell'}
         title=${disableNotifications ? 'Notifications disabled. Click to enable' : 'Notifications enabled. Click to disable'}
         onclick=${toggleTabProperty(dispatch, 'disableNotifications', id)}
@@ -205,7 +234,7 @@ const TabEntry = ({dispatch, id, expanded, url, disableNotifications = false, ..
         onclick=${() => dispatch({type: ACTIONS.REMOVE, payload: {id}})}
       /> 
     </div>
-    <${TabAdvancedSettings} dispatch=${dispatch} id=${id} expanded=${expanded}
+    <${TabAdvancedSettings} dispatch=${dispatch} id=${id} expanded=${expanded} disabled=${disabled}
       ...${tab}
     />
   </div>
@@ -240,7 +269,20 @@ const Settings = () => {
   });
   const cancel = () => ipcRenderer.send(APP_EVENTS.closeDialog);
   return html`
-  <h1 class="title">Settings</h1>
+  <${TopBar}
+    fixed=${true} title='Settings'
+    endComponents=${html`
+      <div class="navbar-item field is-grouped">
+        <div class="control">
+          <button class="settings__submit button is-link"
+            disabled=${!state.canSave || state.invalidTabs.size !== 0} onclick=${save}>Ok</button>
+        </div>
+        <div class="control">
+          <button class="settings__cancel button is-link is-light" onclick=${cancel}>Cancel</button>
+        </div>
+      </div>
+    `}
+  />
   <div class="container">
     <div class="form">
       <nav class="panel">
@@ -255,12 +297,12 @@ const Settings = () => {
               onkeydown=${onNewKeyDown}
             />
           </div>
-          <${SettingsButton} icon='fa-plus' onclick=${addTab} disabled=${!state.newTabValid} /> 
+          <${SettingsButton} icon='fa-plus' onclick=${addTab} disabled=${!state.newTabValid} />
         </div>
         <div class="settings__tabs container field">
           ${state.tabs.map(tab => (html`
             <${TabEntry}
-              dispatch=${dispatch} expanded=${state.expandedTabs.includes(tab.id)}
+              dispatch=${dispatch} expanded=${state.expandedTabs.includes(tab.id)} invalidTabs=${state.invalidTabs}
               ...${tab}
             />
         `))}
@@ -276,7 +318,7 @@ const Settings = () => {
       <${DictionaryEntry} dispatch=${dispatch} dictionaryKey=${key} name=${name}
         enabled=${enabledDictionaries.includes(key)}
       />
-    `))} 
+    `))}
           </div>
         </div>
       </nav>
@@ -297,17 +339,6 @@ const Settings = () => {
           ElectronIM version ${ELECTRONIM_VERSION}
         </div>
       </nav>
-      <div class="field is-grouped">
-        <div class="control">
-          <button class="settings__submit button is-link"
-            disabled=${!state.canSave} onclick=${save}>Ok</button>
-        </div>
-        <div class="control">
-          <button class="settings__cancel button is-link is-light" onclick=${cancel}>
-            Cancel
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 `;
