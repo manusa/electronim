@@ -13,6 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+const {waitFor} = require('@testing-library/dom');
+
 describe('Help Module preload test suite', () => {
   let mockHelp;
   beforeEach(() => {
@@ -24,11 +26,28 @@ describe('Help Module preload test suite', () => {
     jest.mock('../', () => mockHelp);
   });
   test('preload', () => {
-    // Given
     // When
     require('../preload');
     // Then
     expect(global.mainPreloadLoaded).toBe(true);
     expect(mockHelp.loadDocs).toHaveBeenCalledTimes(1);
+  });
+  test('bulma is loaded', async () => {
+    // When
+    require('../preload');
+    // Then
+    await waitFor(() => expect(document.querySelector('link[href*="bulma"]')).not.toBeNull());
+  });
+  test('fontawesome is loaded', async () => {
+    // When
+    require('../preload');
+    // Then
+    await waitFor(() => expect(document.querySelector('link[href*="fontawesome"]')).not.toBeNull());
+  });
+  test('browser-help is loaded', async () => {
+    // When
+    require('../preload');
+    // Then
+    await waitFor(() => expect(document.querySelector('link[href*="browser-help"]')).not.toBeNull());
   });
 });
