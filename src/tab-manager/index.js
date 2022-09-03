@@ -26,6 +26,7 @@ const tabs = {};
 const webPreferences = {
   contextIsolation: false,
   nativeWindowOpen: true,
+  nodeIntegration: true,
   preload: `${__dirname}/preload.js`
 };
 

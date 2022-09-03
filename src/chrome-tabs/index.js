@@ -22,6 +22,7 @@ const TABS_CONTAINER_HEIGHT = 46;
 const webPreferences = {
   contextIsolation: false,
   nativeWindowOpen: true,
+  nodeIntegration: true,
   preload: `${__dirname}/preload.js`,
   partition: 'persist:electronim'
 };
