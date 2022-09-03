@@ -5,15 +5,20 @@ const createLink = href => {
   link.type = 'text/css';
   link.rel = 'stylesheet';
   link.href = href;
-  document.head.appendChild(link);
+  return link;
 };
 
 const addStylesheet = href => {
-  if (document.head) {
-    createLink(href);
-  } else {
-    document.addEventListener('DOMContentLoaded', () => createLink(href));
-  }
+  // eslint-disable-next-line prefer-const
+  let observer;
+  const callback = () => {
+    if (document.head) {
+      document.head.append(createLink(href));
+      observer.disconnect();
+    }
+  };
+  observer = new MutationObserver(callback);
+  observer.observe(document, {childList: true, subtree: true});
 };
 
 const bulma = () => addStylesheet(path.resolve(path.dirname(require.resolve('bulma')), 'css', 'bulma.min.css'));
