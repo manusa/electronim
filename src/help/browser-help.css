@@ -19,7 +19,7 @@
   --color-gray-lighter: #dbdbdb;
   --color-gray: #7d7d7d;
   --border-color: var(--color-gray-lighter);
-  --toolbar-height: 60px;
+  --top-bar-height: 60px;
   --toc-min-width: 250px;
   --code-background-color: rgba(27, 31,35, 0.05);
   --code-border-radius: 6px;
@@ -30,22 +30,10 @@
   overflow: hidden;
 }
 
-.toolbar {
-  position: absolute;
-  top: 0;
-  left: calc(var(--default-spacing) * 3);
-  right: calc(var(--default-spacing) * 3);
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: var(--default-spacing);
-  height: var(--toolbar-height);
-}
 
 .help-root {
   position: fixed;
-  top: 0;
+  top: var(--top-bar-height);
   left: 0;
   bottom: 0;
   right: 0;

@@ -22,6 +22,7 @@ components.addStylesheet('./browser-help.css');
 
 window.preact = require('preact');
 window.preactHooks = require('preact/hooks');
-window.htm = require('htm');
+window.html = require('htm').bind(window.preact.h);
+window.TopBar = components.topBar(window.html);
 
 window.docs = require('./').loadDocs();

@@ -271,8 +271,7 @@ const Settings = () => {
   });
   const cancel = () => ipcRenderer.send(APP_EVENTS.closeDialog);
   return html`
-  <${TopBar}
-    fixed=${true} title='Settings'
+  <${TopBar} fixed=${true} title='Settings'
     endComponents=${html`
       <div class="navbar-item field is-grouped">
         <div class="control">
