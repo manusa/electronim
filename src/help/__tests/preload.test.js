@@ -35,18 +35,21 @@ describe('Help Module preload test suite', () => {
   test('bulma is loaded', async () => {
     // When
     require('../preload');
+    window.document.body.innerHTML = '<div />';
     // Then
     await waitFor(() => expect(document.querySelector('link[href*="bulma"]')).not.toBeNull());
   });
   test('fontawesome is loaded', async () => {
     // When
     require('../preload');
+    window.document.body.innerHTML = '<div />';
     // Then
     await waitFor(() => expect(document.querySelector('link[href*="fontawesome"]')).not.toBeNull());
   });
   test('browser-help is loaded', async () => {
     // When
     require('../preload');
+    window.document.body.innerHTML = '<div />';
     // Then
     await waitFor(() => expect(document.querySelector('link[href*="browser-help"]')).not.toBeNull());
   });

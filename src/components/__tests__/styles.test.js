@@ -21,8 +21,10 @@ describe('Styles Module test suite', () => {
     jest.resetModules();
   });
   test('bulma, loads stylesheet', async () => {
-    // When
+    // Given
     require('../styles').bulma();
+    // When
+    window.document.body.innerHTML = '<div />';
     // Then
     await waitFor(() => expect(document.querySelector('link[href*="bulma"]')).not.toBeNull());
     const bulmaCss = fs.readFileSync(
@@ -30,8 +32,10 @@ describe('Styles Module test suite', () => {
     expect(bulmaCss).toContain('.button,.file-cta,.file-name');
   });
   test('chromeTabs, loads stylesheet', async () => {
-    // When
+    // Given
     require('../styles').chromeTabs();
+    // When
+    window.document.body.innerHTML = '<div />';
     // Then
     await waitFor(() => expect(document.querySelector('link[href*="chrome-tabs.css"]')).not.toBeNull());
     const bulmaCss = fs.readFileSync(
@@ -39,8 +43,10 @@ describe('Styles Module test suite', () => {
     expect(bulmaCss).toContain('.chrome-tabs {');
   });
   test('chromeTabs, loads dark theme stylesheet', async () => {
-    // When
+    // Given
     require('../styles').chromeTabs();
+    // When
+    window.document.body.innerHTML = '<div />';
     // Then
     await waitFor(() => expect(document.querySelector('link[href*="chrome-tabs-dark-theme.css"]')).not.toBeNull());
     const bulmaCss = fs.readFileSync(
@@ -48,8 +54,10 @@ describe('Styles Module test suite', () => {
     expect(bulmaCss).toContain('.chrome-tabs.chrome-tabs-dark-theme {');
   });
   test('fontAwesome, loads stylesheet', async () => {
-    // When
+    // Given
     require('../styles').fontAwesome();
+    // When
+    window.document.body.innerHTML = '<div />';
     // Then
     await waitFor(() => expect(document.querySelector('link[href*="fontawesome"]')).not.toBeNull());
     const bulmaCss = fs.readFileSync(
