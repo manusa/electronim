@@ -25,6 +25,7 @@ const DOCS_DIR = path.resolve(__dirname, '../../docs');
 const webPreferences = {
   contextIsolation: false,
   nativeWindowOpen: true,
+  nodeIntegration: true,
   preload: `${__dirname}/preload.js`
 };
 
