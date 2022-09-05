@@ -10,9 +10,6 @@
     "pretest": "eslint --ignore-path .gitignore .",
     "start": "electron .",
     "test": "jest --coverage",
-    "package-linux": "electron-packager . electronim --overwrite --asar=true --platform=linux --arch=x64 --prune=true --out=dist",
-    "package-mac": "electron-packager . electronim --overwrite --asar=true --platform=darwin --arch=x64 --prune=true --out=dist",
-    "package-win": "electron-packager . electronim --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=dist --version-string.CompanyName=\"Marc Nuri\" --version-string.FileDescription=ElectronIM --version-string.ProductName=\"ElectronIM\"",
     "build:linux": "electron-builder --linux",
     "build:mac": "electron-builder --mac",
     "build:win": "electron-builder --win"
@@ -149,7 +146,6 @@
   "devDependencies": {
     "@testing-library/dom": "8.17.1",
     "electron-builder": "23.3.3",
-    "electron-packager": "16.0.0",
     "eslint": "8.23.0",
     "eslint-plugin-jest": "27.0.1",
     "jest": "29.0.1",
