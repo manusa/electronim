@@ -29,13 +29,11 @@ const validateUrl = (url, allowNoProtocol = true) => {
   if (allowNoProtocol) {
     url = prependProtocol(url);
   }
-  if (!url && !url.match(/^https?:\/\/.+/)) {
+  if (!url || !url.match(/^https?:\/\/.+/)) {
     return false;
   }
   try {
-    // eslint-disable-next-line no-unused-vars
-    const ignored = new URL(url);
-    return true;
+    return Boolean(new URL(url));
   } catch (error) {
     /* error is ignored */
   }
