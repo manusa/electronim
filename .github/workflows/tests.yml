@@ -67,6 +67,10 @@ jobs:
         run: |
           ./utils/prepare-electron-builder.js
           npm run build:linux
+      - name: CI Artifact for AppImage
+        uses: actions/upload-artifact@v3
+        with:
+          path: electronim-linux-x86_64.AppImage
   macos-build:
     name: macOS Build
     runs-on: macos-latest
@@ -106,4 +110,8 @@ jobs:
           powershell
           choco pack --version=$(node -p "require('./package').version") build-config/electronim.nuspec
           choco install electronim -dvy -s .
+      - name: CI Artifact for exe
+        uses: actions/upload-artifact@v3
+        with:
+          path: electronim-win-x64.zip
 
