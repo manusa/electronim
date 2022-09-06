@@ -7,11 +7,15 @@
     "electronim": "bin.js"
   },
   "scripts": {
-    "pretest": "eslint --ignore-path .gitignore .",
-    "start": "electron .",
+    "pretest": "eslint --ignore-path .gitignore . && node parcel.js",
     "test": "jest --coverage",
+    "prestart": "node parcel.js",
+    "start": "electron .",
+    "prebuild:linux": "",
     "build:linux": "electron-builder --linux",
+    "prebuild:mac": "node parcel.js",
     "build:mac": "electron-builder --mac",
+    "prebuild:win": "node parcel.js",
     "build:win": "electron-builder --win"
   },
   "publishConfig": {
