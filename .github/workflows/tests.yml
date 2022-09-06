@@ -72,7 +72,8 @@ jobs:
       - name: CI Artifact for AppImage
         uses: actions/upload-artifact@v3
         with:
-          path: electronim-linux-x86_64.AppImage
+          name: electronim-linux-x86_64.AppImage
+          path: dist/electronim-linux-x86_64.AppImage
   macos-build:
     name: macOS Build
     runs-on: macos-latest
@@ -115,5 +116,6 @@ jobs:
       - name: CI Artifact for exe
         uses: actions/upload-artifact@v3
         with:
-          path: electronim-win-x64.zip
+          name: electronim-win-x64.exe
+          path: dist/electronim-win-x64.exe
 
