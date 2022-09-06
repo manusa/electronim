@@ -14,6 +14,7 @@
    limitations under the License.
  */
 const {BrowserView, Menu, MenuItem} = require('electron');
+const path = require('path');
 const {openHelpDialog} = require('../help');
 const {openSettingsDialog} = require('../settings');
 
@@ -22,8 +23,9 @@ const TABS_CONTAINER_HEIGHT = 46;
 const webPreferences = {
   contextIsolation: false,
   nativeWindowOpen: true,
-  nodeIntegration: true,
-  preload: `${__dirname}/preload.js`,
+  nodeIntegration: false,
+  sandbox: false,
+  preload: path.resolve(__dirname, 'preload.js'),
   partition: 'persist:electronim'
 };
 

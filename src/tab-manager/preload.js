@@ -13,8 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-require('../main/preload');
 const {webFrame} = require('electron');
+require('../main/preload');
 require('./browser-notification-shim');
 require('./browser-mediadevices-shim');
 const {initKeyboardShortcuts} = require('./browser-keyboard-shortcuts');
