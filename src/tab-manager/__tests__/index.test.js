@@ -24,7 +24,7 @@ describe('Tab Manager module test suite', () => {
     mockBrowserView = {
       setAutoResize: jest.fn(),
       webContents: {
-        executeJavaScript: jest.fn(),
+        executeJavaScript: jest.fn(async () => {}),
         on: jest.fn(),
         loadURL: jest.fn(),
         userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36',

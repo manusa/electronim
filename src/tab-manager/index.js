@@ -14,6 +14,7 @@
    limitations under the License.
  */
 const {app, BrowserView, Menu, MenuItem, session} = require('electron');
+const path = require('path');
 const {APP_EVENTS} = require('../constants');
 const settings = require('../settings');
 const {contextMenuHandler} = require('../spell-check');
@@ -26,8 +27,9 @@ const tabs = {};
 const webPreferences = {
   contextIsolation: false,
   nativeWindowOpen: true,
-  nodeIntegration: true,
-  preload: `${__dirname}/preload.js`
+  nodeIntegration: false,
+  sandbox: false,
+  preload: path.resolve(__dirname, 'preload.js')
 };
 
 const handlePageTitleUpdated = (ipcSender, tabId) => (_e, title) => {
@@ -104,7 +106,7 @@ const addTabs = ipcSender => tabsMetadata => {
 
     const registerIdInTab = () => tab.webContents.executeJavaScript(`window.tabId = '${id}';`);
     tab.webContents.on('dom-ready', registerIdInTab);
-    registerIdInTab();
+    registerIdInTab().then();
 
     tabs[id.toString()] = tab;
   });

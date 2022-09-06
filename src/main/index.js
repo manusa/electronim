@@ -14,6 +14,7 @@
    limitations under the License.
  */
 const {BrowserWindow, Notification, app, desktopCapturer, ipcMain: ipc} = require('electron');
+const path = require('path');
 const {APP_EVENTS} = require('../constants');
 const {TABS_CONTAINER_HEIGHT, initTabContainer} = require('../chrome-tabs');
 const {loadSettings, updateSettings, openSettingsDialog} = require('../settings');
@@ -24,8 +25,8 @@ const {initBrowserVersions, userAgentForView} = require('../user-agent');
 const webPreferences = {
   contextIsolation: false,
   nativeWindowOpen: true,
-  nodeIntegration: true,
-  preload: `${__dirname}/preload.js`,
+  sandbox: false,
+  preload: path.resolve(__dirname, 'preload.js'),
   partition: 'persist:electronim'
 };
 
@@ -191,7 +192,6 @@ const init = () => {
       }).show();
       browserVersionsReady();
     });
-
   return mainWindow;
 };
 

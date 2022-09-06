@@ -16,7 +16,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT_DIR = path.resolve(__dirname, '../../');
+const findRootDir = () => {
+  let rootDir = __dirname;
+  while (!fs.existsSync(path.join(rootDir, 'package.json'))) {
+    rootDir = path.join(rootDir, '..');
+  }
+  return rootDir;
+};
 
 const APP_EVENTS = {
   activateTab: 'activateTab',
@@ -39,7 +45,7 @@ const APP_EVENTS = {
   zoomReset: 'zoomReset'
 };
 
-const ELECTRONIM_VERSION = JSON.parse(fs.readFileSync(path.resolve(ROOT_DIR, 'package.json'), 'utf8')).version;
+const ELECTRONIM_VERSION = JSON.parse(fs.readFileSync(path.resolve(findRootDir(), 'package.json'), 'utf8')).version;
 
 module.exports = {
   APP_EVENTS, ELECTRONIM_VERSION
