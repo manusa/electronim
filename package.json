@@ -144,6 +144,8 @@
     }
   },
   "devDependencies": {
+    "@parcel/config-default": "^2.7.0",
+    "@parcel/core": "^2.7.0",
     "@testing-library/dom": "8.17.1",
     "electron-builder": "23.3.3",
     "eslint": "8.23.0",
