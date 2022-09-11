@@ -13,8 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const path = require('path');
-const DOCS_DIR = path.resolve(__dirname, '../../../docs');
 describe('Help module test suite', () => {
   let mockBrowserView;
   let help;
@@ -27,31 +25,6 @@ describe('Help module test suite', () => {
       BrowserView: jest.fn(() => mockBrowserView)
     }));
     help = require('../');
-  });
-  describe('fixRelativeUrls', () => {
-    test('Combination of absolute and relative paths', () => {
-      // Given
-      const input = `
-        <img src\t   =  'relativePath'/>
-        <img src="https://absolute.com" /><a href="./relativeDir" />
-        <a href="http://test/some-path" />
-      `;
-      // When
-      const result = help.fixRelativeUrls(input);
-      // Then
-      expect(result).toBe(`
-        <img src	   =  '${DOCS_DIR}/relativePath'/>
-        <img src="https://absolute.com" /><a href="${DOCS_DIR}/./relativeDir" />
-        <a href="http://test/some-path" />
-      `);
-    });
-  });
-  test('loadDocs, should load object with documentation', () => {
-    // When
-    const docs = help.loadDocs();
-    // Then
-    expect(Object.keys(docs)).toContain('Setup.md');
-    expect(docs['Setup.md']).toMatch(/There are several options available/i);
   });
   test('openHelpDialog, should open dialog and add event listeners', () => {
     // Given

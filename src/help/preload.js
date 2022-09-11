@@ -13,16 +13,19 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-require('../main/preload');
-const components = require('../components');
+/* eslint-disable no-undef */
+const {ipcRenderer} = require('electron');
+const {docs} = require('!val-loader!./docs.browser.val-loader');
+const {topBar} = require('../components/top-bar');
 
-components.bulma();
-components.fontAwesome();
-components.addStylesheet('./browser-help.css');
+require('./help.browser.css');
 
+window.ipcRenderer = ipcRenderer;
+window.APP_EVENTS = APP_EVENTS;
+window.ELECTRONIM_VERSION = ELECTRONIM_VERSION;
 window.preact = require('preact');
 window.preactHooks = require('preact/hooks');
 window.html = require('htm').bind(window.preact.h);
-window.TopBar = components.topBar(window.html);
+window.TopBar = topBar(window.html);
 
-window.docs = require('./').loadDocs();
+window.docs = docs;

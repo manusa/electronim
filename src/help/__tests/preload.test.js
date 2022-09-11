@@ -16,41 +16,51 @@
 const {waitFor} = require('@testing-library/dom');
 
 describe('Help Module preload test suite', () => {
-  let mockHelp;
   beforeEach(() => {
-    mockHelp = {loadDocs: jest.fn()};
     jest.resetModules();
-    jest.mock('../../main/preload', () => {
-      global.mainPreloadLoaded = true;
+  });
+  describe('preload (just for coverage and sanity, see bundle tests)', () => {
+    beforeEach(() => {
+      jest.mock('../help.browser.css', () => {});
+      jest.mock('!val-loader!./docs.browser.val-loader', () => ({
+        docs: {}
+      }), {virtual: true});
+      window.APP_EVENTS = {};
+      window.ELECTRONIM_VERSION = '1.33.7';
+      require('../preload');
     });
-    jest.mock('../', () => mockHelp);
+    test('adds required libraries', () => {
+      expect(window.ELECTRONIM_VERSION).toEqual('1.33.7');
+    });
   });
-  test('preload', () => {
-    // When
-    require('../preload');
-    // Then
-    expect(global.mainPreloadLoaded).toBe(true);
-    expect(mockHelp.loadDocs).toHaveBeenCalledTimes(1);
-  });
-  test('bulma is loaded', async () => {
-    // When
-    require('../preload');
-    window.document.body.innerHTML = '<div />';
-    // Then
-    await waitFor(() => expect(document.querySelector('link[href*="bulma"]')).not.toBeNull());
-  });
-  test('fontawesome is loaded', async () => {
-    // When
-    require('../preload');
-    window.document.body.innerHTML = '<div />';
-    // Then
-    await waitFor(() => expect(document.querySelector('link[href*="fontawesome"]')).not.toBeNull());
-  });
-  test('browser-help is loaded', async () => {
-    // When
-    require('../preload');
-    window.document.body.innerHTML = '<div />';
-    // Then
-    await waitFor(() => expect(document.querySelector('link[href*="browser-help"]')).not.toBeNull());
+  describe('preload.bundle', () => {
+    beforeEach(() => {
+      require('../../../bundles/help.preload');
+    });
+    test('loads styles in order', async () => {
+      // When
+      document.body.append(document.createElement('div'));
+      // Then
+      await waitFor(() => expect(document.head.children.length).toBeGreaterThan(0));
+      const styles = Array.from(document.querySelectorAll('style'));
+      expect(styles).toHaveLength(1);
+      expect(styles[0].innerHTML).toContain('.help-root {');
+    });
+    test('adds required libraries', () => {
+      expect(window.ELECTRONIM_VERSION).toEqual('0.0.0');
+      expect(window.preact).not.toBeUndefined();
+      expect(window.preactHooks).not.toBeUndefined();
+      expect(window.html).not.toBeUndefined();
+      expect(window.TopBar).not.toBeUndefined();
+    });
+    test('loads document contents with valid asset URLs', () => {
+      expect(window.docs).toEqual(expect.objectContaining({
+        'Keyboard-shortcuts.md': expect.stringMatching(/<h1>Keyboard Shortcuts/i),
+        'Roadmap.md': expect.any(String),
+        'Screenshots.md': expect.stringContaining('<img src="../../docs/screenshots/main.png" alt="Main" />'),
+        'Setup.md': expect.stringMatching(/There are several options available/i),
+        'Troubleshooting.md': expect.any(String)
+      }));
+    });
   });
 });

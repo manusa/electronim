@@ -25,7 +25,7 @@ const {APP_EVENTS, ELECTRONIM_VERSION} = require('./src/constants');
 const BUNDLES_DIR = 'bundles';
 const ENTRIES = [
   // 'chrome-tabs',
-  // 'help',
+  'help'
   // 'main',
   // 'settings',
   // 'tab-manager'
@@ -72,7 +72,7 @@ const bundle = webpack({
                 // eslint-disable-next-line prefer-const
                 let observer;
                 const callback = () => {
-                  if (document.head) {
+                  if (document && document.head) {
                     document.head.append(element);
                     observer.disconnect();
                   }

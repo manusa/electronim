@@ -14,7 +14,8 @@
       "experimentalObjectRestSpread": true,
       "destructuring": true,
       "spread": true
-    }
+    },
+    "sourceType": "module"
   },
   "rules": {
     // Possible Errors
