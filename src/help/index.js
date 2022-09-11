@@ -14,35 +14,17 @@
    limitations under the License.
  */
 const {BrowserView} = require('electron');
-const fs = require('fs');
 const path = require('path');
-const md = require('markdown-it')({html: true, xhtmlOut: true});
 const {handleRedirect} = require('../tab-manager/redirect');
 const {showDialog} = require('../browser-window');
-
-const DOCS_DIR = path.resolve(__dirname, '../../docs');
 
 const webPreferences = {
   contextIsolation: false,
   nativeWindowOpen: true,
   nodeIntegration: false,
-  sandbox: false,
-  preload: path.resolve(__dirname, 'preload.js')
+  sandbox: true,
+  preload: path.resolve(__dirname, '..', '..', 'bundles', 'help.preload.js')
 };
-
-// Visible for testing
-const fixRelativeUrls = s => s.replace(
-  /((src|href)\s*?=\s*?['"](?!http))([^'"]+)(['"])/gi,
-  `$1${DOCS_DIR}/$3$4`
-);
-
-const loadDocs = () => fs.readdirSync(DOCS_DIR)
-  .filter(fileName => fileName.endsWith('.md'))
-  .reduce((acc, fileName) => {
-    acc[fileName] = fixRelativeUrls(md.render(fs.readFileSync(path.resolve(DOCS_DIR, fileName), 'utf8')));
-    return acc;
-  }, {});
-
 
 const openHelpDialog = mainWindow => () => {
   const helpView = new BrowserView({webPreferences});
@@ -53,4 +35,4 @@ const openHelpDialog = mainWindow => () => {
   showDialog(mainWindow, helpView);
 };
 
-module.exports = {fixRelativeUrls, openHelpDialog, loadDocs};
+module.exports = {openHelpDialog};

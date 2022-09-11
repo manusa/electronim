@@ -25,31 +25,25 @@ const mockDOM = () => {
 describe('Help in Browser test suite', () => {
   let mockIpcRenderer;
   beforeEach(() => {
+    require('../../../bundles/help.preload');
     mockIpcRenderer = {
       send: jest.fn()
     };
-    window.preact = require('preact');
-    window.html = require('htm').bind(window.preact.h);
-    window.TopBar = require('../../components').topBar(window.html);
-    window.APP_EVENTS = {closeDialog: 'close the dialog'};
-    window.ELECTRONIM_VERSION = '1.33.7';
-    window.docs = {
-      'Setup.md': '<span>Setup guide</span>',
-      'Keyboard-shortcuts.md': '<span>Keyboard shortcuts</span>',
-      'Troubleshooting.md': '<span>Troubleshooting</span>'
-    };
-    window.ipcRenderer = mockIpcRenderer;
     mockDOM();
+    window.ipcRenderer = mockIpcRenderer;
+    window.ELECTRONIM_VERSION = '1.33.7';
     jest.isolateModules(() => {
-      require('../browser-help');
+      require('../help.browser');
     });
   });
   test('render, should render all documents', () => {
     // Then
     expect(document.querySelector('.toc-container').innerHTML)
       .toMatch(/Table of Contents/);
-    expect(document.querySelector('.documents-container').innerHTML)
-      .toMatch(/Setup guide.+<span>Keyboard shortcuts.+Troubleshooting/);
+    const documentsContent = document.querySelector('.documents-container').innerHTML;
+    expect(documentsContent).toContain('<h1>Setup</h1>');
+    expect(documentsContent).toContain('<h1>Keyboard Shortcuts</h1>');
+    expect(documentsContent).toContain('<h1>Troubleshooting</h1>');
   });
   test('render, should show version in footer', () => {
     // Then
@@ -62,7 +56,7 @@ describe('Help in Browser test suite', () => {
       fireEvent.click(document.querySelector('.button.is-link.is-light'));
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('close the dialog');
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('closeDialog');
     });
   });
 });
