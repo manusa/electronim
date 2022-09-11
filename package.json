@@ -2,16 +2,29 @@
   "name": "electronim",
   "version": "0.0.0",
   "description": "Free/Libre open source Electron based multi instant messaging (IM) client.",
+  "author": {
+    "name": "Marc Nuri",
+    "url": "https://www.marcnuri.com"
+  },
   "main": "src/index.js",
   "bin": {
     "electronim": "bin.js"
   },
+  "files": [
+    "build-config",
+    "bundles",
+    "docs",
+    "src",
+    "utils"
+  ],
   "scripts": {
     "pretest": "eslint --ignore-path .gitignore . && node webpack.js",
     "test": "jest --coverage",
     "prestart": "node webpack.js",
     "start": "electron .",
-    "prebuild:linux": "",
+    "prepack": "node webpack.js",
+    "prepublish": "node webpack.js",
+    "prebuild:linux": "node webpack.js",
     "build:linux": "electron-builder --linux",
     "prebuild:mac": "node webpack.js",
     "build:mac": "electron-builder --mac",
@@ -36,10 +49,6 @@
     "whatsapp",
     "slack"
   ],
-  "author": {
-    "name": "Marc Nuri",
-    "url": "https://www.marcnuri.com"
-  },
   "license": "Apache-2.0",
   "licenses": [
     {
@@ -149,6 +158,7 @@
   },
   "devDependencies": {
     "@testing-library/dom": "8.17.1",
+    "css-loader": "6.7.1",
     "electron-builder": "23.3.3",
     "eslint": "8.23.0",
     "eslint-plugin-jest": "27.0.1",
@@ -156,8 +166,8 @@
     "jest-environment-jsdom": "29.0.1",
     "jest-environment-node": "29.0.1",
     "jest-extended": "3.0.2",
-    "url-loader": "4.1.1",
-    "val-loader": "^5.0.0",
+    "style-loader": "3.3.1",
+    "val-loader": "5.0.0",
     "webpack": "5.74.0"
   },
   "dependencies": {
