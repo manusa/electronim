@@ -24,8 +24,8 @@ const webPreferences = {
   contextIsolation: false,
   nativeWindowOpen: true,
   nodeIntegration: false,
-  sandbox: false,
-  preload: path.resolve(__dirname, 'preload.js'),
+  sandbox: true,
+  preload: path.resolve(__dirname, '..', '..', 'bundles', 'chrome-tabs.preload.js'),
   partition: 'persist:electronim'
 };
 

@@ -14,9 +14,9 @@
    limitations under the License.
  */
 /* eslint-disable no-undef */
-const {h, render} = window.preact;
+const {render} = window.preact;
 const {useLayoutEffect, useReducer, useState} = window.preactHooks;
-const html = window.htm.bind(h);
+const html = window.html;
 
 const getTabContainer = () => document.querySelector('.tab-container');
 const getChromeTabs = () => getTabContainer().querySelector('.chrome-tabs');

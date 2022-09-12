@@ -13,14 +13,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-require('../main/preload');
-const components = require('../components');
+/* eslint-disable no-undef */
+const {ipcRenderer} = require('electron');
 
-components.chromeTabs();
-components.bulma();
-components.fontAwesome();
-components.addStylesheet('./browser-chrome-tabs.css');
+require('./chrome-tabs.browser.css');
 
+window.ipcRenderer = ipcRenderer;
+window.APP_EVENTS = APP_EVENTS;
+window.ELECTRONIM_VERSION = ELECTRONIM_VERSION;
 window.preact = require('preact');
 window.preactHooks = require('preact/hooks');
-window.htm = require('htm');
+window.html = require('htm').bind(window.preact.h);
