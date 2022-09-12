@@ -23,6 +23,7 @@ const mockDOM = () => {
 };
 
 describe('ChromeTabs in Browser test suite', () => {
+  require('../../../bundles/chrome-tabs.preload');
   let mockIpcRenderer;
   let $chromeTabs;
   beforeEach(() => {
@@ -31,22 +32,10 @@ describe('ChromeTabs in Browser test suite', () => {
       on: jest.fn((key, event) => (mockIpcRenderer.events[key] = event)),
       send: jest.fn()
     };
-    window.preact = require('preact');
-    window.preactHooks = require('preact/hooks');
-    window.htm = require('htm');
     window.ipcRenderer = mockIpcRenderer;
-    window.APP_EVENTS = {
-      activateTab: 'activateTab',
-      activateTabInContainer: 'activateTabInContainer',
-      addTabs: 'addTabs',
-      setTabFavicon: 'setTabFavicon',
-      setTabTitle: 'setTabTitle',
-      tabReorder: 'tabReorder',
-      tabsReady: 'tabsReady'
-    };
     mockDOM();
     jest.isolateModules(() => {
-      require('../browser-chrome-tabs');
+      require('../chrome-tabs.browser');
     });
     $chromeTabs = document.querySelector('.chrome-tabs');
   });

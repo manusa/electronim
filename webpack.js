@@ -24,7 +24,7 @@ const {APP_EVENTS, ELECTRONIM_VERSION} = require('./src/constants');
 
 const BUNDLES_DIR = 'bundles';
 const ENTRIES = [
-  // 'chrome-tabs',
+  'chrome-tabs',
   'help'
   // 'main',
   // 'settings',
@@ -34,7 +34,9 @@ const ENTRIES = [
 const LIB_DIR = 'lib';
 const LIB_ENTRIES = [
   '@fortawesome/fontawesome-free/css/all.css',
-  'bulma/css/bulma.css'
+  'bulma/css/bulma.css',
+  'chrome-tabs/css/chrome-tabs.css',
+  'chrome-tabs/css/chrome-tabs-dark-theme.css'
 ];
 
 const bundle = webpack({

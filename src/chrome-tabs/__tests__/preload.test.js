@@ -13,18 +13,41 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+const {waitFor} = require('@testing-library/dom');
+
 describe('Chrome Tabs Module preload test suite', () => {
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('../../main/preload', () => {
-      global.mainPreloadLoaded = true;
+  });
+  describe('preload (just for coverage and sanity, see bundle tests)', () => {
+    beforeEach(() => {
+      jest.mock('../chrome-tabs.browser.css', () => {});
+      window.APP_EVENTS = {};
+      window.ELECTRONIM_VERSION = '1.33.7';
+      require('../preload');
+    });
+    test('adds required libraries', () => {
+      expect(window.ELECTRONIM_VERSION).toEqual('1.33.7');
     });
   });
-  test('preload', () => {
-    // Given
-    // When
-    require('../preload');
-    // Then
-    expect(global.mainPreloadLoaded).toBe(true);
+  describe('preload.bundle', () => {
+    beforeEach(() => {
+      require('../../../bundles/chrome-tabs.preload');
+    });
+    test('loads styles in order', async () => {
+      // When
+      document.body.append(document.createElement('div'));
+      // Then
+      await waitFor(() => expect(document.head.children.length).toBeGreaterThan(0));
+      const styles = Array.from(document.querySelectorAll('style'));
+      expect(styles).toHaveLength(1);
+      expect(styles[0].innerHTML).toContain('.tab-container .chrome-tabs {');
+    });
+    test('adds required libraries', async () => {
+      expect(window.ELECTRONIM_VERSION).toEqual('0.0.0');
+      await waitFor(() => expect(window.preact).not.toBeUndefined());
+      expect(window.preactHooks).not.toBeUndefined();
+      expect(window.html).not.toBeUndefined();
+    });
   });
 });
