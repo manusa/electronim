@@ -79,6 +79,8 @@ const AVAILABLE_DICTIONARIES = {
 
 let fakeRendererWorker;
 
+const getAvailableDictionaries = () => AVAILABLE_DICTIONARIES;
+
 const handleGetMisspelled = async (_event, words) =>
   fakeRendererWorker.webContents.executeJavaScript(`getMisspelled(${JSON.stringify(words)})`);
 
@@ -120,5 +122,5 @@ const contextMenuHandler = async (_event, {misspelledWord}, webContents) => {
 
 
 module.exports = {
-  AVAILABLE_DICTIONARIES, contextMenuHandler, getEnabledDictionaries, loadDictionaries
+  AVAILABLE_DICTIONARIES, contextMenuHandler, getAvailableDictionaries, getEnabledDictionaries, loadDictionaries
 };

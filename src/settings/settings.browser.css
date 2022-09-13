@@ -18,11 +18,6 @@
     --border-color: #dbdbdb;
 }
 
-body {
-    margin:0;
-    padding: 15px 0;
-}
-
 .control .checkbox {
     user-select: none;
 }
@@ -30,6 +25,11 @@ body {
 .control .checkbox .checkbox__icon {
     width: calc(1em + var(--default-spacing));
     text-align: center;
+}
+
+.settings.container {
+    margin:0;
+    padding: 15px 0;
 }
 
 .settings__button.button {
@@ -49,13 +49,15 @@ body {
     flex-direction: column;
 }
 
-.settings__new-tab, .settings__tab-main, .settings__tab-advanced {
+.settings__new-tab,
+.settings__tab-main,
+.settings__tab-advanced.container {
     display: inline-flex;
     align-items: center;
     width: 100%;
 }
 
-.settings__tab .settings__tab-advanced {
+.settings__tab .settings__tab-advanced.container {
     transform: scaleY(0);
     height: 0;
     margin: 0;
@@ -63,7 +65,7 @@ body {
     overflow: hidden;
 }
 
-.settings__tab--expanded .settings__tab-advanced {
+.settings__tab--expanded .settings__tab-advanced.container {
     transform: scaleY(1);
     height: 100%;
     --margin: calc(2 * var(--default-spacing));

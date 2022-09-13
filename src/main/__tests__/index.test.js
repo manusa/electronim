@@ -105,7 +105,7 @@ describe('Main module test suite', () => {
       main.init();
       expect(mockApp.setPath).toHaveBeenCalledWith('userData', 'immixed-case/withsome\\separator$');
     });
-    test('initDesktopCapturerHandler, should regiser desktopCapturer', () => {
+    test('initDesktopCapturerHandler, should register desktopCapturer', () => {
       // Given
       const opts = {the: 'opts'};
       mockDesktopCapturer.getSources = jest.fn();

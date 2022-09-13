@@ -17,7 +17,7 @@ const {BrowserWindow, Notification, app, desktopCapturer, ipcMain: ipc} = requir
 const {APP_EVENTS} = require('../constants');
 const {TABS_CONTAINER_HEIGHT, initTabContainer} = require('../chrome-tabs');
 const {loadSettings, updateSettings, openSettingsDialog} = require('../settings');
-const {loadDictionaries} = require('../spell-check');
+const {getAvailableDictionaries, loadDictionaries, getEnabledDictionaries} = require('../spell-check');
 const tabManager = require('../tab-manager');
 const {initBrowserVersions, userAgentForView} = require('../user-agent');
 
@@ -123,9 +123,9 @@ const initDesktopCapturerHandler = () => {
 };
 
 const closeDialog = () => {
-  const settingsView = mainWindow.getBrowserView();
+  const dialogView = mainWindow.getBrowserView();
   activateTab(tabManager.getActiveTab());
-  settingsView.webContents.destroy();
+  dialogView.webContents.destroy();
 };
 
 const saveSettings = (_event, settings) => {
@@ -140,8 +140,11 @@ const saveSettings = (_event, settings) => {
 };
 
 const initDialogListeners = () => {
-  ipc.on(APP_EVENTS.settingsSave, saveSettings);
   ipc.on(APP_EVENTS.closeDialog, closeDialog);
+  ipc.handle(APP_EVENTS.dictionaryGetAvailable, getAvailableDictionaries);
+  ipc.handle(APP_EVENTS.dictionaryGetEnabled, getEnabledDictionaries);
+  ipc.handle(APP_EVENTS.settingsLoad, loadSettings);
+  ipc.on(APP_EVENTS.settingsSave, saveSettings);
 };
 
 const browserVersionsReady = () => {

@@ -13,30 +13,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-require('../main/preload');
-const components = require('../components');
+/* eslint-disable no-undef */
+const {ipcRenderer} = require('electron');
+const {topBar} = require('../components/top-bar');
 
-components.bulma();
-components.fontAwesome();
-components.addStylesheet('./browser-settings.css');
+require('./settings.browser.css');
 
+window.ipcRenderer = ipcRenderer;
+window.APP_EVENTS = APP_EVENTS;
+window.ELECTRONIM_VERSION = ELECTRONIM_VERSION;
 window.preact = require('preact');
 window.preactHooks = require('preact/hooks');
 window.html = require('htm').bind(window.preact.h);
-window.TopBar = components.topBar(window.html);
-
-
-const {AVAILABLE_DICTIONARIES, getEnabledDictionaries} = require('../spell-check');
-const {loadSettings} = require('./');
-
-const settings = loadSettings();
-
-
-window.dictionaries = {
-  available: AVAILABLE_DICTIONARIES,
-  enabled: getEnabledDictionaries()
-};
-
-window.tabs = [...settings.tabs];
-
-window.disableNotificationsGlobally = settings.disableNotificationsGlobally;
+window.TopBar = topBar(window.html);
