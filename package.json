@@ -154,7 +154,12 @@
         "node",
         "node-addons"
       ]
-    }
+    },
+    "testMatch": [
+      "**/__tests__/**/*.?(m)js?(x)",
+      "**/?(*.**/?(*.)(spec|test).?(m)js?(x)"
+    ],
+    "verbose": true
   },
   "devDependencies": {
     "@testing-library/dom": "8.17.1",

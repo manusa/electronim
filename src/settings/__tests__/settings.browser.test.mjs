@@ -13,7 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {fireEvent, waitFor} = require('@testing-library/dom');
+import {jest} from '@jest/globals';
+import {fireEvent, waitFor} from '@testing-library/dom';
+import htm from 'htm';
 
 const mockDOM = () => {
   document.body.innerHTML = '';
@@ -23,49 +25,55 @@ const mockDOM = () => {
 };
 
 describe('Settings in Browser test suite', () => {
-  let mockDictionaries;
-  let mockTabs;
+  let mockDictionariesAvailable;
+  let mockDictionariesEnabled;
+  let mockCurrentSettings;
   let mockIpcRenderer;
-  let spyUseReducer;
-  let dispatch;
-  beforeEach(() => {
-    mockDictionaries = {available: {
+  beforeEach(async () => {
+    jest.resetModules();
+    mockDictionariesAvailable = {
       en: {name: 'English'},
       es: {name: 'Spanish'}
-    }, enabled: ['en']};
-    mockTabs = [
-      {id: '1', url: 'https://initial-tab.com', sandboxed: true},
-      {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true}
-    ];
-    mockIpcRenderer = {
-      send: jest.fn()
     };
-    window.preact = require('preact');
-    window.preactHooks = require('preact/hooks');
-    spyUseReducer = jest.spyOn(window.preactHooks, 'useReducer');
-    window.html = require('htm').bind(window.preact.h);
-    window.TopBar = require('../../components').topBar(window.html);
-    window.APP_EVENTS = {};
+    mockDictionariesEnabled = ['en'];
+    mockCurrentSettings = {
+      disableNotificationsGlobally: false,
+      tabs: [
+        {id: '1', url: 'https://initial-tab.com', sandboxed: true},
+        {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true}
+      ]
+    };
+    mockIpcRenderer = {
+      send: jest.fn(),
+      invoke: jest.fn(async channel => {
+        switch (channel) {
+          case 'settingsLoad':
+            return mockCurrentSettings;
+          case 'dictionaryGetAvailable':
+            return mockDictionariesAvailable;
+          case 'dictionaryGetEnabled':
+            return mockDictionariesEnabled;
+        }
+        return {};
+      })
+    };
+    window.preact = await import('preact');
+    window.preactHooks = await import('preact/hooks');
+    window.html = htm.bind(window.preact.h);
+    window.TopBar = (await import('../../components')).default.topBar(window.html);
+    window.APP_EVENTS = (await import('../../constants')).APP_EVENTS;
     window.ELECTRONIM_VERSION = '1.33.7';
-    window.dictionaries = mockDictionaries;
-    window.tabs = mockTabs;
     window.ipcRenderer = mockIpcRenderer;
-    window.disableNotificationsGlobally = false;
     mockDOM();
-    jest.isolateModules(() => {
-      require('../browser-settings');
-    });
-    dispatch = spyUseReducer.mock.results.reverse()[0].value[1];
+    await import('../settings.browser');
   });
   describe('Main Button events', () => {
     test('Submit should send form data', () => {
-      // Given
-      window.APP_EVENTS = {settingsSave: 'Save my settings'};
       // When
       fireEvent.click(document.querySelector('.settings__submit'));
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('Save my settings',
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('settingsSave',
         {
           tabs: [
             {id: '1', url: 'https://initial-tab.com', sandboxed: true},
@@ -76,13 +84,11 @@ describe('Settings in Browser test suite', () => {
         });
     });
     test('Cancel should send close dialog event', () => {
-      // Given
-      window.APP_EVENTS = {closeDialog: 'Cancel my settings'};
       // When
       fireEvent.click(document.querySelector('.settings__cancel'));
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('Cancel my settings');
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('closeDialog');
     });
     test('Toggle global notifications should check input', async () => {
       // Given
@@ -279,8 +285,8 @@ describe('Settings in Browser test suite', () => {
       });
       test('expanded tab, should collapse tab', async () => {
         // Given
-        await dispatch({type: 'TOGGLE_TAB_EXPANDED', payload: '2'});
         const $tabIcon = document.querySelector('.settings__tab[data-id="2"] .icon');
+        fireEvent.click($tabIcon);
         await waitFor(() => expect($tabIcon.title).toEqual('Collapse'));
         const $expandedTab = $tabIcon.closest('.settings__tab');
         expect($expandedTab.classList.contains('settings__tab--expanded')).toBe(true);
@@ -295,7 +301,9 @@ describe('Settings in Browser test suite', () => {
       describe('Advanced settings', () => {
         test('Sandbox checkbox click, sandboxed session, should unlock', async () => {
           // Given
-          await dispatch({type: 'TOGGLE_TAB_EXPANDED', payload: '1'});
+          const $tabIcon = document.querySelector('.settings__tab[data-id="1"] .icon');
+          fireEvent.click($tabIcon);
+          await waitFor(() => expect($tabIcon.title).toEqual('Collapse'));
           const $lockCheckBox = document.querySelector('.settings__tab-advanced .checkbox .fa-lock');
           // When
           fireEvent.click($lockCheckBox);
@@ -306,7 +314,9 @@ describe('Settings in Browser test suite', () => {
         });
         test('Sandbox checkbox click, non-sandboxed session, should lock', async () => {
           // Given
-          await dispatch({type: 'TOGGLE_TAB_EXPANDED', payload: '2'});
+          const $tabIcon = document.querySelector('.settings__tab[data-id="2"] .icon');
+          fireEvent.click($tabIcon);
+          await waitFor(() => expect($tabIcon.title).toEqual('Collapse'));
           const $lockCheckBox = document.querySelector('.settings__tab-advanced .checkbox .fa-lock-open');
           // When
           fireEvent.click($lockCheckBox);

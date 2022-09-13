@@ -39,7 +39,7 @@ jobs:
       - name: Pretest
         run: npm run pretest
       - name: Test
-        run: npm test
+        run: NODE_OPTIONS=--experimental-vm-modules npm test
       - name: Download and install sonar-scanner
         run: |
           mkdir -p $HOME/.sonar \

@@ -14,31 +14,14 @@
    limitations under the License.
  */
 /* eslint-disable no-undef */
-const {html, preact: {render}, preactHooks: {useReducer}, TopBar} = window;
+const {
+  APP_EVENTS, ELECTRONIM_VERSION,  html, ipcRenderer, preact: {render}, preactHooks: {useReducer}, TopBar
+} = window;
+import {
+  ACTIONS, reducer, dictionariesEnabled, dictionariesAvailable, setTabProperty, toggleTabProperty
+} from './settings.reducer.browser.mjs';
 
-const settings = () => document.querySelector('.settings');
-
-const prependProtocol = url => {
-  if (url && !url.match(/^https?:\/\/.+/)) {
-    return `https://${url}`;
-  }
-  return url;
-};
-
-const validateUrl = (url, allowNoProtocol = true) => {
-  if (allowNoProtocol) {
-    url = prependProtocol(url);
-  }
-  if (!url || !url.match(/^https?:\/\/.+/)) {
-    return false;
-  }
-  try {
-    return Boolean(new URL(url));
-  } catch (error) {
-    /* error is ignored */
-  }
-  return false;
-};
+const settingsRoot = () => document.querySelector('.settings');
 
 const newTabClass = state => {
   if (state.newTabValue.length === 0) {
@@ -47,126 +30,6 @@ const newTabClass = state => {
   return state.newTabValid ? 'is-success' : 'is-danger';
 };
 
-const newId = () => (
-  new Date().getTime().toString(36) + Math.random().toString(36).slice(2) // NOSONAR
-);
-
-const initialState = {
-  dictionaries: window.dictionaries,
-  tabs: window.tabs,
-  expandedTabs: [],
-  newTabValid: false,
-  newTabValue: '',
-  invalidTabs: new Set(),
-  canSave: window.tabs.length > 0,
-  disableNotificationsGlobally: window.disableNotificationsGlobally
-};
-
-const ACTIONS = {
-  ADD: 'ADD',
-  REMOVE: 'REMOVE',
-  SET_TAB_PROPERTY: 'SET_TAB_PROPERTY',
-  TOGGLE_DICTIONARY: 'TOGGLE_DICTIONARY',
-  TOGGLE_TAB_EXPANDED: 'TOGGLE_TAB_EXPANDED',
-  TOGGLE_TAB_PROPERTY: 'TOGGLE_TAB_PROPERTY',
-  TOGGLE_GLOBAL_NOTIFICATIONS: 'TOGGLE_GLOBAL_NOTIFICATIONS',
-  UPDATE_NEW_TAB_VALUE: 'UPDATE_NEW_TAB_VALUE'
-};
-
-const dictionariesEnabled = state => state.dictionaries.enabled;
-const dictionariesAvailable = state => state.dictionaries.available;
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case ACTIONS.ADD: {
-      if (!validateUrl(state.newTabValue)) {
-        return {...state};
-      }
-      return {...state,
-        newTabValid: false,
-        newTabValue: '',
-        tabs: [...state.tabs, {
-          id: newId(),
-          disabled: false,
-          sandboxed: false,
-          disableNotifications: false,
-          url: prependProtocol(state.newTabValue)
-        }],
-        canSave: true
-      };
-    }
-    case ACTIONS.REMOVE: {
-      return {...state,
-        tabs: state.tabs.filter(tab => tab.id !== action.payload.id),
-        canSave: state.tabs.filter(tab => tab.id !== action.payload.id).length > 0
-      };
-    }
-    case ACTIONS.SET_TAB_PROPERTY: {
-      const newState = {...state, tabs: []};
-      state.tabs.forEach(tab => {
-        const newTab = {...tab};
-        if (newTab.id === action.payload.id) {
-          newTab[action.payload.property] = action.payload.value;
-          if (!validateUrl(newTab.url, false)) {
-            newState.invalidTabs.add(newTab.id);
-          } else {
-            newState.invalidTabs.delete(newTab.id);
-          }
-        }
-        newState.tabs.push(newTab);
-      });
-      return newState;
-    }
-    case ACTIONS.TOGGLE_DICTIONARY: {
-      const newState = {...state};
-      if (dictionariesEnabled(newState).includes(action.payload)) {
-        newState.dictionaries.enabled = [...dictionariesEnabled(newState)
-          .filter(key => key !== action.payload)];
-      } else {
-        newState.dictionaries.enabled = [...dictionariesEnabled(newState), action.payload];
-      }
-      return newState;
-    }
-    case ACTIONS.TOGGLE_TAB_EXPANDED: {
-      if (state.expandedTabs.includes(action.payload)) {
-        return {...state,
-          expandedTabs: state.expandedTabs.filter(id => id !== action.payload)};
-      }
-      return {...state,
-        expandedTabs: [...state.expandedTabs, action.payload]
-      };
-    }
-    case ACTIONS.TOGGLE_TAB_PROPERTY: {
-      const newState = {...state, tabs: []};
-      state.tabs.forEach(tab => {
-        const newTab = {...tab};
-        if (newTab.id === action.payload.id) {
-          newTab[action.payload.property] = !newTab[action.payload.property];
-        }
-        newState.tabs.push(newTab);
-      });
-      return newState;
-    }
-    case ACTIONS.TOGGLE_GLOBAL_NOTIFICATIONS: {
-      return {...state,
-        disableNotificationsGlobally: !state.disableNotificationsGlobally
-      };
-    }
-    case ACTIONS.UPDATE_NEW_TAB_VALUE: {
-      return {...state,
-        newTabValid: validateUrl(action.payload),
-        newTabValue: action.payload,
-        canSave: action.payload.length === 0 && state.tabs.length > 0
-      };
-    }
-    default: return {...state};
-  }
-};
-
-const setTabProperty = ({dispatch, property, value, id}) =>
-  dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {id, property, value}});
-const toggleTabProperty = (dispatch, property, id) =>
-  () => dispatch({type: ACTIONS.TOGGLE_TAB_PROPERTY, payload: {id, property}});
 
 const SettingsButton = ({icon, disabled = false, title, onclick}) => (html`
   <button class='settings__button button' disabled=${disabled} onclick=${onclick}>
@@ -247,7 +110,7 @@ const DictionaryEntry = ({dispatch, dictionaryKey, name, enabled = false}) => (h
   />
 `);
 
-const Settings = () => {
+const Settings = ({initialState}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const enabledDictionaries = dictionariesEnabled(state);
   const availableDictionaries = dictionariesAvailable(state);
@@ -343,4 +206,23 @@ const Settings = () => {
 `;
 };
 
-render(html`<${Settings} />`, settings());
+Promise.all([
+  ipcRenderer.invoke(APP_EVENTS.settingsLoad),
+  ipcRenderer.invoke(APP_EVENTS.dictionaryGetAvailable),
+  ipcRenderer.invoke(APP_EVENTS.dictionaryGetEnabled)
+]).then(([currentSettings, availableDictionaries, enabledDictionaries]) => {
+  const initialState = {
+    dictionaries: {
+      available: availableDictionaries,
+      enabled: enabledDictionaries
+    },
+    tabs: currentSettings.tabs,
+    expandedTabs: [],
+    newTabValid: false,
+    newTabValue: '',
+    invalidTabs: new Set(),
+    canSave: currentSettings.tabs.length > 0,
+    disableNotificationsGlobally: currentSettings.disableNotificationsGlobally
+  };
+  render(html`<${Settings} initialState=${initialState} />`, settingsRoot());
+});

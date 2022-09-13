@@ -25,9 +25,8 @@ const {APP_EVENTS, ELECTRONIM_VERSION} = require('./src/constants');
 const BUNDLES_DIR = 'bundles';
 const ENTRIES = [
   'chrome-tabs',
-  'help'
-  // 'main',
-  // 'settings',
+  'help',
+  'settings'
   // 'tab-manager'
 ];
 

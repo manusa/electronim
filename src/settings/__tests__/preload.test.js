@@ -13,32 +13,42 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+const {waitFor} = require('@testing-library/dom');
 describe('Settings Module preload test suite', () => {
-  let mockSettings;
-  let mockSpellCheck;
   beforeEach(() => {
-    mockSpellCheck = {
-      AVAILABLE_DICTIONARIES: 'someAvailableDictionaries', getEnabledDictionaries: jest.fn(() => '1337')
-    };
-    mockSettings = {loadSettings: jest.fn(() => ({tabs: ['1337'], disableNotificationsGlobally: false}))};
     jest.resetModules();
-    jest.mock('../../main/preload', () => {
-      global.mainPreloadLoaded = true;
-    });
-    jest.mock('../../spell-check', () => mockSpellCheck);
-    jest.mock('../', () => mockSettings);
   });
-  test('preload', () => {
-    // Given
-    // When
-    require('../preload');
-    // Then
-    expect(global.mainPreloadLoaded).toBe(true);
-    expect(window.dictionaries.available).toBe(mockSpellCheck.AVAILABLE_DICTIONARIES);
-    expect(mockSpellCheck.getEnabledDictionaries).toHaveBeenCalledTimes(1);
-    expect(window.dictionaries.enabled).toBe('1337');
-    expect(mockSettings.loadSettings).toHaveBeenCalledTimes(1);
-    expect(window.tabs).toEqual(['1337']);
-    expect(window.disableNotificationsGlobally).toBe(false);
+  describe('preload (just for coverage and sanity, see bundle tests)', () => {
+    beforeEach(() => {
+      jest.mock('../settings.browser.css', () => {});
+      window.APP_EVENTS = {};
+      window.ELECTRONIM_VERSION = '1.33.7';
+      require('../preload');
+    });
+    test('adds required libraries', () => {
+      expect(window.ELECTRONIM_VERSION).toEqual('1.33.7');
+    });
+  });
+  describe('preload.bundle', () => {
+    beforeEach(() => {
+      require('../../../bundles/settings.preload');
+    });
+    test('loads styles', async () => {
+      // When
+      document.body.append(document.createElement('div'));
+      // Then
+      await waitFor(() => expect(document.head.children.length).toBeGreaterThan(0));
+      const styles = Array.from(document.querySelectorAll('style'));
+      expect(styles).toHaveLength(1);
+      expect(styles[0].innerHTML).toContain('.settings.container {');
+    });
+    test('adds required libraries', async () => {
+      expect(window.ELECTRONIM_VERSION).toEqual('0.0.0');
+      await waitFor(() => expect(window.preact).not.toBeUndefined());
+      expect(window.preact).not.toBeUndefined();
+      expect(window.preactHooks).not.toBeUndefined();
+      expect(window.html).not.toBeUndefined();
+      expect(window.TopBar).not.toBeUndefined();
+    });
   });
 });
