@@ -28,8 +28,8 @@ const webPreferences = {
   contextIsolation: false,
   nativeWindowOpen: true,
   nodeIntegration: false,
-  sandbox: false,
-  preload: path.resolve(__dirname, 'preload.js')
+  sandbox: true,
+  preload: path.resolve(__dirname, '..', '..', 'bundles', 'tab-manager.preload.js')
 };
 
 const handlePageTitleUpdated = (ipcSender, tabId) => (_e, title) => {

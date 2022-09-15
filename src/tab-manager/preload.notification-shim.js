@@ -13,12 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-/* eslint-disable no-global-assign,no-native-reassign */
+/* eslint-disable no-global-assign,no-native-reassign,no-undef */
 
 // Delegate for Notification API as specified in: https://notifications.spec.whatwg.org/
 
 const {ipcRenderer} = require('electron');
-const {APP_EVENTS} = require('../constants');
 
 const NativeNotification = Notification;
 

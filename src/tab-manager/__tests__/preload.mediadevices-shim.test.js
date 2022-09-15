@@ -47,7 +47,7 @@ describe('Browser mediaDevices shim test suite', () => {
     jest.isolateModules(() => {
       preact = require('preact');
       jest.spyOn(preact, 'render');
-      require('../browser-mediadevices-shim');
+      require('../preload.mediadevices-shim');
     });
   });
   describe('ui', () => {

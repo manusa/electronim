@@ -27,7 +27,7 @@ describe('Browser Spell Check test suite', () => {
     jest.mock('electron', () => ({
       ipcRenderer: mockIpcRenderer
     }));
-    browserSpellCheck = require('../browser-spell-check');
+    browserSpellCheck = require('../preload.spell-check');
   });
   test('initSpellChecker, should set spell checker in provided webFrame', async () => {
     // Given
