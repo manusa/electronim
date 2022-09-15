@@ -13,16 +13,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-/* eslint-disable no-undef */
 const {ipcRenderer} = require('electron');
 
+const spellCheckFunction = async (words, callback) => {
+  // eslint-disable-next-line no-undef
+  const misspelled = await ipcRenderer.invoke(APP_EVENTS.dictionaryGetMisspelled, words);
+  callback(misspelled);
+};
+
 const initSpellChecker = webFrame => {
-  webFrame.setSpellCheckProvider(navigator.language, {
-    async spellCheck (words, callback) {
-      const misspelled = await ipcRenderer.invoke(APP_EVENTS.dictionaryGetMisspelled, words);
-      callback(misspelled);
-    }
-  });
+  webFrame.setSpellCheckProvider(navigator.language, {spellCheck: spellCheckFunction});
 };
 
 module.exports = {initSpellChecker};
