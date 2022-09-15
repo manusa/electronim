@@ -26,8 +26,8 @@ const BUNDLES_DIR = 'bundles';
 const ENTRIES = [
   'chrome-tabs',
   'help',
-  'settings'
-  // 'tab-manager'
+  'settings',
+  'tab-manager'
 ];
 
 const LIB_DIR = 'lib';

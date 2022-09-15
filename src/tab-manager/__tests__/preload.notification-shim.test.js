@@ -25,6 +25,7 @@ describe('Browser Notification Shim test suite', () => {
       }
     }));
     electron = require('electron');
+    window.APP_EVENTS = require('../../constants').APP_EVENTS;
     NativeNotification = jest.fn();
     NativeNotification.maxActions = jest.fn();
     NativeNotification.permission = jest.fn();
@@ -39,7 +40,7 @@ describe('Browser Notification Shim test suite', () => {
   describe('Notifications are enabled for the current tab', () => {
     test('Native Notification should be shimmed and used as delegate', () => {
       // Given
-      require('../browser-notification-shim');
+      require('../preload.notification-shim');
       // When
       const notification = new Notification();
       Notification.maxActions();
@@ -71,7 +72,7 @@ describe('Browser Notification Shim test suite', () => {
     });
     test('Notification should ALWAYS be clickable', () => {
       // Given
-      require('../browser-notification-shim');
+      require('../preload.notification-shim');
       const notification = new Notification();
       // When
       notification.onclick(null);
@@ -81,7 +82,7 @@ describe('Browser Notification Shim test suite', () => {
     });
     test('Notification onclick setter, should add custom behavior', () => {
       // Given
-      require('../browser-notification-shim');
+      require('../preload.notification-shim');
       const notification = new Notification();
       const webAppOnclick = jest.fn();
       notification.onclick = webAppOnclick;
@@ -96,7 +97,7 @@ describe('Browser Notification Shim test suite', () => {
     test('notification should not delegate, and should return empty object', () => {
       // Given
       electron.ipcRenderer.sendSync = jest.fn(() => false);
-      require('../browser-notification-shim');
+      require('../preload.notification-shim');
       // When
       const notification = new Notification();
       // Then

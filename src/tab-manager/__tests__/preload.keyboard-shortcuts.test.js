@@ -29,7 +29,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
     jest.mock('electron', () => ({
       ipcRenderer: mockIpcRenderer
     }));
-    browserKeyboardShortcuts = require('../browser-keyboard-shortcuts');
+    browserKeyboardShortcuts = require('../preload.keyboard-shortcuts');
   });
   test('initKeyboardShortcuts should add window event listeners', () => {
     // Given

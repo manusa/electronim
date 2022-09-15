@@ -15,30 +15,48 @@
  */
 describe('Tab Manager Module preload test suite', () => {
   let mockElectron;
-  let mockKeyboardShortcuts;
-  let mockSpellCheck;
   beforeEach(() => {
-    mockElectron = {webFrame: 'somethingUnique'};
-    mockKeyboardShortcuts = {initKeyboardShortcuts: jest.fn()};
-    mockSpellCheck = {initSpellChecker: jest.fn()};
+    mockElectron = {
+      webFrame: {setSpellCheckProvider: jest.fn()}
+    };
     jest.resetModules();
-    jest.mock('../../main/preload', () => {
-      global.mainPreloadLoaded = true;
-    });
     jest.mock('electron', () => mockElectron);
-    jest.mock('../browser-keyboard-shortcuts', () => mockKeyboardShortcuts);
-    jest.mock('../browser-mediadevices-shim', () => ({}));
-    jest.mock('../browser-notification-shim', () => ({}));
-    jest.mock('../browser-spell-check', () => mockSpellCheck);
+    window.APP_EVENTS = require('../../constants').APP_EVENTS;
+    window.ELECTRONIM_VERSION = '1.33.7';
+    window.Notification = 'NOT A FUNCTION';
+    window.navigator.mediaDevices = {getDisplayMedia: 'NOT A FUNCTION'};
   });
-  test('preload', () => {
-    // Given
-    // When
-    require('../preload');
-    // Then
-    expect(global.mainPreloadLoaded).toBe(true);
-    expect(mockKeyboardShortcuts.initKeyboardShortcuts).toHaveBeenCalledTimes(1);
-    expect(mockSpellCheck.initSpellChecker).toHaveBeenCalledTimes(1);
-    expect(mockSpellCheck.initSpellChecker).toHaveBeenCalledWith(mockElectron.webFrame);
+  describe('preload', () => {
+    beforeEach(() => {
+      jest.spyOn(require('../preload.keyboard-shortcuts'), 'initKeyboardShortcuts');
+      jest.spyOn(require('../preload.spell-check'), 'initSpellChecker');
+    });
+    test('adds required libraries', () => {
+      // When
+      require('../preload');
+      // Then
+      expect(window.Notification).toEqual(expect.any(Function));
+      expect(window.navigator.mediaDevices.getDisplayMedia).toEqual(expect.any(Function));
+      expect(require('../preload.keyboard-shortcuts').initKeyboardShortcuts).toHaveBeenCalledTimes(1);
+      expect(mockElectron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1);
+      expect(require('../preload.spell-check').initSpellChecker).toHaveBeenCalledTimes(1);
+      expect(require('../preload.spell-check').initSpellChecker).toHaveBeenCalledWith(mockElectron.webFrame);
+    });
+  });
+  describe('preload.bundle', () => {
+    beforeEach(() => {
+      window.addEventListener = jest.fn();
+    });
+    test('adds required libraries', () => {
+      // When
+      require('../../../bundles/tab-manager.preload');
+      // Then
+      expect(window.Notification).toEqual(expect.any(Function));
+      expect(window.navigator.mediaDevices.getDisplayMedia).toEqual(expect.any(Function));
+      expect(mockElectron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1);
+      expect(window.addEventListener).toHaveBeenCalledTimes(2);
+      expect(window.addEventListener).toHaveBeenCalledWith('keyup', expect.any(Function));
+      expect(window.addEventListener).toHaveBeenCalledWith('load', expect.any(Function));
+    });
   });
 });

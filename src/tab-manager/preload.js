@@ -14,11 +14,10 @@
    limitations under the License.
  */
 const {webFrame} = require('electron');
-require('../main/preload');
-require('./browser-notification-shim');
-require('./browser-mediadevices-shim');
-const {initKeyboardShortcuts} = require('./browser-keyboard-shortcuts');
-const {initSpellChecker} = require('./browser-spell-check');
+require('./preload.notification-shim');
+require('./preload.mediadevices-shim');
+const {initKeyboardShortcuts} = require('./preload.keyboard-shortcuts');
+const {initSpellChecker} = require('./preload.spell-check');
 
 initKeyboardShortcuts();
 initSpellChecker(webFrame);
