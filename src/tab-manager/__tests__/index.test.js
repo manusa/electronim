@@ -20,7 +20,8 @@ describe('Tab Manager module test suite', () => {
   let userAgent;
   let tabManager;
   let mockSettings;
-  beforeEach(async () => {
+  beforeEach(() => {
+    jest.resetModules();
     mockBrowserView = {
       setAutoResize: jest.fn(),
       webContents: {
@@ -32,7 +33,6 @@ describe('Tab Manager module test suite', () => {
       }
     };
     mockMenu = {};
-    jest.resetModules();
     jest.mock('electron', () => ({
       app: {},
       BrowserView: jest.fn(() => mockBrowserView),
@@ -58,7 +58,7 @@ describe('Tab Manager module test suite', () => {
     tabManager = require('../');
   });
   describe('getTab', () => {
-    test('getTab, existing tab, should return tab', () => {
+    test('with existing tab, should return tab', () => {
       // Given
       tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // When
@@ -66,7 +66,7 @@ describe('Tab Manager module test suite', () => {
       // Then
       expect(result.webContents.loadURL).toHaveBeenCalledWith('https://localhost');
     });
-    test('getTab, NON-existing tab, should return undefined', () => {
+    test('with NON-existing tab, should return undefined', () => {
       // Given
       tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // When
@@ -74,7 +74,7 @@ describe('Tab Manager module test suite', () => {
       // Then
       expect(result).toBeUndefined();
     });
-    test('getTab, null id, should return null', () => {
+    test('with null id, should return null', () => {
       // Given
       tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // When
@@ -84,6 +84,16 @@ describe('Tab Manager module test suite', () => {
     });
   });
   describe('addTabs', () => {
+    test('webPreferences is sandboxed and has no node integration', () => {
+      // When
+      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      // Then
+      const BrowserView = require('electron').BrowserView;
+      expect(BrowserView).toHaveBeenCalledTimes(1);
+      expect(BrowserView).toHaveBeenCalledWith({
+        webPreferences: expect.objectContaining({sandbox: true, nodeIntegration: false})
+      });
+    });
     test('not sandboxed, should use shared session', () => {
       // When
       tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
