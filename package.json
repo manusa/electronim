@@ -162,7 +162,10 @@
     "verbose": true
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "5.15.4",
     "@testing-library/dom": "8.17.1",
+    "bulma": "0.9.4",
+    "chrome-tabs": "5.4.0",
     "css-loader": "6.7.1",
     "electron-builder": "23.3.3",
     "eslint": "8.23.0",
@@ -176,10 +179,7 @@
     "webpack": "5.74.0"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "5.15.4",
     "axios": "0.27.2",
-    "bulma": "0.9.4",
-    "chrome-tabs": "5.4.0",
     "dictionary-ca": "2.6.0",
     "dictionary-ca-valencia": "2.6.0",
     "dictionary-de": "2.0.4",
