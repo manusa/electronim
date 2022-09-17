@@ -1,6 +1,6 @@
 # Components
 
-This module contains the library of shared components to be used accross the application.
+This module contains the library of shared components to be used across the application.
 
 ## Structure
 
