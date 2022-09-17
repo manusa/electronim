@@ -9,7 +9,7 @@
     "plugin:jest/recommended"
   ],
   "parserOptions": {
-    "ecmaVersion": 9,
+    "ecmaVersion": "latest",
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true,
       "destructuring": true,
@@ -115,7 +115,7 @@
     "indent": [2, 2, {
       "SwitchCase": 1
     }],
-    "arrow-body-style": [2, "as-needed"],
+    "arrow-body-style": [2, "as-needed"], // Consider disabling this one: https://twitter.com/dan_abramov/status/1570426739591114755
     "arrow-parens": [2, "as-needed"],
     "arrow-spacing": 2,
     "brace-style": 2,
@@ -180,5 +180,13 @@
   },
   "plugins": [
     "jest"
-  ]
+  ],
+  "settings": {
+    "import/extensions": [".mjs", ".js"],
+    "import/resolver": {
+      "node": {
+        "extensions": [".mjs", ".js"]
+      }
+    }
+  }
 }

@@ -18,7 +18,7 @@
     "utils"
   ],
   "scripts": {
-    "pretest": "eslint --ignore-path .gitignore . && node webpack.js",
+    "pretest": "eslint --ext .mjs,.js --ignore-path .gitignore . && node webpack.js",
     "test": "jest --coverage",
     "prestart": "node webpack.js",
     "start": "electron .",
