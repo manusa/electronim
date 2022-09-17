@@ -99,7 +99,7 @@ describe('Settings module test suite', () => {
       // Then
       expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
       expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
-        '{\n  "tabs": [],\n  "enabledDictionaries": [\n    "en-US"\n  ]\n}');
+        '{\n  "tabs": [],\n  "useNativeSpellChecker": false,\n  "enabledDictionaries": [\n    "en-US"\n  ]\n}');
     });
     test('object and saved settings, should overwrite overlapping settings', () => {
       // Given
@@ -109,7 +109,9 @@ describe('Settings module test suite', () => {
       // Then
       expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
       expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
-        '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
+        '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n' +
+        '  "useNativeSpellChecker": false,\n' +
+        '  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
         '  "activeTab": 1337,\n  "otherSetting": "1337"\n}');
     });
     test('object and saved settings with activeTab removed, should update activeTab', () => {
@@ -120,7 +122,9 @@ describe('Settings module test suite', () => {
       // Then
       expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
       expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
-        '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
+        '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n' +
+        '  "useNativeSpellChecker": false,\n' +
+        '  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
         '  "activeTab": 1337\n}');
     });
   });

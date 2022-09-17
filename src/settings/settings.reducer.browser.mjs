@@ -13,10 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+import {newId, prependProtocol, validateUrl} from './settings.common.browser.mjs';
+
 export const ACTIONS = {
   ADD: 'ADD',
   REMOVE: 'REMOVE',
   SET_TAB_PROPERTY: 'SET_TAB_PROPERTY',
+  TOGGLE_USE_NATIVE_SPELL_CHECKER: 'TOGGLE_USE_NATIVE_SPELL_CHECKER',
   TOGGLE_DICTIONARY: 'TOGGLE_DICTIONARY',
   TOGGLE_TAB_EXPANDED: 'TOGGLE_TAB_EXPANDED',
   TOGGLE_TAB_PROPERTY: 'TOGGLE_TAB_PROPERTY',
@@ -24,35 +27,22 @@ export const ACTIONS = {
   UPDATE_NEW_TAB_VALUE: 'UPDATE_NEW_TAB_VALUE'
 };
 
-const prependProtocol = url => {
-  if (url && !url.match(/^https?:\/\/.+/)) {
-    return `https://${url}`;
-  }
-  return url;
-};
-
-const validateUrl = (url, allowNoProtocol = true) => {
-  if (allowNoProtocol) {
-    url = prependProtocol(url);
-  }
-  if (!url || !url.match(/^https?:\/\/.+/)) {
-    return false;
-  }
-  try {
-    return Boolean(new URL(url));
-  } catch (error) {
-    /* error is ignored */
-  }
-  return false;
-};
-
-const newId = () => (
-  new Date().getTime().toString(36) + Math.random().toString(36).slice(2) // NOSONAR
-);
-
+// Selectors
+export const useNativeSpellChecker = state => state.useNativeSpellChecker;
 export const dictionariesEnabled = state => state.dictionaries.enabled;
-export const dictionariesAvailable = state => state.dictionaries.available;
-
+const dictionariesAvailableNative = state => state.dictionaries.availableNative;
+const dictionariesAvailable = state => state.dictionaries.available;
+export const dictionaries = state => {
+  if (useNativeSpellChecker(state)) {
+    return Object.entries(dictionariesAvailable(state))
+      .filter(([key]) => dictionariesAvailableNative(state).includes(key))
+      .reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      }, {});
+  }
+  return dictionariesAvailable(state);
+};
 
 export const reducer = (state, action) => {
   switch (action.type) {
@@ -94,6 +84,11 @@ export const reducer = (state, action) => {
         newState.tabs.push(newTab);
       });
       return newState;
+    }
+    case ACTIONS.TOGGLE_USE_NATIVE_SPELL_CHECKER: {
+      return {...state,
+        useNativeSpellChecker: !state.useNativeSpellChecker
+      };
     }
     case ACTIONS.TOGGLE_DICTIONARY: {
       const newState = {...state};
@@ -141,6 +136,11 @@ export const reducer = (state, action) => {
   }
 };
 
+// Action creators
+export const toggleUseNativeSpellChecker = ({dispatch}) =>
+  () => dispatch({type: ACTIONS.TOGGLE_USE_NATIVE_SPELL_CHECKER});
+export const toggleDictionary = ({dispatch, languageKey}) =>
+  () => dispatch({type: ACTIONS.TOGGLE_DICTIONARY, payload: languageKey});
 export const setTabProperty = ({dispatch, property, value, id}) =>
   dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {id, property, value}});
 export const toggleTabProperty = (dispatch, property, id) =>

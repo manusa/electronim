@@ -15,11 +15,17 @@
  */
 /* eslint-disable no-undef */
 const {
-  APP_EVENTS, ELECTRONIM_VERSION,  html, ipcRenderer, preact: {render}, preactHooks: {useReducer}, TopBar
+  APP_EVENTS, ELECTRONIM_VERSION, html, ipcRenderer, preact: {render}, preactHooks: {useReducer}, TopBar
 } = window;
 import {
-  ACTIONS, reducer, dictionariesEnabled, dictionariesAvailable, setTabProperty, toggleTabProperty
+  ACTIONS, reducer, dictionariesEnabled, setTabProperty, toggleTabProperty
 } from './settings.reducer.browser.mjs';
+import {
+  Checkbox
+} from './settings.common.browser.mjs';
+import {
+  SpellCheckContainer
+} from './settings.spell-check.browser.mjs';
 
 const settingsRoot = () => document.querySelector('.settings');
 
@@ -29,7 +35,6 @@ const newTabClass = state => {
   }
   return state.newTabValid ? 'is-success' : 'is-danger';
 };
-
 
 const SettingsButton = ({icon, disabled = false, title, onclick}) => (html`
   <button class='settings__button button' disabled=${disabled} onclick=${onclick}>
@@ -49,15 +54,6 @@ const ExpandButton = ({dispatch, id, expanded = false}) => {
     <${SettingsButton} ...${properties} />
   `;
 };
-
-const Checkbox = ({label, title = '', icon, checked, value, onclick}) => (html`
-  <div class='control'>
-    <label class='checkbox' title=${title}>
-      <input type='checkbox' checked=${checked} title=${title} value=${value} onclick=${onclick} />
-      ${icon && html`<i class='checkbox__icon fas ${icon}'></i>`} ${label} 
-    </label>
-  </div>
-`);
 
 const disabledIcon = disabled => (disabled === true ? 'fa-eye-slash' : 'fa-eye');
 const sandboxedIcon = sandboxed => (sandboxed === true ? 'fa-lock' : 'fa-lock-open');
@@ -103,17 +99,10 @@ const TabEntry = ({
   </div>
 `);
 
-const DictionaryEntry = ({dispatch, dictionaryKey, name, enabled = false}) => (html`
-  <${Checkbox} label=${`${name} (${dictionaryKey})`} checked=${enabled}
-    value=${dictionaryKey}
-    onclick=${() => dispatch({type: ACTIONS.TOGGLE_DICTIONARY, payload: dictionaryKey})}
-  />
-`);
 
 const Settings = ({initialState}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const enabledDictionaries = dictionariesEnabled(state);
-  const availableDictionaries = dictionariesAvailable(state);
   const onNewTabInput = ({target: {value}}) => dispatch({
     type: ACTIONS.UPDATE_NEW_TAB_VALUE,
     payload: value
@@ -127,6 +116,7 @@ const Settings = ({initialState}) => {
   const toggleNotifications = () => dispatch({type: ACTIONS.TOGGLE_GLOBAL_NOTIFICATIONS});
   const save = () => ipcRenderer.send(APP_EVENTS.settingsSave, {
     tabs: state.tabs,
+    useNativeSpellChecker: state.useNativeSpellChecker,
     enabledDictionaries,
     disableNotificationsGlobally: state.disableNotificationsGlobally
   });
@@ -170,20 +160,7 @@ const Settings = ({initialState}) => {
         `))}
         </div>
       </nav>
-      <nav class="panel">
-        <p class="panel-heading">Spell checker languages</p>
-        <div class="panel-block">
-          <div class="settings__dictionaries container">${
-  Object.entries(availableDictionaries)
-    .sort(([, {name: name1}], [, {name: name2}]) => name1.localeCompare(name2))
-    .map(([key, {name}]) => (html`
-      <${DictionaryEntry} dispatch=${dispatch} dictionaryKey=${key} name=${name}
-        enabled=${enabledDictionaries.includes(key)}
-      />
-    `))}
-          </div>
-        </div>
-      </nav>
+      <${SpellCheckContainer} dispatch=${dispatch} state=${state} />
       <nav class="panel">
         <p class="panel-heading">Other</p>
         <div class="panel-block">
@@ -209,20 +186,27 @@ const Settings = ({initialState}) => {
 Promise.all([
   ipcRenderer.invoke(APP_EVENTS.settingsLoad),
   ipcRenderer.invoke(APP_EVENTS.dictionaryGetAvailable),
+  ipcRenderer.invoke(APP_EVENTS.dictionaryGetAvailableNative),
   ipcRenderer.invoke(APP_EVENTS.dictionaryGetEnabled)
-]).then(([currentSettings, availableDictionaries, enabledDictionaries]) => {
-  const initialState = {
-    dictionaries: {
-      available: availableDictionaries,
-      enabled: enabledDictionaries
-    },
-    tabs: currentSettings.tabs,
-    expandedTabs: [],
-    newTabValid: false,
-    newTabValue: '',
-    invalidTabs: new Set(),
-    canSave: currentSettings.tabs.length > 0,
-    disableNotificationsGlobally: currentSettings.disableNotificationsGlobally
-  };
-  render(html`<${Settings} initialState=${initialState} />`, settingsRoot());
-});
+]).then(
+  (
+    [currentSettings, availableDictionaries, availableNativeDictionaries, enabledDictionaries]
+  ) => {
+    const initialState = {
+      dictionaries: {
+        available: availableDictionaries,
+        availableNative: availableNativeDictionaries,
+        enabled: enabledDictionaries
+      },
+      useNativeSpellChecker: currentSettings.useNativeSpellChecker,
+      tabs: currentSettings.tabs,
+      expandedTabs: [],
+      newTabValid: false,
+      newTabValue: '',
+      invalidTabs: new Set(),
+      canSave: currentSettings.tabs.length > 0,
+      disableNotificationsGlobally: currentSettings.disableNotificationsGlobally
+    };
+    render(html`<${Settings} initialState=${initialState} />`, settingsRoot());
+  }
+);

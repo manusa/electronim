@@ -31,6 +31,7 @@ const APP_EVENTS = {
   closeDialog: 'closeDialog',
   desktopCapturerGetSources: 'desktopCapturerGetSources',
   dictionaryGetAvailable: 'dictionaryGetAvailable',
+  dictionaryGetAvailableNative: 'dictionaryGetAvailableNative',
   dictionaryGetEnabled: 'dictionaryGetEnabled',
   dictionaryGetMisspelled: 'dictionaryGetMisspelled',
   notificationClick: 'notificationClick',
