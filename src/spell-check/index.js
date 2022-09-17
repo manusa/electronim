@@ -81,6 +81,9 @@ let fakeRendererWorker;
 
 const getAvailableDictionaries = () => AVAILABLE_DICTIONARIES;
 
+const getAvailableNativeDictionaries = () =>
+  fakeRendererWorker?.webContents.session.availableSpellCheckerLanguages ?? [];
+
 const handleGetMisspelled = async (_event, words) =>
   fakeRendererWorker.webContents.executeJavaScript(`getMisspelled(${JSON.stringify(words)})`);
 
@@ -122,5 +125,10 @@ const contextMenuHandler = async (_event, {misspelledWord}, webContents) => {
 
 
 module.exports = {
-  AVAILABLE_DICTIONARIES, contextMenuHandler, getAvailableDictionaries, getEnabledDictionaries, loadDictionaries
+  AVAILABLE_DICTIONARIES,
+  contextMenuHandler,
+  getAvailableDictionaries,
+  getAvailableNativeDictionaries,
+  getEnabledDictionaries,
+  loadDictionaries
 };

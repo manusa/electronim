@@ -21,7 +21,7 @@ const {showDialog} = require('../browser-window');
 
 const APP_DIR = '.electronim';
 const SETTINGS_FILE = 'settings.json';
-const DEFAULT_SETTINGS = {tabs: [], enabledDictionaries: ['en-US']};
+const DEFAULT_SETTINGS = {tabs: [], useNativeSpellChecker: false, enabledDictionaries: ['en-US']};
 
 const webPreferences = {
   contextIsolation: false,

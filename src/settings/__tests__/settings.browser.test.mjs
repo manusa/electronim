@@ -25,12 +25,14 @@ const mockDOM = () => {
 };
 
 describe('Settings in Browser test suite', () => {
+  let mockDictionariesAvailableNative;
   let mockDictionariesAvailable;
   let mockDictionariesEnabled;
   let mockCurrentSettings;
   let mockIpcRenderer;
   beforeEach(async () => {
     jest.resetModules();
+    mockDictionariesAvailableNative = ['en'];
     mockDictionariesAvailable = {
       en: {name: 'English'},
       es: {name: 'Spanish'}
@@ -49,12 +51,15 @@ describe('Settings in Browser test suite', () => {
         switch (channel) {
           case 'settingsLoad':
             return mockCurrentSettings;
+          case 'dictionaryGetAvailableNative':
+            return mockDictionariesAvailableNative;
           case 'dictionaryGetAvailable':
             return mockDictionariesAvailable;
           case 'dictionaryGetEnabled':
             return mockDictionariesEnabled;
+          default:
+            return {};
         }
-        return {};
       })
     };
     window.preact = await import('preact');
@@ -348,28 +353,56 @@ describe('Settings in Browser test suite', () => {
       });
     });
   });
-  describe('Dictionary events', () => {
-    let $dictionaries;
+  describe('Spell Check events', () => {
+    let $spellCheckContainer;
     beforeEach(() => {
-      $dictionaries = document.querySelector('.settings__dictionaries');
+      $spellCheckContainer = document.querySelector('.settings__spell-check');
     });
-    test('toggle active dictionary, should uncheck dictionary', async () => {
+    test('toggle use native spell checker, should check use native spell checker', async () => {
       // Given
-      const $enDict = $dictionaries.querySelector('input[value=en]');
-      expect($enDict.checked).toBe(true);
+      const $useNativeSpellChecker = $spellCheckContainer
+        .querySelector('.settings__spell-check-common input[data-testid=use-native-spell-checker]');
+      expect($useNativeSpellChecker.checked).toBe(false);
       // When
-      fireEvent.click($enDict);
+      fireEvent.click($useNativeSpellChecker);
       // Then
-      waitFor(() => expect($enDict.checked).toBe(false));
+      await waitFor(() => expect($useNativeSpellChecker.checked).toBe(true));
     });
-    test('toggle inactive dictionary, should check dictionary', async () => {
-      // Given
-      const $esDict = $dictionaries.querySelector('input[value=es]');
-      expect($esDict.checked).toBe(false);
-      // When
-      fireEvent.click($esDict);
-      // Then
-      waitFor(() => expect($esDict.checked).toBe(true));
+    describe('dictionaries', () => {
+      let $dictionaries;
+      beforeEach(() => {
+        $dictionaries = $spellCheckContainer.querySelector('.settings__dictionaries');
+      });
+      test('toggle active dictionary, should uncheck dictionary', async () => {
+        // Given
+        const $enDict = $dictionaries.querySelector('input[value=en]');
+        expect($enDict.checked).toBe(true);
+        // When
+        fireEvent.click($enDict);
+        // Then
+        await waitFor(() => expect($enDict.checked).toBe(false));
+      });
+      test('toggle inactive dictionary, should check dictionary', async () => {
+        // Given
+        const $esDict = $dictionaries.querySelector('input[value=es]');
+        expect($esDict.checked).toBe(false);
+        // When
+        fireEvent.click($esDict);
+        // Then
+        await waitFor(() => expect($esDict.checked).toBe(true));
+      });
+      test('when not native, dictionaries should intersect available', async () => {
+        await waitFor(() => expect($dictionaries.querySelectorAll('input').length).toBe(2));
+      });
+      test('when native, dictionaries should intersect available', async () => {
+        // Given
+        const $useNativeSpellChecker = $spellCheckContainer
+          .querySelector('.settings__spell-check-common input[data-testid=use-native-spell-checker]');
+        // When
+        fireEvent.click($useNativeSpellChecker);
+        // Then
+        await waitFor(() => expect($dictionaries.querySelectorAll('input').length).toBe(1));
+      });
     });
   });
 });
