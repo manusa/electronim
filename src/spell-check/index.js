@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {BrowserWindow, ipcMain} = require('electron');
+const {BrowserWindow, MenuItem, ipcMain} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const {loadSettings} = require('../settings');
 
@@ -87,48 +87,60 @@ const getAvailableNativeDictionaries = () =>
 const handleGetMisspelled = async (_event, words) =>
   fakeRendererWorker.webContents.executeJavaScript(`getMisspelled(${JSON.stringify(words)})`);
 
+const getUseNativeSpellChecker = () => loadSettings().useNativeSpellChecker;
+
 const getEnabledDictionaries = () => loadSettings().enabledDictionaries;
 
 const loadDictionaries = () => {
-  if (!fakeRendererWorker) {
-    fakeRendererWorker = new BrowserWindow({
-      show: false,
-      webPreferences: {
-        contextIsolation: false,
-        nativeWindowOpen: true,
-        nodeIntegration: true
-      }
-    });
-    ipcMain.handle(APP_EVENTS.dictionaryGetMisspelled, handleGetMisspelled);
+  if (fakeRendererWorker) {
+    fakeRendererWorker.destroy();
   }
+  fakeRendererWorker = new BrowserWindow({
+    show: false,
+    webPreferences: {
+      contextIsolation: false,
+      nativeWindowOpen: true,
+      nodeIntegration: true
+    }
+  });
   fakeRendererWorker.loadURL(`file://${__dirname}/dictionary.renderer/index.html`);
+  ipcMain.removeHandler(APP_EVENTS.dictionaryGetMisspelled);
+  ipcMain.handle(APP_EVENTS.dictionaryGetMisspelled, handleGetMisspelled);
   // Uncomment to debug problems with dictionaries
   // fakeRendererWorker.webContents.openDevTools();
 };
 
+const menuItem = ({webContents, suggestion}) => new MenuItem({
+  label: suggestion,
+  click: () => {
+    webContents.replaceMisspelling(suggestion);
+  }
+});
+
 const contextMenuHandler = async (_event, {misspelledWord}, webContents) => {
-  const {MenuItem} = require('electron');
   const ret = [];
   if (misspelledWord && misspelledWord.length > 0) {
     const suggestions = await fakeRendererWorker.webContents.executeJavaScript(`getSuggestions('${misspelledWord}')`);
-    suggestions.forEach(suggestion =>
-      ret.push(new MenuItem({
-        label: suggestion,
-        click: () => {
-          webContents.replaceMisspelling(suggestion);
-        }
-      }))
-    );
+    suggestions.forEach(suggestion => ret.push(menuItem({webContents, suggestion})));
   }
   return ret;
 };
 
+const contextMenuNativeHandler = (_event, {misspelledWord, dictionarySuggestions = []}, webContents) => {
+  const ret = [];
+  if (misspelledWord && misspelledWord.length > 0) {
+    dictionarySuggestions.forEach(suggestion => ret.push(menuItem({webContents, suggestion})));
+  }
+  return ret;
+};
 
 module.exports = {
   AVAILABLE_DICTIONARIES,
   contextMenuHandler,
+  contextMenuNativeHandler,
   getAvailableDictionaries,
   getAvailableNativeDictionaries,
   getEnabledDictionaries,
+  getUseNativeSpellChecker,
   loadDictionaries
 };

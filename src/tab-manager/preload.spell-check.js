@@ -13,7 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {ipcRenderer} = require('electron');
+/* eslint-disable no-undef */
+const {ipcRenderer, webFrame} = require('electron');
 
 const spellCheckFunction = async (words, callback) => {
   // eslint-disable-next-line no-undef
@@ -21,8 +22,15 @@ const spellCheckFunction = async (words, callback) => {
   callback(misspelled);
 };
 
-const initSpellChecker = webFrame => {
-  webFrame.setSpellCheckProvider(navigator.language, {spellCheck: spellCheckFunction});
-};
+const initSpellChecker = () => new Promise(resolve => {
+  ipcRenderer.invoke(APP_EVENTS.settingsLoad)
+    .then(settings => {
+      if (!settings.useNativeSpellChecker) {
+        webFrame.setSpellCheckProvider(navigator.language, {spellCheck: spellCheckFunction});
+      }
+      resolve();
+    })
+    .catch(initSpellChecker);
+});
 
 module.exports = {initSpellChecker};

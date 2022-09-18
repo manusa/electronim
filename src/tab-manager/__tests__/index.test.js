@@ -25,6 +25,7 @@ describe('Tab Manager module test suite', () => {
     mockBrowserView = {
       setAutoResize: jest.fn(),
       webContents: {
+        session: {},
         executeJavaScript: jest.fn(async () => {}),
         on: jest.fn(),
         loadURL: jest.fn(),
@@ -198,7 +199,7 @@ describe('Tab Manager module test suite', () => {
           mockMenu.append = jest.fn();
           mockMenu.popup = jest.fn();
         });
-        test('No spelling suggestions, should open a Menu with DevTools entry', async () => {
+        test('should open a Menu with DevTools entry', async () => {
           // Given
           spellChecker.contextMenuHandler.mockImplementationOnce(() => []);
           // When
@@ -208,25 +209,54 @@ describe('Tab Manager module test suite', () => {
           expect(electron.MenuItem).toHaveBeenCalledTimes(1);
           expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'DevTools'}));
           expect(mockMenu.append).toHaveBeenCalledTimes(1);
-          expect(mockMenu.popup).toHaveBeenCalledTimes(1);
-          expect(mockMenu.popup).toHaveBeenCalledWith({x: 13, y: 37});
         });
-        test('Spelling suggestions, should open a Menu with all suggestions, a sperator and DevTools entry', async () => {
+        test('should open a Menu at the specified location', async () => {
           // Given
-          spellChecker.contextMenuHandler.mockImplementationOnce(() => [
-            new electron.MenuItem({label: 'suggestion 1'}),
-            new electron.MenuItem({label: 'suggestion 2'})
-          ]);
+          spellChecker.contextMenuHandler.mockImplementationOnce(() => []);
           // When
           await events['context-menu'](new Event(''), {x: 13, y: 37});
           // Then
-          expect(electron.Menu).toHaveBeenCalledTimes(1);
-          expect(electron.MenuItem).toHaveBeenCalledTimes(4);
-          expect(electron.MenuItem).toHaveBeenCalledWith({type: 'separator'});
-          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'DevTools'}));
-          expect(mockMenu.append).toHaveBeenCalledTimes(4);
           expect(mockMenu.popup).toHaveBeenCalledTimes(1);
           expect(mockMenu.popup).toHaveBeenCalledWith({x: 13, y: 37});
+        });
+        describe('with native spellcheck disabled', () => {
+          beforeEach(() => {
+            mockBrowserView.webContents.session.spellcheck = false;
+          });
+          test('Spelling suggestions, should open a Menu with all suggestions, a separator and DevTools entry', async () => {
+            // Given
+            spellChecker.contextMenuHandler.mockImplementationOnce(() => [
+              new electron.MenuItem({label: 'suggestion 1'}),
+              new electron.MenuItem({label: 'suggestion 2'})
+            ]);
+            // When
+            await events['context-menu'](new Event(''), {x: 13, y: 37});
+            // Then
+            expect(electron.Menu).toHaveBeenCalledTimes(1);
+            expect(electron.MenuItem).toHaveBeenCalledTimes(4);
+            expect(electron.MenuItem).toHaveBeenCalledWith({type: 'separator'});
+            expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'DevTools'}));
+            expect(mockMenu.append).toHaveBeenCalledTimes(4);
+          });
+        });
+        describe('with native spellcheck enabled', () => {
+          beforeEach(() => {
+            mockBrowserView.webContents.session.spellcheck = true;
+          });
+          test('Spelling suggestions, should open a Menu with all suggestions, a separator and DevTools entry', async () => {
+            // Given
+            spellChecker.contextMenuNativeHandler.mockImplementationOnce(() => [
+              new electron.MenuItem({label: 'suggestion 1'})
+            ]);
+            // When
+            await events['context-menu'](new Event(''), {x: 13, y: 37});
+            // Then
+            expect(electron.Menu).toHaveBeenCalledTimes(1);
+            expect(electron.MenuItem).toHaveBeenCalledTimes(3);
+            expect(electron.MenuItem).toHaveBeenCalledWith({type: 'separator'});
+            expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'DevTools'}));
+            expect(mockMenu.append).toHaveBeenCalledTimes(3);
+          });
         });
       });
     });

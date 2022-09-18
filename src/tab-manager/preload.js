@@ -13,11 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {webFrame} = require('electron');
 require('./preload.notification-shim');
 require('./preload.mediadevices-shim');
-const {initKeyboardShortcuts} = require('./preload.keyboard-shortcuts');
-const {initSpellChecker} = require('./preload.spell-check');
+require('./preload.keyboard-shortcuts').initKeyboardShortcuts();
+require('./preload.spell-check').initSpellChecker()
+  // eslint-disable-next-line no-console
+  .catch(err => console.error('Error initializing spell check', err));
 
-initKeyboardShortcuts();
-initSpellChecker(webFrame);
