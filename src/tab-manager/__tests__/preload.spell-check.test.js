@@ -13,36 +13,74 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+const {waitFor} = require('@testing-library/dom');
+
 describe('Browser Spell Check test suite', () => {
   let mockIpcRenderer;
+  let mockWebFrame;
   let browserSpellCheck;
   beforeEach(() => {
-    global.APP_EVENTS = {
-      dictionaryGetMisspelled: 'dictionaryGetMisspelled'
-    };
-    mockIpcRenderer = {
-      invoke: jest.fn()
-    };
     jest.resetModules();
+    global.APP_EVENTS = require('../../constants').APP_EVENTS;
+    mockIpcRenderer = {
+      invoke: jest.fn(async () => ({useNativeSpellChecker: false}))
+    };
+    mockWebFrame = {
+      setSpellCheckProvider: jest.fn()
+    };
     jest.mock('electron', () => ({
-      ipcRenderer: mockIpcRenderer
+      ipcRenderer: mockIpcRenderer,
+      webFrame: mockWebFrame
     }));
     browserSpellCheck = require('../preload.spell-check');
   });
-  test('initSpellChecker, should set spell checker in provided webFrame', async () => {
+  describe('initSpellChecker', () => {
+    test('not-native, should load settings and set SpellCheckProvider in webFrame for navigator language', async () => {
+      // Given
+      Object.defineProperty(navigator, 'language', {value: 'eo'});
+      // When
+      browserSpellCheck.initSpellChecker();
+      // Then
+      await waitFor(() => expect(mockWebFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
+      expect(mockWebFrame.setSpellCheckProvider).toHaveBeenCalledWith('eo', expect.any(Object));
+      expect(mockIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('settingsLoad');
+    });
+    test('native, should load settings and skip processing', async () => {
+      // Given
+      mockIpcRenderer.invoke = jest.fn(async () => ({useNativeSpellChecker: true}));
+      // When
+      await browserSpellCheck.initSpellChecker();
+      // Then
+      expect(mockWebFrame.setSpellCheckProvider).not.toHaveBeenCalled();
+      expect(mockIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('settingsLoad');
+    });
+    test('retries in case of failure', async () => {
+      // Given
+      mockIpcRenderer.invoke = jest.fn()
+        .mockImplementationOnce(async () => {
+          throw new Error('failed');
+        })
+        .mockImplementationOnce(async () => ({useNativeSpellChecker: false}));
+      // When
+      browserSpellCheck.initSpellChecker();
+      // Then
+      await waitFor(() => expect(mockWebFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
+      expect(mockIpcRenderer.invoke).toHaveBeenCalledTimes(2);
+      expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('settingsLoad');
+    });
+  });
+  test('spellCheck, should invoke dictionaryGetMisspelled and trigger callback', async () => {
     // Given
     const callback = jest.fn();
-    Object.defineProperty(navigator, 'language', {value: 'eo'});
-    const webFrame = {
-      setSpellCheckProvider: jest.fn()
-    };
-    browserSpellCheck.initSpellChecker(webFrame);
+    browserSpellCheck.initSpellChecker();
+    await waitFor(() => expect(mockWebFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
     // When
-    await webFrame.setSpellCheckProvider.mock.calls[0][1].spellCheck([], callback);
+    await mockWebFrame.setSpellCheckProvider.mock.calls[0][1].spellCheck([], callback);
     // Then
-    expect(webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1);
-    expect(webFrame.setSpellCheckProvider).toHaveBeenCalledWith('eo', expect.any(Object));
-    expect(mockIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+    expect(mockIpcRenderer.invoke).toHaveBeenCalledTimes(2);
+    expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('dictionaryGetMisspelled', []);
     expect(callback).toHaveBeenCalledTimes(1);
   });
 });

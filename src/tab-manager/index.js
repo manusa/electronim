@@ -17,7 +17,7 @@ const {app, BrowserView, Menu, MenuItem, session} = require('electron');
 const path = require('path');
 const {APP_EVENTS} = require('../constants');
 const settings = require('../settings');
-const {contextMenuHandler} = require('../spell-check');
+const {contextMenuHandler, contextMenuNativeHandler, getEnabledDictionaries, getUseNativeSpellChecker} = require('../spell-check');
 const {userAgentForView, addUserAgentInterceptor} = require('../user-agent');
 const {handleRedirect} = require('./redirect');
 
@@ -58,8 +58,12 @@ const handlePageFaviconUpdated = (browserView, ipcSender, tabId) => async (_e, f
 const handleContextMenu = browserView => async (event, params) => {
   const {webContents} = browserView;
   const menu = new Menu();
-
-  const spellingSuggestions = await contextMenuHandler(event, params, webContents);
+  let spellingSuggestions;
+  if (webContents.session.spellcheck) {
+    spellingSuggestions = contextMenuNativeHandler(event, params, webContents);
+  } else {
+    spellingSuggestions = await contextMenuHandler(event, params, webContents);
+  }
   if (spellingSuggestions.length > 0) {
     spellingSuggestions.forEach(mi => menu.append(mi));
     menu.append(new MenuItem({type: 'separator'}));
@@ -79,6 +83,8 @@ const cleanUserAgent = browserView => {
 };
 
 const addTabs = ipcSender => tabsMetadata => {
+  const useNativeSpellChecker = getUseNativeSpellChecker();
+  const enabledDictionaries = getEnabledDictionaries();
   tabsMetadata.forEach(({id, url, sandboxed = false}) => {
     const tabPreferences = {...webPreferences};
     if (sandboxed) {
@@ -87,6 +93,19 @@ const addTabs = ipcSender => tabsMetadata => {
       tabPreferences.session = session.defaultSession;
     }
     addUserAgentInterceptor(tabPreferences.session);
+
+    tabPreferences.session.spellcheck = useNativeSpellChecker;
+    if (useNativeSpellChecker) {
+      tabPreferences.session.setSpellCheckerEnabled(true);
+      tabPreferences.session.setSpellCheckerLanguages(tabPreferences.session.availableSpellCheckerLanguages
+        .filter(lang => enabledDictionaries.includes(lang)));
+    }
+
+
+    tabPreferences.experiment = false;
+    if (tabPreferences.experiment) { // USE NATIVE SPELL CHECKER
+      tabPreferences.session.setSpellCheckerDictionaryDownloadURL('file:///home/user/00-MN/projects/manusa/electronim/dictionaries/');
+    }
     const tab = new BrowserView({webPreferences: tabPreferences});
     tab.setAutoResize({width: true, height: true});
 

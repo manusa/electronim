@@ -13,11 +13,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+/* eslint-disable no-console */
+const {waitFor} = require('@testing-library/dom');
+
 describe('Tab Manager Module preload test suite', () => {
   let mockElectron;
   beforeEach(() => {
     mockElectron = {
-      webFrame: {setSpellCheckProvider: jest.fn()}
+      webFrame: {setSpellCheckProvider: jest.fn()},
+      ipcRenderer: {invoke: async () => ({useNativeSpellChecker: false})}
     };
     jest.resetModules();
     jest.mock('electron', () => mockElectron);
@@ -31,29 +35,42 @@ describe('Tab Manager Module preload test suite', () => {
       jest.spyOn(require('../preload.keyboard-shortcuts'), 'initKeyboardShortcuts');
       jest.spyOn(require('../preload.spell-check'), 'initSpellChecker');
     });
-    test('adds required libraries', () => {
+    test('adds required libraries', async () => {
       // When
       require('../preload');
       // Then
       expect(window.Notification).toEqual(expect.any(Function));
       expect(window.navigator.mediaDevices.getDisplayMedia).toEqual(expect.any(Function));
       expect(require('../preload.keyboard-shortcuts').initKeyboardShortcuts).toHaveBeenCalledTimes(1);
-      expect(mockElectron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1);
+      await waitFor(() => expect(mockElectron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
       expect(require('../preload.spell-check').initSpellChecker).toHaveBeenCalledTimes(1);
-      expect(require('../preload.spell-check').initSpellChecker).toHaveBeenCalledWith(mockElectron.webFrame);
+    });
+    test('logs error if can\'t initialize spell checker', async () => {
+      // Given
+      jest.mock('../preload.spell-check', () => ({
+        initSpellChecker: async () => {
+          throw new Error('Error initializing spell checker');
+        }
+      }));
+      jest.spyOn(console, 'error').mockImplementationOnce(() => {});
+      // When
+      require('../preload');
+      // Then
+      await waitFor(() => expect(console.error).toHaveBeenCalledTimes(1));
+      expect(console.error).toHaveBeenCalledWith('Error initializing spell check', expect.any(Error));
     });
   });
   describe('preload.bundle', () => {
     beforeEach(() => {
       window.addEventListener = jest.fn();
     });
-    test('adds required libraries', () => {
+    test('adds required libraries', async () => {
       // When
       require('../../../bundles/tab-manager.preload');
       // Then
       expect(window.Notification).toEqual(expect.any(Function));
       expect(window.navigator.mediaDevices.getDisplayMedia).toEqual(expect.any(Function));
-      expect(mockElectron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1);
+      await waitFor(() => expect(mockElectron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
       expect(window.addEventListener).toHaveBeenCalledTimes(2);
       expect(window.addEventListener).toHaveBeenCalledWith('keyup', expect.any(Function));
       expect(window.addEventListener).toHaveBeenCalledWith('load', expect.any(Function));

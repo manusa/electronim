@@ -19,19 +19,22 @@ describe('Spell-check module test suite', () => {
   let mockSettings;
   let spellCheck;
   beforeEach(() => {
+    jest.resetModules();
     mockBrowserWindow = {
+      destroy: jest.fn(),
       loadURL: jest.fn()
     };
     mockIpc = {
-      handle: jest.fn()
+      handle: jest.fn(),
+      removeHandler: jest.fn()
     };
     mockSettings = {
       enabledDictionaries: []
     };
-    jest.resetModules();
     jest.mock('electron', () => ({
       BrowserWindow: jest.fn(() => mockBrowserWindow),
-      ipcMain: mockIpc
+      ipcMain: mockIpc,
+      MenuItem: jest.fn(({label, click}) => ({label, click}))
     }));
     jest.mock('../../settings', () => ({
       loadSettings: jest.fn(() => mockSettings)
@@ -46,11 +49,115 @@ describe('Spell-check module test suite', () => {
     // Then
     expect(result).toEqual(['13-37']);
   });
-  test('loadDictionaries', () => {
-    // When
-    spellCheck.loadDictionaries();
-    // Then
-    expect(mockBrowserWindow.loadURL).toHaveBeenCalledWith(expect.stringMatching(/\/dictionary.renderer\/index.html$/));
-    expect(mockIpc.handle).toHaveBeenCalledWith('dictionaryGetMisspelled', expect.any(Function));
+  describe('loadDictionaries', () => {
+    test('should destroy existing previous fakeRenderer', () => {
+      // Given
+      spellCheck.loadDictionaries();
+      // When
+      spellCheck.loadDictionaries();
+      // Then
+      expect(mockBrowserWindow.destroy).toHaveBeenCalledTimes(1);
+    });
+    test('should not destroy non-existing previous fakeRenderer', () => {
+      // When
+      spellCheck.loadDictionaries();
+      // Then
+      expect(mockBrowserWindow.destroy).not.toHaveBeenCalled();
+    });
+    test('should remove and then add handler', () => {
+      // When
+      spellCheck.loadDictionaries();
+      // Then
+      expect(mockIpc.handle).toHaveBeenCalledAfter(mockIpc.removeHandler);
+    });
+    test('should remove dictionaryGetMisspelled handler', () => {
+      // When
+      spellCheck.loadDictionaries();
+      // Then
+      expect(mockIpc.removeHandler).toHaveBeenCalledWith('dictionaryGetMisspelled');
+    });
+    test('should handle dictionaryGetMisspelled', () => {
+      // When
+      spellCheck.loadDictionaries();
+      // Then
+      expect(mockIpc.handle).toHaveBeenCalledWith('dictionaryGetMisspelled', expect.any(Function));
+    });
+    test('should load dictionary.renderer URL', () => {
+      // When
+      spellCheck.loadDictionaries();
+      // Then
+      expect(mockBrowserWindow.loadURL)
+        .toHaveBeenCalledWith(expect.stringMatching(/\/dictionary.renderer\/index.html$/));
+    });
+  });
+  describe('Context Menu handlers', () => {
+    let params;
+    let webContents;
+    beforeEach(() => {
+      params = {};
+      webContents = {};
+      mockBrowserWindow.webContents = webContents;
+      spellCheck.loadDictionaries();
+    });
+    describe('contextMenuHandler', () => {
+      test('with no misspelled word, should return empty array', async () => {
+        // When
+        const result = await spellCheck.contextMenuHandler({}, params, webContents);
+        // Then
+        expect(result).toEqual([]);
+      });
+      describe('with misspelled word', () => {
+        beforeEach(() => {
+          params.misspelledWord = 'the-word';
+        });
+        test('and no suggestions, should return empty array', async () => {
+          // Given
+          mockBrowserWindow.webContents.executeJavaScript = jest.fn(async () => []);
+          // When
+          const result = await spellCheck.contextMenuHandler({}, params, webContents);
+          // Then
+          expect(result).toEqual([]);
+        });
+        test('and suggestions, should return array of MenuItems', async () => {
+          // Given
+          mockBrowserWindow.webContents.executeJavaScript = jest.fn(async () => ['the-suggestion']);
+          // When
+          const result = await spellCheck.contextMenuHandler({}, params, webContents);
+          // Then
+          expect(result).toEqual([
+            expect.objectContaining({label: 'the-suggestion'})
+          ]);
+        });
+      });
+    });
+    describe('contextMenuNativeHandler', () => {
+      test('with no misspelled word, should return empty array', () => {
+        // When
+        const result = spellCheck.contextMenuNativeHandler({}, params, webContents);
+        // Then
+        expect(result).toEqual([]);
+      });
+      describe('with misspelled word', () => {
+        beforeEach(() => {
+          params.misspelledWord = 'the-word';
+        });
+        test('and no suggestions, should return empty array', () => {
+          // When
+          const result = spellCheck.contextMenuNativeHandler({}, params, webContents);
+          // Then
+          expect(result).toEqual([]);
+        });
+        test('and suggestions, should return array of MenuItems', async () => {
+          // Given
+          params.dictionarySuggestions = ['the-suggestion'];
+          // When
+          const result = spellCheck.contextMenuNativeHandler({}, params, webContents);
+          // Then
+          expect(result).toEqual([
+            expect.objectContaining({label: 'the-suggestion'})
+          ]);
+        });
+      });
+    });
   });
 });
