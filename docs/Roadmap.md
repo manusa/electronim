@@ -16,6 +16,7 @@
 
 - [x] Screen sharing [#12](https://github.com/manusa/electronim/issues/12)
 - [x] Disable individual applications [#5](https://github.com/manusa/electronim/issues/5)
+- [x] Built-in native spell checker [#89](https://github.com/manusa/electronim/issues/89)
 
 ### NFR
 
