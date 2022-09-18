@@ -85,6 +85,7 @@ const addUserAgentInterceptor = session => {
       if (
         details.url.match(/https?:\/\/[^/]+google\.com.*/) // NOSONAR
         && !details.url.match(/https?:\/\/meet.google\.com.*/)
+        && !details.url.match(/https?:\/\/mail.google\.com.*/)
       ) {
         details.requestHeaders['User-Agent'] = firefoxUserAgent(details.requestHeaders['User-Agent'])(BROWSER_VERSIONS.firefoxESR);
       }
