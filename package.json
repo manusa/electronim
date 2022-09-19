@@ -163,7 +163,7 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "5.15.4",
-    "@testing-library/dom": "8.17.1",
+    "@testing-library/dom": "8.18.0",
     "bulma": "0.9.4",
     "chrome-tabs": "5.4.0",
     "css-loader": "6.7.1",
