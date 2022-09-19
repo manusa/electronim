@@ -79,9 +79,27 @@
 }
 
 .settings__dictionaries {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) ;
-    grid-gap: var(--default-spacing);
+    column-count: 1;
+}
+@media screen and (min-width:  400px) {
+    .settings__dictionaries {
+        column-count: 2;
+    }
+}
+@media screen and (min-width:  600px) {
+    .settings__dictionaries {
+        column-count: 3;
+    }
+}
+@media screen and (min-width:  800px) {
+    .settings__dictionaries {
+        column-count: 4;
+    }
+}
+@media screen and (min-width:  1000px) {
+    .settings__dictionaries {
+        column-count: 5;
+    }
 }
 
 .settings__dictionaries .control input[type="checkbox"] {
