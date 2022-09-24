@@ -62,6 +62,27 @@ const activateTab = tabId => {
   }
 };
 
+const handleMainWindowResize = event => {
+  const window = event.sender;
+  const [windowWidth, windowHeight] = window.getSize();
+  updateSettings({width: windowWidth, height: windowHeight});
+
+  setTimeout(() => {
+    const {width: contentWidth, height: contentHeight} = window.getContentBounds();
+    let totalHeight = 0;
+    const isLast = (idx, array) => idx === array.length - 1;
+    window.getBrowserViews().forEach((bv, idx, array) => {
+      const {x: currentX, y: currentY, height: currentHeight} = bv.getBounds();
+      let newHeight = currentHeight;
+      if (isLast(idx, array)) {
+        newHeight = contentHeight - totalHeight;
+      }
+      bv.setBounds({x: currentX, y: currentY, width: contentWidth, height: newHeight});
+      totalHeight += currentHeight;
+    });
+  });
+};
+
 const handleTabReload = event => event.sender.reloadIgnoringCache();
 
 const handleZoomIn = event => event.sender.setZoomFactor(event.sender.getZoomFactor() + 0.1);
@@ -153,23 +174,6 @@ const initDialogListeners = () => {
 const browserVersionsReady = () => {
   app.userAgentFallback = userAgentForView(mainWindow);
   tabContainer = initTabContainer(mainWindow);
-};
-
-const handleMainWindowResize = () => {
-  const [windowWidth, windowHeight] = mainWindow.getSize();
-  updateSettings({width: windowWidth, height: windowHeight});
-  const {width: contentWidth, height: contentHeight} = mainWindow.getContentBounds();
-  let totalHeight = 0;
-  const isLast = (idx, array) => idx === array.length - 1;
-  mainWindow.getBrowserViews().forEach((bv, idx, array) => {
-    const {x: currentX, y: currentY} = bv.getBounds();
-    let {height: currentHeight} = bv.getBounds();
-    if (isLast(idx, array)) {
-      currentHeight = contentHeight - totalHeight;
-    }
-    bv.setBounds({x: currentX, y: currentY, width: contentWidth, height: currentHeight});
-    totalHeight += currentHeight;
-  });
 };
 
 const init = () => {
