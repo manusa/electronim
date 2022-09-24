@@ -27,6 +27,8 @@ describe('Main module test suite', () => {
   let userAgentModule;
   let main;
   beforeEach(() => {
+    jest.resetModules();
+    jest.useFakeTimers();
     mockBrowserWindow = {
       listeners: {},
       on: jest.fn((eventName, func) => {
@@ -49,7 +51,6 @@ describe('Main module test suite', () => {
     };
     mockTabContainer = {};
     mockSettings = {};
-    jest.resetModules();
     jest.mock('electron', () => ({
       BrowserWindow: jest.fn(() => mockBrowserWindow),
       Notification: jest.fn(() => mockNotification),
@@ -120,9 +121,14 @@ describe('Main module test suite', () => {
     });
   });
   describe('mainWindow events', () => {
+    let views;
     beforeEach(() => {
+      jest.spyOn(global, 'setTimeout');
+      views = [];
       mockBrowserWindow.getSize = jest.fn(() => ([13, 37]));
       mockBrowserWindow.getContentBounds = jest.fn(() => ({x: 0, y: 0, width: 10, height: 34}));
+      mockBrowserWindow.getBrowserViews = jest.fn(() => (views));
+      main.init();
     });
     test('maximize, should set browserview to fit window and store new size in configuration file', () => {
       // Given
@@ -130,30 +136,37 @@ describe('Main module test suite', () => {
         getBounds: jest.fn(() => ({x: 0, y: 0, width: 1, height: 1})),
         setBounds: jest.fn()
       };
-      mockBrowserWindow.getBrowserViews = jest.fn(() => ([singleView]));
-      main.init();
+      views.push(singleView);
       // When
-      mockBrowserWindow.listeners.maximize();
+      mockBrowserWindow.listeners.maximize({sender: mockBrowserWindow});
+      jest.runAllTimers();
       // Then
       expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
       expect(singleView.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
     });
     describe('resize', () => {
-      test('single view, should set browserview to fit window and store new size in configuration file', () => {
+      test('#78: should be run in separate setTimeout timer function to resize properly in Linux', () => {
+        // When
+        mockBrowserWindow.listeners.resize({sender: mockBrowserWindow});
+        // Then
+        expect(setTimeout).toHaveBeenCalledTimes(1);
+        expect(mockBrowserWindow.getBrowserViews).not.toHaveBeenCalled();
+      });
+      test('single view, should set BrowserView to fit window and store new size in configuration file', () => {
         // Given
         const singleView = {
           getBounds: jest.fn(() => ({x: 0, y: 0, width: 1, height: 1})),
           setBounds: jest.fn()
         };
-        mockBrowserWindow.getBrowserViews = jest.fn(() => ([singleView]));
-        main.init();
+        views.push(singleView);
         // When
-        mockBrowserWindow.listeners.resize();
+        mockBrowserWindow.listeners.resize({sender: mockBrowserWindow});
+        jest.runAllTimers();
         // Then
         expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
         expect(singleView.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
       });
-      test('multiple views, should set last browserview to fit window and store new size in configuration file', () => {
+      test('multiple views, should set last BrowserView to fit window and store new size in configuration file', () => {
         // Given
         const topBar = {
           getBounds: jest.fn(() => ({x: 0, y: 0, width: 1, height: 1})),
@@ -163,10 +176,10 @@ describe('Main module test suite', () => {
           getBounds: jest.fn(() => ({x: 1337, y: 1337, width: 1, height: 1})),
           setBounds: jest.fn()
         };
-        mockBrowserWindow.getBrowserViews = jest.fn(() => ([topBar, content]));
-        main.init();
+        views.push(topBar, content);
         // When
-        mockBrowserWindow.listeners.resize();
+        mockBrowserWindow.listeners.resize({sender: mockBrowserWindow});
+        jest.runAllTimers();
         // Then
         expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
         expect(topBar.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 1});
