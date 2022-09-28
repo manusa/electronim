@@ -43,8 +43,12 @@ describe('Help Module preload test suite', () => {
       // Then
       await waitFor(() => expect(document.head.children.length).toBeGreaterThan(0));
       const styles = Array.from(document.querySelectorAll('style'));
-      expect(styles).toHaveLength(1);
-      expect(styles[0].innerHTML).toContain('.help-root {');
+      expect(styles).toHaveLength(8);
+      expect(styles[0].innerHTML).toMatch(/:root \{.+--color-accent-fg:/s); // Variables
+      expect(styles[1].innerHTML).toContain('html.electronim,'); // Base
+      expect(styles[2].innerHTML).toContain('.electronim h1,'); // Typography
+      expect(styles[4].innerHTML).toContain('.electronim .navbar {'); // Components
+      expect(styles[7].innerHTML).toContain('.help-root {'); // Help-specific
     });
     test('adds required libraries', () => {
       expect(window.ELECTRONIM_VERSION).toEqual('0.0.0');

@@ -1,0 +1,84 @@
+/*
+   Copyright 2022 Marc Nuri San Felix
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+:root {
+  --code-border-radius: 6px;
+}
+
+html.electronim,
+.electronim body {
+  background: var(--color-canvas-default);
+  color: var(--color-fg-default);
+}
+
+.electronim a {
+  background-color: transparent;
+  color: var(--color-accent-fg);
+  text-decoration: none;
+}
+
+.electronim a:hover {
+  color: var(--color-accent-fg);
+  text-decoration: underline;
+}
+
+.electronim code {
+  background-color: var(--color-neutral-muted);
+  border-radius: var(--code-border-radius);
+  color: var(--color-fg-default);
+  font-size: 85%;
+  padding: 0.2em 0.4em;
+}
+
+.electronim pre code {
+  background-color: transparent;
+  border: none;
+  color: var(--color-fg-default);
+  padding: 0;
+}
+
+.electronim blockquote {
+  padding: 0 1em;
+  color: var(--color-fg-muted);
+  border-left: .25em solid var(--color-border-default);
+}
+
+.electronim pre {
+  background-color: var(--color-canvas-subtle);
+  border-radius: 6px;
+  font-size: 85%;
+  padding: 16px;
+}
+
+.electronim table th,
+.electronim table td {
+  border: 1px solid var(--color-border-default);
+  color: var(--color-fg-default);
+  padding: 6px 13px;
+}
+
+.electronim table th {
+  font-weight: 600;
+  text-align: center;
+}
+
+.electronim table tr {
+  background-color: var(--color-canvas-default);
+  border-top: 1px solid var(--color-border-muted);
+}
+
+.electronim table tr:nth-child(2n) {
+  background-color: var(--color-canvas-subtle);
+}
