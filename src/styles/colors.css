@@ -1,0 +1,46 @@
+/*
+   Copyright 2022 Marc Nuri San Felix
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+:root {
+  --color-accent-fg: #0969da;
+  --color-border-default: #d0d7de;
+  --color-border-muted: #d8dee4;
+  --color-canvas-default: #ffffff;
+  --color-canvas-subtle: #f6f8fa;
+  --color-fg-default: #24292f;
+  --color-fg-muted: #57606a;
+  --color-gray-lightest: #f6f8fa;
+  --color-gray-lighter: #dbdbdb;
+  --color-gray: #7d7d7d;
+  --color-gray-darker: #4a4a4a;
+  --color-neutral-muted: rgba(175, 184, 193, 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-accent-fg: #58a6ff;
+    --color-border-default: #30363d;
+    --color-border-muted: #21262d;
+    --color-canvas-default: #0d1117;
+    --color-canvas-subtle: #161b22;
+    --color-fg-default: #c9d1d9;
+    --color-fg-muted: #8b949e;
+    --color-gray-lightest: #090705;
+    --color-gray-lighter: #242424;
+    --color-gray: #828282;
+    --color-gray-darker: #b5b5b5;
+    --color-neutral-muted: rgba(110, 118, 129, 0.4);
+  }
+}

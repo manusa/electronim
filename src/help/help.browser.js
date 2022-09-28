@@ -27,7 +27,7 @@ const Document = ({id}) => html`
 
 const Toc = () => html`
   <div class="toc-container">
-    <h1 class="title">Table of Contents</h1>
+    <h1>Table of Contents</h1>
     <ol>
       <li><a href="#Setup.md">Setup</a></li>
       <li><a href="#Keyboard-shortcuts.md">Keyboard Shortcuts</a></li>
