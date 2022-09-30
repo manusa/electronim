@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+@media (prefers-color-scheme: dark) {
+  // Must override all initial variables in ~bulma/sass/utilities/initial-variables.sass
+  $black: hsl(0, 0%, 100%);
+  $black-bis: hsl(0, 0%, 98%);
+  $black-ter: hsl(0, 0%, 96%);
+  $grey-darker: hsl(0, 0%, 86%);
+  $grey-dark: hsl(0, 0%, 71%);
+  $grey-light: hsl(0, 0%, 29%);
+  $grey-lighter: hsl(0, 0%, 21%);
+  $grey-lightest: hsl(0, 0%, 17%);
+  $white-ter: hsl(0, 0%, 14%);
+  $white-bis: hsl(0, 0%, 7%);
+  $white: hsl(0, 0%, 0%);
+  @import "~bulma/bulma";
+}
