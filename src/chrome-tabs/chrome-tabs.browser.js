@@ -18,6 +18,7 @@ const {render} = window.preact;
 const {useLayoutEffect, useReducer, useState} = window.preactHooks;
 const html = window.html;
 
+const shouldUseDarkColors = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 const getTabContainer = () => document.querySelector('.tab-container');
 const getChromeTabs = () => getTabContainer().querySelector('.chrome-tabs');
 
@@ -228,7 +229,7 @@ const ChromeTabs = ({dispatch, state: {tabs}}) => {
   });
   return html`
     <div
-      class="chrome-tabs"
+      class=${`chrome-tabs ${shouldUseDarkColors ? 'chrome-tabs-dark-theme' : ''}`}
       style=${`--tab-content-margin: ${TAB_CONTENT_MARGIN}px`}
       ondragover=${event => event.preventDefault()}
     >

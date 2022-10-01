@@ -37,6 +37,13 @@ body {
     background: #EEE;
     padding: 10px 0;
 }
+@media (prefers-color-scheme: dark) {
+    .tab-container,
+    .tab-container .chrome-tabs.chrome-tabs-dark-theme {
+        background: #202124;
+    }
+
+}
 
 .tab-container .chrome-tabs .chrome-tab-close {
     display: none;
@@ -51,6 +58,6 @@ body {
     border-color: transparent;
 }
 
-.tab-container .settings__button:hover {
+.tab-container .menu__button:hover {
     border-color: #dbdbdb;
 }
