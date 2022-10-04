@@ -17,7 +17,7 @@ const showDialog = (window, browserView) => {
   window.setBrowserView(browserView);
   const {width, height} = window.getContentBounds();
   browserView.setBounds({x: 0, y: 0, width, height});
-  browserView.setAutoResize({width: true, horizontal: true, height: true, vertical: true});
+  browserView.setAutoResize({width: false, horizontal: false, height: false, vertical: false});
 };
 
 module.exports = {showDialog};

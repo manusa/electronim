@@ -37,6 +37,6 @@ describe('browser-window util module test suite', () => {
     expect(dialog.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 13, height: 37});
     expect(dialog.setAutoResize).toHaveBeenCalledTimes(1);
     expect(dialog.setAutoResize)
-      .toHaveBeenCalledWith({width: true, horizontal: true, height: true, vertical: true});
+      .toHaveBeenCalledWith({width: false, horizontal: false, height: false, vertical: false});
   });
 });
