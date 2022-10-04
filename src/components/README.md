@@ -1,33 +1,37 @@
 # Components
 
-This module contains the library of shared components to be used across the application.
+This ES module contains the library of shared components to be used across the application.
 
 ## Structure
 
-Since ElectronIM is based on Preact in combination with Electron, to be able to use the component within a browser, you need to pass the `html` bound `h` function from `preact` to the component.
-
-Every component definition will start with a function that accepts the `html` parameter that returns an arrow function with the component.
+To be able to use the component within a browser, there needs to be an  `html` bound `h` function from `preact` globally available.
 
 ```javascript
-module.exports.Component = html => ({property1}) => html`
+export const Component = ({property1}) => html`
   <div>Your Component Definition</div>
 `;
 ```
 
-## Using Components
-
-Components need to be imported in a `preload.js` script in order to be used ina `browser-xxx.js` file.
+To expose the component in the public API, it needs to be referenced from the `index.mjs` file.
 
 ```javascript
-window.preact = require('preact');
-window.html = require('htm').bind(window.preact.h);
-window.Component = require('../components').component(window.html);
+export {Component} from './component.mjs';
 ```
 
-Then you can use the component in the `browser-xxx.js` file.
+## Using Components
+
+Components are ES modules that can be imported from the browser js (`xxx.browser.mjs` files).
 
 ```javascript
-const {html, Component, preact: {render}} = window;
+const {html} = window;
+import {Component} from '../components/index.mjs';
+
 const App = () => html`<${Component} property1='value1' />`;
 render(html`<${App} />`, document.querySelector('.root'));
+```
+
+Note that the `xxx.browser.mjs` files need to be loaded as JavaScript ES modules in the `index.html` file.
+
+```html
+<script src="./xxx.browser.mjs" type="module"></script>
 ```

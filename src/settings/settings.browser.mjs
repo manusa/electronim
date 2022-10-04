@@ -15,14 +15,16 @@
  */
 /* eslint-disable no-undef */
 const {
-  APP_EVENTS, ELECTRONIM_VERSION, html, ipcRenderer, preact: {render}, preactHooks: {useReducer}, TopBar
+  APP_EVENTS, ipcRenderer, preact: {render}, preactHooks: {useReducer}
 } = window;
+
+import {Checkbox, TopBar} from '../components/index.mjs';
 import {
   ACTIONS, reducer, dictionariesEnabled, setTabProperty, toggleTabProperty
 } from './settings.reducer.browser.mjs';
 import {
-  Checkbox
-} from './settings.common.browser.mjs';
+  OtherContainer
+} from './settings.other.browser.mjs';
 import {
   SpellCheckContainer
 } from './settings.spell-check.browser.mjs';
@@ -36,8 +38,8 @@ const newTabClass = state => {
   return state.newTabValid ? 'is-success' : 'is-danger';
 };
 
-const SettingsButton = ({icon, disabled = false, title, onclick}) => (html`
-  <button class='settings__button button' disabled=${disabled} onclick=${onclick}>
+const SettingsButton = ({icon, disabled = false, title, onClick}) => (html`
+  <button class='settings__button button' disabled=${disabled} onClick=${onClick}>
     <span class='icon is-medium' title='${title}'>
       <i class='fas ${icon}'></i>
     </span>
@@ -48,7 +50,7 @@ const ExpandButton = ({dispatch, id, expanded = false}) => {
   const properties = {
     icon: expanded ? 'fa-chevron-down' : 'fa-chevron-right',
     title: expanded ? 'Collapse' : 'Expand (show advanced settings)',
-    onclick: () => dispatch({type: ACTIONS.TOGGLE_TAB_EXPANDED, payload: id})
+    onClick: () => dispatch({type: ACTIONS.TOGGLE_TAB_EXPANDED, payload: id})
   };
   return html`
     <${SettingsButton} ...${properties} />
@@ -65,7 +67,7 @@ const TabAdvancedSettings = (
     <${Checkbox} label="Sandbox" checked=${sandboxed} value=${id}
       title='Use an isolated/sandboxed session for this tab'
       icon=${sandboxedIcon(sandboxed)}
-      onclick=${toggleTabProperty(dispatch, 'sandboxed', id)}
+      onClick=${toggleTabProperty(dispatch, 'sandboxed', id)}
     />
   </div>
 `);
@@ -83,14 +85,14 @@ const TabEntry = ({
       </div>
       <${SettingsButton} icon=${disabledIcon(disabled)}
         title=${disabled ? 'Tab disabled. Click to enable' : 'Tab enabled. Click to disable'}
-        onclick=${toggleTabProperty(dispatch, 'disabled', id)}
+        onClick=${toggleTabProperty(dispatch, 'disabled', id)}
       />
       <${SettingsButton} icon=${disableNotifications ? 'fa-bell-slash' : 'fa-bell'}
         title=${disableNotifications ? 'Notifications disabled. Click to enable' : 'Notifications enabled. Click to disable'}
-        onclick=${toggleTabProperty(dispatch, 'disableNotifications', id)}
+        onClick=${toggleTabProperty(dispatch, 'disableNotifications', id)}
       />
       <${SettingsButton} icon='fa-trash' title='Delete tab'
-        onclick=${() => dispatch({type: ACTIONS.REMOVE, payload: {id}})}
+        onClick=${() => dispatch({type: ACTIONS.REMOVE, payload: {id}})}
       /> 
     </div>
     <${TabAdvancedSettings} dispatch=${dispatch} id=${id} expanded=${expanded} disabled=${disabled}
@@ -113,12 +115,12 @@ const Settings = ({initialState}) => {
       addTab();
     }
   };
-  const toggleNotifications = () => dispatch({type: ACTIONS.TOGGLE_GLOBAL_NOTIFICATIONS});
   const save = () => ipcRenderer.send(APP_EVENTS.settingsSave, {
     tabs: state.tabs,
     useNativeSpellChecker: state.useNativeSpellChecker,
     enabledDictionaries,
-    disableNotificationsGlobally: state.disableNotificationsGlobally
+    disableNotificationsGlobally: state.disableNotificationsGlobally,
+    theme: state.theme
   });
   const cancel = () => ipcRenderer.send(APP_EVENTS.closeDialog);
   return html`
@@ -127,10 +129,10 @@ const Settings = ({initialState}) => {
       <div class="navbar-item field is-grouped">
         <div class="control">
           <button class="settings__submit button is-link"
-            disabled=${!state.canSave || state.invalidTabs.size !== 0} onclick=${save}>Ok</button>
+            disabled=${!state.canSave || state.invalidTabs.size !== 0} onClick=${save}>Ok</button>
         </div>
         <div class="control">
-          <button class="settings__cancel button is-link is-light" onclick=${cancel}>Cancel</button>
+          <button class="settings__cancel button is-link is-light" onClick=${cancel}>Cancel</button>
         </div>
       </div>
     `}
@@ -149,7 +151,7 @@ const Settings = ({initialState}) => {
               onkeydown=${onNewKeyDown}
             />
           </div>
-          <${SettingsButton} icon='fa-plus' onclick=${addTab} disabled=${!state.newTabValid} />
+          <${SettingsButton} icon='fa-plus' onClick=${addTab} disabled=${!state.newTabValid} />
         </div>
         <div class="settings__tabs container field">
           ${state.tabs.map(tab => (html`
@@ -161,23 +163,7 @@ const Settings = ({initialState}) => {
         </div>
       </nav>
       <${SpellCheckContainer} dispatch=${dispatch} state=${state} />
-      <nav class="panel">
-        <p class="panel-heading">Other</p>
-        <div class="panel-block">
-          <div class="settings__global-notifications container">
-            <${Checkbox}
-              label="Disable notifications globally"
-              icon=${state.disableNotificationsGlobally ? 'fa-bell-slash' : 'fa-bell'}
-              checked=${state.disableNotificationsGlobally}
-              value=${state.disableNotificationsGlobally}
-              onclick=${toggleNotifications}
-            />
-          </div>
-        </div>
-        <div class="panel-block is-italic">
-          ElectronIM version ${ELECTRONIM_VERSION}
-        </div>
-      </nav>
+      <${OtherContainer} dispatch=${dispatch} state=${state} />
     </div>
   </div>
 `;
@@ -205,7 +191,8 @@ Promise.all([
       newTabValue: '',
       invalidTabs: new Set(),
       canSave: currentSettings.tabs.length > 0,
-      disableNotificationsGlobally: currentSettings.disableNotificationsGlobally
+      disableNotificationsGlobally: currentSettings.disableNotificationsGlobally,
+      theme: currentSettings.theme
     };
     render(html`<${Settings} initialState=${initialState} />`, settingsRoot());
   }

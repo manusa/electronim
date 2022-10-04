@@ -13,7 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {APP_EVENTS, ELECTRONIM_VERSION, docs, html, ipcRenderer, preact: {render}, TopBar} = window;
+const {APP_EVENTS, ELECTRONIM_VERSION, docs, html, ipcRenderer, preact: {render}} = window;
+
+import {TopBar} from '../components/index.mjs';
 
 const helpRoot = () => document.querySelector('.help-root');
 const close = () => ipcRenderer.send(APP_EVENTS.closeDialog);
@@ -55,7 +57,7 @@ const Help = () => html`
     <${TopBar} fixed=${true} title='Help'
       endComponents=${html`
         <div class='navbar-item'>
-          <button class="button is-link is-light" onclick=${close}>Close</button>
+          <button class="button is-link is-light" onClick=${close}>Close</button>
         </div>
       `}
     />

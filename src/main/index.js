@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {BrowserWindow, Notification, app, desktopCapturer, ipcMain: ipc} = require('electron');
+const {BrowserWindow, Notification, app, desktopCapturer, ipcMain: ipc, nativeTheme} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const {TABS_CONTAINER_HEIGHT, initTabContainer} = require('../chrome-tabs');
 const {loadSettings, updateSettings, openSettingsDialog} = require('../settings');
@@ -154,6 +154,7 @@ const closeDialog = () => {
 const saveSettings = (_event, settings) => {
   updateSettings(settings);
   loadDictionaries();
+  nativeTheme.themeSource = settings.theme ?? 'system';
   const currentBrowserView = mainWindow.getBrowserView();
   mainWindow.removeBrowserView(currentBrowserView);
   tabManager.removeAll();
@@ -179,7 +180,8 @@ const browserVersionsReady = () => {
 const init = () => {
   fixUserDataLocation();
   loadDictionaries();
-  const {width = 800, height = 600} = loadSettings();
+  const {width = 800, height = 600, theme} = loadSettings();
+  nativeTheme.themeSource = theme ?? 'system';
   mainWindow = new BrowserWindow({
     width, height, resizable: true, maximizable: true, webPreferences
   });

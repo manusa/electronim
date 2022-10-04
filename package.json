@@ -156,14 +156,14 @@
       ]
     },
     "testMatch": [
-      "**/__tests__/**/*.?(m)js?(x)",
-      "**/?(*.**/?(*.)(spec|test).?(m)js?(x)"
+      "**/(*.)(spec|test).?(m)js?(x)"
     ],
     "verbose": true
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "5.15.4",
-    "@testing-library/dom": "8.18.0",
+    "@testing-library/dom": "8.18.1",
+    "@testing-library/user-event": "14.4.3",
     "bulma": "0.9.4",
     "chrome-tabs": "5.4.0",
     "css-loader": "6.7.1",
