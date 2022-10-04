@@ -43,19 +43,19 @@ describe('Help Module preload test suite', () => {
       // Then
       await waitFor(() => expect(document.head.children.length).toBeGreaterThan(0));
       const styles = Array.from(document.querySelectorAll('style'));
-      expect(styles).toHaveLength(8);
+      expect(styles).toHaveLength(9);
       expect(styles[0].innerHTML).toMatch(/:root \{.+--color-accent-fg:/s); // Variables
       expect(styles[1].innerHTML).toContain('html.electronim,'); // Base
       expect(styles[2].innerHTML).toContain('.electronim h1,'); // Typography
-      expect(styles[4].innerHTML).toContain('.electronim .navbar {'); // Components
-      expect(styles[7].innerHTML).toContain('.help-root {'); // Help-specific
+      expect(styles[4].innerHTML).toContain('.electronim .control .checkbox {'); // CheckBox
+      expect(styles[5].innerHTML).toContain('.electronim .top-bar.navbar {'); // NavBar
+      expect(styles[8].innerHTML).toContain('.help-root {'); // Help-specific
     });
     test('adds required libraries', () => {
       expect(window.ELECTRONIM_VERSION).toEqual('0.0.0');
       expect(window.preact).not.toBeUndefined();
       expect(window.preactHooks).not.toBeUndefined();
       expect(window.html).not.toBeUndefined();
-      expect(window.TopBar).not.toBeUndefined();
     });
     test('loads document contents with valid asset URLs', () => {
       expect(window.docs).toEqual(expect.objectContaining({

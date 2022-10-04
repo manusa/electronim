@@ -19,6 +19,7 @@ describe('Main module test suite', () => {
   let mockApp;
   let mockDesktopCapturer;
   let mockIpc;
+  let mockNativeTheme;
   let mockTabContainer;
   let mockSettings;
   let settingsModule;
@@ -49,6 +50,7 @@ describe('Main module test suite', () => {
         mockIpc.listeners[eventName] = func;
       })
     };
+    mockNativeTheme = {};
     mockTabContainer = {};
     mockSettings = {};
     jest.mock('electron', () => ({
@@ -56,7 +58,8 @@ describe('Main module test suite', () => {
       Notification: jest.fn(() => mockNotification),
       app: mockApp,
       desktopCapturer: mockDesktopCapturer,
-      ipcMain: mockIpc
+      ipcMain: mockIpc,
+      nativeTheme: mockNativeTheme
     }));
     jest.mock('../../chrome-tabs', () => ({
       TABS_CONTAINER_HEIGHT: 46,
@@ -83,6 +86,22 @@ describe('Main module test suite', () => {
     main = require('../');
   });
   describe('init - environment preparation', () => {
+    describe('theme', () => {
+      test('fallbacks to system', () => {
+        // When
+        main.init();
+        // Then
+        expect(mockNativeTheme.themeSource).toBe('system');
+      });
+      test('uses theme from saved settings', () => {
+        // Given
+        mockSettings.theme = 'dark';
+        // When
+        main.init();
+        // Then
+        expect(mockNativeTheme.themeSource).toBe('dark');
+      });
+    });
     test('initBrowserVersions, successful, should be set to defaultUserAgent', () => {
       // When
       main.init();
@@ -389,21 +408,36 @@ describe('Main module test suite', () => {
       settingsView = {webContents: {destroy: jest.fn()}};
       mockBrowserWindow.getBrowserView = jest.fn(() => settingsView);
     });
-    test('saveSettings, should reload settings and reset all views', () => {
-      // Given
-      mockBrowserWindow.removeBrowserView = jest.fn();
-      mockTabContainer.webContents = {destroy: jest.fn()};
-      main.init();
-      // When
-      mockIpc.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
-      // Then
-      expect(spellCheckModule.loadDictionaries).toHaveBeenCalledTimes(2);
-      expect(settingsModule.updateSettings).toHaveBeenCalledTimes(1);
-      expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledTimes(1);
-      expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledWith(settingsView);
-      expect(tabManagerModule.removeAll).toHaveBeenCalledTimes(1);
-      expect(settingsView.webContents.destroy).toHaveBeenCalledTimes(1);
-      expect(mockTabContainer.webContents.destroy).toHaveBeenCalledTimes(1);
+    describe('saveSettings', () => {
+      beforeEach(() => {
+        mockBrowserWindow.removeBrowserView = jest.fn();
+        mockTabContainer.webContents = {destroy: jest.fn()};
+        main.init();
+      });
+      test('should reload settings and reset all views', () => {
+        // When
+        mockIpc.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
+        // Then
+        expect(spellCheckModule.loadDictionaries).toHaveBeenCalledTimes(2);
+        expect(settingsModule.updateSettings).toHaveBeenCalledTimes(1);
+        expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledTimes(1);
+        expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledWith(settingsView);
+        expect(tabManagerModule.removeAll).toHaveBeenCalledTimes(1);
+        expect(settingsView.webContents.destroy).toHaveBeenCalledTimes(1);
+        expect(mockTabContainer.webContents.destroy).toHaveBeenCalledTimes(1);
+      });
+      test('should set saved theme', () => {
+        // When
+        mockIpc.listeners.settingsSave({}, {theme: 'light'});
+        // Then
+        expect(mockNativeTheme.themeSource).toEqual('light');
+      });
+      test('should fallback theme to system', () => {
+        // When
+        mockIpc.listeners.settingsSave({}, {});
+        // Then
+        expect(mockNativeTheme.themeSource).toEqual('system');
+      });
     });
     test('closeDialog, should destroy dialog view and activate current tab', () => {
       // Given

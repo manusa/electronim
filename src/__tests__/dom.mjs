@@ -14,29 +14,19 @@
    limitations under the License.
  */
 
-export const prependProtocol = url => {
-  if (url && !url.match(/^https?:\/\/.+/)) {
-    return `https://${url}`;
+import {fileURLToPath} from 'url';
+import {dirname, resolve} from 'path';
+import {readFileSync} from 'fs';
+
+const parser = new DOMParser();
+
+export const loadDOM = async ({meta, path}) => {
+  const pathSegments = [dirname(fileURLToPath(meta.url)), ...path];
+  const htmlPath = resolve(...pathSegments);
+  const html = readFileSync(htmlPath, 'utf8');
+  const index = parser.parseFromString(html, 'text/html');
+  document.body.innerHTML = index.body.innerHTML;
+  for (const script of index.querySelectorAll('script[src]')) {
+    await import(`${dirname(htmlPath)}/${script.getAttribute('src')}`);
   }
-  return url;
 };
-
-export const validateUrl = (url, allowNoProtocol = true) => {
-  if (allowNoProtocol) {
-    url = prependProtocol(url);
-  }
-  if (!url || !url.match(/^https?:\/\/.+/)) {
-    return false;
-  }
-  try {
-    return Boolean(new URL(url));
-  } catch (error) {
-    /* error is ignored */
-  }
-  return false;
-};
-
-export const newId = () => (
-  new Date().getTime().toString(36) + Math.random().toString(36).slice(2) // NOSONAR
-);
-

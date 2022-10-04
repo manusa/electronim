@@ -13,28 +13,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {fireEvent} = require('@testing-library/dom');
-
-const mockDOM = () => {
-  document.body.innerHTML = '';
-  const $root = document.createElement('div');
-  $root.innerHTML = '<div class="help-root"></div>';
-  document.body.append($root);
-};
+import {jest} from '@jest/globals';
+import {loadDOM} from '../../__tests__/index.mjs';
+import {fireEvent} from '@testing-library/dom';
 
 describe('Help in Browser test suite', () => {
   let mockIpcRenderer;
-  beforeEach(() => {
-    require('../../../bundles/help.preload');
+  beforeEach(async () => {
+    jest.resetModules();
     mockIpcRenderer = {
       send: jest.fn()
     };
-    mockDOM();
-    window.ipcRenderer = mockIpcRenderer;
+    await import('../../../bundles/help.preload');
     window.ELECTRONIM_VERSION = '1.33.7';
-    jest.isolateModules(() => {
-      require('../help.browser');
-    });
+    window.ipcRenderer = mockIpcRenderer;
+    await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
   test('render, should render all documents', () => {
     // Then

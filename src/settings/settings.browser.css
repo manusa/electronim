@@ -20,15 +20,6 @@
     --border-color: #dbdbdb;
 }
 
-.control .checkbox {
-    user-select: none;
-}
-
-.control .checkbox .checkbox__icon {
-    width: calc(1em + var(--default-spacing));
-    text-align: center;
-}
-
 .settings.container {
     margin:0;
     padding: 15px 0;

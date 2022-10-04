@@ -14,63 +14,19 @@
    limitations under the License.
  */
 import {jest} from '@jest/globals';
+import {loadDOM} from '../../__tests__/index.mjs';
+import {ipcRenderer} from './settings.browser.mjs';
 import {fireEvent, waitFor} from '@testing-library/dom';
-import htm from 'htm';
-
-const mockDOM = () => {
-  document.body.innerHTML = '';
-  const $root = document.createElement('div');
-  $root.innerHTML = '<div class="settings container is-fluid"></div>';
-  document.body.append($root);
-};
 
 describe('Settings in Browser test suite', () => {
-  let mockDictionariesAvailableNative;
-  let mockDictionariesAvailable;
-  let mockDictionariesEnabled;
-  let mockCurrentSettings;
   let mockIpcRenderer;
   beforeEach(async () => {
     jest.resetModules();
-    mockDictionariesAvailableNative = ['en'];
-    mockDictionariesAvailable = {
-      en: {name: 'English'},
-      es: {name: 'Spanish'}
-    };
-    mockDictionariesEnabled = ['en'];
-    mockCurrentSettings = {
-      disableNotificationsGlobally: false,
-      tabs: [
-        {id: '1', url: 'https://initial-tab.com', sandboxed: true},
-        {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true}
-      ]
-    };
-    mockIpcRenderer = {
-      send: jest.fn(),
-      invoke: jest.fn(async channel => {
-        switch (channel) {
-          case 'settingsLoad':
-            return mockCurrentSettings;
-          case 'dictionaryGetAvailableNative':
-            return mockDictionariesAvailableNative;
-          case 'dictionaryGetAvailable':
-            return mockDictionariesAvailable;
-          case 'dictionaryGetEnabled':
-            return mockDictionariesEnabled;
-          default:
-            return {};
-        }
-      })
-    };
-    window.preact = await import('preact');
-    window.preactHooks = await import('preact/hooks');
-    window.html = htm.bind(window.preact.h);
-    window.TopBar = (await import('../../components')).default.topBar(window.html);
-    window.APP_EVENTS = (await import('../../constants')).APP_EVENTS;
+    mockIpcRenderer = ipcRenderer();
+    await import('../../../bundles/settings.preload');
     window.ELECTRONIM_VERSION = '1.33.7';
     window.ipcRenderer = mockIpcRenderer;
-    mockDOM();
-    await import('../settings.browser');
+    await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
   describe('Main Button events', () => {
     test('Submit should send form data', () => {
@@ -85,7 +41,8 @@ describe('Settings in Browser test suite', () => {
             {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true}
           ],
           enabledDictionaries: ['en'],
-          disableNotificationsGlobally: false
+          disableNotificationsGlobally: false,
+          theme: 'dark'
         });
     });
     test('Cancel should send close dialog event', () => {

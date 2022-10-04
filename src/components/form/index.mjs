@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Marc Nuri San Felix
+   Copyright 2022 Marc Nuri San Felix
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,14 +13,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-/* eslint-disable no-undef */
-const {ipcRenderer} = require('electron');
 
-require('./settings.browser.css');
+export const sizes = {
+  small: 'is-small',
+  normal: 'is-normal',
+  medium: 'is-medium',
+  large: 'is-large'
+};
 
-window.ipcRenderer = ipcRenderer;
-window.APP_EVENTS = APP_EVENTS;
-window.ELECTRONIM_VERSION = ELECTRONIM_VERSION;
-window.preact = require('preact');
-window.preactHooks = require('preact/hooks');
-window.html = require('htm').bind(window.preact.h);
+export {Checkbox} from './checkbox.mjs';
+export {Field, HorizontalField} from './field.mjs';
+export {Select} from './select.mjs';

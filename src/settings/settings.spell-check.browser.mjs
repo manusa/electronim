@@ -15,6 +15,7 @@
  */
 const {html} = window;
 
+import {Checkbox, Panel} from '../components/index.mjs';
 import {
   dictionaries,
   dictionariesEnabled,
@@ -22,12 +23,11 @@ import {
   toggleDictionary,
   useNativeSpellChecker
 } from './settings.reducer.browser.mjs';
-import {Checkbox} from './settings.common.browser.mjs';
 
 const LanguageEntry = ({dispatch, languageKey, name, enabled = false}) => html`
   <${Checkbox} label=${`${name} (${languageKey})`} checked=${enabled}
     value=${languageKey}
-    onclick=${toggleDictionary({dispatch, languageKey})}
+    onClick=${toggleDictionary({dispatch, languageKey})}
   />
 `;
 
@@ -35,16 +35,15 @@ export const SpellCheckContainer = ({dispatch, state}) => {
   const useNative = useNativeSpellChecker(state);
   const enabledDictionaries = dictionariesEnabled(state);
   return html`
-    <nav class="settings__spell-check panel">
-      <p class="panel-heading">Spell check</p>
-      <div class="settings__spell-check-common panel-block">
+    <${Panel} heading='Spell check' className='settings__spell-check'>
+      <${Panel.Block} className='settings__spell-check-common'>
         <${Checkbox}
             label='Use Native Spell Checker' checked=${useNative} value=${useNative}
-            onclick="${toggleUseNativeSpellChecker({dispatch})}"
+            onClick="${toggleUseNativeSpellChecker({dispatch})}"
             data-testid='use-native-spell-checker'
         />
-      </div>
-      <div class="panel-block">
+      </${Panel.Block} >
+      <${Panel.Block} >
         <div class="settings__dictionaries container">${
   Object.entries(dictionaries(state))
     .sort(([, {name: name1}], [, {name: name2}]) => name1.localeCompare(name2))
@@ -54,7 +53,7 @@ export const SpellCheckContainer = ({dispatch, state}) => {
       />
     `))}
         </div>
-      </div>
-    </nav>
+      </${Panel.Block} >
+    </${Panel}>
   `;
 };

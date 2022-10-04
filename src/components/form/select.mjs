@@ -13,6 +13,28 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-.electronim .navbar {
-  background: var(--color-canvas-default);
-}
+const {html} = window;
+
+import {sizes} from './index.mjs';
+
+export const Select = ({
+  value, onChange, size = sizes.normal, children
+}) => (html`
+  <div class='control'>
+    <div class=${`select ${size}`}>
+      <select value=${value} onChange=${onChange}>
+        ${children}
+      </select>
+    </div>
+  </div>
+`);
+
+Select.Option = ({value, children}) => {
+  const props = {};
+  if (value) {
+    props.value = value;
+  }
+  return html`
+    <option ...${props}>${children}</option>
+  `;
+};
