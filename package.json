@@ -206,8 +206,5 @@
     "markdown-it": "13.0.1",
     "nodehun": "3.0.2",
     "preact": "10.11.0"
-  },
-  "directories": {
-    "doc": "docs"
   }
 }
