@@ -13,9 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {ELECTRONIM_VERSION, html} = window;
+const {ELECTRONIM_VERSION} = window;
 
-import {Checkbox, HorizontalField, Panel, Select} from '../components/index.mjs';
+import {Checkbox, HorizontalField, Panel, Select, html} from '../components/index.mjs';
 import {
   setTheme,
   toggleNotifications
