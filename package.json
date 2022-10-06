@@ -181,7 +181,7 @@
     "webpack": "5.74.0"
   },
   "dependencies": {
-    "axios": "0.27.2",
+    "axios": "1.0.0",
     "dictionary-ca": "2.6.0",
     "dictionary-ca-valencia": "2.6.0",
     "dictionary-de": "2.0.4",
