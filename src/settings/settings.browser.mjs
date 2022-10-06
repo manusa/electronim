@@ -15,10 +15,10 @@
  */
 /* eslint-disable no-undef */
 const {
-  APP_EVENTS, ipcRenderer, preact: {render}, preactHooks: {useReducer}
+  APP_EVENTS, ipcRenderer
 } = window;
 
-import {Checkbox, TopBar} from '../components/index.mjs';
+import {Checkbox, TopBar, html, render, useReducer} from '../components/index.mjs';
 import {
   ACTIONS, reducer, dictionariesEnabled, setTabProperty, toggleTabProperty
 } from './settings.reducer.browser.mjs';
