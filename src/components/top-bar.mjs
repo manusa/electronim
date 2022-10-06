@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {html} = window;
+import {html} from './index.mjs';
 
 /**
  * A TopBar partially based on Bulma's Navbar component.

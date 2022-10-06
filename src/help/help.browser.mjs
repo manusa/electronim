@@ -13,9 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {APP_EVENTS, ELECTRONIM_VERSION, docs, html, ipcRenderer, preact: {render}} = window;
+const {APP_EVENTS, ELECTRONIM_VERSION, docs, ipcRenderer} = window;
 
-import {TopBar} from '../components/index.mjs';
+import {TopBar, html, render} from '../components/index.mjs';
 
 const helpRoot = () => document.querySelector('.help-root');
 const close = () => ipcRenderer.send(APP_EVENTS.closeDialog);

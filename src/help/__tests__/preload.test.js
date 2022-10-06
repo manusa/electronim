@@ -51,11 +51,8 @@ describe('Help Module preload test suite', () => {
       expect(styles[5].innerHTML).toContain('.electronim .top-bar.navbar {'); // NavBar
       expect(styles[8].innerHTML).toContain('.help-root {'); // Help-specific
     });
-    test('adds required libraries', () => {
+    test('adds required variables', () => {
       expect(window.ELECTRONIM_VERSION).toEqual('0.0.0');
-      expect(window.preact).not.toBeUndefined();
-      expect(window.preactHooks).not.toBeUndefined();
-      expect(window.html).not.toBeUndefined();
     });
     test('loads document contents with valid asset URLs', () => {
       expect(window.docs).toEqual(expect.objectContaining({
