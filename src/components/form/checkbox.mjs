@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {html} = window;
+import {html} from '../index.mjs';
 
 export const Checkbox = ({label, title = '', icon, checked, value, onClick, ...properties}) => (html`
   <div class='control'>

@@ -13,9 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {html} = window;
-
-import {sizes} from './index.mjs';
+import {html, sizes} from '../index.mjs';
 
 const FieldContainer = ({className = '', children, ...properties}) => (html`
   <div class=${`field ${className}`} ...${properties}>
