@@ -13,31 +13,24 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {createEvent, fireEvent, waitFor} = require('@testing-library/dom');
-
-const mockDOM = () => {
-  document.body.innerHTML = '';
-  const $root = document.createElement('div');
-  $root.innerHTML = '<div class="tab-container"></div>';
-  document.body.append($root);
-};
+import {jest} from '@jest/globals';
+import {loadDOM} from '../../__tests__/index.mjs';
+import {createEvent, fireEvent, waitFor} from '@testing-library/dom';
 
 describe('ChromeTabs in Browser test suite', () => {
-  require('../../../bundles/chrome-tabs.preload');
   let mockIpcRenderer;
   let $chromeTabs;
-  beforeEach(() => {
+  beforeEach(async () => {
+    jest.resetModules();
     mockIpcRenderer = {
       events: {},
       on: jest.fn((key, event) => (mockIpcRenderer.events[key] = event)),
       send: jest.fn()
     };
+    await import('../../../bundles/chrome-tabs.preload');
     window.ipcRenderer = mockIpcRenderer;
-    mockDOM();
-    jest.isolateModules(() => {
-      require('../chrome-tabs.browser');
-    });
-    $chromeTabs = document.querySelector('.chrome-tabs');
+    await loadDOM({meta: import.meta, path: ['..', 'index.html']});
+    $chromeTabs = await waitFor(() => document.querySelector('.chrome-tabs'));
   });
   test('APP_EVENTS.tabsReady should be fired on load', () => {
     expect(mockIpcRenderer.send).toHaveBeenCalledWith('tabsReady', {});
