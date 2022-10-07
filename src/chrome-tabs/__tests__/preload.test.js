@@ -43,11 +43,8 @@ describe('Chrome Tabs Module preload test suite', () => {
       expect(styles).toHaveLength(1);
       expect(styles[0].innerHTML).toContain('.tab-container .chrome-tabs {');
     });
-    test('adds required libraries', async () => {
+    test('adds required variables', async () => {
       expect(window.ELECTRONIM_VERSION).toEqual('0.0.0');
-      await waitFor(() => expect(window.preact).not.toBeUndefined());
-      expect(window.preactHooks).not.toBeUndefined();
-      expect(window.html).not.toBeUndefined();
     });
   });
 });

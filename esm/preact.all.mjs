@@ -15,7 +15,7 @@
  */
 import {h, render} from 'preact';
 export {h, render};
-export {useReducer} from 'preact/hooks';
+export {useLayoutEffect, useReducer, useState} from 'preact/hooks';
 import htm from 'htm';
 export const html = htm.bind(h);
 
