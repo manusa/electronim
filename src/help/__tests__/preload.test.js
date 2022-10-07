@@ -23,14 +23,14 @@ describe('Help Module preload test suite', () => {
     beforeEach(() => {
       jest.mock('../help.browser.css', () => {});
       jest.mock('!val-loader!./docs.browser.val-loader', () => ({
-        docs: {}
+        docs: {
+          one: 'this is a doc'
+        }
       }), {virtual: true});
-      window.APP_EVENTS = {};
-      window.ELECTRONIM_VERSION = '1.33.7';
       require('../preload');
     });
-    test('adds required libraries', () => {
-      expect(window.ELECTRONIM_VERSION).toEqual('1.33.7');
+    test('adds required variables', () => {
+      expect(window.docs).toEqual({one: 'this is a doc'});
     });
   });
   describe('preload.bundle', () => {
@@ -50,9 +50,6 @@ describe('Help Module preload test suite', () => {
       expect(styles[4].innerHTML).toContain('.electronim .control .checkbox {'); // CheckBox
       expect(styles[5].innerHTML).toContain('.electronim .top-bar.navbar {'); // NavBar
       expect(styles[8].innerHTML).toContain('.help-root {'); // Help-specific
-    });
-    test('adds required variables', () => {
-      expect(window.ELECTRONIM_VERSION).toEqual('0.0.0');
     });
     test('loads document contents with valid asset URLs', () => {
       expect(window.docs).toEqual(expect.objectContaining({

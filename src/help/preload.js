@@ -20,7 +20,5 @@ const {docs} = require('!val-loader!./docs.browser.val-loader');
 require('./help.browser.css');
 
 window.ipcRenderer = ipcRenderer;
-window.APP_EVENTS = APP_EVENTS;
-window.ELECTRONIM_VERSION = ELECTRONIM_VERSION;
 
 window.docs = docs;
