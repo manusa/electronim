@@ -14,9 +14,7 @@
    limitations under the License.
  */
 /* eslint-disable no-undef */
-const {render} = window.preact;
-const {useLayoutEffect, useReducer, useState} = window.preactHooks;
-const html = window.html;
+import {html, render, useLayoutEffect, useReducer, useState} from '../components/index.mjs';
 
 const shouldUseDarkColors = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 const getTabContainer = () => document.querySelector('.tab-container');

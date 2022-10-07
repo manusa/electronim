@@ -25,7 +25,6 @@ describe('Help in Browser test suite', () => {
       send: jest.fn()
     };
     await import('../../../bundles/help.preload');
-    window.ELECTRONIM_VERSION = '1.33.7';
     window.ipcRenderer = mockIpcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
@@ -40,8 +39,8 @@ describe('Help in Browser test suite', () => {
   });
   test('render, should show version in footer', () => {
     // Then
-    expect(document.querySelector('.documents-footer').innerHTML)
-      .toMatch(/ElectronIM version 1\.33\.7/);
+    expect(document.querySelector('.documents-footer').textContent)
+      .toEqual('ElectronIM version 0.0.0');
   });
   describe('Main Button events', () => {
     test('Close should send close dialog event', () => {

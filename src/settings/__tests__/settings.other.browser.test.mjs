@@ -15,7 +15,7 @@
  */
 import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
-import {findByTestId, getByTestId} from '@testing-library/dom';
+import {findByTestId} from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import {ipcRenderer} from './settings.browser.mjs';
 
@@ -33,8 +33,7 @@ describe('Settings (Other) in Browser test suite', () => {
   describe('Theme selection', () => {
     let $themeContainer;
     beforeEach(async () => {
-      await findByTestId(document, 'settings-theme-select');
-      $themeContainer = getByTestId(document, 'settings-theme-select');
+      $themeContainer = await findByTestId(document, 'settings-theme-select');
     });
     test('Select shows the current theme', () => {
       expect($themeContainer.querySelector('select').value).toBe('dark');
@@ -46,5 +45,9 @@ describe('Settings (Other) in Browser test suite', () => {
         theme: 'light'
       }));
     });
+  });
+  test('ElectronIM version is visible', async () => {
+    const $electronimVersion = await findByTestId(document, 'settings-electronim-version');
+    expect($electronimVersion.textContent).toBe('ElectronIM version 0.0.0');
   });
 });
