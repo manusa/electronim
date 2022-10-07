@@ -100,8 +100,6 @@ const addTabs = ipcSender => tabsMetadata => {
       tabPreferences.session.setSpellCheckerLanguages(tabPreferences.session.availableSpellCheckerLanguages
         .filter(lang => enabledDictionaries.includes(lang)));
     }
-
-
     tabPreferences.experiment = false;
     if (tabPreferences.experiment) { // USE NATIVE SPELL CHECKER
       tabPreferences.session.setSpellCheckerDictionaryDownloadURL('file:///home/user/00-MN/projects/manusa/electronim/dictionaries/');
