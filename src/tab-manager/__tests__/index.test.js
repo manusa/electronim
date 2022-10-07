@@ -118,7 +118,8 @@ describe('Tab Manager module test suite', () => {
       tabManager.addTabs(mockIpcSender)([{id: 1337, url: 'https://localhost'}]);
       // Then
       expect(mockBrowserView.webContents.loadURL).toHaveBeenCalledWith('https://localhost');
-      expect(mockBrowserView.setAutoResize).toHaveBeenCalledWith({width: false, horizontal: false, height: false, vertical: false});
+      expect(mockBrowserView.setAutoResize)
+        .toHaveBeenCalledWith({width: false, horizontal: false, height: false, vertical: false});
       expect(mockIpcSender.send).toHaveBeenCalledTimes(1);
       expect(mockIpcSender.send).toHaveBeenCalledWith('addTabs', [{id: 1337, url: 'https://localhost'}]);
     });
