@@ -55,7 +55,7 @@ const preloadBundle = webpack({
     chunkLoading: false
   },
   mode: 'development',
-  devtool: false, // Don't use `eval` --> "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self'"."
+  devtool: false, // Prevent the use `eval` --> "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self'"."
   target: 'electron-main', // Don't use 'electron-preload', Electron Sandbox takes care of proper security isolation
   optimization: {
     minimize: false,
@@ -152,7 +152,7 @@ const esmBundle = webpack({
     outputModule: true
   },
   mode: 'development',
-  devtool: false // Don't use `eval` --> "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self'"."
+  devtool: false // Prevent the use `eval` --> "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self'"."
 });
 
 const toPromise = async webpackBundle => new Promise((resolve, reject) => {

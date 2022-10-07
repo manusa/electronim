@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-export {html, render, useReducer} from '../../bundles/preact.mjs';
+export {html, render, useLayoutEffect, useReducer, useState} from '../../bundles/preact.mjs';
 
 export {Checkbox, Field, HorizontalField, Select, sizes} from './form/index.mjs';
 export {Panel} from './panel.mjs';
