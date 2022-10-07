@@ -107,7 +107,7 @@ const addTabs = ipcSender => tabsMetadata => {
       tabPreferences.session.setSpellCheckerDictionaryDownloadURL('file:///home/user/00-MN/projects/manusa/electronim/dictionaries/');
     }
     const tab = new BrowserView({webPreferences: tabPreferences});
-    tab.setAutoResize({width: true, height: true});
+    tab.setAutoResize({width: false, horizontal: false, height: false, vertical: false});
 
     cleanUserAgent(tab);
     tab.webContents.loadURL(url);
