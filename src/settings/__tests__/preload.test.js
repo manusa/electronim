@@ -21,12 +21,13 @@ describe('Settings Module preload test suite', () => {
   describe('preload (just for coverage and sanity, see bundle tests)', () => {
     beforeEach(() => {
       jest.mock('../settings.browser.css', () => {});
-      window.APP_EVENTS = {};
-      window.ELECTRONIM_VERSION = '1.33.7';
+      jest.mock('electron', () => ({
+        ipcRenderer: 'the-ipc-renderer'
+      }));
       require('../preload');
     });
-    test('adds required libraries', () => {
-      expect(window.ELECTRONIM_VERSION).toEqual('1.33.7');
+    test('adds required variables', () => {
+      expect(window.ipcRenderer).toEqual('the-ipc-renderer');
     });
   });
   describe('preload.bundle', () => {
@@ -46,9 +47,6 @@ describe('Settings Module preload test suite', () => {
       expect(styles[4].innerHTML).toContain('.electronim .control .checkbox {'); // CheckBox
       expect(styles[5].innerHTML).toContain('.electronim .top-bar.navbar {'); // NavBar
       expect(styles[8].innerHTML).toContain('.settings.container {'); // Settings-specific
-    });
-    test('adds required variables', async () => {
-      expect(window.ELECTRONIM_VERSION).toEqual('0.0.0');
     });
   });
 });

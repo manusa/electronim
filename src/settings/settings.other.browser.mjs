@@ -13,9 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {ELECTRONIM_VERSION} = window;
-
-import {Checkbox, HorizontalField, Panel, Select, html} from '../components/index.mjs';
+import {ELECTRONIM_VERSION, Checkbox, HorizontalField, Panel, Select, html} from '../components/index.mjs';
 import {
   setTheme,
   toggleNotifications
@@ -43,7 +41,7 @@ export const OtherContainer = ({dispatch, state}) => html`
         />
       </div>
     </${Panel.Block}>
-    <${Panel.Block} className='is-italic'>
+    <${Panel.Block} className='is-italic' data-testid='settings-electronim-version'>
       ElectronIM version ${ELECTRONIM_VERSION}
     </${Panel.Block}>
   </${Panel}>

@@ -31,6 +31,11 @@ const PRELOAD_ENTRIES = [
   'tab-manager'
 ];
 
+const ESM_ENTRIES = {
+  constants: '/esm/constants.mjs',
+  preact: '/esm/preact.all.mjs'
+};
+
 const LIB_DIR = 'lib';
 const LIB_ENTRIES = [
   '@fortawesome/fontawesome-free/css/all.css',
@@ -138,9 +143,7 @@ const libBundle = ({name, entries}) => webpack({
 
 const esmBundle = webpack({
   name: 'esm-bundles',
-  entry: {
-    preact: '/esm/preact.all.mjs'
-  },
+  entry: ESM_ENTRIES,
   output: {
     filename: '[name].mjs',
     path: path.resolve(__dirname, BUNDLES_DIR),
@@ -152,7 +155,13 @@ const esmBundle = webpack({
     outputModule: true
   },
   mode: 'development',
-  devtool: false // Prevent the use `eval` --> "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self'"."
+  devtool: false, // Prevent the use `eval` --> "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self'".",
+  plugins: [
+    new webpack.DefinePlugin({
+      APP_EVENTS_TO_BE_REPLACED: JSON.stringify(APP_EVENTS),
+      ELECTRONIM_VERSION_TO_BE_REPLACED: JSON.stringify(ELECTRONIM_VERSION)
+    })
+  ]
 });
 
 const toPromise = async webpackBundle => new Promise((resolve, reject) => {
@@ -169,16 +178,16 @@ const exec = async () => {
   console.log('⌛ Starting webpack bundling process...');
   await Promise.all([
     ...PRELOAD_ENTRIES.map(entry => path.resolve(__dirname, 'src', entry, 'preload.js')),
+    ...Object.values(ESM_ENTRIES).map(entry => path.resolve(__dirname, entry.substring(1))),
     ...LIB_ENTRIES.map(entry => path.resolve(__dirname, 'node_modules', entry)),
     ...CUSTOM_LIB_ENTRIES.map(entry => path.resolve(__dirname, entry.substring(1)))
   ].map(p => fsp.access(p, fs.constants.R_OK)));
   console.log('✅ Required files exist');
-  const bundles = [preloadBundle];
+  const bundles = [preloadBundle, esmBundle];
   if (!process.argv.includes('--no-lib')) {
     const bundlesDir = path.resolve(__dirname, BUNDLES_DIR);
     await Promise.all([bundlesDir].map(dir => fsp.rm(dir, {recursive: true, force: true})));
     console.log('🧹 Cleaned previous build...');
-    bundles.push(esmBundle);
     bundles.push(libBundle({name: 'lib', entries: LIB_ENTRIES}));
     bundles.push(libBundle({name: 'custom-lib', entries: CUSTOM_LIB_ENTRIES}));
   }

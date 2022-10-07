@@ -13,12 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-/* eslint-disable no-undef */
-const {
-  APP_EVENTS, ipcRenderer
-} = window;
+const {ipcRenderer} = window;
 
-import {Checkbox, TopBar, html, render, useReducer} from '../components/index.mjs';
+import {APP_EVENTS, Checkbox, TopBar, html, render, useReducer} from '../components/index.mjs';
 import {
   ACTIONS, reducer, dictionariesEnabled, setTabProperty, toggleTabProperty
 } from './settings.reducer.browser.mjs';

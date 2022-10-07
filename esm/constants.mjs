@@ -13,15 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {html} from './index.mjs';
-
-export const Panel = ({heading, className = '', children}) => (html`
-  <nav class=${`panel ${className}`}>
-    ${heading && html`<p class='panel-heading'>${heading}</p>`}
-    ${children}
-  </nav>
-`);
-
-Panel.Block = ({className = '', children, ...properties}) => (html`
-  <div class=${`panel-block ${className}`} ...${properties}>${children}</div>
-`);
+/* eslint-disable no-undef */
+export const APP_EVENTS = APP_EVENTS_TO_BE_REPLACED;
+export const ELECTRONIM_VERSION = ELECTRONIM_VERSION_TO_BE_REPLACED;
