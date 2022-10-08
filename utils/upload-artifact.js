@@ -55,9 +55,10 @@ const uploadArtifact = async () => {
     method: 'POST',
     url: `https://uploads.github.com/repos/manusa/electronim/releases/${releaseId}/assets?name=${artifactFileName}`,
     headers: {
+      Accept: 'application/vnd.github+json',
       'Content-Type': mimeType,
       'Content-Length': artifactSize,
-      Authorization: `token ${process.env.GITHUB_TOKEN}`
+      Authorization: `Bearer ${process.env.GITHUB_TOKEN}`
     },
     maxContentLength: Infinity,
     maxBodyLength: Infinity,
