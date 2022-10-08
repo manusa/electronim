@@ -71,6 +71,44 @@ describe('Tab Manager Redirect module test suite', () => {
         expect(result).toBe(false);
       });
     });
+    describe('GoDaddy OAuth', () => {
+      describe('godaddy.com', () => {
+        test('From OAuth to Slack, should return false', () => {
+          // Given
+          mockBrowserViewUrl = 'https://sso.godaddy.com/';
+          // When
+          const result = redirect.shouldOpenInExternalBrowser(mockBrowserView, new URL('https://a-and-a.slack.com'));
+          // Then
+          expect(result).toBe(false);
+        });
+        test('From Slack to OAuth, should return false', () => {
+          // Given
+          mockBrowserViewUrl = 'https://a-and-a.slack.com';
+          // When
+          const result = redirect.shouldOpenInExternalBrowser(mockBrowserView, new URL('https://sso.godaddy.com'));
+          // Then
+          expect(result).toBe(false);
+        });
+      });
+      describe('secureserver.net', () => {
+        test('From OAuth to Slack, should return false', () => {
+          // Given
+          mockBrowserViewUrl = 'https://sso.secureserver.net/';
+          // When
+          const result = redirect.shouldOpenInExternalBrowser(mockBrowserView, new URL('https://julia.slack.com'));
+          // Then
+          expect(result).toBe(false);
+        });
+        test('From Slack to OAuth, should return false', () => {
+          // Given
+          mockBrowserViewUrl = 'https://julia.slack.com';
+          // When
+          const result = redirect.shouldOpenInExternalBrowser(mockBrowserView, new URL('https://sso.secureserver.net/'));
+          // Then
+          expect(result).toBe(false);
+        });
+      });
+    });
     describe('Red Hat OAuth', () => {
       test('From Slack to OAuth, should return false', () => {
         // Given
