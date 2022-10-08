@@ -46,6 +46,7 @@ electronim
 - 💤 Notifications can be disabled globally (Do not disturb)
 - ⌨ Keyboard [shortcuts](docs/Keyboard-shortcuts.md)
 - 🖥️ Screen sharing
+- 🌗 Light and Dark themes with system override
 
 ## [Screenshot](docs/Screenshots.md)
 
