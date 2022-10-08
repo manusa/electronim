@@ -69,6 +69,7 @@ const handleContextMenu = browserView => async (event, params) => {
     menu.append(new MenuItem({type: 'separator'}));
   }
   menu.append(new MenuItem({label: 'DevTools', click: () => webContents.openDevTools()}));
+  menu.append(new MenuItem({label: 'Reload', click: () => webContents.reload()}));
   const {x, y} = params;
   menu.popup({x, y});
 };
