@@ -20,7 +20,6 @@ const {showDialog} = require('../browser-window');
 
 const webPreferences = {
   contextIsolation: false,
-  nativeWindowOpen: true,
   nodeIntegration: false,
   sandbox: true,
   preload: path.resolve(__dirname, '..', '..', 'bundles', 'help.preload.js')
