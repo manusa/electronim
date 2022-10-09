@@ -159,8 +159,8 @@ const saveSettings = (_event, settings) => {
   mainWindow.removeBrowserView(currentBrowserView);
   tabManager.removeAll();
   const viewsToDestroy = [currentBrowserView, tabContainer];
-  tabContainer = initTabContainer(mainWindow);
   viewsToDestroy.forEach(view => view.webContents.destroy());
+  tabContainer = initTabContainer();
 };
 
 const initDialogListeners = () => {
@@ -174,7 +174,7 @@ const initDialogListeners = () => {
 
 const browserVersionsReady = () => {
   app.userAgentFallback = userAgentForView(mainWindow);
-  tabContainer = initTabContainer(mainWindow);
+  tabContainer = initTabContainer();
 };
 
 const init = () => {
