@@ -40,13 +40,13 @@ describe('Settings Module preload test suite', () => {
       // Then
       await waitFor(() => expect(document.head.children.length).toBeGreaterThan(0));
       const styles = Array.from(document.querySelectorAll('style'));
-      expect(styles).toHaveLength(9);
-      expect(styles[0].innerHTML).toMatch(/:root \{.+--color-accent-fg:/s); // Variables
-      expect(styles[1].innerHTML).toContain('html.electronim,'); // Base
-      expect(styles[2].innerHTML).toContain('.electronim h1,'); // Typography
-      expect(styles[4].innerHTML).toContain('.electronim .control .checkbox {'); // CheckBox
-      expect(styles[5].innerHTML).toContain('.electronim .top-bar.navbar {'); // NavBar
-      expect(styles[8].innerHTML).toContain('.settings.container {'); // Settings-specific
+      expect(styles).toHaveLength(10);
+      expect(styles[1].innerHTML).toMatch(/:root \{.+--color-accent-fg:/s); // Variables
+      expect(styles[2].innerHTML).toContain('html.electronim,'); // Base
+      expect(styles[3].innerHTML).toContain('.electronim h1,'); // Typography
+      expect(styles[5].innerHTML).toContain('.electronim .control .checkbox {'); // CheckBox
+      expect(styles[6].innerHTML).toContain('.electronim .top-bar.navbar {'); // NavBar
+      expect(styles[9].innerHTML).toContain('.settings.container {'); // Settings-specific
     });
   });
 });

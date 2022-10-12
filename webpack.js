@@ -25,6 +25,7 @@ const {APP_EVENTS, ELECTRONIM_VERSION} = require('./src/constants');
 const BUNDLES_DIR = 'bundles';
 
 const PRELOAD_ENTRIES = [
+  'app-menu',
   'chrome-tabs',
   'help',
   'settings',

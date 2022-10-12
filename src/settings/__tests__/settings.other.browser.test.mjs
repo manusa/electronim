@@ -44,7 +44,7 @@ describe('Settings (Other) in Browser test suite', () => {
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('settingsSave', expect.objectContaining({
         theme: 'light'
       }));
-    });
+    }, 10000);
   });
   test('ElectronIM version is visible', async () => {
     const $electronimVersion = await findByTestId(document, 'settings-electronim-version');

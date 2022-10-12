@@ -20,7 +20,10 @@ const shouldUseDarkColors = () => window.matchMedia && window.matchMedia('(prefe
 const getTabContainer = () => document.querySelector('.tab-container');
 const getChromeTabs = () => getTabContainer().querySelector('.chrome-tabs');
 
-const openSettings = () => ipcRenderer.send(APP_EVENTS.settingsOpenDialog);
+const openMenu = event => {
+  event.preventDefault();
+  ipcRenderer.send(APP_EVENTS.appMenuOpen);
+};
 const sendTabsReady = () => ipcRenderer.send(APP_EVENTS.tabsReady, {});
 const sendActivateTab = id => ipcRenderer.send(APP_EVENTS.activateTab, {id});
 const sendReorderTabs = tabs =>
@@ -239,14 +242,14 @@ const ChromeTabs = ({dispatch, state: {tabs}}) => {
   `;
 };
 
-const Settings = () => html`
- <div class="settings">
+const Menu = () => html`
+ <div class="menu">
      <button
-        class="settings__button button"
-        onclick=${openSettings}
+        class="menu__button button"
+        onClick=${openMenu}
       >
          <span class='icon'>
-           <em class='fas fa-cog'></em>
+           <em class='fas fa-bars'></em>
          </span>
      </button>
  </div>
@@ -264,7 +267,7 @@ const TabContainer = () => {
   }, []);
   return html`
     <${ChromeTabs} state=${state} dispatch=${dispatch}/>
-    <${Settings}/>
+    <${Menu}/>
   `;
 };
 

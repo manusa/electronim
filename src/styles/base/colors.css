@@ -26,6 +26,7 @@
   --color-gray: #7d7d7d;
   --color-gray-darker: #4a4a4a;
   --color-neutral-muted: rgba(175, 184, 193, 0.2);
+  --color-white: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -42,5 +43,6 @@
     --color-gray: #828282;
     --color-gray-darker: #b5b5b5;
     --color-neutral-muted: rgba(110, 118, 129, 0.4);
+    --color-white: #000000;
   }
 }

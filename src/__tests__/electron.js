@@ -16,6 +16,7 @@
 
 const mockBrowserWindowInstance = () => {
   const instance = {
+    addBrowserView: jest.fn(),
     destroy: jest.fn(),
     getContentBounds: jest.fn(() => ({})),
     listeners: {},
@@ -23,14 +24,17 @@ const mockBrowserWindowInstance = () => {
     on: jest.fn((eventName, func) => {
       instance.listeners[eventName] = func;
     }),
+    removeBrowserView: jest.fn(),
     removeMenu: jest.fn(),
     setAutoResize: jest.fn(),
     setBounds: jest.fn(),
     setBrowserView: jest.fn(),
     webContents: {
+      destroy: jest.fn(),
       loadURL: jest.fn(),
       on: jest.fn(),
-      openDevTools: jest.fn()
+      openDevTools: jest.fn(),
+      send: jest.fn()
     }
   };
   return instance;

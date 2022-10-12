@@ -19,13 +19,7 @@ describe('Chrome Tabs Module module test suite', () => {
   let chromeTabs;
   beforeEach(() => {
     jest.resetModules();
-    mockBrowserView = {
-      setAutoResize: jest.fn(),
-      webContents: {
-        on: jest.fn(),
-        loadURL: jest.fn()
-      }
-    };
+    mockBrowserView = require('../../__tests__').mockBrowserWindowInstance();
     jest.mock('electron', () => ({
       BrowserView: jest.fn(() => mockBrowserView)
     }));

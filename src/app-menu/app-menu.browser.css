@@ -1,0 +1,70 @@
+/*
+   Copyright 2022 Marc Nuri San Felix
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+@import '../styles/main.css';
+:root {
+  --scrim-color: rgba(0, 0, 0, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --scrim-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+html.electronim,
+.electronim body {
+  background: transparent;
+}
+
+html.electronim,
+.electronim body,
+.electronim .scrim {
+  overflow: hidden;
+}
+.electronim .app-menu .wrapper,
+.electronim .app-menu .scrim {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+}
+.electronim .app-menu .scrim {
+  top: var(--tab-container-height);
+  background: var(--scrim-color);
+}
+.electronim .app-menu .dropdown,
+.electronim .app-menu .dropdown-menu {
+  position: absolute;
+  left: auto;
+  right: 0;
+}
+
+.electronim .app-menu .dropdown-menu {
+  padding: var(--default-spacing) var(--default-spacing)  0 0;
+}
+
+.electronim .app-menu .dropdown-item {
+  cursor: pointer;
+  user-select: none;
+  color: var(--color-gray-darker);
+  text-decoration: none;
+}
+
+.electronim .app-menu .dropdown-item.is-active {
+  color: var(--color-white);
+}

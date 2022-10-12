@@ -17,5 +17,6 @@ export {APP_EVENTS, ELECTRONIM_VERSION} from '../../bundles/constants.mjs';
 export {html, render, useLayoutEffect, useReducer, useState} from '../../bundles/preact.mjs';
 
 export {Checkbox, Field, HorizontalField, Select, sizes} from './form/index.mjs';
+export {DropDown} from './drop-down.mjs';
 export {Panel} from './panel.mjs';
 export {TopBar} from './top-bar.mjs';

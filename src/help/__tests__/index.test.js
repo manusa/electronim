@@ -18,14 +18,7 @@ describe('Help module test suite', () => {
   let help;
   beforeEach(() => {
     jest.resetModules();
-    mockBrowserView = {
-      setAutoResize: jest.fn(),
-      setBounds: jest.fn(),
-      webContents: {
-        on: jest.fn(),
-        loadURL: jest.fn()
-      }
-    };
+    mockBrowserView = require('../../__tests__').mockBrowserWindowInstance();
     jest.mock('electron', () => ({
       BrowserView: jest.fn(() => mockBrowserView)
     }));

@@ -21,14 +21,7 @@ describe('Settings module test suite', () => {
   let settings;
   beforeEach(() => {
     jest.resetModules();
-    mockBrowserView = {
-      setAutoResize: jest.fn(),
-      setBounds: jest.fn(),
-      webContents: {
-        on: jest.fn(),
-        loadURL: jest.fn()
-      }
-    };
+    mockBrowserView = require('../../__tests__').mockBrowserWindowInstance();
     jest.mock('electron', () => ({
       BrowserView: jest.fn(() => mockBrowserView)
     }));
@@ -130,15 +123,17 @@ describe('Settings module test suite', () => {
   });
   describe('openSettingsDialog', () => {
     let mainWindow;
+    let openSettings;
     beforeEach(() => {
       mainWindow = {
         getContentBounds: jest.fn(() => ({width: 13, height: 37})),
         setBrowserView: jest.fn()
       };
+      openSettings = settings.openSettingsDialog(mainWindow);
     });
     test('webPreferences is sandboxed and has no node integration', () => {
       // When
-      settings.openSettingsDialog(mainWindow);
+      openSettings();
       // Then
       const BrowserView = require('electron').BrowserView;
       expect(BrowserView).toHaveBeenCalledTimes(1);
@@ -148,7 +143,7 @@ describe('Settings module test suite', () => {
     });
     test('should load settings URL', () => {
       // When
-      settings.openSettingsDialog(mainWindow);
+      openSettings();
       // Then
       expect(mockBrowserView.webContents.loadURL).toHaveBeenCalledTimes(1);
       expect(mockBrowserView.webContents.loadURL).toHaveBeenCalledWith(expect.stringMatching(/.+?\/index.html$/));
