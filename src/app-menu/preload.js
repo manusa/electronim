@@ -13,7 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-@import './variables.css';
-@import './colors.css';
-@import './base.css';
-@import './typography.css';
+/* eslint-disable no-undef */
+const {contextBridge, ipcRenderer} = require('electron');
+
+contextBridge.exposeInMainWorld('electron', {
+  close: () => ipcRenderer.send(APP_EVENTS.appMenuClose),
+  helpOpenDialog: () => ipcRenderer.send(APP_EVENTS.helpOpenDialog),
+  settingsOpenDialog: () => ipcRenderer.send(APP_EVENTS.settingsOpenDialog)
+});

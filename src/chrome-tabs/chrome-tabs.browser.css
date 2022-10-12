@@ -49,11 +49,11 @@ body {
     display: none;
 }
 
-.tab-container .settings {
+.tab-container .menu {
     padding: 0 8px 0 0;
 }
 
-.tab-container .settings__button {
+.tab-container .menu__button {
     background: none;
     border-color: transparent;
 }

@@ -16,7 +16,6 @@
 @import '../styles/main.css';
 
 :root {
-    --default-spacing: 6px;
     --border-color: #dbdbdb;
 }
 

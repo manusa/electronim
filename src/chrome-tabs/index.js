@@ -33,7 +33,7 @@ const handleContextMenu = (event, params) => {
   const webContents = event.sender;
   const mainWindow = BrowserWindow.fromWebContents(webContents);
   const menu = new Menu();
-  menu.append(new MenuItem({label: 'Settings', click: () => openSettingsDialog(mainWindow)}));
+  menu.append(new MenuItem({label: 'Settings', click: openSettingsDialog(mainWindow)}));
   menu.append(new MenuItem({label: 'Help', click: openHelpDialog(mainWindow)}));
   menu.append(new MenuItem({
     label: 'DevTools',
@@ -53,6 +53,8 @@ const initTabContainer = () => {
   return tabContainer;
 };
 
+const isNotTabContainer = bv => bv.isTabContainer !== true;
+
 module.exports = {
-  TABS_CONTAINER_HEIGHT, initTabContainer
+  TABS_CONTAINER_HEIGHT, initTabContainer, isNotTabContainer
 };

@@ -16,7 +16,6 @@
 @import '../styles/main.css';
 
 :root {
-  --default-spacing: 6px;
   --top-bar-height: 60px;
   --toc-min-width: 250px;
   overflow: hidden;

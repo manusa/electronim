@@ -20,10 +20,7 @@ describe('Spell-check module test suite', () => {
   let spellCheck;
   beforeEach(() => {
     jest.resetModules();
-    mockBrowserWindow = {
-      destroy: jest.fn(),
-      loadURL: jest.fn()
-    };
+    mockBrowserWindow = require('../../__tests__').mockBrowserWindowInstance();
     mockIpc = {
       handle: jest.fn(),
       removeHandler: jest.fn()

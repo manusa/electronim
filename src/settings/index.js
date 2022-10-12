@@ -65,7 +65,7 @@ const writeSettings = settings => {
 const updateSettings = settings =>
   writeSettings(ensureActiveTab({...loadSettings(), ...settings}));
 
-const openSettingsDialog = mainWindow => {
+const openSettingsDialog = mainWindow => () => {
   const settingsView = new BrowserView({webPreferences});
   settingsView.webContents.loadURL(`file://${__dirname}/index.html`);
   showDialog(mainWindow, settingsView);

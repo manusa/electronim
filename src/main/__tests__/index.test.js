@@ -20,8 +20,8 @@ describe('Main module test suite', () => {
   let mockDesktopCapturer;
   let mockIpc;
   let mockNativeTheme;
-  let mockTabContainer;
   let mockSettings;
+  let appMenuModule;
   let settingsModule;
   let spellCheckModule;
   let tabManagerModule;
@@ -30,13 +30,7 @@ describe('Main module test suite', () => {
   beforeEach(() => {
     jest.resetModules();
     jest.useFakeTimers();
-    mockBrowserWindow = {
-      listeners: {},
-      on: jest.fn((eventName, func) => {
-        mockBrowserWindow.listeners[eventName] = func;
-      }),
-      removeMenu: jest.fn()
-    };
+    mockBrowserWindow = require('../../__tests__').mockBrowserWindowInstance();
     mockNotification = jest.fn();
     mockApp = {
       getPath: jest.fn(),
@@ -51,9 +45,9 @@ describe('Main module test suite', () => {
       })
     };
     mockNativeTheme = {};
-    mockTabContainer = {};
     mockSettings = {};
     jest.mock('electron', () => ({
+      BrowserView: jest.fn(() => mockBrowserWindow),
       BrowserWindow: jest.fn(() => mockBrowserWindow),
       Notification: jest.fn(() => mockNotification),
       app: mockApp,
@@ -61,21 +55,14 @@ describe('Main module test suite', () => {
       ipcMain: mockIpc,
       nativeTheme: mockNativeTheme
     }));
-    jest.mock('../../chrome-tabs', () => ({
-      TABS_CONTAINER_HEIGHT: 46,
-      initTabContainer: () => mockTabContainer
-    }));
-    require('../../chrome-tabs');
-    jest.mock('../../settings');
+    appMenuModule = require('../../app-menu');
+    jest.spyOn(appMenuModule, 'initAppMenu');
     settingsModule = require('../../settings');
-    settingsModule.loadSettings.mockImplementation(() => mockSettings);
-    settingsModule.openSettingsDialog.mockImplementation();
-    settingsModule.updateSettings.mockImplementation();
+    jest.spyOn(settingsModule, 'loadSettings').mockImplementation(() => mockSettings);
+    jest.spyOn(settingsModule, 'updateSettings').mockImplementation();
     jest.mock('../../spell-check');
     spellCheckModule = require('../../spell-check');
-    jest.mock('../../tab-manager');
     tabManagerModule = require('../../tab-manager');
-    tabManagerModule.getActiveTab.mockImplementation();
     jest.mock('../../user-agent');
     userAgentModule = require('../../user-agent');
     userAgentModule.userAgentForView.mockImplementation(() => 'UserAgent String');
@@ -149,19 +136,27 @@ describe('Main module test suite', () => {
       mockBrowserWindow.getBrowserViews = jest.fn(() => (views));
       main.init();
     });
-    test('maximize, should set browserview to fit window and store new size in configuration file', () => {
-      // Given
-      const singleView = {
-        getBounds: jest.fn(() => ({x: 0, y: 0, width: 1, height: 1})),
-        setBounds: jest.fn()
-      };
-      views.push(singleView);
-      // When
-      mockBrowserWindow.listeners.maximize({sender: mockBrowserWindow});
-      jest.runAllTimers();
-      // Then
-      expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
-      expect(singleView.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
+    describe('maximize', () => {
+      test('single view, should set BrowserView to fit window', () => {
+        // Given
+        const singleView = {
+          getBounds: jest.fn(() => ({x: 0, y: 0, width: 1, height: 1})),
+          setBounds: jest.fn()
+        };
+        views.push(singleView);
+        // When
+        mockBrowserWindow.listeners.maximize({sender: mockBrowserWindow});
+        jest.runAllTimers();
+        // Then
+        expect(singleView.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
+      });
+      test('should store new size in configuration file', () => {
+        // When
+        mockBrowserWindow.listeners.maximize({sender: mockBrowserWindow});
+        jest.runAllTimers();
+        // Then
+        expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
+      });
     });
     describe('resize', () => {
       test('#78: should be run in separate setTimeout timer function to resize properly in Linux', () => {
@@ -171,7 +166,40 @@ describe('Main module test suite', () => {
         expect(setTimeout).toHaveBeenCalledTimes(1);
         expect(mockBrowserWindow.getBrowserViews).not.toHaveBeenCalled();
       });
-      test('single view, should set BrowserView to fit window and store new size in configuration file', () => {
+      test('should store new size in configuration file', () => {
+        // When
+        mockBrowserWindow.listeners.resize({sender: mockBrowserWindow});
+        jest.runAllTimers();
+        // Then
+        expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
+      });
+      describe('app-menu', () => {
+        let mockAppMenu;
+        beforeEach(() => {
+          mockAppMenu = {
+            setBounds: jest.fn()
+          };
+          jest.spyOn(appMenuModule, 'initAppMenu').mockImplementation(() => mockAppMenu);
+          main.init();
+        });
+        test('should set app-menu bounds', () => {
+          // When
+          mockBrowserWindow.listeners.resize({sender: mockBrowserWindow});
+          jest.runAllTimers();
+          // Then
+          expect(mockAppMenu.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
+        });
+        test('should ignore if undefined (app might be resized before app-menu is initialized)', () => {
+          // Given
+          mockAppMenu.setBounds = null;
+          // When
+          mockBrowserWindow.listeners.resize({sender: mockBrowserWindow});
+          jest.runAllTimers();
+          // Then
+          expect(mockBrowserWindow.setBounds).not.toHaveBeenCalled();
+        });
+      });
+      test('single view, should set BrowserView to fit window', () => {
         // Given
         const singleView = {
           getBounds: jest.fn(() => ({x: 0, y: 0, width: 1, height: 1})),
@@ -182,7 +210,6 @@ describe('Main module test suite', () => {
         mockBrowserWindow.listeners.resize({sender: mockBrowserWindow});
         jest.runAllTimers();
         // Then
-        expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
         expect(singleView.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
       });
       test('multiple views, should set last BrowserView to fit window and store new size in configuration file', () => {
@@ -211,7 +238,8 @@ describe('Main module test suite', () => {
       let addTabsNested;
       beforeEach(() => {
         addTabsNested = jest.fn();
-        tabManagerModule.addTabs.mockImplementation(() => addTabsNested);
+        jest.spyOn(tabManagerModule, 'addTabs')
+          .mockImplementation(() => addTabsNested);
       });
       test('No tabs in settings, should open settings dialog', () => {
         // Given
@@ -222,7 +250,8 @@ describe('Main module test suite', () => {
         // Then
         expect(tabManagerModule.addTabs).not.toHaveBeenCalled();
         expect(addTabsNested).not.toHaveBeenCalled();
-        expect(settingsModule.openSettingsDialog).toHaveBeenCalledTimes(1);
+        expect(mockBrowserWindow.webContents.loadURL)
+          .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
       });
       test('Previous saved tabs in loaded settings, should add tabs to manager and activate them as they are added', () => {
         // Given
@@ -238,7 +267,8 @@ describe('Main module test suite', () => {
         expect(tabManagerModule.addTabs).toHaveBeenCalledWith(event.sender);
         expect(addTabsNested).toHaveBeenCalledTimes(1);
         expect(addTabsNested).toHaveBeenCalledWith([{id: '1337', otherInfo: 'A Tab', active: false}]);
-        expect(settingsModule.openSettingsDialog).not.toHaveBeenCalled();
+        expect(mockBrowserWindow.webContents.loadURL)
+          .not.toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
       });
     });
     describe('activateTab', () => {
@@ -248,7 +278,6 @@ describe('Main module test suite', () => {
           setBounds: jest.fn(),
           webContents: {focus: jest.fn()}
         };
-        mockTabContainer.setBounds = jest.fn();
         mockBrowserWindow.getBrowserViews = jest.fn(() => ([]));
         mockBrowserWindow.setBrowserView = jest.fn();
         mockBrowserWindow.addBrowserView = jest.fn();
@@ -271,7 +300,7 @@ describe('Main module test suite', () => {
         mockIpc.listeners.activateTab({}, {id: 'validId'});
         // Then
         expect(activeTab.setBounds).toHaveBeenCalledWith({x: 0, y: 46, width: 13, height: 37});
-        expect(mockBrowserWindow.setBrowserView).toHaveBeenCalledWith(mockTabContainer);
+        expect(mockBrowserWindow.setBrowserView).toHaveBeenCalledWith(expect.objectContaining({isTabContainer: true}));
         expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledWith(activeTab);
         expect(activeTab.webContents.focus).toHaveBeenCalledTimes(1);
       });
@@ -282,8 +311,8 @@ describe('Main module test suite', () => {
         // When
         mockIpc.listeners.activateTab({}, {id: 'validId'});
         // Then
-        expect(mockBrowserWindow.setBrowserView).toHaveBeenCalledBefore(mockTabContainer.setBounds);
-        expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledBefore(mockTabContainer.setBounds);
+        expect(mockBrowserWindow.setBrowserView).toHaveBeenCalledBefore(mockBrowserWindow.setBounds);
+        expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledBefore(mockBrowserWindow.setBounds);
         expect(mockBrowserWindow.setBrowserView).toHaveBeenCalledBefore(activeTab.setBounds);
         expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledBefore(activeTab.setBounds);
       });
@@ -301,14 +330,14 @@ describe('Main module test suite', () => {
     });
     test('notificationClick, should restore window and activate tab', () => {
       // Given
-      mockTabContainer.webContents = {send: jest.fn()};
       mockBrowserWindow.restore = jest.fn();
       mockBrowserWindow.show = jest.fn();
+      jest.spyOn(tabManagerModule, 'getTab').mockImplementation();
       main.init();
       // When
       mockIpc.listeners.notificationClick({}, {tabId: 'validId'});
       // Then
-      expect(mockTabContainer.webContents.send).toHaveBeenCalledWith('activateTabInContainer', {tabId: 'validId'});
+      expect(mockBrowserWindow.webContents.send).toHaveBeenCalledWith('activateTabInContainer', {tabId: 'validId'});
       expect(mockBrowserWindow.restore).toHaveBeenCalledTimes(1);
       expect(mockBrowserWindow.show).toHaveBeenCalledTimes(1);
       expect(tabManagerModule.getTab).toHaveBeenCalledWith('validId');
@@ -393,16 +422,8 @@ describe('Main module test suite', () => {
         ]});
       });
     });
-    test('settingsOpenDialog, should open settings dialog', () => {
-      // Given
-      main.init();
-      // When
-      mockIpc.listeners.settingsOpenDialog();
-      // Then
-      expect(settingsModule.openSettingsDialog).toHaveBeenCalledTimes(1);
-    });
   });
-  describe('initDialogListeners ipc events', () => {
+  describe('initGlobalListeners ipc events', () => {
     let settingsView;
     beforeEach(() => {
       settingsView = {webContents: {destroy: jest.fn()}};
@@ -411,10 +432,11 @@ describe('Main module test suite', () => {
     describe('saveSettings', () => {
       beforeEach(() => {
         mockBrowserWindow.removeBrowserView = jest.fn();
-        mockTabContainer.webContents = {destroy: jest.fn()};
         main.init();
       });
       test('should reload settings and reset all views', () => {
+        // Given
+        jest.spyOn(tabManagerModule, 'removeAll').mockImplementation();
         // When
         mockIpc.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
         // Then
@@ -424,7 +446,7 @@ describe('Main module test suite', () => {
         expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledWith(settingsView);
         expect(tabManagerModule.removeAll).toHaveBeenCalledTimes(1);
         expect(settingsView.webContents.destroy).toHaveBeenCalledTimes(1);
-        expect(mockTabContainer.webContents.destroy).toHaveBeenCalledTimes(1);
+        expect(mockBrowserWindow.webContents.destroy).toHaveBeenCalledTimes(1);
       });
       test('should set saved theme', () => {
         // When
@@ -441,6 +463,7 @@ describe('Main module test suite', () => {
     });
     test('closeDialog, should destroy dialog view and activate current tab', () => {
       // Given
+      jest.spyOn(tabManagerModule, 'getActiveTab').mockImplementation();
       main.init();
       // When
       mockIpc.listeners.closeDialog();
@@ -448,6 +471,47 @@ describe('Main module test suite', () => {
       expect(settingsModule.updateSettings).not.toHaveBeenCalled();
       expect(tabManagerModule.getActiveTab).toHaveBeenCalledTimes(1);
       expect(settingsView.webContents.destroy).toHaveBeenCalledTimes(1);
+    });
+    test('appMenuOpen, should show and resize app-menu', () => {
+      // Given
+      const mockAppMenu = {setBounds: jest.fn()};
+      jest.spyOn(appMenuModule, 'initAppMenu').mockImplementation(() => mockAppMenu);
+      main.init();
+      // When
+      mockIpc.listeners.appMenuOpen();
+      // Then
+      expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledTimes(1);
+      expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledWith(mockAppMenu);
+      expect(mockAppMenu.setBounds).toHaveBeenCalledWith(expect.objectContaining({x: 0, y: 0}));
+    });
+    test('appMenuClose, should hide app-menu', () => {
+      // Given
+      const mockAppMenu = {isTheMockAppMenu: true};
+      jest.spyOn(appMenuModule, 'initAppMenu').mockImplementation(() => mockAppMenu);
+      main.init();
+      // When
+      mockIpc.listeners.appMenuClose();
+      // Then
+      expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledTimes(1);
+      expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledWith(mockAppMenu);
+    });
+    test('settingsOpenDialog, should open settings dialog', () => {
+      // Given
+      main.init();
+      // When
+      mockIpc.listeners.settingsOpenDialog();
+      // Then
+      expect(mockBrowserWindow.webContents.loadURL)
+        .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
+    });
+    test('helpOpenDialog, should open help dialog', () => {
+      // Given
+      main.init();
+      // When
+      mockIpc.listeners.helpOpenDialog();
+      // Then
+      expect(mockBrowserWindow.webContents.loadURL)
+        .toHaveBeenCalledWith(expect.stringMatching(/help\/index.html$/));
     });
   });
 });
