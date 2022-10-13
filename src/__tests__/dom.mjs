@@ -25,6 +25,7 @@ export const loadDOM = async ({meta, path}) => {
   const htmlPath = resolve(...pathSegments);
   const html = readFileSync(htmlPath, 'utf8');
   const index = parser.parseFromString(html, 'text/html');
+  document.head.innerHTML = index.head.innerHTML;
   document.body.innerHTML = index.body.innerHTML;
   for (const script of index.querySelectorAll('script[src]')) {
     await import(`${dirname(htmlPath)}/${script.getAttribute('src')}`);
