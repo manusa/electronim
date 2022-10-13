@@ -14,7 +14,7 @@
    limitations under the License.
  */
 /* eslint-disable no-undef */
-import {html, render, useLayoutEffect, useReducer, useState} from '../components/index.mjs';
+import {html, render, useLayoutEffect, useReducer, useState, Icon} from '../components/index.mjs';
 
 const shouldUseDarkColors = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 const getTabContainer = () => document.querySelector('.tab-container');
@@ -248,9 +248,7 @@ const Menu = () => html`
         class="menu__button button"
         onClick=${openMenu}
       >
-         <span class='icon'>
-           <em class='fas fa-bars'></em>
-         </span>
+        <${Icon} icon='fas fa-bars'></${Icon}>
      </button>
  </div>
 `;

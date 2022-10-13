@@ -15,7 +15,7 @@
  */
 import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
-import {getByText, fireEvent, waitFor} from '@testing-library/dom';
+import {getByTestId, fireEvent, waitFor} from '@testing-library/dom';
 
 describe('App Menu in Browser test suite', () => {
   beforeEach(async () => {
@@ -36,11 +36,12 @@ describe('App Menu in Browser test suite', () => {
   describe('Settings entry', () => {
     let settings;
     beforeEach(() => {
-      settings = getByText(document, 'Settings');
+      settings = getByTestId(document, 'settings-menu-entry');
     });
     test('should be visible', () => {
       expect(settings.getAttribute('class'))
         .toMatch(/^dropdown-item*/);
+      expect(settings.textContent).toBe('Settings');
     });
     test('click, should open settings dialog', () => {
       // When
@@ -57,13 +58,18 @@ describe('App Menu in Browser test suite', () => {
     });
   });
   describe('Help entry', () => {
+    let help;
+    beforeEach(() => {
+      help = getByTestId(document, 'help-menu-entry');
+    });
     test('should be visible', () => {
-      expect(getByText(document, 'Help').getAttribute('class'))
+      expect(help.getAttribute('class'))
         .toMatch(/^dropdown-item*/);
+      expect(help.textContent).toBe('Help');
     });
     test('click, should open settings dialog', () => {
       // When
-      fireEvent.click(getByText(document, 'Help'));
+      fireEvent.click(help);
       // Then
       expect(window.electron.helpOpenDialog).toHaveBeenCalledTimes(1);
     });
