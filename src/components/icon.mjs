@@ -13,11 +13,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-export {APP_EVENTS, ELECTRONIM_VERSION} from '../../bundles/constants.mjs';
-export {html, render, useLayoutEffect, useReducer, useState} from '../../bundles/preact.mjs';
+import {html} from './index.mjs';
 
-export {Checkbox, Field, HorizontalField, Select, sizes} from './form/index.mjs';
-export {DropDown} from './drop-down.mjs';
-export {Icon} from './icon.mjs';
-export {Panel} from './panel.mjs';
-export {TopBar} from './top-bar.mjs';
+export const Icon = ({icon, children}) => {
+  const theIcon = html`<span class='icon'><i class=${icon}></i></span>`;
+  if (!children) {
+    return theIcon;
+  }
+  return (html`
+    <span class='icon-text'>
+      ${theIcon}
+      <span>${children}</span>
+    </span>
+  `);
+};

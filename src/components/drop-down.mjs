@@ -28,7 +28,7 @@ DropDown.Menu = ({children}) => (html`
   </div>
 `);
 
-DropDown.Item = ({onClick, children}) => {
+DropDown.Item = ({onClick, children, ...properties}) => {
   const [hover, setHover] = useState(false);
   const onMouseOver = () => setHover(true);
   const onMouseOut = () => setHover(false);
@@ -39,6 +39,7 @@ DropDown.Item = ({onClick, children}) => {
       onClick=${onClick}
       onMouseOver=${onMouseOver}
       onMouseOut=${onMouseOut}
+      ...${properties}
     >
       ${children}
     </a>

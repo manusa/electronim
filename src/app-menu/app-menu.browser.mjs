@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {html, render, DropDown} from '../components/index.mjs';
+import {html, render, DropDown, Icon} from '../components/index.mjs';
 
 const {close, helpOpenDialog, settingsOpenDialog} = window.electron;
 
@@ -30,8 +30,12 @@ const AppMenu = () => {
       <div class='scrim'>
         <${DropDown} active=${true}>
         <${DropDown.Menu}>
-          <${DropDown.Item} onClick=${noBubbling(helpOpenDialog)}>Help</${DropDown.Item}>
-          <${DropDown.Item} onClick=${noBubbling(settingsOpenDialog)}>Settings</${DropDown.Item}>
+          <${DropDown.Item} data-testid='help-menu-entry' onClick=${noBubbling(helpOpenDialog)}>
+            <${Icon} icon='fas fa-question-circle'>Help</${Icon}>
+          </${DropDown.Item}>
+          <${DropDown.Item} data-testid='settings-menu-entry' onClick=${noBubbling(settingsOpenDialog)}>
+            <${Icon} icon='fas fa-cog'>Settings</${Icon}>
+          </${DropDown.Item}>
         </${DropDown.Menu}>
         </${DropDown}>
       </div>
