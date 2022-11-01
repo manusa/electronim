@@ -19,7 +19,7 @@ const {handleRedirect} = require('../tab-manager/redirect');
 const {showDialog} = require('../browser-window');
 
 const webPreferences = {
-  contextIsolation: false,
+  contextIsolation: true,
   nodeIntegration: false,
   sandbox: true,
   preload: path.resolve(__dirname, '..', '..', 'bundles', 'help.preload.js')

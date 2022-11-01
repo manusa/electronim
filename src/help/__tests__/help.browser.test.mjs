@@ -24,6 +24,14 @@ describe('Help in Browser test suite', () => {
     mockIpcRenderer = {
       send: jest.fn()
     };
+    jest.mock('electron', () => ({
+      ipcRenderer: mockIpcRenderer,
+      contextBridge: {
+        exposeInMainWorld: jest.fn((api, object) => {
+          window[api] = object;
+        })
+      }
+    }));
     await import('../../../bundles/help.preload');
     window.ipcRenderer = mockIpcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});

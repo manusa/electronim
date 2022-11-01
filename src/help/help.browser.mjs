@@ -13,12 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {docs, ipcRenderer} = window;
+const {docs, close} = window.electron;
 
-import {APP_EVENTS, ELECTRONIM_VERSION, TopBar, html, render} from '../components/index.mjs';
+import {ELECTRONIM_VERSION, TopBar, html, render} from '../components/index.mjs';
 
 const helpRoot = () => document.querySelector('.help-root');
-const close = () => ipcRenderer.send(APP_EVENTS.closeDialog);
 
 const Document = ({id}) => html`
   <a id=${id} />
