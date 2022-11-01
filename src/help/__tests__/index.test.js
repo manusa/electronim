@@ -32,14 +32,32 @@ describe('Help module test suite', () => {
         setBrowserView: jest.fn()
       };
     });
-    test('webPreferences is sandboxed and has no node integration', () => {
-      // When
-      help.openHelpDialog(mainWindow)();
-      // Then
-      const BrowserView = require('electron').BrowserView;
-      expect(BrowserView).toHaveBeenCalledTimes(1);
-      expect(BrowserView).toHaveBeenCalledWith({
-        webPreferences: expect.objectContaining({sandbox: true, nodeIntegration: false})
+    describe('webPreferences', () => {
+      test('is sandboxed', () => {
+        // When
+        help.openHelpDialog(mainWindow)();
+        // Then
+        const BrowserView = require('electron').BrowserView;
+        expect(BrowserView).toHaveBeenCalledTimes(1);
+        expect(BrowserView).toHaveBeenCalledWith({
+          webPreferences: expect.objectContaining({sandbox: true, nodeIntegration: false})
+        });
+      });
+      test('has no node integration', () => {
+        // When
+        help.openHelpDialog(mainWindow)();
+        // Then
+        expect(require('electron').BrowserView).toHaveBeenCalledWith({
+          webPreferences: expect.objectContaining({nodeIntegration: false})
+        });
+      });
+      test('has context isolation', () => {
+        // When
+        help.openHelpDialog(mainWindow)();
+        // Then
+        expect(require('electron').BrowserView).toHaveBeenCalledWith({
+          webPreferences: expect.objectContaining({contextIsolation: true})
+        });
       });
     });
     test('should open dialog and add event listeners', () => {

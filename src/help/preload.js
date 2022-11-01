@@ -14,11 +14,10 @@
    limitations under the License.
  */
 /* eslint-disable no-undef */
-const {ipcRenderer} = require('electron');
+const {contextBridge, ipcRenderer} = require('electron');
 const {docs} = require('!val-loader!./docs.browser.val-loader');
 
-require('./help.browser.css');
-
-window.ipcRenderer = ipcRenderer;
-
-window.docs = docs;
+contextBridge.exposeInMainWorld('electron', {
+  close: () => ipcRenderer.send(APP_EVENTS.closeDialog),
+  docs
+});
