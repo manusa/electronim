@@ -141,6 +141,20 @@ const setActiveTab = tabId => {
   settings.updateSettings({activeTab});
 };
 
+const getTabTraverse = operation => () => {
+  const tabIds = Object.keys(tabs);
+  const idx = operation(tabIds.indexOf(getActiveTab()));
+  if (idx < 0) {
+    return tabIds[tabIds.length - 1];
+  } else if (idx >= tabIds.length) {
+    return tabIds[0];
+  }
+  return tabIds[idx];
+};
+
+const getNextTab = getTabTraverse(idx => idx + 1);
+const getPreviousTab = getTabTraverse(idx => idx - 1);
+
 const removeAll = () => {
   Object.values(tabs).forEach(browserView => browserView.webContents.destroy());
   Object.keys(tabs).forEach(key => delete tabs[key]);
@@ -158,5 +172,5 @@ const canNotify = tabId => {
 };
 
 module.exports = {
-  addTabs, getTab, getActiveTab, setActiveTab, canNotify, reload, removeAll
+  addTabs, getTab, getActiveTab, setActiveTab, getNextTab, getPreviousTab, canNotify, reload, removeAll
 };

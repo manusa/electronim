@@ -17,11 +17,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
   let mockIpcRenderer;
   let browserKeyboardShortcuts;
   beforeEach(() => {
-    global.APP_EVENTS = {
-      reload: 'reload',
-      zoomIn: 'zoomIn',
-      zoomOut: 'zoomOut'
-    };
+    global.APP_EVENTS = require('../../constants').APP_EVENTS;
     mockIpcRenderer = {
       send: jest.fn()
     };
@@ -70,6 +66,15 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('reload');
     });
+    test('ctrl+tab, should send tabTraverseNext event', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      // When
+      window.dispatchEvent(new KeyboardEvent('keyup', {key: 'Tab', ctrlKey: true}));
+      // Then
+      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('tabTraverseNext');
+    });
   });
   describe('Command modified events', () => {
     test('cmd+R, should send reload app event', () => {
@@ -80,6 +85,17 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('reload');
+    });
+  });
+  describe('Control+Shift modified events', () => {
+    test('ctrl+shift+tab, should send tabTraversePrevious event', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      // When
+      window.dispatchEvent(new KeyboardEvent('keyup', {key: 'Tab', ctrlKey: true, shiftKey: true}));
+      // Then
+      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('tabTraversePrevious');
     });
   });
   describe('Mouse wheel events', () => {

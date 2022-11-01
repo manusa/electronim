@@ -89,6 +89,12 @@ const handleMainWindowResize = event => {
 
 const handleTabReload = event => event.sender.reloadIgnoringCache();
 
+const handleTabTraverse = getTabIdFunction => () => {
+  const tabId = getTabIdFunction();
+  tabContainer.webContents.send(APP_EVENTS.activateTabInContainer, {tabId});
+  activateTab(tabId);
+};
+
 const handleZoomIn = event => event.sender.setZoomFactor(event.sender.getZoomFactor() + 0.1);
 
 const handleZoomOut = event => {
@@ -139,6 +145,8 @@ const initTabListener = () => {
   });
   ipc.on(APP_EVENTS.reload, handleTabReload);
   ipc.on(APP_EVENTS.tabReorder, handleTabReorder);
+  ipc.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(tabManager.getNextTab));
+  ipc.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(tabManager.getPreviousTab));
   ipc.on(APP_EVENTS.zoomIn, handleZoomIn);
   ipc.on(APP_EVENTS.zoomOut, handleZoomOut);
   ipc.on(APP_EVENTS.zoomReset, handleZoomReset);
