@@ -68,8 +68,9 @@ const handleContextMenu = browserView => async (event, params) => {
     spellingSuggestions.forEach(mi => menu.append(mi));
     menu.append(new MenuItem({type: 'separator'}));
   }
-  menu.append(new MenuItem({label: 'DevTools', click: () => webContents.openDevTools()}));
   menu.append(new MenuItem({label: 'Reload', click: () => webContents.reload()}));
+  menu.append(new MenuItem({type: 'separator'}));
+  menu.append(new MenuItem({label: 'DevTools', click: () => webContents.openDevTools()}));
   const {x, y} = params;
   menu.popup({x, y});
 };
