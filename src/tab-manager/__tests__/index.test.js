@@ -252,9 +252,16 @@ describe('Tab Manager module test suite', () => {
           await events['context-menu'](new Event(''), {x: 13, y: 37});
           // Then
           expect(electron.Menu).toHaveBeenCalledTimes(1);
-          expect(electron.MenuItem).toHaveBeenCalledTimes(1);
           expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'DevTools'}));
-          expect(mockMenu.append).toHaveBeenCalledTimes(1);
+        });
+        test('should open a Menu with Reload entry', async () => {
+          // Given
+          spellChecker.contextMenuHandler.mockImplementationOnce(() => []);
+          // When
+          await events['context-menu'](new Event(''), {x: 13, y: 37});
+          // Then
+          expect(electron.Menu).toHaveBeenCalledTimes(1);
+          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'Reload'}));
         });
         test('should open a Menu at the specified location', async () => {
           // Given
@@ -279,10 +286,10 @@ describe('Tab Manager module test suite', () => {
             await events['context-menu'](new Event(''), {x: 13, y: 37});
             // Then
             expect(electron.Menu).toHaveBeenCalledTimes(1);
-            expect(electron.MenuItem).toHaveBeenCalledTimes(4);
+            expect(electron.MenuItem).toHaveBeenCalledWith({label: 'suggestion 1'});
+            expect(electron.MenuItem).toHaveBeenCalledWith({label: 'suggestion 2'});
             expect(electron.MenuItem).toHaveBeenCalledWith({type: 'separator'});
             expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'DevTools'}));
-            expect(mockMenu.append).toHaveBeenCalledTimes(4);
           });
         });
         describe('with native spellcheck enabled', () => {
@@ -292,16 +299,16 @@ describe('Tab Manager module test suite', () => {
           test('Spelling suggestions, should open a Menu with all suggestions, a separator and DevTools entry', async () => {
             // Given
             spellChecker.contextMenuNativeHandler.mockImplementationOnce(() => [
-              new electron.MenuItem({label: 'suggestion 1'})
+              new electron.MenuItem({label: 'native suggestion 1'})
             ]);
             // When
             await events['context-menu'](new Event(''), {x: 13, y: 37});
             // Then
             expect(electron.Menu).toHaveBeenCalledTimes(1);
-            expect(electron.MenuItem).toHaveBeenCalledTimes(3);
+            expect(electron.MenuItem).toHaveBeenCalledWith({label: 'native suggestion 1'});
+            expect(electron.MenuItem).toHaveBeenCalledWith({type: 'separator'});
             expect(electron.MenuItem).toHaveBeenCalledWith({type: 'separator'});
             expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'DevTools'}));
-            expect(mockMenu.append).toHaveBeenCalledTimes(3);
           });
         });
       });
