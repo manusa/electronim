@@ -84,6 +84,51 @@ describe('Tab Manager module test suite', () => {
       expect(result).toBeNull();
     });
   });
+  describe('getTabTraverse', () => {
+    beforeEach(() => {
+      tabManager.addTabs({send: jest.fn()})([
+        {id: 'A'},
+        {id: 'B'},
+        {id: 'C'}
+      ]);
+    });
+    describe('getNextTab with tabs [A, B, C]', () => {
+      test('with currentTab = A, should return B', () => {
+        // Given
+        tabManager.setActiveTab('A');
+        // When
+        const nextTab = tabManager.getNextTab();
+        // Then
+        expect(nextTab).toBe('B');
+      });
+      test('with currentTab = C, should return A', () => {
+        // Given
+        tabManager.setActiveTab('C');
+        // When
+        const nextTab = tabManager.getNextTab();
+        // Then
+        expect(nextTab).toBe('A');
+      });
+    });
+    describe('getPreviousTab', () => {
+      test('with currentTab = B, should return A', () => {
+        // Given
+        tabManager.setActiveTab('B');
+        // When
+        const nextTab = tabManager.getPreviousTab();
+        // Then
+        expect(nextTab).toBe('A');
+      });
+      test('with currentTab = A, should return C', () => {
+        // Given
+        tabManager.setActiveTab('A');
+        // When
+        const nextTab = tabManager.getPreviousTab();
+        // Then
+        expect(nextTab).toBe('C');
+      });
+    });
+  });
   describe('addTabs', () => {
     test('webPreferences is sandboxed and has no node integration', () => {
       // When

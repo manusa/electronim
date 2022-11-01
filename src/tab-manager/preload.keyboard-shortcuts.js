@@ -16,40 +16,50 @@
 /* eslint-disable no-undef */
 const {ipcRenderer} = require('electron');
 
-const codeActionMap = {
-  F5: APP_EVENTS.reload
-};
-
-const controlCodeActionMap = {
-  r: APP_EVENTS.reload,
-  R: APP_EVENTS.reload,
-  '+': APP_EVENTS.zoomIn,
-  '-': APP_EVENTS.zoomOut,
-  0: APP_EVENTS.zoomReset
-};
-
-const commandCodeActionMap = {
-  r: APP_EVENTS.reload,
-  R: APP_EVENTS.reload
-};
-
-const triggerForActionMap = actionMap => key => {
+const triggerForActionMap = actionMap => ({key}) => {
   if (actionMap[key]) {
     ipcRenderer.send(actionMap[key]);
   }
 };
 
+const triggerCode = event => triggerForActionMap({
+  F5: APP_EVENTS.reload
+})(event);
+
+const triggerControlCode = event => triggerForActionMap({
+  r: APP_EVENTS.reload,
+  R: APP_EVENTS.reload,
+  '+': APP_EVENTS.zoomIn,
+  '-': APP_EVENTS.zoomOut,
+  0: APP_EVENTS.zoomReset,
+  Tab: APP_EVENTS.tabTraverseNext
+})(event);
+
+const triggerControlShiftCode = event => triggerForActionMap({
+  Tab: APP_EVENTS.tabTraversePrevious
+})(event);
+
+const triggerCommandCode = event => triggerForActionMap({
+  r: APP_EVENTS.reload,
+  R: APP_EVENTS.reload
+})(event);
+
+
+const isPlain = event => event.ctrlKey === false && event.metaKey === false && event.shiftKey === false;
+const isControl = event => event.ctrlKey === true && event.metaKey === false && event.shiftKey === false;
+const isControlShift = event => event.ctrlKey === true && event.metaKey === false && event.shiftKey === true;
+const isCommand = event => event.ctrlKey === false && event.metaKey === true && event.shiftKey === false;
+
 const initKeyboardShortcuts = () => {
-  const triggerCodeActionMap = triggerForActionMap(codeActionMap);
-  const triggerControlCodeActionMap = triggerForActionMap(controlCodeActionMap);
-  const triggerCommandCodeActionMap = triggerForActionMap(commandCodeActionMap);
   window.addEventListener('keyup', event => {
-    if (event.ctrlKey === false && event.metaKey === false) {
-      triggerCodeActionMap(event.key);
-    } else if (event.ctrlKey === true && event.metaKey === false) {
-      triggerControlCodeActionMap(event.key);
-    } else if (event.ctrlKey === false && event.metaKey === true) {
-      triggerCommandCodeActionMap(event.key);
+    if (isPlain(event)) {
+      triggerCode(event);
+    } else if (isControl(event)) {
+      triggerControlCode(event);
+    } else if (isControlShift(event)) {
+      triggerControlShiftCode(event);
+    } else if (isCommand(event)) {
+      triggerCommandCode(event);
     }
   });
   window.addEventListener('load', () => {

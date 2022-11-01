@@ -47,6 +47,8 @@ const APP_EVENTS = {
   canNotify: 'canNotify',
   tabsReady: 'tabsReady',
   tabReorder: 'tabReorder',
+  tabTraverseNext: 'tabTraverseNext',
+  tabTraversePrevious: 'tabTraversePrevious',
   zoomIn: 'zoomIn',
   zoomOut: 'zoomOut',
   zoomReset: 'zoomReset'
