@@ -13,12 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {app, BrowserView, Menu, MenuItem, session} = require('electron');
+const {app, BrowserView, session} = require('electron');
 const path = require('path');
 const {APP_EVENTS} = require('../constants');
 const settings = require('../settings');
-const {contextMenuHandler, contextMenuNativeHandler, getEnabledDictionaries, getUseNativeSpellChecker} = require('../spell-check');
+const {getEnabledDictionaries, getUseNativeSpellChecker} = require('../spell-check');
 const {userAgentForView, addUserAgentInterceptor} = require('../user-agent');
+const {handleContextMenu} = require('./context-menu');
 const {handleRedirect} = require('./redirect');
 
 let activeTab = null;
@@ -53,26 +54,6 @@ const handlePageFaviconUpdated = (browserView, ipcSender, tabId) => async (_e, f
   if (favicons.length > 0) {
     ipcSender.send(APP_EVENTS.setTabFavicon, {id: tabId, favicon: favicons[favicons.length - 1]});
   }
-};
-
-const handleContextMenu = browserView => async (event, params) => {
-  const {webContents} = browserView;
-  const menu = new Menu();
-  let spellingSuggestions;
-  if (webContents.session.spellcheck) {
-    spellingSuggestions = contextMenuNativeHandler(event, params, webContents);
-  } else {
-    spellingSuggestions = await contextMenuHandler(event, params, webContents);
-  }
-  if (spellingSuggestions.length > 0) {
-    spellingSuggestions.forEach(mi => menu.append(mi));
-    menu.append(new MenuItem({type: 'separator'}));
-  }
-  menu.append(new MenuItem({label: 'Reload', click: () => webContents.reload()}));
-  menu.append(new MenuItem({type: 'separator'}));
-  menu.append(new MenuItem({label: 'DevTools', click: () => webContents.openDevTools()}));
-  const {x, y} = params;
-  menu.popup({x, y});
 };
 
 // Required for Service Workers -> https://github.com/electron/electron/issues/16196
@@ -123,7 +104,7 @@ const addTabs = ipcSender => tabsMetadata => {
     const handlePageFaviconUpdatedForCurrentTab = handlePageFaviconUpdated(tab, ipcSender, id);
     tab.webContents.on('page-favicon-updated', handlePageFaviconUpdatedForCurrentTab);
 
-    tab.webContents.on('context-menu', handleContextMenu(tab));
+    tab.webContents.on('context-menu', handleContextMenu);
 
     const registerIdInTab = () => tab.webContents.executeJavaScript(`window.tabId = '${id}';`);
     tab.webContents.on('dom-ready', registerIdInTab);

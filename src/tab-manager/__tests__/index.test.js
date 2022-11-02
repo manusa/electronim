@@ -15,37 +15,13 @@
  */
 describe('Tab Manager module test suite', () => {
   let mockBrowserView;
-  let mockMenu;
-  let mockMenuItem;
   let userAgent;
   let tabManager;
   let mockSettings;
   beforeEach(() => {
     jest.resetModules();
-    mockBrowserView = {
-      setAutoResize: jest.fn(),
-      webContents: {
-        session: {},
-        executeJavaScript: jest.fn(async () => {}),
-        on: jest.fn(),
-        loadURL: jest.fn(),
-        userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36',
-        destroy: jest.fn()
-      }
-    };
-    mockMenu = {};
-    jest.mock('electron', () => ({
-      app: {},
-      BrowserView: jest.fn(() => mockBrowserView),
-      Menu: jest.fn(() => mockMenu),
-      MenuItem: jest.fn(() => mockMenuItem),
-      session: {
-        fromPartition: jest.fn(() => ({
-          userAgentInterceptor: true
-        })),
-        defaultSession: {userAgentInterceptor: true}
-      }
-    }));
+    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
+    mockBrowserView = require('electron').browserViewInstance;
     mockSettings = {
       loadSettings: jest.fn(() => ({
         tabs: [{id: '1337', disableNotifications: false}],
@@ -54,7 +30,6 @@ describe('Tab Manager module test suite', () => {
       updateSettings: jest.fn()
     };
     jest.mock('../../settings', () => mockSettings);
-    jest.mock('../../spell-check');
     userAgent = require('../../user-agent');
     tabManager = require('../');
   });
@@ -196,24 +171,21 @@ describe('Tab Manager module test suite', () => {
       });
     });
     describe('Event listeners', () => {
-      let events;
       let mockIpcSender;
       beforeEach(() => {
-        events = {};
-        mockBrowserView.webContents.on = jest.fn((id, func) => (events[id] = func));
         mockIpcSender = {send: jest.fn()};
         tabManager.addTabs(mockIpcSender)([{id: '1337', url: 'https://localhost'}]);
       });
       test('handlePageTitleUpdated, should send setTabTitle event', () => {
         // When
-        events['page-title-updated'](new Event(''), 'Dr.');
+        mockBrowserView.listeners['page-title-updated'](new Event(''), 'Dr.');
         // Then
         expect(mockIpcSender.send).toHaveBeenCalledWith('setTabTitle', {id: '1337', title: 'Dr.'});
       });
       describe('handlePageFaviconUpdated', () => {
         test('Favicons provided, should send setTabFavicon with the last of the provided favicons', () => {
           // When
-          events['page-favicon-updated'](new Event(''), [
+          mockBrowserView.listeners['page-favicon-updated'](new Event(''), [
             'http://url-to-favicon/aitana.png',
             'http://url-to-favicon/alex.png'
           ]);
@@ -230,86 +202,10 @@ describe('Tab Manager module test suite', () => {
             return [];
           });
           // When
-          await events['page-favicon-updated'](new Event(''));
+          await mockBrowserView.listeners['page-favicon-updated'](new Event(''));
           // Then
           expect(mockIpcSender.send)
             .toHaveBeenCalledWith('setTabFavicon', {id: '1337', favicon: 'http://url-to-favicon/julia.png'});
-        });
-      });
-      describe('handleContextMenu', () => {
-        let electron;
-        let spellChecker;
-        beforeEach(() => {
-          electron = require('electron');
-          spellChecker = require('../../spell-check');
-          mockMenu.append = jest.fn();
-          mockMenu.popup = jest.fn();
-        });
-        test('should open a Menu with DevTools entry', async () => {
-          // Given
-          spellChecker.contextMenuHandler.mockImplementationOnce(() => []);
-          // When
-          await events['context-menu'](new Event(''), {x: 13, y: 37});
-          // Then
-          expect(electron.Menu).toHaveBeenCalledTimes(1);
-          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'DevTools'}));
-        });
-        test('should open a Menu with Reload entry', async () => {
-          // Given
-          spellChecker.contextMenuHandler.mockImplementationOnce(() => []);
-          // When
-          await events['context-menu'](new Event(''), {x: 13, y: 37});
-          // Then
-          expect(electron.Menu).toHaveBeenCalledTimes(1);
-          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'Reload'}));
-        });
-        test('should open a Menu at the specified location', async () => {
-          // Given
-          spellChecker.contextMenuHandler.mockImplementationOnce(() => []);
-          // When
-          await events['context-menu'](new Event(''), {x: 13, y: 37});
-          // Then
-          expect(mockMenu.popup).toHaveBeenCalledTimes(1);
-          expect(mockMenu.popup).toHaveBeenCalledWith({x: 13, y: 37});
-        });
-        describe('with native spellcheck disabled', () => {
-          beforeEach(() => {
-            mockBrowserView.webContents.session.spellcheck = false;
-          });
-          test('Spelling suggestions, should open a Menu with all suggestions, a separator and DevTools entry', async () => {
-            // Given
-            spellChecker.contextMenuHandler.mockImplementationOnce(() => [
-              new electron.MenuItem({label: 'suggestion 1'}),
-              new electron.MenuItem({label: 'suggestion 2'})
-            ]);
-            // When
-            await events['context-menu'](new Event(''), {x: 13, y: 37});
-            // Then
-            expect(electron.Menu).toHaveBeenCalledTimes(1);
-            expect(electron.MenuItem).toHaveBeenCalledWith({label: 'suggestion 1'});
-            expect(electron.MenuItem).toHaveBeenCalledWith({label: 'suggestion 2'});
-            expect(electron.MenuItem).toHaveBeenCalledWith({type: 'separator'});
-            expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'DevTools'}));
-          });
-        });
-        describe('with native spellcheck enabled', () => {
-          beforeEach(() => {
-            mockBrowserView.webContents.session.spellcheck = true;
-          });
-          test('Spelling suggestions, should open a Menu with all suggestions, a separator and DevTools entry', async () => {
-            // Given
-            spellChecker.contextMenuNativeHandler.mockImplementationOnce(() => [
-              new electron.MenuItem({label: 'native suggestion 1'})
-            ]);
-            // When
-            await events['context-menu'](new Event(''), {x: 13, y: 37});
-            // Then
-            expect(electron.Menu).toHaveBeenCalledTimes(1);
-            expect(electron.MenuItem).toHaveBeenCalledWith({label: 'native suggestion 1'});
-            expect(electron.MenuItem).toHaveBeenCalledWith({type: 'separator'});
-            expect(electron.MenuItem).toHaveBeenCalledWith({type: 'separator'});
-            expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'DevTools'}));
-          });
         });
       });
     });
