@@ -30,14 +30,41 @@ const mockBrowserWindowInstance = () => {
     setBounds: jest.fn(),
     setBrowserView: jest.fn(),
     webContents: {
+      copy: jest.fn(),
+      copyImageAt: jest.fn(),
+      cut: jest.fn(),
       destroy: jest.fn(),
+      executeJavaScript: jest.fn(async () => {}),
+      goBack: jest.fn(),
       loadURL: jest.fn(),
-      on: jest.fn(),
+      on: jest.fn((...args) => instance.on(...args)),
       openDevTools: jest.fn(),
-      send: jest.fn()
+      paste: jest.fn(),
+      reload: jest.fn(),
+      send: jest.fn(),
+      session: {},
+      userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36'
     }
   };
   return instance;
 };
 
-module.exports = {mockBrowserWindowInstance};
+const mockElectronInstance = ({...overriddenProps} = {}) => {
+  const browserViewInstance = mockBrowserWindowInstance();
+  return {
+    BrowserView: jest.fn(() => browserViewInstance),
+    browserViewInstance,
+    Menu: jest.fn(),
+    MenuItem: jest.fn(),
+    app: {},
+    session: {
+      fromPartition: jest.fn(() => ({
+        userAgentInterceptor: true
+      })),
+      defaultSession: {userAgentInterceptor: true}
+    },
+    ...overriddenProps
+  };
+};
+
+module.exports = {mockBrowserWindowInstance, mockElectronInstance};

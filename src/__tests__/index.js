@@ -15,5 +15,6 @@
  */
 
 module.exports = {
-  mockBrowserWindowInstance: require('./electron.js').mockBrowserWindowInstance
+  mockBrowserWindowInstance: require('./electron.js').mockBrowserWindowInstance,
+  mockElectronInstance: require('./electron.js').mockElectronInstance
 };
