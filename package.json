@@ -167,7 +167,7 @@
     "bulma": "0.9.4",
     "chrome-tabs": "5.4.0",
     "css-loader": "6.7.1",
-    "electron-builder": "23.3.3",
+    "electron-builder": "23.6.0",
     "eslint": "8.23.1",
     "eslint-plugin-jest": "27.0.4",
     "jest": "29.0.3",
