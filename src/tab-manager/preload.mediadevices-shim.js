@@ -171,4 +171,7 @@ const getDisplayMedia = async (resolve, reject) => {
   currentRoot = render(html`<${Container} resolve=${resolve} reject=${reject}/>`, getOrCreateRoot());
 };
 
-window.navigator.mediaDevices.getDisplayMedia = () => new Promise(getDisplayMedia);
+// Some web applications break the mediaDevices capability
+if (window.navigator.mediaDevices) {
+  window.navigator.mediaDevices.getDisplayMedia = () => new Promise(getDisplayMedia);
+}
