@@ -65,9 +65,13 @@ const spellCheckContextMenu = async (event, params) => {
 
 const regularContextMenu = (event, params) => {
   const menu = new Menu();
-  entries(event, params).forEach(group => {
+  const isVisible = me => !Object.keys(me).includes('visible') || me.visible === true;
+  entries(event, params).forEach((group, idx, arr) => {
     for (const entry of group) {
       menu.append(new MenuItem({...entry}));
+    }
+    if (group.filter(isVisible).length > 0 && idx < arr.length - 1) {
+      menu.append(new MenuItem({type: 'separator'}));
     }
   });
   return menu;

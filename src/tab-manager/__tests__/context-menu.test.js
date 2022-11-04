@@ -18,18 +18,18 @@ describe('Tab Manager context-menu test suite', () => {
   let event;
   let listeners;
   let mockMenu;
-  let mockMenuItem;
   let params;
   let tabManager;
   beforeEach(() => {
     jest.resetModules();
     mockMenu = {
-      append: jest.fn(),
+      entries: [],
+      append: jest.fn(e => mockMenu.entries.push(e)),
       popup: jest.fn()
     };
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance({
       Menu: jest.fn(() => mockMenu),
-      MenuItem: jest.fn(() => mockMenuItem)
+      MenuItem: jest.fn(def => def)
     }));
     jest.mock('../../settings', () => ({
       loadSettings: jest.fn(() => ({
@@ -106,6 +106,15 @@ describe('Tab Manager context-menu test suite', () => {
       'adds MenuItem with label %s', async label => {
         expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label}));
       });
+    describe('separator', () => {
+      test('groups are separated by a separator', async () => {
+        // separator after Back and Reload
+        expect(mockMenu.entries[2].type).toBe('separator');
+      });
+      test('last item is not a separator', () => {
+        expect(mockMenu.entries[mockMenu.entries.length - 1].type).not.toBe('separator');
+      });
+    });
     describe('Back', () => {
       test('disabled when canGoBack returns false', async () => {
         expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
