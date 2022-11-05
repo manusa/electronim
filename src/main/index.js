@@ -231,4 +231,6 @@ const init = () => {
   return mainWindow;
 };
 
-module.exports = {APP_EVENTS, init};
+module.exports = {
+  init
+};
