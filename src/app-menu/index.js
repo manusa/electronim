@@ -24,7 +24,11 @@ const webPreferences = {
   preload: path.resolve(__dirname, '..', '..', 'bundles', 'app-menu.preload.js')
 };
 
-const initAppMenu = () => {
+/**
+ * Creates a new BrowserView instance with the App Menu
+ * @returns {Electron.CrossProcessExports.BrowserView}
+ */
+const newAppMenu = () => {
   const appMenu = new BrowserView({webPreferences});
   appMenu.isAppMenu = true;
   appMenu.setAutoResize({width: false, horizontal: false, height: false, vertical: false});
@@ -34,4 +38,4 @@ const initAppMenu = () => {
 
 const isNotAppMenu = bv => bv.isAppMenu !== true;
 
-module.exports = {initAppMenu, isNotAppMenu};
+module.exports = {newAppMenu, isNotAppMenu};

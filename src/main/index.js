@@ -15,7 +15,7 @@
  */
 const {BrowserWindow, Notification, app, desktopCapturer, ipcMain: ipc, nativeTheme} = require('electron');
 const {APP_EVENTS} = require('../constants');
-const {initAppMenu, isNotAppMenu} = require('../app-menu');
+const {newAppMenu, isNotAppMenu} = require('../app-menu');
 const {TABS_CONTAINER_HEIGHT, initTabContainer, isNotTabContainer} = require('../chrome-tabs');
 const {openHelpDialog} = require('../help');
 const {loadSettings, updateSettings, openSettingsDialog} = require('../settings');
@@ -201,7 +201,7 @@ const initGlobalListeners = () => {
 const browserVersionsReady = () => {
   app.userAgentFallback = userAgentForView(mainWindow);
   tabContainer = initTabContainer();
-  appMenu = initAppMenu();
+  appMenu = newAppMenu();
 };
 
 const init = () => {
