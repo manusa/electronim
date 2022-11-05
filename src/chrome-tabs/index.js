@@ -42,7 +42,11 @@ const handleContextMenu = (event, params) => {
   menu.popup({x, y});
 };
 
-const initTabContainer = () => {
+/**
+ * Creates a new BrowserView instance with the Chrome Tabs
+ * @returns {Electron.CrossProcessExports.BrowserView}
+ */
+const newTabContainer = () => {
   const tabContainer = new BrowserView({webPreferences});
   tabContainer.isTabContainer = true;
   tabContainer.setAutoResize({width: false, horizontal: false, height: false, vertical: false});
@@ -55,5 +59,5 @@ const initTabContainer = () => {
 const isNotTabContainer = bv => bv.isTabContainer !== true;
 
 module.exports = {
-  TABS_CONTAINER_HEIGHT, initTabContainer, isNotTabContainer
+  TABS_CONTAINER_HEIGHT, newTabContainer, isNotTabContainer
 };

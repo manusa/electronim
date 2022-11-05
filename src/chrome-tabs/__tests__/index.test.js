@@ -28,10 +28,10 @@ describe('Chrome Tabs Module module test suite', () => {
     };
     chromeTabs = require('../');
   });
-  describe('initTabContainer', () => {
+  describe('newTabContainer', () => {
     test('webPreferences is sandboxed and has no node integration', () => {
       // When
-      chromeTabs.initTabContainer(mainWindow);
+      chromeTabs.newTabContainer(mainWindow);
       // Then
       const BrowserView = require('electron').BrowserView;
       expect(BrowserView).toHaveBeenCalledTimes(1);

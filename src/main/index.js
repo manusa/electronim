@@ -16,7 +16,7 @@
 const {BrowserWindow, Notification, app, desktopCapturer, ipcMain: ipc, nativeTheme} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const {newAppMenu, isNotAppMenu} = require('../app-menu');
-const {TABS_CONTAINER_HEIGHT, initTabContainer, isNotTabContainer} = require('../chrome-tabs');
+const {TABS_CONTAINER_HEIGHT, newTabContainer, isNotTabContainer} = require('../chrome-tabs');
 const {openHelpDialog} = require('../help');
 const {loadSettings, updateSettings, openSettingsDialog} = require('../settings');
 const {
@@ -182,7 +182,7 @@ const saveSettings = (_event, settings) => {
   tabManager.removeAll();
   const viewsToDestroy = [currentBrowserView, tabContainer];
   viewsToDestroy.forEach(view => view.webContents.destroy());
-  tabContainer = initTabContainer();
+  tabContainer = newTabContainer();
 };
 
 const initGlobalListeners = () => {
@@ -200,7 +200,7 @@ const initGlobalListeners = () => {
 
 const browserVersionsReady = () => {
   app.userAgentFallback = userAgentForView(mainWindow);
-  tabContainer = initTabContainer();
+  tabContainer = newTabContainer();
   appMenu = newAppMenu();
 };
 
