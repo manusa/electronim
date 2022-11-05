@@ -16,8 +16,6 @@
 /* eslint-disable no-undef */
 const {ipcRenderer} = require('electron');
 
-require('./chrome-tabs.browser.css');
-
 window.ipcRenderer = ipcRenderer;
 window.APP_EVENTS = APP_EVENTS;
 window.ELECTRONIM_VERSION = ELECTRONIM_VERSION;
