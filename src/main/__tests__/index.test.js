@@ -56,7 +56,7 @@ describe('Main module test suite', () => {
       nativeTheme: mockNativeTheme
     }));
     appMenuModule = require('../../app-menu');
-    jest.spyOn(appMenuModule, 'initAppMenu');
+    jest.spyOn(appMenuModule, 'newAppMenu');
     settingsModule = require('../../settings');
     jest.spyOn(settingsModule, 'loadSettings').mockImplementation(() => mockSettings);
     jest.spyOn(settingsModule, 'updateSettings').mockImplementation();
@@ -179,7 +179,7 @@ describe('Main module test suite', () => {
           mockAppMenu = {
             setBounds: jest.fn()
           };
-          jest.spyOn(appMenuModule, 'initAppMenu').mockImplementation(() => mockAppMenu);
+          jest.spyOn(appMenuModule, 'newAppMenu').mockImplementation(() => mockAppMenu);
           main.init();
         });
         test('should set app-menu bounds', () => {
@@ -498,7 +498,7 @@ describe('Main module test suite', () => {
     test('appMenuOpen, should show and resize app-menu', () => {
       // Given
       const mockAppMenu = {setBounds: jest.fn()};
-      jest.spyOn(appMenuModule, 'initAppMenu').mockImplementation(() => mockAppMenu);
+      jest.spyOn(appMenuModule, 'newAppMenu').mockImplementation(() => mockAppMenu);
       main.init();
       // When
       mockIpc.listeners.appMenuOpen();
@@ -510,7 +510,7 @@ describe('Main module test suite', () => {
     test('appMenuClose, should hide app-menu', () => {
       // Given
       const mockAppMenu = {isTheMockAppMenu: true};
-      jest.spyOn(appMenuModule, 'initAppMenu').mockImplementation(() => mockAppMenu);
+      jest.spyOn(appMenuModule, 'newAppMenu').mockImplementation(() => mockAppMenu);
       main.init();
       // When
       mockIpc.listeners.appMenuClose();
