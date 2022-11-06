@@ -17,5 +17,3 @@
 const {ipcRenderer} = require('electron');
 
 window.ipcRenderer = ipcRenderer;
-window.APP_EVENTS = APP_EVENTS;
-window.ELECTRONIM_VERSION = ELECTRONIM_VERSION;

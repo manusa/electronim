@@ -191,12 +191,10 @@ describe('ChromeTabs in Browser test suite', () => {
   });
   describe('Main button events', () => {
     test('menuButton click, should dispatch APP_EVENTS.appMenuOpen', () => {
-      // Given
-      window.APP_EVENTS.appMenuOpen = 'open your settings please';
       // When
       fireEvent.click(document.querySelector('.menu__button'));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('open your settings please');
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('appMenuOpen');
     });
   });
 });

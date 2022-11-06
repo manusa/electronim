@@ -16,6 +16,9 @@
 describe('Chrome Tabs Module preload test suite', () => {
   beforeEach(() => {
     jest.resetModules();
+    jest.mock('electron', () => ({
+      ipcRenderer: {send: jest.fn()}
+    }));
   });
   describe('preload (just for coverage and sanity, see bundle tests)', () => {
     beforeEach(() => {
@@ -24,7 +27,7 @@ describe('Chrome Tabs Module preload test suite', () => {
       require('../preload');
     });
     test('adds required libraries', () => {
-      expect(window.ELECTRONIM_VERSION).toEqual('1.33.7');
+      expect(window.ipcRenderer.send).toBeDefined();
     });
   });
   describe('preload.bundle', () => {
@@ -32,7 +35,7 @@ describe('Chrome Tabs Module preload test suite', () => {
       require('../../../bundles/chrome-tabs.preload');
     });
     test('adds required variables', async () => {
-      expect(window.ELECTRONIM_VERSION).toEqual('0.0.0');
+      expect(window.ipcRenderer.send).toBeDefined();
     });
   });
 });
