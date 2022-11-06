@@ -51,12 +51,18 @@ const mockBrowserWindowInstance = () => {
 
 const mockElectronInstance = ({...overriddenProps} = {}) => {
   const browserViewInstance = mockBrowserWindowInstance();
+  const browserWindowInstance = mockBrowserWindowInstance();
   return {
     BrowserView: jest.fn(() => browserViewInstance),
     browserViewInstance,
+    BrowserWindow: jest.fn(() => browserWindowInstance),
+    browserWindowInstance,
     Menu: jest.fn(),
     MenuItem: jest.fn(),
-    app: {},
+    app: {
+      getPath: jest.fn(),
+      setPath: jest.fn()
+    },
     session: {
       fromPartition: jest.fn(() => ({
         userAgentInterceptor: true
