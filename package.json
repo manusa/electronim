@@ -146,7 +146,8 @@
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "jest-extended/all"
+      "jest-extended/all",
+      "<rootDir>/src/__tests__/setup-jest.js"
     ],
     "testEnvironment": "jsdom",
     "testEnvironmentOptions": {

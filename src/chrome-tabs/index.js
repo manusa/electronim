@@ -15,6 +15,8 @@
  */
 const {BrowserView, BrowserWindow, Menu, MenuItem} = require('electron');
 const path = require('path');
+const {APP_EVENTS} = require('../constants');
+const {getLatestRelease} = require('./check-for-updates');
 const {openHelpDialog} = require('../help');
 const {openSettingsDialog} = require('../settings');
 
@@ -26,6 +28,15 @@ const webPreferences = {
   sandbox: true,
   preload: path.resolve(__dirname, '..', '..', 'bundles', 'chrome-tabs.preload.js'),
   partition: 'persist:electronim'
+};
+
+const checkForUpdates = webContents => {
+  getLatestRelease()
+    .then(release => {
+      webContents.send(APP_EVENTS.electronimNewVersionAvailable, !release.matchesCurrent);
+    })
+    // eslint-disable-next-line no-console
+    .catch(e => console.debug('Error checking for updates', e));
 };
 
 const handleContextMenu = (event, params) => {
@@ -53,6 +64,8 @@ const newTabContainer = () => {
   tabContainer.webContents.loadURL(`file://${__dirname}/index.html`,
     {extraHeaders: 'pragma: no-cache\nCache-control: no-cache'});
   tabContainer.webContents.on('context-menu', handleContextMenu);
+  checkForUpdates(tabContainer.webContents);
+  setInterval(() => checkForUpdates(tabContainer.webContents), 1000 * 60 * 30).unref();
   return tabContainer;
 };
 

@@ -73,18 +73,20 @@ describe('ChromeTabs in Browser test suite', () => {
       await waitFor(() =>
         expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"]').hasAttribute('active')).toBe(true));
     });
-    test('setTabTitle, should change title of specified tab', async () => {
-      // Given
-      mockIpcRenderer.events.addTabs({}, tabs);
-      // When
-      mockIpcRenderer.events.setTabTitle({}, {id: 313373, title: 'replaced'});
-      // Then
-      await waitFor(() => expect(
-        $chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"] .chrome-tab-title').innerHTML)
-        .toBe('replaced'));
-      expect(
-        $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"] .chrome-tab-title').innerHTML)
-        .toBe('https://1337.com');
+    describe('electronimNewVersionAvailable is true', () => {
+      beforeEach(() => {
+        mockIpcRenderer.events.electronimNewVersionAvailable({}, true);
+      });
+      test('Main button shows arrow up', async () => {
+        await waitFor(() =>
+          expect(document.querySelector('.menu__button i').getAttribute('class'))
+            .toBe('fas fa-arrow-alt-circle-up'));
+      });
+      test('Main button has tooltip informing about new updates', async () => {
+        await waitFor(() =>
+          expect(document.querySelector('.menu__button').getAttribute('title'))
+            .toBe('New ElectronIM version is available'));
+      });
     });
     test('setTabFavicon, should change favicon of specified tab', async () => {
       // Given
@@ -98,6 +100,19 @@ describe('ChromeTabs in Browser test suite', () => {
       expect(
         $chromeTabs.querySelector('.chrome-tab[data-tab-id="13373"] .chrome-tab-favicon').style.backgroundImage)
         .toBe('url(https://13373.png)');
+    });
+    test('setTabTitle, should change title of specified tab', async () => {
+      // Given
+      mockIpcRenderer.events.addTabs({}, tabs);
+      // When
+      mockIpcRenderer.events.setTabTitle({}, {id: 313373, title: 'replaced'});
+      // Then
+      await waitFor(() => expect(
+        $chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"] .chrome-tab-title').innerHTML)
+        .toBe('replaced'));
+      expect(
+        $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"] .chrome-tab-title').innerHTML)
+        .toBe('https://1337.com');
     });
   });
   describe('Tab events', () => {
@@ -190,6 +205,10 @@ describe('ChromeTabs in Browser test suite', () => {
     });
   });
   describe('Main button events', () => {
+    test('shows 3 bars when no updates available', () => {
+      const buttonClass = document.querySelector('.menu__button i').getAttribute('class');
+      expect(buttonClass).toBe('fas fa-bars');
+    });
     test('menuButton click, should dispatch APP_EVENTS.appMenuOpen', () => {
       // When
       fireEvent.click(document.querySelector('.menu__button'));

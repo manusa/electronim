@@ -36,6 +36,7 @@ const APP_EVENTS = {
   dictionaryGetAvailableNative: 'dictionaryGetAvailableNative',
   dictionaryGetEnabled: 'dictionaryGetEnabled',
   dictionaryGetMisspelled: 'dictionaryGetMisspelled',
+  electronimNewVersionAvailable: 'electronimNewVersionAvailable',
   helpOpenDialog: 'helpOpenDialog',
   notificationClick: 'notificationClick',
   reload: 'reload',

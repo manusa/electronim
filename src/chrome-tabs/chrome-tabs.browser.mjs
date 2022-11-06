@@ -14,7 +14,13 @@
    limitations under the License.
  */
 /* eslint-disable no-undef */
-import {APP_EVENTS, html, render, useLayoutEffect, useReducer, useState, Icon} from '../components/index.mjs';
+import {
+  APP_EVENTS, html, render, useLayoutEffect, useReducer, useState, Icon
+} from '../components/index.mjs';
+import {
+  initialState, reducer, activateTab, addTabs, moveTab, setNewVersionAvailable, setTabFavicon, setTabTitle,
+  sendActivateTab
+} from './chrome-tabs.reducer.browser.mjs';
 
 const shouldUseDarkColors = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 const getTabContainer = () => document.querySelector('.tab-container');
@@ -25,86 +31,12 @@ const openMenu = event => {
   ipcRenderer.send(APP_EVENTS.appMenuOpen);
 };
 const sendTabsReady = () => ipcRenderer.send(APP_EVENTS.tabsReady, {});
-const sendActivateTab = id => ipcRenderer.send(APP_EVENTS.activateTab, {id});
-const sendReorderTabs = tabs =>
-  ipcRenderer.send(APP_EVENTS.tabReorder, {tabIds: tabs.map(({id}) => id)});
 
 const TRANSPARENT_GIF = new Image();
 TRANSPARENT_GIF.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
 const TAB_CONTENT_MARGIN = 9;
 const TAB_CONTENT_OVERLAP_DISTANCE = 1;
 const TAB_CONTENT_MAX_WIDTH = 240;
-
-const ACTIONS = {
-  ACTIVATE_TAB: 'ACTIVATE_TAB',
-  MOVE_TAB: 'MOVE_TAB',
-  SET_TAB_PROPERTY: 'SET_TAB_PROPERTY',
-  SET_TABS: 'SET_TABS'
-};
-
-const initialState = {
-  tabs: []
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case ACTIONS.ACTIVATE_TAB: {
-      return {...state,
-        tabs: state.tabs.map(tab => ({...tab, active: tab.id === action.payload}))
-      };
-    }
-    case ACTIONS.MOVE_TAB: {
-      const {id, idx, offsetX} = action.payload;
-      const fromIdx = state.tabs.findIndex(t => t.id === id);
-      const ret = {...state, tabs: [...state.tabs]};
-      ret.tabs.forEach(t => (t.offsetX = 0));
-      const tab = ret.tabs[fromIdx];
-      tab.offsetX = offsetX;
-      ret.tabs.splice(fromIdx, 1);
-      ret.tabs.splice(idx, 0, tab);
-      sendReorderTabs(ret.tabs);
-      return ret;
-    }
-    case ACTIONS.SET_TAB_PROPERTY: {
-      const {id, property, value} = action.payload;
-      return {...state, tabs: state.tabs.map(tab => {
-        if (tab.id === id) {
-          const ret = {...tab};
-          ret[property] = value;
-          return ret;
-        }
-        return tab;
-      })};
-    }
-    case ACTIONS.SET_TABS: {
-      return {...state, tabs: [...action.payload]};
-    }
-    default: return state;
-  }
-};
-
-const dispatchActivateTab = dispatch => id => dispatch({type: ACTIONS.ACTIVATE_TAB, payload: id});
-
-const dispatchAddTabs = dispatch => (_event, tabs) => {
-  dispatch({type: ACTIONS.SET_TABS, payload: tabs});
-  const activeTabMeta = tabs.find(({active}) => active === true);
-  if (tabs.length > 0 && activeTabMeta) {
-    sendActivateTab(activeTabMeta.id);
-  }
-};
-
-const dispatchSetTabTitle = dispatch => (_event, {id, title}) => {
-  dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {
-    id, property: 'title', value: title
-  }});
-};
-
-const dispatchSetTabFavicon = dispatch => (_event, {id, favicon}) => {
-  dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {
-    id, property: 'favicon', value: favicon
-  }});
-};
-
 
 const calculateTabWidth = numberOfTabs => {
   const availableWidth = (getChromeTabs() || getTabContainer()).clientWidth;
@@ -163,12 +95,11 @@ const BackgroundSvg = () => html`
     </svg>
 `;
 
-
 const Tab = ({dispatch, numberOfTabs, idx, id, active, offsetX = 0, title, url, width, ...rest}) => {
   const tabClick = () => {
     if (active !== true) {
       sendActivateTab(id);
-      dispatchActivateTab(dispatch)(id);
+      activateTab({dispatch})(null, {tabId: id});
     }
   };
   const [draggedId, setDraggedId] = useState(id);
@@ -180,11 +111,11 @@ const Tab = ({dispatch, numberOfTabs, idx, id, active, offsetX = 0, title, url, 
     if (isInVisibleArea(event) && event.type === 'drag') {
       currentOffsetX = (event.clientX - originX) + (width * (idx - newIdx));
     }
-    dispatch({type: ACTIONS.MOVE_TAB, payload: {
+    moveTab({dispatch})({
       id: draggedId,
       idx: isInVisibleArea(event) ? newIdx : idx,
       offsetX: currentOffsetX
-    }});
+    });
   };
   const props = {
     'data-tab-id': id,
@@ -242,30 +173,34 @@ const ChromeTabs = ({dispatch, state: {tabs}}) => {
   `;
 };
 
-const Menu = () => html`
- <div class="menu">
-     <button
-        class="menu__button button"
-        onClick=${openMenu}
-      >
-        <${Icon} icon='fas fa-bars'></${Icon}>
-     </button>
- </div>
-`;
+const Menu = ({state: {newVersionAvailable}}) => {
+  const iconClass = `fas ${newVersionAvailable ? 'fa-arrow-alt-circle-up' : 'fa-bars'}`;
+  return html`
+   <div class="menu">
+       <button
+          class="menu__button button"
+          onClick=${openMenu}
+          title=${newVersionAvailable ? 'New ElectronIM version is available' : ''}
+        >
+          <${Icon} icon=${iconClass}></${Icon}>
+       </button>
+   </div>
+  `;
+};
 
 const TabContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   useLayoutEffect(() => {
-    ipcRenderer.on(APP_EVENTS.addTabs, dispatchAddTabs(dispatch));
-    ipcRenderer.on(APP_EVENTS.activateTabInContainer,
-      (_event, {tabId}) => dispatchActivateTab(dispatch)(tabId));
-    ipcRenderer.on(APP_EVENTS.setTabTitle, dispatchSetTabTitle(dispatch));
-    ipcRenderer.on(APP_EVENTS.setTabFavicon, dispatchSetTabFavicon(dispatch));
+    ipcRenderer.on(APP_EVENTS.addTabs, addTabs({dispatch}));
+    ipcRenderer.on(APP_EVENTS.activateTabInContainer, activateTab({dispatch}));
+    ipcRenderer.on(APP_EVENTS.electronimNewVersionAvailable, setNewVersionAvailable({dispatch}));
+    ipcRenderer.on(APP_EVENTS.setTabFavicon, setTabFavicon({dispatch}));
+    ipcRenderer.on(APP_EVENTS.setTabTitle, setTabTitle({dispatch}));
     sendTabsReady();
   }, []);
   return html`
     <${ChromeTabs} state=${state} dispatch=${dispatch}/>
-    <${Menu}/>
+    <${Menu} state=${state}/>
   `;
 };
 

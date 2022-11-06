@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 /*
    Copyright 2019 Marc Nuri San Felix
 
@@ -14,9 +17,10 @@
    limitations under the License.
  */
 describe('Main module test suite', () => {
-  let mockBrowserWindow;
   let mockNotification;
-  let mockApp;
+  let electron;
+  let mockBrowserView;
+  let mockBrowserWindow;
   let mockDesktopCapturer;
   let mockIpc;
   let mockNativeTheme;
@@ -29,13 +33,8 @@ describe('Main module test suite', () => {
   let main;
   beforeEach(() => {
     jest.resetModules();
-    jest.useFakeTimers();
-    mockBrowserWindow = require('../../__tests__').mockBrowserWindowInstance();
+    jest.useFakeTimers({doNotFake: ['setInterval']});
     mockNotification = jest.fn();
-    mockApp = {
-      getPath: jest.fn(),
-      setPath: jest.fn()
-    };
     mockDesktopCapturer = {};
     mockIpc = {
       handle: jest.fn(),
@@ -46,15 +45,15 @@ describe('Main module test suite', () => {
     };
     mockNativeTheme = {};
     mockSettings = {};
-    jest.mock('electron', () => ({
-      BrowserView: jest.fn(() => mockBrowserWindow),
-      BrowserWindow: jest.fn(() => mockBrowserWindow),
+    jest.mock('electron', () => require('../../__tests__').mockElectronInstance({
       Notification: jest.fn(() => mockNotification),
-      app: mockApp,
       desktopCapturer: mockDesktopCapturer,
       ipcMain: mockIpc,
       nativeTheme: mockNativeTheme
     }));
+    electron = require('electron');
+    mockBrowserView = electron.browserViewInstance;
+    mockBrowserWindow = electron.browserWindowInstance;
     appMenuModule = require('../../app-menu');
     jest.spyOn(appMenuModule, 'newAppMenu');
     settingsModule = require('../../settings');
@@ -72,11 +71,15 @@ describe('Main module test suite', () => {
     }}));
     main = require('../');
   });
+  afterEach(() => {
+    jest.useRealTimers();
+  });
   describe('init - environment preparation', () => {
     describe('theme', () => {
       test('fallbacks to system', () => {
         // When
         main.init();
+        jest.runAllTimers();
         // Then
         expect(mockNativeTheme.themeSource).toBe('system');
       });
@@ -85,6 +88,7 @@ describe('Main module test suite', () => {
         mockSettings.theme = 'dark';
         // When
         main.init();
+        jest.runAllTimers();
         // Then
         expect(mockNativeTheme.themeSource).toBe('dark');
       });
@@ -93,7 +97,7 @@ describe('Main module test suite', () => {
       // When
       main.init();
       // Then
-      expect(mockApp.userAgentFallback).toBe('UserAgent String');
+      expect(electron.app.userAgentFallback).toBe('UserAgent String');
     });
     test('initBrowserVersions, throws error, should be set to defaultUserAgent and show Notification', () => {
       // Given
@@ -102,15 +106,15 @@ describe('Main module test suite', () => {
       // When
       main.init();
       // Then
-      expect(mockApp.userAgentFallback).toBe('UserAgent String');
+      expect(electron.app.userAgentFallback).toBe('UserAgent String');
       expect(mockNotification.show).toHaveBeenCalledTimes(1);
     });
     test('fixUserDataLocation, should set a location in lower-case (Electron <14 compatible)', () => {
       // Given
-      mockApp.getPath.mockImplementation(() => 'ImMixed-Case/WithSome\\Separator$');
+      electron.app.getPath.mockImplementation(() => 'ImMixed-Case/WithSome\\Separator$');
       // When
       main.init();
-      expect(mockApp.setPath).toHaveBeenCalledWith('userData', 'immixed-case/withsome\\separator$');
+      expect(electron.app.setPath).toHaveBeenCalledWith('userData', 'immixed-case/withsome\\separator$');
     });
     test('initDesktopCapturerHandler, should register desktopCapturer', () => {
       // Given
@@ -250,7 +254,7 @@ describe('Main module test suite', () => {
         // Then
         expect(tabManagerModule.addTabs).not.toHaveBeenCalled();
         expect(addTabsNested).not.toHaveBeenCalled();
-        expect(mockBrowserWindow.webContents.loadURL)
+        expect(mockBrowserView.webContents.loadURL)
           .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
       });
       test('Previous saved tabs in loaded settings, should add tabs to manager and activate them as they are added', () => {
@@ -311,8 +315,8 @@ describe('Main module test suite', () => {
         // When
         mockIpc.listeners.activateTab({}, {id: 'validId'});
         // Then
-        expect(mockBrowserWindow.setBrowserView).toHaveBeenCalledBefore(mockBrowserWindow.setBounds);
-        expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledBefore(mockBrowserWindow.setBounds);
+        expect(mockBrowserWindow.setBrowserView).toHaveBeenCalledBefore(mockBrowserView.setBounds);
+        expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledBefore(mockBrowserView.setBounds);
         expect(mockBrowserWindow.setBrowserView).toHaveBeenCalledBefore(activeTab.setBounds);
         expect(mockBrowserWindow.addBrowserView).toHaveBeenCalledBefore(activeTab.setBounds);
       });
@@ -337,7 +341,7 @@ describe('Main module test suite', () => {
       // When
       mockIpc.listeners.notificationClick({}, {tabId: 'validId'});
       // Then
-      expect(mockBrowserWindow.webContents.send).toHaveBeenCalledWith('activateTabInContainer', {tabId: 'validId'});
+      expect(mockBrowserView.webContents.send).toHaveBeenCalledWith('activateTabInContainer', {tabId: 'validId'});
       expect(mockBrowserWindow.restore).toHaveBeenCalledTimes(1);
       expect(mockBrowserWindow.show).toHaveBeenCalledTimes(1);
       expect(tabManagerModule.getTab).toHaveBeenCalledWith('validId');
@@ -469,7 +473,7 @@ describe('Main module test suite', () => {
         expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledWith(settingsView);
         expect(tabManagerModule.removeAll).toHaveBeenCalledTimes(1);
         expect(settingsView.webContents.destroy).toHaveBeenCalledTimes(1);
-        expect(mockBrowserWindow.webContents.destroy).toHaveBeenCalledTimes(1);
+        expect(mockBrowserView.webContents.destroy).toHaveBeenCalledTimes(1);
       });
       test('should set saved theme', () => {
         // When
@@ -524,7 +528,7 @@ describe('Main module test suite', () => {
       // When
       mockIpc.listeners.settingsOpenDialog();
       // Then
-      expect(mockBrowserWindow.webContents.loadURL)
+      expect(mockBrowserView.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
     });
     test('helpOpenDialog, should open help dialog', () => {
@@ -533,7 +537,7 @@ describe('Main module test suite', () => {
       // When
       mockIpc.listeners.helpOpenDialog();
       // Then
-      expect(mockBrowserWindow.webContents.loadURL)
+      expect(mockBrowserView.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/help\/index.html$/));
     });
   });

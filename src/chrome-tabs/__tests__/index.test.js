@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 /*
    Copyright 2022 Marc Nuri San Felix
 
@@ -14,30 +17,49 @@
    limitations under the License.
  */
 describe('Chrome Tabs Module module test suite', () => {
-  let mockBrowserView;
-  let mainWindow;
   let chromeTabs;
   beforeEach(() => {
     jest.resetModules();
-    mockBrowserView = require('../../__tests__').mockBrowserWindowInstance();
-    jest.mock('electron', () => ({
-      BrowserView: jest.fn(() => mockBrowserView)
+    jest.mock('../check-for-updates', () => ({
+      getLatestRelease: () => Promise.resolve({})
     }));
-    mainWindow = {
-      addBrowserView: jest.fn()
-    };
+    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     chromeTabs = require('../');
   });
   describe('newTabContainer', () => {
     test('webPreferences is sandboxed and has no node integration', () => {
       // When
-      chromeTabs.newTabContainer(mainWindow);
+      chromeTabs.newTabContainer();
       // Then
       const BrowserView = require('electron').BrowserView;
       expect(BrowserView).toHaveBeenCalledTimes(1);
       expect(BrowserView).toHaveBeenCalledWith({
         webPreferences: expect.objectContaining({sandbox: true, nodeIntegration: false})
       });
+    });
+    test('checks for updates', async () => {
+      // Given
+      const {browserViewInstance} = require('electron');
+      let resolveSend;
+      const isSent = new Promise(resolve => {
+        resolveSend = resolve;
+      });
+      browserViewInstance.webContents.send = jest.fn(() => resolveSend(true));
+      // When
+      chromeTabs.newTabContainer();
+      // Then
+      await expect(isSent).resolves.toBe(true);
+      expect(browserViewInstance.webContents.send).toHaveBeenCalledWith('electronimNewVersionAvailable', true);
+    });
+    test('sets interval to check for updates with unref', () => {
+      // Given
+      const unref = jest.fn();
+      global.setInterval = jest.fn(() => ({unref}));
+      // When
+      chromeTabs.newTabContainer();
+      // Then
+      expect(setInterval).toHaveBeenCalled();
+      expect(unref).toHaveBeenCalled();
     });
   });
 });
