@@ -25,6 +25,7 @@ const TAG_MATCHER = new RegExp(`${GITHUB_RELEASES}/tag/(.+)`);
  * @returns {Promise<{matchesCurrent: boolean, version: string}>}
  */
 const getLatestRelease = async () => {
+  // Use HTTP endpoint instead of API to avoid rate limits
   const response = await axios.get(GITHUB_RELEASES_LATEST, {
     headers: {Accept: '*/*'},
     maxRedirects: 0,
