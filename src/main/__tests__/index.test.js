@@ -36,24 +36,17 @@ describe('Main module test suite', () => {
     jest.useFakeTimers({doNotFake: ['setInterval']});
     mockNotification = jest.fn();
     mockDesktopCapturer = {};
-    mockIpc = {
-      handle: jest.fn(),
-      listeners: {},
-      on: jest.fn((eventName, func) => {
-        mockIpc.listeners[eventName] = func;
-      })
-    };
     mockNativeTheme = {};
     mockSettings = {};
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance({
       Notification: jest.fn(() => mockNotification),
       desktopCapturer: mockDesktopCapturer,
-      ipcMain: mockIpc,
       nativeTheme: mockNativeTheme
     }));
     electron = require('electron');
     mockBrowserView = electron.browserViewInstance;
     mockBrowserWindow = electron.browserWindowInstance;
+    mockIpc = electron.ipcMain;
     appMenuModule = require('../../app-menu');
     jest.spyOn(appMenuModule, 'newAppMenu');
     settingsModule = require('../../settings');
@@ -455,6 +448,7 @@ describe('Main module test suite', () => {
     beforeEach(() => {
       settingsView = {webContents: {destroy: jest.fn()}};
       mockBrowserWindow.getBrowserView = jest.fn(() => settingsView);
+      mockBrowserWindow.getBrowserViews = jest.fn(() => [settingsView]);
     });
     describe('saveSettings', () => {
       beforeEach(() => {
@@ -488,16 +482,28 @@ describe('Main module test suite', () => {
         expect(mockNativeTheme.themeSource).toEqual('system');
       });
     });
-    test('closeDialog, should destroy dialog view and activate current tab', () => {
-      // Given
-      jest.spyOn(tabManagerModule, 'getActiveTab').mockImplementation();
-      main.init();
-      // When
-      mockIpc.listeners.closeDialog();
-      // Then
-      expect(settingsModule.updateSettings).not.toHaveBeenCalled();
-      expect(tabManagerModule.getActiveTab).toHaveBeenCalledTimes(1);
-      expect(settingsView.webContents.destroy).toHaveBeenCalledTimes(1);
+    describe('closeDialog', () => {
+      beforeEach(() => {
+        jest.spyOn(tabManagerModule, 'getActiveTab').mockImplementation();
+        main.init();
+      });
+      test('should destroy dialog view and activate current tab', () => {
+        // When
+        mockIpc.listeners.closeDialog();
+        // Then
+        expect(settingsModule.updateSettings).not.toHaveBeenCalled();
+        expect(tabManagerModule.getActiveTab).toHaveBeenCalledTimes(1);
+        expect(settingsView.webContents.destroy).toHaveBeenCalledTimes(1);
+      });
+      test('should return if no dialog is shown (>1 view)', () => {
+        // Given
+        mockBrowserWindow.getBrowserViews = jest.fn(() => [{}, {}]);
+        // When
+        mockIpc.listeners.closeDialog();
+        // Then
+        expect(settingsModule.updateSettings).not.toHaveBeenCalled();
+        expect(tabManagerModule.getActiveTab).not.toHaveBeenCalled();
+      });
     });
     test('appMenuOpen, should show and resize app-menu', () => {
       // Given

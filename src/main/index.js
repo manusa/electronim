@@ -13,7 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {BrowserWindow, Notification, app, desktopCapturer, ipcMain: ipc, nativeTheme} = require('electron');
+const {BrowserWindow, Notification, app, desktopCapturer, ipcMain: eventBus, nativeTheme} = require('electron');
+const {registerGlobalShortcuts} = require('./keyboard-shortcuts');
 const {APP_EVENTS} = require('../constants');
 const {newAppMenu, isNotAppMenu} = require('../app-menu');
 const {TABS_CONTAINER_HEIGHT, newTabContainer, isNotTabContainer} = require('../chrome-tabs');
@@ -121,7 +122,7 @@ const handleTabReorder = (_event, {tabIds: visibleTabIds}) => {
 };
 
 const initTabListener = () => {
-  ipc.on(APP_EVENTS.tabsReady, event => {
+  eventBus.on(APP_EVENTS.tabsReady, event => {
     const currentSettings = loadSettings();
     const tabs = currentSettings.tabs
       .filter(tab => !tab.disabled)
@@ -133,27 +134,27 @@ const initTabListener = () => {
       openSettingsDialog(mainWindow)();
     }
   });
-  ipc.on(APP_EVENTS.activateTab, (_event, data) => activateTab(data.id));
-  ipc.on(APP_EVENTS.canNotify, (event, tabId) => {
+  eventBus.on(APP_EVENTS.activateTab, (_event, data) => activateTab(data.id));
+  eventBus.on(APP_EVENTS.canNotify, (event, tabId) => {
     event.returnValue = tabManager.canNotify(tabId);
   });
-  ipc.on(APP_EVENTS.notificationClick, (_event, {tabId}) => {
+  eventBus.on(APP_EVENTS.notificationClick, (_event, {tabId}) => {
     tabContainer.webContents.send(APP_EVENTS.activateTabInContainer, {tabId});
     mainWindow.restore();
     mainWindow.show();
     activateTab(tabId);
   });
-  ipc.on(APP_EVENTS.reload, handleTabReload);
-  ipc.on(APP_EVENTS.tabReorder, handleTabReorder);
-  ipc.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(tabManager.getNextTab));
-  ipc.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(tabManager.getPreviousTab));
-  ipc.on(APP_EVENTS.zoomIn, handleZoomIn);
-  ipc.on(APP_EVENTS.zoomOut, handleZoomOut);
-  ipc.on(APP_EVENTS.zoomReset, handleZoomReset);
+  eventBus.on(APP_EVENTS.reload, handleTabReload);
+  eventBus.on(APP_EVENTS.tabReorder, handleTabReorder);
+  eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(tabManager.getNextTab));
+  eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(tabManager.getPreviousTab));
+  eventBus.on(APP_EVENTS.zoomIn, handleZoomIn);
+  eventBus.on(APP_EVENTS.zoomOut, handleZoomOut);
+  eventBus.on(APP_EVENTS.zoomReset, handleZoomReset);
 };
 
 const initDesktopCapturerHandler = () => {
-  ipc.handle(APP_EVENTS.desktopCapturerGetSources, (_event, opts) => desktopCapturer.getSources(opts));
+  eventBus.handle(APP_EVENTS.desktopCapturerGetSources, (_event, opts) => desktopCapturer.getSources(opts));
 };
 
 const appMenuOpen = () => {
@@ -168,6 +169,9 @@ const appMenuClose = () => {
 };
 
 const closeDialog = () => {
+  if (mainWindow.getBrowserViews().length > 1) {
+    return;
+  }
   const dialogView = mainWindow.getBrowserView();
   activateTab(tabManager.getActiveTab());
   dialogView.webContents.destroy();
@@ -186,16 +190,16 @@ const saveSettings = (_event, settings) => {
 };
 
 const initGlobalListeners = () => {
-  ipc.on(APP_EVENTS.appMenuOpen, appMenuOpen);
-  ipc.on(APP_EVENTS.appMenuClose, appMenuClose);
-  ipc.on(APP_EVENTS.closeDialog, closeDialog);
-  ipc.handle(APP_EVENTS.dictionaryGetAvailable, getAvailableDictionaries);
-  ipc.handle(APP_EVENTS.dictionaryGetAvailableNative, getAvailableNativeDictionaries);
-  ipc.handle(APP_EVENTS.dictionaryGetEnabled, getEnabledDictionaries);
-  ipc.on(APP_EVENTS.helpOpenDialog, openHelpDialog(mainWindow));
-  ipc.handle(APP_EVENTS.settingsLoad, loadSettings);
-  ipc.on(APP_EVENTS.settingsOpenDialog, openSettingsDialog(mainWindow));
-  ipc.on(APP_EVENTS.settingsSave, saveSettings);
+  eventBus.on(APP_EVENTS.appMenuOpen, appMenuOpen);
+  eventBus.on(APP_EVENTS.appMenuClose, appMenuClose);
+  eventBus.on(APP_EVENTS.closeDialog, closeDialog);
+  eventBus.handle(APP_EVENTS.dictionaryGetAvailable, getAvailableDictionaries);
+  eventBus.handle(APP_EVENTS.dictionaryGetAvailableNative, getAvailableNativeDictionaries);
+  eventBus.handle(APP_EVENTS.dictionaryGetEnabled, getEnabledDictionaries);
+  eventBus.on(APP_EVENTS.helpOpenDialog, openHelpDialog(mainWindow));
+  eventBus.handle(APP_EVENTS.settingsLoad, loadSettings);
+  eventBus.on(APP_EVENTS.settingsOpenDialog, openSettingsDialog(mainWindow));
+  eventBus.on(APP_EVENTS.settingsSave, saveSettings);
 };
 
 const browserVersionsReady = () => {
@@ -205,6 +209,7 @@ const browserVersionsReady = () => {
 };
 
 const init = () => {
+  registerGlobalShortcuts();
   fixUserDataLocation();
   loadDictionaries();
   const {width = 800, height = 600, theme} = loadSettings();

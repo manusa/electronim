@@ -52,7 +52,7 @@ const mockBrowserWindowInstance = () => {
 const mockElectronInstance = ({...overriddenProps} = {}) => {
   const browserViewInstance = mockBrowserWindowInstance();
   const browserWindowInstance = mockBrowserWindowInstance();
-  return {
+  const instance = {
     BrowserView: jest.fn(() => browserViewInstance),
     browserViewInstance,
     BrowserWindow: jest.fn(() => browserWindowInstance),
@@ -63,6 +63,26 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
       getPath: jest.fn(),
       setPath: jest.fn()
     },
+    globalShortcut: {
+      listeners: {},
+      register: jest.fn((accelerator, callback) => {
+        instance.globalShortcut.listeners[accelerator] = callback;
+      })
+    },
+    ipcMain: {
+      listeners: {},
+      emit: jest.fn(),
+      handle: jest.fn((eventName, func) => {
+        instance.ipcMain.listeners[eventName] = func;
+      }),
+      on: jest.fn((eventName, func) => {
+        instance.ipcMain.listeners[eventName] = func;
+      }),
+      removeHandler: jest.fn(eventName => {
+        delete instance.ipcMain.listeners[eventName];
+      })
+    },
+    nativeTheme: {},
     session: {
       fromPartition: jest.fn(() => ({
         userAgentInterceptor: true
@@ -71,6 +91,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     },
     ...overriddenProps
   };
+  return instance;
 };
 
 module.exports = {mockBrowserWindowInstance, mockElectronInstance};
