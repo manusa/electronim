@@ -16,10 +16,11 @@
 
 const mockBrowserWindowInstance = () => {
   const instance = {
+    listeners: {},
     addBrowserView: jest.fn(),
     destroy: jest.fn(),
     getContentBounds: jest.fn(() => ({})),
-    listeners: {},
+    isFullScreen: jest.fn(() => false),
     loadURL: jest.fn(),
     on: jest.fn((eventName, func) => {
       instance.listeners[eventName] = func;
@@ -29,6 +30,7 @@ const mockBrowserWindowInstance = () => {
     setAutoResize: jest.fn(),
     setBounds: jest.fn(),
     setBrowserView: jest.fn(),
+    setFullScreen: jest.fn(),
     webContents: {
       copy: jest.fn(),
       copyImageAt: jest.fn(),

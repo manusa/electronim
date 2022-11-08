@@ -21,6 +21,7 @@ const registerGlobalShortcuts = () => {
     eventBus.emit(APP_EVENTS.appMenuClose);
     eventBus.emit(APP_EVENTS.closeDialog);
   });
+  globalShortcut.register('F11', () => eventBus.emit(APP_EVENTS.fullscreenToggle));
 };
 
 module.exports = {registerGlobalShortcuts};

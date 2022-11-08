@@ -168,6 +168,10 @@ const appMenuClose = () => {
   activateTab(tabManager.getActiveTab());
 };
 
+const fullscreenToggle = () => {
+  mainWindow.setFullScreen(!mainWindow.isFullScreen());
+};
+
 const closeDialog = () => {
   if (mainWindow.getBrowserViews().length > 1) {
     return;
@@ -196,6 +200,7 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.dictionaryGetAvailable, getAvailableDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetAvailableNative, getAvailableNativeDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetEnabled, getEnabledDictionaries);
+  eventBus.on(APP_EVENTS.fullscreenToggle, fullscreenToggle);
   eventBus.on(APP_EVENTS.helpOpenDialog, openHelpDialog(mainWindow));
   eventBus.handle(APP_EVENTS.settingsLoad, loadSettings);
   eventBus.on(APP_EVENTS.settingsOpenDialog, openSettingsDialog(mainWindow));

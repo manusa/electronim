@@ -21,11 +21,11 @@ describe('Global Keyboard Shortcuts module test suite', () => {
     require('../').init();
     electron = require('electron');
   });
-  describe('Escape', () => {
-    test.each(['appMenuClose', 'closeDialog'])('callback triggers %s', appEvent => {
-      // eslint-disable-next-line new-cap
-      electron.globalShortcut.listeners.Escape();
-      expect(electron.ipcMain.emit).toHaveBeenCalledWith(appEvent);
-    });
+  test.each([
+    ['Escape', 'appMenuClose'], ['Escape', 'closeDialog'],
+    ['F11', 'fullscreenToggle']
+  ])('Accelerator "%s" triggers "%s" app event', (accelerator, appEvent) => {
+    electron.globalShortcut.listeners[accelerator]();
+    expect(electron.ipcMain.emit).toHaveBeenCalledWith(appEvent);
   });
 });
