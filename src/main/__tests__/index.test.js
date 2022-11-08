@@ -528,6 +528,26 @@ describe('Main module test suite', () => {
       expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledTimes(1);
       expect(mockBrowserWindow.removeBrowserView).toHaveBeenCalledWith(mockAppMenu);
     });
+    describe('fullscreenToggle', () => {
+      test('when not fullscreen, should enter fullscreen', () => {
+        // Given
+        mockBrowserWindow.isFullScreen.mockReturnValue(false);
+        main.init();
+        // When
+        mockIpc.listeners.fullscreenToggle();
+        // Then
+        expect(mockBrowserWindow.setFullScreen).toHaveBeenCalledWith(true);
+      });
+      test('when in fullscreen, should leave fullscreen', () => {
+        // Given
+        mockBrowserWindow.isFullScreen.mockReturnValue(true);
+        main.init();
+        // When
+        mockIpc.listeners.fullscreenToggle();
+        // Then
+        expect(mockBrowserWindow.setFullScreen).toHaveBeenCalledWith(false);
+      });
+    });
     test('settingsOpenDialog, should open settings dialog', () => {
       // Given
       main.init();
