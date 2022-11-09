@@ -20,7 +20,7 @@ const mockBrowserWindowInstance = () => {
     addBrowserView: jest.fn(),
     destroy: jest.fn(),
     getContentBounds: jest.fn(() => ({})),
-    isFullScreen: jest.fn(() => false),
+    isFullScreen: jest.fn(),
     loadURL: jest.fn(),
     on: jest.fn((eventName, func) => {
       instance.listeners[eventName] = func;
@@ -32,13 +32,16 @@ const mockBrowserWindowInstance = () => {
     setBrowserView: jest.fn(),
     setFullScreen: jest.fn(),
     webContents: {
+      loadedUrl: '',
       copy: jest.fn(),
       copyImageAt: jest.fn(),
       cut: jest.fn(),
       destroy: jest.fn(),
       executeJavaScript: jest.fn(async () => {}),
       goBack: jest.fn(),
-      loadURL: jest.fn(),
+      loadURL: jest.fn(url => {
+        instance.webContents.loadedUrl = url;
+      }),
       on: jest.fn((...args) => instance.on(...args)),
       openDevTools: jest.fn(),
       paste: jest.fn(),
