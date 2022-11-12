@@ -16,3 +16,21 @@
 .electronim .top-bar.navbar {
   background: var(--color-canvas-default);
 }
+
+.electronim .material3.top-app-bar.small {
+  padding: 0 16px;
+  height: 64px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.electronim .material3.top-app-bar .leading-navigation-icon {
+  font-family: 'Material Symbols Outlined', sans-serif;
+  cursor: pointer;
+  user-select: none;
+}
+.electronim .material3.top-app-bar.small .leading-navigation-icon {
+  width: 24px;
+  text-align: center;
+}

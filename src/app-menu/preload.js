@@ -18,6 +18,7 @@ const {contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
   close: () => ipcRenderer.send(APP_EVENTS.appMenuClose),
+  aboutOpenDialog: () => ipcRenderer.send(APP_EVENTS.aboutOpenDialog),
   helpOpenDialog: () => ipcRenderer.send(APP_EVENTS.helpOpenDialog),
   settingsOpenDialog: () => ipcRenderer.send(APP_EVENTS.settingsOpenDialog)
 });

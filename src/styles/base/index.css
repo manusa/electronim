@@ -15,5 +15,7 @@
  */
 @import './variables.css';
 @import './colors.css';
+@import './material3/index.css';
 @import './base.css';
+@import './fonts.css';
 @import './typography.css';

@@ -33,6 +33,7 @@ const mockBrowserWindowInstance = () => {
     setFullScreen: jest.fn(),
     webContents: {
       loadedUrl: '',
+      browserWindowInstance: () => instance,
       copy: jest.fn(),
       copyImageAt: jest.fn(),
       cut: jest.fn(),
@@ -68,6 +69,9 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
       getPath: jest.fn(),
       setPath: jest.fn()
     },
+    contextBridge: {
+      exposeInMainWorld: jest.fn()
+    },
     globalShortcut: {
       listeners: {},
       register: jest.fn((accelerator, callback) => {
@@ -87,6 +91,9 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
         delete instance.ipcMain.listeners[eventName];
       })
     },
+    ipcRenderer: {
+      send: jest.fn()
+    },
     nativeTheme: {},
     session: {
       fromPartition: jest.fn(() => ({
@@ -96,6 +103,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     },
     ...overriddenProps
   };
+  instance.BrowserWindow.fromWebContents = jest.fn(webContents => webContents.browserWindowInstance());
   return instance;
 };
 

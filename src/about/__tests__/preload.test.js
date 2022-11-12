@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Marc Nuri San Felix
+   Copyright 2022 Marc Nuri San Felix
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,29 +13,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-describe('Help Module preload test suite', () => {
+describe('About Module preload test suite', () => {
   let electron;
   beforeEach(() => {
     jest.resetModules();
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
-    window.APP_EVENTS = require('../../constants').APP_EVENTS;
   });
   describe('preload (just for coverage and sanity, see bundle tests)', () => {
     beforeEach(() => {
-      jest.mock('../help.browser.css', () => {});
-      jest.mock('!val-loader!./docs.browser.val-loader', () => ({
-        docs: {
-          one: 'this is a doc'
-        }
-      }), {virtual: true});
+      global.APP_EVENTS = require('../../constants').APP_EVENTS;
       require('../preload');
     });
     describe('creates an API', () => {
-      test('with doc entries', () => {
+      test('with entries', () => {
         expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
           close: expect.toBeFunction(),
-          docs: {one: 'this is a doc'}
+          versions: expect.toBeObject()
         });
       });
       test('with close function', () => {
@@ -47,17 +41,13 @@ describe('Help Module preload test suite', () => {
   });
   describe('preload.bundle', () => {
     beforeEach(() => {
-      require('../../../bundles/help.preload');
+      require('../../../bundles/about.preload');
     });
-    test('loads document contents with valid asset URLs', () => {
-      const electronApi = electron.contextBridge.exposeInMainWorld.mock.calls[0][1];
-      expect(electronApi.docs).toEqual(expect.objectContaining({
-        'Keyboard-shortcuts.md': expect.stringMatching(/<h1>Keyboard Shortcuts/i),
-        'Roadmap.md': expect.any(String),
-        'Screenshots.md': expect.stringContaining('<img src="../../docs/screenshots/main.png" alt="Main" />'),
-        'Setup.md': expect.stringMatching(/There are several options available/i),
-        'Troubleshooting.md': expect.any(String)
-      }));
+    test('creates an API', () => {
+      expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
+        close: expect.toBeFunction(),
+        versions: expect.toBeObject()
+      });
     });
   });
 });

@@ -16,6 +16,4 @@
 /* eslint-disable no-undef */
 const {ipcRenderer} = require('electron');
 
-require('./settings.browser.css');
-
 window.ipcRenderer = ipcRenderer;

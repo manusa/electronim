@@ -21,6 +21,7 @@ describe('App Menu in Browser test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
     window.electron = {
+      aboutOpenDialog: jest.fn(),
       close: jest.fn(),
       helpOpenDialog: jest.fn(),
       settingsOpenDialog: jest.fn()
@@ -33,45 +34,35 @@ describe('App Menu in Browser test suite', () => {
     // Then
     expect(window.electron.close).toHaveBeenCalledTimes(1);
   });
-  describe('Settings entry', () => {
-    let settings;
+  describe.each([
+    {testId: 'about', icon: 'fas fa-info-circle', label: 'About', expectedFunction: 'aboutOpenDialog'},
+    {testId: 'help', icon: 'fas fa-question-circle', label: 'Help', expectedFunction: 'helpOpenDialog'},
+    {testId: 'settings', icon: 'fas fa-cog', label: 'Settings', expectedFunction: 'settingsOpenDialog'}
+  ])('$label entry', ({testId, icon, label, expectedFunction}) => {
+    let entry;
     beforeEach(() => {
-      settings = getByTestId(document, 'settings-menu-entry');
+      entry = getByTestId(document, `${testId}-menu-entry`);
     });
     test('should be visible', () => {
-      expect(settings.getAttribute('class'))
+      expect(entry.getAttribute('class'))
         .toMatch(/^dropdown-item*/);
-      expect(settings.textContent).toBe('Settings');
+      expect(entry.textContent).toBe(label);
     });
-    test('click, should open settings dialog', () => {
+    test(`should have icon ${icon}`, () => {
+      expect(entry.querySelector('i').getAttribute('class')).toBe(icon);
+    });
+    test('click, should invoke function', () => {
       // When
-      fireEvent.click(settings);
+      fireEvent.click(entry);
       // Then
-      expect(window.electron.settingsOpenDialog).toHaveBeenCalledTimes(1);
+      expect(window.electron[expectedFunction]).toHaveBeenCalledTimes(1);
     });
     test('hover, should activate entry', async () => {
       // When
-      fireEvent.mouseOver(settings);
+      fireEvent.mouseOver(entry);
       // Then
-      await waitFor(() => expect(settings.getAttribute('class'))
+      await waitFor(() => expect(entry.getAttribute('class'))
         .toContain('is-active'));
-    });
-  });
-  describe('Help entry', () => {
-    let help;
-    beforeEach(() => {
-      help = getByTestId(document, 'help-menu-entry');
-    });
-    test('should be visible', () => {
-      expect(help.getAttribute('class'))
-        .toMatch(/^dropdown-item*/);
-      expect(help.textContent).toBe('Help');
-    });
-    test('click, should open settings dialog', () => {
-      // When
-      fireEvent.click(help);
-      // Then
-      expect(window.electron.helpOpenDialog).toHaveBeenCalledTimes(1);
     });
   });
 });
