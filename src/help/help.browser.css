@@ -16,14 +16,13 @@
 @import '../styles/main.css';
 
 :root {
-  --top-bar-height: 60px;
   --toc-min-width: 250px;
   overflow: hidden;
 }
 
 .help-root {
   position: fixed;
-  top: var(--top-bar-height);
+  top: var(--material3-top-app-bar-height);
   left: 0;
   bottom: 0;
   right: 0;
@@ -87,6 +86,10 @@
   list-style: decimal;
   padding-left: 2rem;
   margin-bottom: var(--default-spacing);
+}
+
+.documents-container img {
+  max-width: 100%;
 }
 
 .documents-container .documents-footer {

@@ -53,7 +53,7 @@ describe('Help in Browser test suite', () => {
   describe('Main Button events', () => {
     test('Close should send close dialog event', () => {
       // When
-      fireEvent.click(document.querySelector('.button.is-link.is-light'));
+      fireEvent.click(document.querySelector('.top-app-bar .leading-navigation-icon'));
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('closeDialog');

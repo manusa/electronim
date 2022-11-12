@@ -17,9 +17,24 @@
   background: var(--color-canvas-default);
 }
 
+:root {
+  --material3-top-app-bar-height: 64px;
+}
+
+.electronim body.has-top-app-bar {
+  margin-top: var(--material3-top-app-bar-height);
+}
+
+.electronim .material3.top-app-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
 .electronim .material3.top-app-bar.small {
   padding: 0 16px;
-  height: 64px;
+  height: var(--material3-top-app-bar-height);
   display: flex;
   gap: 16px;
   align-items: center;
@@ -30,6 +45,7 @@
   cursor: pointer;
   user-select: none;
 }
+
 .electronim .material3.top-app-bar.small .leading-navigation-icon {
   width: 24px;
   text-align: center;
