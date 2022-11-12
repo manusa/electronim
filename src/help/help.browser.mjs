@@ -15,7 +15,7 @@
  */
 const {docs, close} = window.electron;
 
-import {ELECTRONIM_VERSION, TopBar, html, render} from '../components/index.mjs';
+import {ELECTRONIM_VERSION, html, render, TopAppBar} from '../components/index.mjs';
 
 const helpRoot = () => document.querySelector('.help-root');
 
@@ -53,14 +53,8 @@ const Content = () => html`
 `;
 
 const Help = () => html`
-    <${TopBar} fixed=${true} title='Help'
-      endComponents=${html`
-        <div class='navbar-item'>
-          <button class="button is-link is-light" onClick=${close}>Close</button>
-        </div>
-      `}
-    />
-    <div class="help-content">
+    <${TopAppBar} headline='Help' icon='\uE5C4' iconClick=${close} />
+    <div class="help-content body-large">
       <${Toc} />
       <${Content} />
     </div>

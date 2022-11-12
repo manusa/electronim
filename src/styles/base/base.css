@@ -60,6 +60,12 @@ html.electronim,
   border-radius: 6px;
   font-size: 85%;
   padding: 16px;
+  overflow-x: auto;
+}
+
+.electronim table {
+  border-spacing: 0;
+  border-collapse: collapse;
 }
 
 .electronim table th,
