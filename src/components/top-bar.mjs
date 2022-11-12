@@ -38,3 +38,23 @@ export const TopBar = ({
     </nav>
   `;
 };
+
+/**
+ * A top app bar based on Material design (3) guidelines.
+ *
+ * @param icon represented using a Material Icon codepoint.
+ * @param iconClick callback function to be executed when the icon is clicked.
+ * @param headline the headline of the app bar.
+ * @see https://m3.material.io/components/top-app-bar
+ */
+export const TopAppBar = ({
+  icon,
+  iconClick = () => {},
+  headline
+}) => html`
+  <div class='material3 top-app-bar small elevation-0 surface'>
+    <div class='leading-navigation-icon title-large' onClick=${iconClick}>${icon}</div>
+    <div class='top-app-bar__headline title-large'>${headline}</div>
+    <div class='trailing-icon title-large'></div>
+  </div>
+`;

@@ -16,6 +16,7 @@
 const {BrowserWindow, Notification, app, desktopCapturer, ipcMain: eventBus, nativeTheme} = require('electron');
 const {registerGlobalShortcuts} = require('./keyboard-shortcuts');
 const {APP_EVENTS} = require('../constants');
+const {openAboutDialog} = require('../about');
 const {newAppMenu, isNotAppMenu} = require('../app-menu');
 const {TABS_CONTAINER_HEIGHT, newTabContainer, isNotTabContainer} = require('../chrome-tabs');
 const {openHelpDialog} = require('../help');
@@ -164,6 +165,9 @@ const appMenuOpen = () => {
 };
 
 const appMenuClose = () => {
+  if (!mainWindow.getBrowserViews().find(bv => bv.isAppMenu)) {
+    return;
+  }
   mainWindow.removeBrowserView(appMenu);
   activateTab(tabManager.getActiveTab());
 };
@@ -194,6 +198,7 @@ const saveSettings = (_event, settings) => {
 };
 
 const initGlobalListeners = () => {
+  eventBus.on(APP_EVENTS.aboutOpenDialog, openAboutDialog);
   eventBus.on(APP_EVENTS.appMenuOpen, appMenuOpen);
   eventBus.on(APP_EVENTS.appMenuClose, appMenuClose);
   eventBus.on(APP_EVENTS.closeDialog, closeDialog);
@@ -201,7 +206,7 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.dictionaryGetAvailableNative, getAvailableNativeDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetEnabled, getEnabledDictionaries);
   eventBus.on(APP_EVENTS.fullscreenToggle, fullscreenToggle);
-  eventBus.on(APP_EVENTS.helpOpenDialog, openHelpDialog(mainWindow));
+  eventBus.on(APP_EVENTS.helpOpenDialog, openHelpDialog);
   eventBus.handle(APP_EVENTS.settingsLoad, loadSettings);
   eventBus.on(APP_EVENTS.settingsOpenDialog, openSettingsDialog(mainWindow));
   eventBus.on(APP_EVENTS.settingsSave, saveSettings);

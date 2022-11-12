@@ -17,10 +17,7 @@ describe('App Menu Module preload test suite', () => {
   let electron;
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('electron', () => ({
-      contextBridge: {exposeInMainWorld: jest.fn()},
-      ipcRenderer: {send: jest.fn()}
-    }));
+    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
   });
   describe('preload (just for coverage and sanity, see bundle tests)', () => {
@@ -30,6 +27,7 @@ describe('App Menu Module preload test suite', () => {
     });
     test('creates an API', () => {
       expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
+        aboutOpenDialog: expect.toBeFunction(),
         close: expect.toBeFunction(),
         helpOpenDialog: expect.toBeFunction(),
         settingsOpenDialog: expect.toBeFunction()
@@ -40,17 +38,14 @@ describe('App Menu Module preload test suite', () => {
       beforeEach(() => {
         api = electron.contextBridge.exposeInMainWorld.mock.calls[0][1];
       });
-      test('close, invokes appMenuClose', () => {
-        api.close();
-        expect(electron.ipcRenderer.send).toHaveBeenCalledWith('appMenuClose');
-      });
-      test('helpOpenDialog, invokes helpOpenDialog', () => {
-        api.helpOpenDialog();
-        expect(electron.ipcRenderer.send).toHaveBeenCalledWith('helpOpenDialog');
-      });
-      test('settingsOpenDialog, invokes settingsOpenDialog', () => {
-        api.settingsOpenDialog();
-        expect(electron.ipcRenderer.send).toHaveBeenCalledWith('settingsOpenDialog');
+      test.each([
+        ['aboutOpenDialog', 'aboutOpenDialog'],
+        ['close', 'appMenuClose'],
+        ['helpOpenDialog', 'helpOpenDialog'],
+        ['settingsOpenDialog', 'settingsOpenDialog']
+      ])('%s invokes %s', (apiMethod, event) => {
+        api[apiMethod]();
+        expect(electron.ipcRenderer.send).toHaveBeenCalledWith(event);
       });
     });
   });
@@ -60,6 +55,7 @@ describe('App Menu Module preload test suite', () => {
     });
     test('creates an API', () => {
       expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
+        aboutOpenDialog: expect.toBeFunction(),
         close: expect.toBeFunction(),
         helpOpenDialog: expect.toBeFunction(),
         settingsOpenDialog: expect.toBeFunction()

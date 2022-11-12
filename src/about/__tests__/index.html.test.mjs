@@ -13,12 +13,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-export {APP_EVENTS, ELECTRONIM_VERSION} from '../../bundles/constants.mjs';
-export {html, render, useLayoutEffect, useReducer, useState} from '../../bundles/preact.mjs';
+import {jest} from '@jest/globals';
+import {loadDOM} from '../../__tests__/index.mjs';
 
-export {Card} from './card.mjs';
-export {Checkbox, Field, HorizontalField, Select, sizes} from './form/index.mjs';
-export {DropDown} from './drop-down.mjs';
-export {Icon} from './icon.mjs';
-export {Panel} from './panel.mjs';
-export {TopBar, TopAppBar} from './top-bar.mjs';
+describe('About index.html test suite', () => {
+  beforeEach(async () => {
+    jest.resetModules();
+    window.electron = {
+      close: jest.fn(),
+      versions: {}
+    };
+    await loadDOM({meta: import.meta, path: ['..', 'index.html']});
+  });
+  test('loads required styles', () => {
+    expect(Array.from(document.querySelectorAll('link[rel=stylesheet]'))
+      .map(link => link.getAttribute('href')))
+      .toEqual(['./about.browser.css']);
+  });
+});

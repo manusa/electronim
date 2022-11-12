@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Marc Nuri San Felix
+   Copyright 2022 Marc Nuri San Felix
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,16 +22,16 @@ const webPreferences = {
   contextIsolation: true,
   nodeIntegration: false,
   sandbox: true,
-  preload: path.resolve(__dirname, '..', '..', 'bundles', 'help.preload.js')
+  preload: path.resolve(__dirname, '..', '..', 'bundles', 'about.preload.js')
 };
 
-const openHelpDialog = event => {
-  const helpView = new BrowserView({webPreferences});
-  helpView.webContents.loadURL(`file://${__dirname}/index.html`);
-  const handleRedirectForCurrentUrl = handleRedirect(helpView);
-  helpView.webContents.on('will-navigate', handleRedirectForCurrentUrl);
-  helpView.webContents.on('new-window', handleRedirectForCurrentUrl);
-  showDialog(BrowserWindow.fromWebContents(event.sender), helpView);
+const openAboutDialog = event => {
+  const aboutView = new BrowserView({webPreferences});
+  aboutView.webContents.loadURL(`file://${__dirname}/index.html`);
+  const handleRedirectForCurrentUrl = handleRedirect(aboutView);
+  aboutView.webContents.on('will-navigate', handleRedirectForCurrentUrl);
+  aboutView.webContents.on('new-window', handleRedirectForCurrentUrl);
+  showDialog(BrowserWindow.fromWebContents(event.sender), aboutView);
 };
 
-module.exports = {openHelpDialog};
+module.exports = {openAboutDialog};

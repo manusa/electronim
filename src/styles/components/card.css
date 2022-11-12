@@ -13,12 +13,19 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-export {APP_EVENTS, ELECTRONIM_VERSION} from '../../bundles/constants.mjs';
-export {html, render, useLayoutEffect, useReducer, useState} from '../../bundles/preact.mjs';
+:root {
+  --material3-card-padding: 16px;
+}
 
-export {Card} from './card.mjs';
-export {Checkbox, Field, HorizontalField, Select, sizes} from './form/index.mjs';
-export {DropDown} from './drop-down.mjs';
-export {Icon} from './icon.mjs';
-export {Panel} from './panel.mjs';
-export {TopBar, TopAppBar} from './top-bar.mjs';
+.electronim .material3.card:hover {
+  background-color: var(--md-sys-color-secondary-container);
+}
+
+.electronim .material3.card .card__content {
+  padding: var(--material3-card-padding);
+}
+
+.electronim .material3.card .card__divider {
+  margin: 8px calc(-1 * var(--material3-card-padding));
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}

@@ -50,13 +50,25 @@ describe('Main :: Global listeners module test suite', () => {
       x: 0, y: 0
     }));
   });
-  test('appMenuClose, should hide app-menu', () => {
-    // When
-    eventBus.listeners.appMenuClose();
-    // Then
-    expect(browserWindow.removeBrowserView).toHaveBeenCalledWith(
-      expect.objectContaining({isAppMenu: true})
-    );
+  describe('appMenuClose', () => {
+    test('with menu hidden, should return', () => {
+      // Given
+      browserWindow.getBrowserViews = jest.fn(() => []);
+      // When
+      eventBus.listeners.appMenuClose();
+      // Then
+      expect(browserWindow.removeBrowserView).not.toHaveBeenCalled();
+    });
+    test('with menu visible, should hide app-menu', () => {
+      // Given
+      browserWindow.getBrowserViews = jest.fn(() => [{isAppMenu: true}]);
+      // When
+      eventBus.listeners.appMenuClose();
+      // Then
+      expect(browserWindow.removeBrowserView).toHaveBeenCalledWith(
+        expect.objectContaining({isAppMenu: true})
+      );
+    });
   });
   describe('closeDialog', () => {
     describe('with dialog visible (<= 1 view)', () => {
@@ -121,7 +133,7 @@ describe('Main :: Global listeners module test suite', () => {
   });
   test('helpOpenDialog, should open help dialog', () => {
     // When
-    eventBus.listeners.helpOpenDialog();
+    eventBus.listeners.helpOpenDialog({sender: browserWindow.webContents});
     // Then
     const browserView = electron.BrowserView.mock.results
       .map(r => r.value).filter(bv => bv.webContents.loadedUrl.endsWith('/help/index.html'))[0];

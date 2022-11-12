@@ -15,9 +15,15 @@
  */
 import {html, render, DropDown, Icon} from '../components/index.mjs';
 
-const {close, helpOpenDialog, settingsOpenDialog} = window.electron;
+const {aboutOpenDialog, close, helpOpenDialog, settingsOpenDialog} = window.electron;
 
 const getAppMenu = () => document.querySelector('.app-menu');
+
+const MenuItem = ({icon, label, onClick, testId}) => html`
+  <${DropDown.Item} data-testid=${testId} onClick=${onClick}>
+    <${Icon} icon=${icon}>${label}</${Icon}>
+  </${DropDown.Item}>
+`;
 
 const AppMenu = () => {
   const noBubbling = func => e => {
@@ -30,12 +36,12 @@ const AppMenu = () => {
       <div class='scrim'>
         <${DropDown} active=${true}>
         <${DropDown.Menu}>
-          <${DropDown.Item} data-testid='help-menu-entry' onClick=${noBubbling(helpOpenDialog)}>
-            <${Icon} icon='fas fa-question-circle'>Help</${Icon}>
-          </${DropDown.Item}>
-          <${DropDown.Item} data-testid='settings-menu-entry' onClick=${noBubbling(settingsOpenDialog)}>
-            <${Icon} icon='fas fa-cog'>Settings</${Icon}>
-          </${DropDown.Item}>
+          <${MenuItem} icon='fas fa-question-circle' label='Help' testId='help-menu-entry'
+            onClick=${noBubbling(helpOpenDialog)} />
+          <${MenuItem} icon='fas fa-cog' label='Settings' testId='settings-menu-entry'
+            onClick=${noBubbling(settingsOpenDialog)} />
+          <${MenuItem} icon='fas fa-info-circle' label='About' testId='about-menu-entry'
+            onClick=${noBubbling(aboutOpenDialog)} />
         </${DropDown.Menu}>
         </${DropDown}>
       </div>

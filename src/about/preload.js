@@ -13,12 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-export {APP_EVENTS, ELECTRONIM_VERSION} from '../../bundles/constants.mjs';
-export {html, render, useLayoutEffect, useReducer, useState} from '../../bundles/preact.mjs';
+/* eslint-disable no-undef */
+const {contextBridge, ipcRenderer} = require('electron');
 
-export {Card} from './card.mjs';
-export {Checkbox, Field, HorizontalField, Select, sizes} from './form/index.mjs';
-export {DropDown} from './drop-down.mjs';
-export {Icon} from './icon.mjs';
-export {Panel} from './panel.mjs';
-export {TopBar, TopAppBar} from './top-bar.mjs';
+contextBridge.exposeInMainWorld('electron', {
+  close: () => ipcRenderer.send(APP_EVENTS.closeDialog),
+  versions: {...process.versions}
+});

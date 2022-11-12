@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Marc Nuri San Felix
+   Copyright 2022 Marc Nuri San Felix
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,22 +13,22 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-describe('Help module test suite', () => {
+describe('About module test suite', () => {
   let electron;
   let sender;
-  let help;
+  let about;
   beforeEach(() => {
     jest.resetModules();
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
     sender = electron.browserWindowInstance.webContents;
-    help = require('../');
+    about = require('../');
   });
-  describe('openHelpDialog', () => {
+  describe('openAboutDialog', () => {
     describe('webPreferences', () => {
       test('is sandboxed', () => {
         // When
-        help.openHelpDialog({sender});
+        about.openAboutDialog({sender});
         // Then
         const BrowserView = electron.BrowserView;
         expect(BrowserView).toHaveBeenCalledTimes(1);
@@ -38,7 +38,7 @@ describe('Help module test suite', () => {
       });
       test('has no node integration', () => {
         // When
-        help.openHelpDialog({sender});
+        about.openAboutDialog({sender});
         // Then
         expect(electron.BrowserView).toHaveBeenCalledWith({
           webPreferences: expect.objectContaining({nodeIntegration: false})
@@ -46,7 +46,7 @@ describe('Help module test suite', () => {
       });
       test('has context isolation', () => {
         // When
-        help.openHelpDialog({sender});
+        about.openAboutDialog({sender});
         // Then
         expect(electron.BrowserView).toHaveBeenCalledWith({
           webPreferences: expect.objectContaining({contextIsolation: true})
@@ -55,7 +55,7 @@ describe('Help module test suite', () => {
     });
     test('should open dialog and add event listeners', () => {
       // When
-      help.openHelpDialog({sender: electron.browserWindowInstance.webContents});
+      about.openAboutDialog({sender: electron.browserWindowInstance.webContents});
       // Then
       expect(electron.browserViewInstance.webContents.loadURL).toHaveBeenCalledTimes(1);
       expect(electron.browserViewInstance.webContents.loadURL)

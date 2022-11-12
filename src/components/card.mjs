@@ -13,12 +13,25 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-export {APP_EVENTS, ELECTRONIM_VERSION} from '../../bundles/constants.mjs';
-export {html, render, useLayoutEffect, useReducer, useState} from '../../bundles/preact.mjs';
+import {html} from './index.mjs';
 
-export {Card} from './card.mjs';
-export {Checkbox, Field, HorizontalField, Select, sizes} from './form/index.mjs';
-export {DropDown} from './drop-down.mjs';
-export {Icon} from './icon.mjs';
-export {Panel} from './panel.mjs';
-export {TopBar, TopAppBar} from './top-bar.mjs';
+/**
+ A card based on Material design (3) guidelines.
+ */
+export const Card = ({
+  headline,
+  subHeadline,
+  children
+}) => html`
+  <div class='material3 card elevation-1 surface shape-medium body-medium'>
+    <div class='card__content'>
+      <div class='card__headline headline-large'>${headline}</div>
+      ${subHeadline && html`<div class='card__subHeadline headline-small'>${subHeadline}</div>`}
+      <div>${children}</div>
+    </div>
+  </div>
+`;
+
+Card.Divider = () => html`
+  <div class='card__divider' />
+`;
