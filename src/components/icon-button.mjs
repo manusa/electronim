@@ -13,9 +13,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-@import './palette.css';
-@import './colors.css';
-@import './elevation.css';
-@import './shape.css';
-@import './state-layer.css';
-@import './typography.css';
+import {html} from './index.mjs';
+
+export const IconButton = ({
+  icon,
+  onClick = () => {},
+  disabled = false,
+  className = ''
+}) => html`
+  <a href='#'
+    class=${`material3 icon-button ${disabled ? 'disabled ' : ''}${className}`}
+    onClick=${disabled ? null : onClick}>${icon}</a>
+`;

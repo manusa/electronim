@@ -41,9 +41,7 @@
 }
 
 .electronim .material3.top-app-bar .leading-navigation-icon {
-  font-family: 'Material Symbols Outlined', sans-serif;
-  cursor: pointer;
-  user-select: none;
+  color: var(--md-sys-color-on-surface);
 }
 
 .electronim .material3.top-app-bar.small .leading-navigation-icon {
