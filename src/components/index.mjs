@@ -22,4 +22,4 @@ export {DropDown} from './drop-down.mjs';
 export {Icon} from './icon.mjs';
 export {IconButton} from './icon-button.mjs';
 export {Panel} from './panel.mjs';
-export {TopBar, TopAppBar} from './top-bar.mjs';
+export {TopAppBar} from './top-app-bar.mjs';

@@ -47,7 +47,7 @@ describe('Settings in Browser test suite', () => {
     });
     test('Cancel should send close dialog event', () => {
       // When
-      fireEvent.click(document.querySelector('.settings__cancel'));
+      fireEvent.click(document.querySelector('.top-app-bar .leading-navigation-icon'));
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('closeDialog');
