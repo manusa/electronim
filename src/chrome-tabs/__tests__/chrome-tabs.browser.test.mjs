@@ -79,8 +79,8 @@ describe('ChromeTabs in Browser test suite', () => {
       });
       test('Main button shows arrow up', async () => {
         await waitFor(() =>
-          expect(document.querySelector('.menu__button i').getAttribute('class'))
-            .toBe('fas fa-arrow-alt-circle-up'));
+          expect(document.querySelector('.menu__button').textContent)
+            .toBe('\uf182'));
       });
       test('Main button has tooltip informing about new updates', async () => {
         await waitFor(() =>
@@ -206,8 +206,8 @@ describe('ChromeTabs in Browser test suite', () => {
   });
   describe('Main button events', () => {
     test('shows 3 bars when no updates available', () => {
-      const buttonClass = document.querySelector('.menu__button i').getAttribute('class');
-      expect(buttonClass).toBe('fas fa-bars');
+      const buttonClass = document.querySelector('.menu__button').textContent;
+      expect(buttonClass).toBe('\ue5d4');
     });
     test('menuButton click, should dispatch APP_EVENTS.appMenuOpen', () => {
       // When

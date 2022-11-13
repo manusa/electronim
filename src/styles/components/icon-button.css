@@ -24,8 +24,10 @@
   outline: none;
   text-decoration: none;
   width: 24px;
-  line-height: 24px;
   height: 24px;
+  font-size: 24px;
+  line-height: 24px;
+  text-align: center;
 }
 
 .electronim .material3.icon-button::before {
@@ -44,5 +46,4 @@
 
 .electronim .material3.icon-button:hover::before {
   opacity: var(--md-sys-state-hover-state-layer-opacity);
-
 }

@@ -15,7 +15,7 @@
  */
 /* eslint-disable no-undef */
 import {
-  APP_EVENTS, html, render, useLayoutEffect, useReducer, useState, Icon
+  APP_EVENTS, html, render, useLayoutEffect, useReducer, useState, IconButton
 } from '../components/index.mjs';
 import {
   initialState, reducer, activateTab, addTabs, moveTab, setNewVersionAvailable, setTabFavicon, setTabTitle,
@@ -174,17 +174,12 @@ const ChromeTabs = ({dispatch, state: {tabs}}) => {
 };
 
 const Menu = ({state: {newVersionAvailable}}) => {
-  const iconClass = `fas ${newVersionAvailable ? 'fa-arrow-alt-circle-up' : 'fa-bars'}`;
+  const icon = newVersionAvailable ? '\uf182' : '\ue5d4';
   return html`
-   <div class="menu">
-       <button
-          class="menu__button button"
-          onClick=${openMenu}
-          title=${newVersionAvailable ? 'New ElectronIM version is available' : ''}
-        >
-          <${Icon} icon=${iconClass}></${Icon}>
-       </button>
-   </div>
+    <${IconButton}
+      icon=${icon} className='menu__button' onClick=${openMenu}
+      title=${newVersionAvailable ? 'New ElectronIM version is available' : ''}
+    />
   `;
 };
 
