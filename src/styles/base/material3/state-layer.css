@@ -13,9 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-@import './palette.css';
-@import './colors.css';
-@import './elevation.css';
-@import './shape.css';
-@import './state-layer.css';
-@import './typography.css';
+
+:root {
+  --md-sys-state-hover-state-layer-opacity: 8%;
+}

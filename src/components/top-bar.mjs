@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {html} from './index.mjs';
+import {html, IconButton} from './index.mjs';
 
 /**
  * A TopBar partially based on Bulma's Navbar component.
@@ -55,7 +55,7 @@ export const TopAppBar = ({
   document.body.classList.add('has-top-app-bar');
   return html`
     <div class='material3 top-app-bar small elevation-0 surface'>
-      <div class='leading-navigation-icon title-large' onClick=${iconClick}>${icon}</div>
+      <${IconButton} className='leading-navigation-icon title-large' icon=${icon} onClick=${iconClick}/>
       <div class='top-app-bar__headline title-large'>${headline}</div>
       <div class='trailing-icon title-large'></div>
     </div>
