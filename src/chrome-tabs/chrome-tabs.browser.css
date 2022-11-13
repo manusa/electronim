@@ -13,51 +13,49 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+@import '../styles/main.css';
+
 html {
-    overflow: hidden !important;
+  overflow: hidden !important;
 }
 
 body {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .tab-container {
-    position: relative;
-    width: auto;
-    flex-grow: 1;
-    display: flex;
-    background: #EEE;
-    align-items: center;
-    max-width: none;
+  position: relative;
+  width: auto;
+  flex-grow: 1;
+  display: flex;
+  background: #EEE;
+  align-items: center;
+  max-width: none;
 }
 
 .tab-container .chrome-tabs {
-    flex: 1;
-    background: #EEE;
-    padding: 10px 0;
+  flex: 1;
+  background: #EEE;
+  padding: 10px 0;
 }
 @media (prefers-color-scheme: dark) {
-    .tab-container,
-    .tab-container .chrome-tabs.chrome-tabs-dark-theme {
-        background: #202124;
-    }
+  .tab-container,
+  .tab-container .chrome-tabs.chrome-tabs-dark-theme {
+    background: #202124;
+  }
 
 }
 
 .tab-container .chrome-tabs .chrome-tab-close {
-    display: none;
+  display: none;
 }
 
 .tab-container .menu {
-    padding: 0 8px 0 0;
+  padding: 0 8px 0 0;
 }
 
 .tab-container .menu__button {
-    background: none;
-    border-color: transparent;
-}
-
-.tab-container .menu__button:hover {
-    border-color: #dbdbdb;
+  margin: 0 12px 0 8px;
+  z-index: 2;
 }
