@@ -16,48 +16,26 @@
 import {html, IconButton} from './index.mjs';
 
 /**
- * A TopBar partially based on Bulma's Navbar component.
- */
-export const TopBar = ({
-  title,
-  titleClass = 'navbar-item is-size-5 has-text-info has-text-weight-bold',
-  containerClass = '',
-  endComponents = '',
-  endComponentsClass = '',
-  fixed = false
-}) => {
-  if (fixed) {
-    document.body.classList.add('has-navbar-fixed-top');
-  }
-  return html`
-    <nav class=${`top-bar navbar ${fixed ? 'is-fixed-top' : ''}`}>
-      <div class=${`not-navbar-brand is-flex is-flex-grow-1 is-align-content-center ${containerClass}`}>
-        <div class=${`not-navbar-brand is-flex is-flex-grow-1 ${titleClass}`}>${title}</div>
-        <div class=${endComponentsClass}>${endComponents}</div>
-      </div>
-    </nav>
-  `;
-};
-
-/**
  * A top app bar based on Material design (3) guidelines.
  *
  * @param icon represented using a Material Icon codepoint.
  * @param iconClick callback function to be executed when the icon is clicked.
  * @param headline the headline of the app bar.
+ * @param components or component containing an icon displayed at the end of the app bar.
  * @see https://m3.material.io/components/top-app-bar
  */
 export const TopAppBar = ({
   icon,
   iconClick = () => {},
-  headline
+  headline,
+  trailingIcon
 }) => {
   document.body.classList.add('has-top-app-bar');
   return html`
     <div class='material3 top-app-bar small elevation-0 surface'>
       <${IconButton} className='leading-navigation-icon title-large' icon=${icon} onClick=${iconClick}/>
       <div class='top-app-bar__headline title-large'>${headline}</div>
-      <div class='trailing-icon title-large'></div>
+      <div class='trailing-icon title-large'>${trailingIcon}</div>
     </div>
   `;
 };

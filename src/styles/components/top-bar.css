@@ -13,10 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-.electronim .top-bar.navbar {
-  background: var(--color-canvas-default);
-}
-
 :root {
   --material3-top-app-bar-height: 64px;
 }
@@ -30,6 +26,7 @@
   top: 0;
   left: 0;
   right: 0;
+  z-index: 1;
 }
 
 .electronim .material3.top-app-bar.small {
@@ -46,5 +43,13 @@
 
 .electronim .material3.top-app-bar.small .leading-navigation-icon {
   width: 24px;
-  text-align: center;
+}
+
+.electronim .material3.top-app-bar .top-app-bar__headline {
+  flex: 1;
+}
+
+.electronim .material3.top-app-bar .trailing-icon {
+  display: flex;
+  align-items: center;
 }

@@ -13,6 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+:root {
+  --material3-icon-button-size: 24px;
+}
+
 .electronim .material3.icon-button,
 .electronim .material3.icon-button:active,
 .electronim .material3.icon-button:focus,
@@ -23,10 +27,10 @@
   color: var(--md-sys-color-on-surface-variant);
   outline: none;
   text-decoration: none;
-  width: 24px;
-  height: 24px;
-  font-size: 24px;
-  line-height: 24px;
+  width: var(--material3-icon-button-size);
+  height: var(--material3-icon-button-size);
+  font-size: var(--material3-icon-button-size);
+  line-height: var(--material3-icon-button-size);
   text-align: center;
 }
 
@@ -46,4 +50,17 @@
 
 .electronim .material3.icon-button:hover::before {
   opacity: var(--md-sys-state-hover-state-layer-opacity);
+}
+
+.electronim .material3.icon-button.disabled {
+  opacity: 38%;
+  color: var(--md-sys-color-on-surface);
+}
+
+.electronim .material3.icon-button.disabled:hover {
+  cursor: not-allowed;
+}
+
+.electronim .material3.icon-button.disabled:hover::before {
+  opacity: 0;
 }

@@ -15,7 +15,7 @@
  */
 const {ipcRenderer} = window;
 
-import {APP_EVENTS, Checkbox, TopBar, html, render, useReducer} from '../components/index.mjs';
+import {APP_EVENTS, html, render, useReducer, Checkbox, IconButton, TopAppBar} from '../components/index.mjs';
 import {
   ACTIONS, reducer, dictionariesEnabled, setTabProperty, toggleTabProperty
 } from './settings.reducer.browser.mjs';
@@ -121,18 +121,10 @@ const Settings = ({initialState}) => {
   });
   const cancel = () => ipcRenderer.send(APP_EVENTS.closeDialog);
   return html`
-  <${TopBar} fixed=${true} title='Settings'
-    endComponents=${html`
-      <div class="navbar-item field is-grouped">
-        <div class="control">
-          <button class="settings__submit button is-link"
-            disabled=${!state.canSave || state.invalidTabs.size !== 0} onClick=${save}>Ok</button>
-        </div>
-        <div class="control">
-          <button class="settings__cancel button is-link is-light" onClick=${cancel}>Cancel</button>
-        </div>
-      </div>
-    `}
+  <${TopAppBar} headline='Settings' icon='\uE5C4' iconClick=${cancel}
+    trailingIcon=${html`<${IconButton}
+        className='settings__submit' icon='\ue161' onClick=${save}
+        disabled=${!state.canSave || state.invalidTabs.size !== 0}/>`}
   />
   <div class="container">
     <div class="form">
