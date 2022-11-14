@@ -15,7 +15,7 @@
  */
 import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
-import {getByTestId, fireEvent, waitFor} from '@testing-library/dom';
+import {getByTestId, fireEvent} from '@testing-library/dom';
 
 describe('App Menu in Browser test suite', () => {
   beforeEach(async () => {
@@ -35,9 +35,9 @@ describe('App Menu in Browser test suite', () => {
     expect(window.electron.close).toHaveBeenCalledTimes(1);
   });
   describe.each([
-    {testId: 'about', icon: 'fas fa-info-circle', label: 'About', expectedFunction: 'aboutOpenDialog'},
-    {testId: 'help', icon: 'fas fa-question-circle', label: 'Help', expectedFunction: 'helpOpenDialog'},
-    {testId: 'settings', icon: 'fas fa-cog', label: 'Settings', expectedFunction: 'settingsOpenDialog'}
+    {testId: 'about', icon: '\ue88e', label: 'About', expectedFunction: 'aboutOpenDialog'},
+    {testId: 'help', icon: '\ue887', label: 'Help', expectedFunction: 'helpOpenDialog'},
+    {testId: 'settings', icon: '\ue8b8', label: 'Settings', expectedFunction: 'settingsOpenDialog'}
   ])('$label entry', ({testId, icon, label, expectedFunction}) => {
     let entry;
     beforeEach(() => {
@@ -45,24 +45,17 @@ describe('App Menu in Browser test suite', () => {
     });
     test('should be visible', () => {
       expect(entry.getAttribute('class'))
-        .toMatch(/^dropdown-item*/);
-      expect(entry.textContent).toBe(label);
+        .toMatch(/^menu-item*/);
+      expect(entry.querySelector('.menu-item__text').textContent).toBe(label);
     });
     test(`should have icon ${icon}`, () => {
-      expect(entry.querySelector('i').getAttribute('class')).toBe(icon);
+      expect(entry.querySelector('.menu-item__leading-icon').textContent).toBe(icon);
     });
     test('click, should invoke function', () => {
       // When
       fireEvent.click(entry);
       // Then
       expect(window.electron[expectedFunction]).toHaveBeenCalledTimes(1);
-    });
-    test('hover, should activate entry', async () => {
-      // When
-      fireEvent.mouseOver(entry);
-      // Then
-      await waitFor(() => expect(entry.getAttribute('class'))
-        .toContain('is-active'));
     });
   });
 });

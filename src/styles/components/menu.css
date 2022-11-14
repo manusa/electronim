@@ -1,0 +1,77 @@
+/*
+   Copyright 2022 Marc Nuri San Felix
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
+:root {
+  --material3-menu-item-size: 24px;
+}
+
+.electronim .material3.menu {
+  position: relative;
+  z-index: 0;
+  min-width: 112px;
+  max-width: 280px;
+  border-radius: 4px;
+  padding: 4px 0;
+  background-color: var(--md-sys-color-surface);
+}
+
+.electronim .material3.menu a.menu-item {
+  position: relative;
+  padding: 0 12px;
+  z-index: 2;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 48px;
+  display: flex;
+  gap: 12px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.electronim .material3.menu a.menu-item::before {
+  content: '';
+  background-color: var(--md-sys-color-on-surface);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 200ms linear;
+}
+
+.electronim .material3.menu a.menu-item:hover::before {
+  opacity: var(--md-sys-state-hover-state-layer-opacity);
+}
+
+.electronim .material3.menu a.menu-item:focus::before {
+  opacity: var(--md-sys-state-focus-state-layer-opacity);
+}
+
+.electronim .material3.menu a.menu-item:active::before {
+  opacity: var(--md-sys-state-pressed-state-layer-opacity);
+}
+
+.electronim .material3.menu .menu-item .menu-item__leading-icon,
+.electronim .material3.menu .menu-item .menu-item__trailing-icon {
+  color: var(--md-sys-color-on-surface-variant);
+  font-family: 'Material Symbols Outlined', sans-serif;
+  width: var(--material3-menu-item-size);
+  height: var(--material3-menu-item-size);
+  text-align: center;
+  font-size: var(--material3-icon-button-size);
+}

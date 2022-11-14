@@ -21,5 +21,6 @@ export {Checkbox, Field, HorizontalField, Select, sizes} from './form/index.mjs'
 export {DropDown} from './drop-down.mjs';
 export {Icon} from './icon.mjs';
 export {IconButton} from './icon-button.mjs';
+export {Menu} from './menu.mjs';
 export {Panel} from './panel.mjs';
 export {TopAppBar} from './top-app-bar.mjs';

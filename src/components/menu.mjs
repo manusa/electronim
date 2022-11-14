@@ -13,9 +13,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+import {html} from './index.mjs';
 
-:root {
-  --md-sys-state-hover-state-layer-opacity: 8%;
-  --md-sys-state-focus-state-layer-opacity: 12%;
-  --md-sys-state-pressed-state-layer-opacity: 12%;
-}
+export const Menu = ({children}) => html`
+  <div class='material3 menu elevation-2 surface body-large'>
+    ${children}
+  </div>
+`;
+
+Menu.Item = ({
+  icon,
+  label,
+  trailingIcon,
+  ...properties
+}) => html`
+  <a class='menu-item' ...${properties}>
+    <div class='menu-item__leading-icon'>${icon}</div>
+    <div class='menu-item__text'>${label}</div>
+    <div class='menu-item__trailing-icon'>${trailingIcon}</div>
+  </a>
+`;
