@@ -47,24 +47,8 @@ html.electronim,
   top: var(--tab-container-height);
   background: var(--scrim-color);
 }
-.electronim .app-menu .dropdown,
-.electronim .app-menu .dropdown-menu {
+.electronim .app-menu .menu {
   position: absolute;
   left: auto;
   right: 0;
-}
-
-.electronim .app-menu .dropdown-menu {
-  padding: var(--default-spacing) var(--default-spacing)  0 0;
-}
-
-.electronim .app-menu .dropdown-item {
-  cursor: pointer;
-  user-select: none;
-  color: var(--color-gray-darker);
-  text-decoration: none;
-}
-
-.electronim .app-menu .dropdown-item.is-active {
-  color: var(--color-white);
 }

@@ -26,7 +26,8 @@
   --md-sys-color-on-tertiary: var(--md-ref-palette-tertiary100);
   --md-sys-color-tertiary-container: var(--md-ref-palette-tertiary90);
   --md-sys-color-tertiary: var(--md-ref-palette-tertiary40);
-  --md-sys-color-shadow: var(--md-ref-palette-neutral0-rgb);
+  --md-sys-color-shadow: var(--md-ref-palette-neutral0);
+  --md-sys-color-shadow-rgb: var(--md-ref-palette-neutral0-rgb);
   --md-sys-color-error: var(--md-ref-palette-error40);
   --md-sys-color-outline: var(--md-ref-palette-neutral-variant50);
   --md-sys-color-outline-variant: var(--md-ref-palette-neutral-variant80);
@@ -60,7 +61,8 @@
     --md-sys-color-on-tertiary: var(--md-ref-palette-tertiary20);
     --md-sys-color-tertiary-container: var(--md-ref-palette-tertiary30);
     --md-sys-color-tertiary: var(--md-ref-palette-tertiary80);
-    --md-sys-color-shadow: var(--md-ref-palette-neutral0-rgb);
+    --md-sys-color-shadow: var(--md-ref-palette-neutral0);
+    --md-sys-color-shadow-rgb: var(--md-ref-palette-neutral0-rgb);
     --md-sys-color-error: var(--md-ref-palette-error80);
     --md-sys-color-outline: var(--md-ref-palette-neutral-variant60);
     --md-sys-color-outline-variant: var(--md-ref-palette-neutral-variant30);

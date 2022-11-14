@@ -15,6 +15,14 @@
  */
 import {html} from './index.mjs';
 
+/**
+ An Icon Button based on Material design (3) guidelines.
+
+ @param icon represented using a Material Icon codepoint.
+ @param iconClick callback function to be executed when the icon is clicked.
+ @param disabled whether the button is disabled or not.
+ @param className additional classes to be added to the button.
+ */
 export const IconButton = ({
   icon,
   onClick = () => {},

@@ -13,17 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {html, render, DropDown, Icon} from '../components/index.mjs';
+import {html, render, Menu} from '../components/index.mjs';
 
 const {aboutOpenDialog, close, helpOpenDialog, settingsOpenDialog} = window.electron;
 
 const getAppMenu = () => document.querySelector('.app-menu');
-
-const MenuItem = ({icon, label, onClick, testId}) => html`
-  <${DropDown.Item} data-testid=${testId} onClick=${onClick}>
-    <${Icon} icon=${icon}>${label}</${Icon}>
-  </${DropDown.Item}>
-`;
 
 const AppMenu = () => {
   const noBubbling = func => e => {
@@ -34,16 +28,14 @@ const AppMenu = () => {
   return (html`
     <div class='wrapper' onClick=${close}>
       <div class='scrim'>
-        <${DropDown} active=${true}>
-        <${DropDown.Menu}>
-          <${MenuItem} icon='fas fa-question-circle' label='Help' testId='help-menu-entry'
+        <${Menu}>
+          <${Menu.Item} icon='\ue887' label='Help' data-testid='help-menu-entry'
             onClick=${noBubbling(helpOpenDialog)} />
-          <${MenuItem} icon='fas fa-cog' label='Settings' testId='settings-menu-entry'
+          <${Menu.Item} icon='\ue8b8' label='Settings' data-testid='settings-menu-entry'
             onClick=${noBubbling(settingsOpenDialog)} />
-          <${MenuItem} icon='fas fa-info-circle' label='About' testId='about-menu-entry'
+          <${Menu.Item} icon='\ue88e' label='About' data-testid='about-menu-entry'
             onClick=${noBubbling(aboutOpenDialog)} />
-        </${DropDown.Menu}>
-        </${DropDown}>
+        </${Menu}>
       </div>
     </div>
   `);
