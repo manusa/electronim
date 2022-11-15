@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 390 390" style="enable-background:new 0 0 390 390;" xml:space="preserve">
+<style type="text/css">
+	.background{fill:#FFFFFF;stroke: #FFFFFF}
+	.nucleus{fill:url(#nucleusGradient);}
+</style>
+<g id="electrons">
+	<circle id="background" class="background" cx="195" cy="195" r="185"/>
+	<path
+			id="nucleus"
+			class="nucleus"
+			d="M 195,8.598091 C 92.183073,8.598091 8.5980908,92.183073 8.5980908,195 8.5980908,297.81693 92.183073,381.40191 195,381.40191 297.81693,381.40191 381.40191,297.81693 381.40191,195 381.40191,92.183073 297.81693,8.598091 195,8.598091 Z M 278.58498,271.18808 H 115.85316 v -29.5876 h 162.73182 z m -44.3814,-59.17521 H 115.85316 v -29.5876 h 118.35042 z m 44.3814,-59.17521 H 115.85316 v -29.5876 h 162.73182 z"/>
+	<radialGradient id="nucleusGradient">
+		<stop  offset="0" style="stop-color:#42598C"/>
+		<stop  offset="75%" style="stop-color:#42598C;stop-opacity:0.92"/>
+		<stop  offset="100%" style="stop-color:#42598C;stop-opacity:0.8"/>
+	</radialGradient>
+</g>
+</svg>

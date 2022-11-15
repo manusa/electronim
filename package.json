@@ -65,7 +65,8 @@
     "productName": "ElectronIM",
     "copyright": "Copyright 2019 Marc Nuri",
     "directories": {
-      "output": "dist"
+      "output": "dist",
+      "buildResources": "assets"
     },
     "snap": {
       "summary": "Free/Libre open source Electron based multi instant messaging (IM) client.",
@@ -102,6 +103,7 @@
         "Type": "Application",
         "Categories": "GTK;GNOME;Network;Email;Chat;InstantMessaging;"
       },
+      "icon": "icon_1024x1024.png",
       "target": [
         "AppImage",
         "snap",
@@ -111,6 +113,7 @@
     "mac": {
       "artifactName": "electronim-mac.${ext}",
       "category": "public.app-category.utilities",
+      "icon": "icon_1024x1024.png",
       "target": [
         "dmg",
         "tar.gz"
@@ -138,6 +141,7 @@
     },
     "win": {
       "artifactName": "electronim-win-${arch}.${ext}",
+      "icon": "icon.ico",
       "target": [
         "zip",
         "portable"

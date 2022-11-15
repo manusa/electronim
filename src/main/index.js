@@ -13,14 +13,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {BrowserWindow, Notification, app, desktopCapturer, ipcMain: eventBus, nativeTheme} = require('electron');
+const path = require('path');
+const {
+  BrowserWindow, Notification, app, desktopCapturer, ipcMain: eventBus, nativeTheme
+} = require('electron');
 const {registerGlobalShortcuts} = require('./keyboard-shortcuts');
 const {APP_EVENTS} = require('../constants');
 const {openAboutDialog} = require('../about');
 const {newAppMenu, isNotAppMenu} = require('../app-menu');
 const {TABS_CONTAINER_HEIGHT, newTabContainer, isNotTabContainer} = require('../chrome-tabs');
 const {openHelpDialog} = require('../help');
-const {loadSettings, updateSettings, openSettingsDialog} = require('../settings');
+const {getPlatform, loadSettings, updateSettings, openSettingsDialog} = require('../settings');
 const {
   getAvailableDictionaries, getAvailableNativeDictionaries, loadDictionaries, getEnabledDictionaries
 } = require('../spell-check');
@@ -225,7 +228,9 @@ const init = () => {
   const {width = 800, height = 600, theme} = loadSettings();
   nativeTheme.themeSource = theme ?? 'system';
   mainWindow = new BrowserWindow({
-    width, height, resizable: true, maximizable: true, webPreferences
+    width, height, resizable: true, maximizable: true,
+    icon: path.resolve(__dirname, '..', '..', 'assets', getPlatform() === 'linux' ? 'icon.png' : 'icon.ico'),
+    webPreferences
   });
   mainWindow.removeMenu();
   ['resize', 'maximize']

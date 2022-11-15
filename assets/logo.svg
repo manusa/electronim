@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 390 390" style="enable-background:new 0 0 390 390;" xml:space="preserve">
+<style type="text/css">
+	.electron{fill:#87C7D8;}
+	.nucleus{fill:url(#nucleusGradient);}
+	.orbit{fill:none;stroke:#d89f87;stroke-width:2.7469;stroke-miterlimit:10;}
+	.hidden{display:none;fill:#87C7D8;}
+</style>
+	<path id="orbit" class="orbit" d="M160.3,340.5c-6.4-3.3-11.9-8.1-16.8-13.7c-14-16-23.4-39-33.6-53.1c-10.3-14.1-22.9-43.8-34.3-78.1
+	c-8.4-25.1-10.3-75.9-8.2-85.3c1.9-8.5,9-22,20.1-33.1c15.8-15.8,38.7-14.6,63.1-12.4C203.1,69.5,263.3,98,278.8,107
+	c39.1,22.7,76,44.2,77.8,77.8c1.9,34.9-32.3,66.5-69.1,89.8c-15.9,10.1-75.3,47.9-153,45.7c-22.1-0.6-38.8-2.2-52.3-16.9
+	C66.4,286,65.6,253,70,218.3c7.3-57.3,33.2-98,42.6-113.1c25.6-41.1,51.6-68.8,82.4-71.4c43.2-3.6,66.7,48,90.6,87
+	c11.3,18.5,43,74.6,37.1,142.8c-2.3,26.4-8.6,36.4-13.7,42.1c-22,24.6-64,18.5-97.1,13.7c0,0-99.9-14.5-165.7-92
+	c-6.7-7.9-13.9-18.1-14.6-31.6c-0.9-17.1,9.2-30.4,19.7-43.9c15.1-19.4,31.5-32,43.9-40.3c33.9-22.6,64.7-31,92.9-38.5
+	c2.5-0.7,40.3-10.4,78.3-8.2c7.5,0.4,18.6,1.5,30.2,8.2c3.8,2.2,14.3,8.5,20.6,20.6c6.5,12.5,8.6,28.6,8.7,36.6
+	c0.7,41.9-10.4,79.7-31,122.7c-10.9,22.7-23.5,35.6-37.7,54.9c-10.5,14.4-17.8,22.5-28.8,29.3c-11.9,7.3-26.5,10.4-34.3,11.6
+	C194.1,348.9,180,350.6,160.3,340.5z"/>
+	<g id="electrons">
+	<circle id="b" class="electron" cx="195" cy="351.6" r="25.2"/>
+		<circle id="b-r" class="electron" cx="282.9" cy="282.9" r="25.2"/>
+		<circle id="b-l" class="electron" cx="112.6" cy="282.9" r="25.2"/>
+		<circle id="m-r" class="electron" cx="354.3" cy="197.7" r="25.2"/>
+		<radialGradient id="nucleusGradient">
+			<stop  offset="0" style="stop-color:#42598C"/>
+			<stop  offset="75%" style="stop-color:#42598C;stop-opacity:0.92"/>
+			<stop  offset="100%" style="stop-color:#42598C;stop-opacity:0.8"/>
+		</radialGradient>
+		<path id="nucleus" class="nucleus" d="m 195,122.2 c -41.7,0 -75.6,33.9 -75.6,75.6 0,41.7 33.9,75.6 75.6,75.6 41.7,0 75.6,-33.9 75.6,-75.6 0,-41.7 -33.9,-75.6 -75.6,-75.6 z m 33.9,106.5 h -66 v -12 h 66 z m -18,-24 h -48 v -12 h 48 z m 18,-24 h -66 v -12 h 66 z" />
+		<circle id="m-l" class="electron" cx="35.7" cy="197.7" r="25.2"/>
+		<circle id="t-r" class="electron" cx="282.9" cy="109.8" r="25.2"/>
+		<circle id="t-l" class="electron" cx="112.6" cy="109.8" r="25.2"/>
+		<circle id="t" class="electron" cx="195" cy="38.4" r="25.2"/>
+		<path id="proton" class="hidden" d="M195,172.6c-13.9,0-25.2,11.3-25.2,25.2s11.3,25.2,25.2,25.2s25.2-11.3,25.2-25.2
+		S208.9,172.6,195,172.6z M208.3,199.1h-12v12h-3v-12h-11v-3h11v-11h3v11h12V199.1z"/>
+		<circle id="m_1_" class="hidden" cx="195" cy="197.7" r="25.2"/>
+</g>
+</svg>
