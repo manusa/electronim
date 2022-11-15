@@ -83,6 +83,28 @@ describe('Main module test suite', () => {
         expect(mockNativeTheme.themeSource).toBe('dark');
       });
     });
+    describe('icon', () => {
+      test('uses icon.png', () => {
+        // Given
+        jest.spyOn(settingsModule, 'getPlatform').mockImplementation(() => 'linux');
+        // When
+        main.init();
+        // Then
+        expect(electron.BrowserWindow).toHaveBeenCalledWith(expect.objectContaining({
+          icon: expect.stringMatching(/icon\.png$/)
+        }));
+      });
+      test('in windows, uses icon.ico', () => {
+        // Given
+        jest.spyOn(settingsModule, 'getPlatform').mockImplementation(() => 'win32');
+        // When
+        main.init();
+        // Then
+        expect(electron.BrowserWindow).toHaveBeenCalledWith(expect.objectContaining({
+          icon: expect.stringMatching(/icon\.png$/)
+        }));
+      });
+    });
     test('initBrowserVersions, successful, should be set to defaultUserAgent', () => {
       // When
       main.init();

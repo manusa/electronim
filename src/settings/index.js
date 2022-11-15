@@ -35,6 +35,13 @@ const webPreferences = {
 const appDir = path.join(HOME_DIR, APP_DIR);
 const settingsPath = path.join(appDir, SETTINGS_FILE);
 
+/**
+ * Wrapper function to retrieve the current system's platform.
+ *
+ * @returns {NodeJS.Platform} the OS platform.
+ */
+const getPlatform = () => process.platform;
+
 const containsTabId = tabs => tabId => tabs.map(({id}) => id).includes(tabId);
 
 const ensureActiveTab = settings => {
@@ -71,4 +78,4 @@ const openSettingsDialog = mainWindow => () => {
   showDialog(mainWindow, settingsView);
 };
 
-module.exports = {loadSettings, updateSettings, openSettingsDialog};
+module.exports = {getPlatform, loadSettings, updateSettings, openSettingsDialog};
