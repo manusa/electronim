@@ -9,3 +9,4 @@
 | `Ctrl+0` `Cmd+0`                                           | Reset zoom.                    |
 | `Ctrl+Tab`                                                 | Jump to the next open tab.     |
 | `Ctrl+Shift+Tab`                                           | Jump to the previous open tab. |
+| `Esc`                                                      | (in dialog) Close.             |
