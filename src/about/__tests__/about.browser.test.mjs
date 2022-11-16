@@ -45,5 +45,9 @@ describe('About in Browser test suite', () => {
       }));
     expect(versions).toContainEqual({label, version: expectedVersion});
   });
+  test('Shows an icon with ElectronIM logo', () => {
+    expect(document.querySelector('.about-content .card__image svg.electronim-logo'))
+      .not.toBeNull();
+  });
 });
 

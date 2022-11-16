@@ -17,8 +17,37 @@
   --material3-card-padding: 16px;
 }
 
-.electronim .material3.card:hover {
-  background-color: var(--md-sys-color-secondary-container);
+.electronim .material3.card {
+  position: relative;
+  z-index: 0;
+  border-radius: var(--md-sys-shape-corner-medium-default-size);
+}
+
+.electronim .material3.card.elevated {
+  background-color: var(--md-sys-color-surface);
+  box-shadow: var(--md-sys-elevation-1);
+}
+
+.electronim .material3.card.elevated:hover {
+  box-shadow: var(--md-sys-elevation-2);
+}
+
+.electronim .material3.card::before {
+  content: '';
+  border-radius: var(--md-sys-shape-corner-medium-default-size);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 200ms linear;
+}
+
+.electronim .material3.card.elevated:hover::before {
+  background-color: var(--md-sys-color-on-surface);
+  opacity: var(--md-sys-state-hover-state-layer-opacity);
 }
 
 .electronim .material3.card .card__content {

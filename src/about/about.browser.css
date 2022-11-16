@@ -27,6 +27,23 @@ body {
 .about-content {
   padding: 16px;
 }
+
+.about-content .card__image {
+  --negative-margin: calc(-1 * var(--material3-card-padding));
+  margin: var(--negative-margin) var(--negative-margin) var(--material3-card-padding) var(--negative-margin);
+  background-color: var(--md-sys-color-surface-variant);
+  border-radius: var(--md-sys-shape-corner-medium-default-size);
+  padding: var(--material3-card-padding);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-content .electronim-logo {
+  width: 30%;
+  max-width: 250px;
+}
+
 .about-content .about-content__release {
   margin: 8px 0;
 }

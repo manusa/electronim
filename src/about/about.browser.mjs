@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {ELECTRONIM_VERSION, html, render, Card, TopAppBar} from '../components/index.mjs';
+import {ELECTRONIM_VERSION, html, render, Card, Logo, TopAppBar} from '../components/index.mjs';
 
 const {close, versions} = window.electron;
 
@@ -31,7 +31,10 @@ const Version = ({component, value}) => html`
 const About = () => html`
   <${TopAppBar} icon='\uE5C4' iconClick=${close} headline='About ElectronIM'/>
   <div class='about-content'>
-    <${Card} headline=${`ElectronIM ${ELECTRONIM_VERSION}`}>
+    <${Card}
+        image=${html`<${Logo} />`}
+        headline=${`ElectronIM ${ELECTRONIM_VERSION}`}
+    >
       <div class='about-content__release'>
         <a href=${`https://github.com/manusa/electronim/releases/tag/v${ELECTRONIM_VERSION}`}>
           Release Notes

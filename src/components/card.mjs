@@ -19,18 +19,25 @@ import {html} from './index.mjs';
  A card based on Material design (3) guidelines.
  */
 export const Card = ({
+  type = Card.types.elevated,
+  image,
   headline,
   subHeadline,
   children
 }) => html`
-  <div class='material3 card elevation-1 surface shape-medium body-medium'>
+  <div class=${`material3 card body-medium ${type}`}>
     <div class='card__content'>
-      <div class='card__headline headline-large'>${headline}</div>
+      ${image && html`<div class='card__image'>${image}</div>`}
+      ${headline && html`<div class='card__headline headline-large'>${headline}</div>`}
       ${subHeadline && html`<div class='card__subHeadline headline-small'>${subHeadline}</div>`}
       <div>${children}</div>
     </div>
   </div>
 `;
+
+Card.types = {
+  elevated: 'elevated'
+};
 
 Card.Divider = () => html`
   <div class='card__divider' />
