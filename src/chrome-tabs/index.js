@@ -13,12 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {BrowserView, BrowserWindow, Menu, MenuItem} = require('electron');
+const {BrowserView, Menu, MenuItem, ipcMain: eventBus} = require('electron');
 const path = require('path');
 const {APP_EVENTS} = require('../constants');
 const {getLatestRelease} = require('./check-for-updates');
-const {openHelpDialog} = require('../help');
-const {openSettingsDialog} = require('../settings');
 
 const TABS_CONTAINER_HEIGHT = 46;
 
@@ -41,10 +39,15 @@ const checkForUpdates = webContents => {
 
 const handleContextMenu = (event, params) => {
   const webContents = event.sender;
-  const mainWindow = BrowserWindow.fromWebContents(webContents);
   const menu = new Menu();
-  menu.append(new MenuItem({label: 'Settings', click: openSettingsDialog(mainWindow)}));
-  menu.append(new MenuItem({label: 'Help', click: openHelpDialog(mainWindow)}));
+  menu.append(new MenuItem({
+    label: 'Settings',
+    click: () => eventBus.emit(APP_EVENTS.settingsOpenDialog, event, params)
+  }));
+  menu.append(new MenuItem({
+    label: 'Help',
+    click: () => eventBus.emit(APP_EVENTS.helpOpenDialog, event, params)
+  }));
   menu.append(new MenuItem({
     label: 'DevTools',
     click: () => webContents.openDevTools({mode: 'detach', activate: true})
