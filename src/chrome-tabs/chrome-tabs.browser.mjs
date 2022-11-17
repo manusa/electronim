@@ -70,9 +70,7 @@ const Favicon = ({favicon = ''}) => {
 };
 
 const NotificationIcon = ({disableNotifications = false}) => disableNotifications && html`
-  <div class="chrome-tab-notifications-mute">
-    <i class="fas fa-bell-slash" />
-  </div>
+  <div class="chrome-tab-notifications-mute">\ue7f6</div>
 `;
 
 const BackgroundSvgGeometryLeft = ({...props}) => html`
