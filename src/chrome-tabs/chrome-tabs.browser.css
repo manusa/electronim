@@ -39,16 +39,21 @@ body {
   background: #EEE;
   padding: 10px 0;
 }
+
 @media (prefers-color-scheme: dark) {
   .tab-container,
   .tab-container .chrome-tabs.chrome-tabs-dark-theme {
     background: #202124;
   }
-
 }
 
 .tab-container .chrome-tabs .chrome-tab-close {
   display: none;
+}
+
+.tab-container .chrome-tabs .chrome-tab-notifications-mute {
+  font-family: 'Material Symbols Outlined', sans-serif;
+  padding-left: 2px;
 }
 
 .tab-container .menu {
