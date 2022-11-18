@@ -19,7 +19,7 @@ import {
   dictionariesEnabled,
   toggleUseNativeSpellChecker,
   toggleDictionary,
-  useNativeSpellChecker
+  useNativeSpellChecker, isPaneActive
 } from './settings.reducer.browser.mjs';
 
 const LanguageEntry = ({dispatch, languageKey, name, enabled = false}) => html`
@@ -29,10 +29,10 @@ const LanguageEntry = ({dispatch, languageKey, name, enabled = false}) => html`
   />
 `;
 
-export const SpellCheckContainer = ({dispatch, state}) => {
+export const SpellCheckPane = ({dispatch, state}) => {
   const useNative = useNativeSpellChecker(state);
   const enabledDictionaries = dictionariesEnabled(state);
-  return html`
+  return isPaneActive(state)(SpellCheckPane.id) && html`
     <${Panel} heading='Spell check' className='settings__spell-check'>
       <${Panel.Block} className='settings__spell-check-common'>
         <${Checkbox}
@@ -55,3 +55,5 @@ export const SpellCheckContainer = ({dispatch, state}) => {
     </${Panel}>
   `;
 };
+
+SpellCheckPane.id = 'spell-check';

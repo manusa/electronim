@@ -15,7 +15,7 @@
  */
 import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
-import {findByTestId} from '@testing-library/dom';
+import {findByTestId, fireEvent, getByText, waitFor} from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import {ipcRenderer} from './settings.browser.mjs';
 
@@ -29,6 +29,8 @@ describe('Settings (Other) in Browser test suite', () => {
     window.ipcRenderer = mockIpcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
     user = userEvent.setup(document);
+    // Show other settings pane
+    await user.click(getByText(document.querySelector('.material3.navigation-rail'), 'Other'));
   });
   describe('Theme selection', () => {
     let $themeContainer;
@@ -45,6 +47,17 @@ describe('Settings (Other) in Browser test suite', () => {
         theme: 'light'
       }));
     }, 10000);
+  });
+  test('Toggle global notifications should check input', async () => {
+    // Given
+    const $notificationCheckbox = document.querySelector('.settings__global-notifications input');
+    expect($notificationCheckbox.checked).toBe(false);
+    // When
+    fireEvent.click($notificationCheckbox);
+    // Then
+    await waitFor(() => {
+      expect($notificationCheckbox.checked).toBe(true);
+    });
   });
   test('ElectronIM version is visible', async () => {
     const $electronimVersion = await findByTestId(document, 'settings-electronim-version');

@@ -15,11 +15,12 @@
  */
 import {ELECTRONIM_VERSION, Checkbox, HorizontalField, Panel, Select, html} from '../components/index.mjs';
 import {
+  isPaneActive,
   setTheme,
   toggleNotifications
 } from './settings.reducer.browser.mjs';
 
-export const OtherContainer = ({dispatch, state}) => html`
+export const OtherPane = ({dispatch, state}) => isPaneActive(state)(OtherPane.id) && html`
   <${Panel} heading='Other' className='settings__other'>
     <${Panel.Block}>
       <${HorizontalField} label='Theme' data-testid='settings-theme-select'>
@@ -46,3 +47,5 @@ export const OtherContainer = ({dispatch, state}) => html`
     </${Panel.Block}>
   </${Panel}>
 `;
+
+OtherPane.id = 'other';
