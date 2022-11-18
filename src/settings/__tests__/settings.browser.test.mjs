@@ -89,7 +89,7 @@ describe('Settings in Browser test suite', () => {
       fireEvent.input($input, {target: {value: 'A'}});
       // Then
       await waitFor(() => expect($input.value).toBe('A'));
-      expect($tabContainer.childElementCount).toBe(2);
+      expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(2);
     });
     describe.each([
       'Enter',
@@ -101,7 +101,7 @@ describe('Settings in Browser test suite', () => {
         // When
         fireEvent.keyDown($input, {code});
         // Then
-        expect($tabContainer.childElementCount).toBe(2);
+        expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(2);
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
         expect($submitButton.hasAttribute('disabled')).toBe(false);
       });
@@ -111,7 +111,7 @@ describe('Settings in Browser test suite', () => {
         // When
         fireEvent.keyDown($input, {code});
         // Then
-        expect($tabContainer.childElementCount).toBe(2);
+        expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(2);
         await waitFor(() =>
           expect($input.classList.contains('is-danger')).toBe(true));
         expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input').length).toBe(2);
@@ -126,7 +126,7 @@ describe('Settings in Browser test suite', () => {
         fireEvent.keyDown($input, {code});
         // Then
         await waitFor(() =>
-          expect($tabContainer.childElementCount).toBe(3));
+          expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(3));
         expect($input.classList.contains('is-success')).toBe(false);
         expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input')[2].value)
           .toBe('https://info.cern.ch');
@@ -141,7 +141,7 @@ describe('Settings in Browser test suite', () => {
         fireEvent.keyDown($input, {code});
         // Then
         await waitFor(() =>
-          expect($tabContainer.childElementCount).toBe(3));
+          expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(3));
         await waitFor(() =>
           expect($input.classList.contains('is-success')).toBe(false));
         expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input')[2].value)
@@ -180,7 +180,7 @@ describe('Settings in Browser test suite', () => {
       fireEvent.click($addTabButton);
       // Then
       await waitFor(() =>
-        expect($tabContainer.childElementCount).toBe(3));
+        expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(3));
       expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input')[2].value)
         .toBe('https://info.cern.ch');
       expect($input.value).toBe('');
@@ -233,13 +233,13 @@ describe('Settings in Browser test suite', () => {
       // Given
       const $tabContainer = document.querySelector('.settings__tabs');
       const $trashIcon = $tabContainer.querySelector('.icon .fa-trash');
-      const initialChildren = $tabContainer.childElementCount;
+      const initialChildren = $tabContainer.querySelectorAll('.settings__tab').length;
       expect(initialChildren).toBeGreaterThan(0);
       // When
       fireEvent.click($trashIcon);
       // Then
       await waitFor(() =>
-        expect($tabContainer.childElementCount).toBe(initialChildren - 1));
+        expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(initialChildren - 1));
     });
     describe('Expand/Collapse icon click', () => {
       test('collapsed tab, should expand tab', async () => {

@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {Checkbox, Panel, html} from '../components/index.mjs';
+import {Card, Checkbox, html} from '../components/index.mjs';
 import {
   dictionaries,
   dictionariesEnabled,
@@ -33,16 +33,17 @@ export const SpellCheckPane = ({dispatch, state}) => {
   const useNative = useNativeSpellChecker(state);
   const enabledDictionaries = dictionariesEnabled(state);
   return isPaneActive(state)(SpellCheckPane.id) && html`
-    <${Panel} heading='Spell check' className='settings__spell-check'>
-      <${Panel.Block} className='settings__spell-check-common'>
+    <h2 class='title'>Spell check</h2>
+    <${Card} className='settings__spell-check'>
+      <div class='settings__spell-check-common'>
         <${Checkbox}
             label='Use Native Spell Checker' checked=${useNative} value=${useNative}
             onClick="${toggleUseNativeSpellChecker({dispatch})}"
             data-testid='use-native-spell-checker'
         />
-      </${Panel.Block} >
-      <${Panel.Block} >
-        <div class="settings__dictionaries container">${
+      </div>
+      <${Card.Divider} />
+      <div class="settings__dictionaries container">${
   Object.entries(dictionaries(state))
     .sort(([, {name: name1}], [, {name: name2}]) => name1.localeCompare(name2))
     .map(([key, {name}]) => (html`
@@ -50,9 +51,8 @@ export const SpellCheckPane = ({dispatch, state}) => {
         enabled=${enabledDictionaries.includes(key)}
       />
     `))}
-        </div>
-      </${Panel.Block} >
-    </${Panel}>
+      </div>
+    </${Card}>
   `;
 };
 

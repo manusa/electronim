@@ -32,6 +32,7 @@ const About = () => html`
   <${TopAppBar} icon='\uE5C4' iconClick=${close} headline='About ElectronIM'/>
   <div class='about-content'>
     <${Card}
+        interactive=${true /* Enable state layer just for fun */}
         image=${html`<${Logo} />`}
         headline=${`ElectronIM ${ELECTRONIM_VERSION}`}
     >

@@ -28,7 +28,7 @@
   box-shadow: var(--md-sys-elevation-1);
 }
 
-.electronim .material3.card.elevated:hover {
+.electronim .material3.card.interactive.elevated:hover {
   box-shadow: var(--md-sys-elevation-2);
 }
 
@@ -45,7 +45,7 @@
   transition: opacity 200ms linear;
 }
 
-.electronim .material3.card.elevated:hover::before {
+.electronim .material3.card.interactive.elevated:hover::before {
   background-color: var(--md-sys-color-on-surface);
   opacity: var(--md-sys-state-hover-state-layer-opacity);
 }
