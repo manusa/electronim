@@ -16,6 +16,7 @@
 import {newId, prependProtocol, validateUrl} from './settings.common.browser.mjs';
 
 export const ACTIONS = {
+  ACTIVATE_PANE: 'ACTIVATE_PANE',
   ADD: 'ADD',
   REMOVE: 'REMOVE',
   SET_TAB_PROPERTY: 'SET_TAB_PROPERTY',
@@ -29,6 +30,7 @@ export const ACTIONS = {
 };
 
 // Selectors
+export const isPaneActive = state => paneId => state.activePane === paneId;
 export const useNativeSpellChecker = state => state.useNativeSpellChecker;
 export const dictionariesEnabled = state => state.dictionaries.enabled;
 const dictionariesAvailableNative = state => state.dictionaries.availableNative;
@@ -47,6 +49,9 @@ export const dictionaries = state => {
 
 export const reducer = (state, action) => {
   switch (action.type) {
+    case ACTIONS.ACTIVATE_PANE: {
+      return {...state, activePane: action.payload};
+    }
     case ACTIONS.ADD: {
       if (!validateUrl(state.newTabValue)) {
         return {...state};
@@ -143,6 +148,8 @@ export const reducer = (state, action) => {
 };
 
 // Action creators
+export const activatePane = ({dispatch}) =>
+  paneId => dispatch({type: ACTIONS.ACTIVATE_PANE, payload: paneId});
 export const addTab = ({dispatch}) =>
   () => dispatch({type: ACTIONS.ADD});
 export const setTabProperty = ({dispatch, property, value, id}) =>

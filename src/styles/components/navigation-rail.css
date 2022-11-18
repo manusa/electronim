@@ -1,0 +1,86 @@
+/*
+   Copyright 2022 Marc Nuri San Felix
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+:root {
+  --material3-navigation-rail-width: 80px;
+  --material3-navigation-rail-gap: 12px;
+}
+
+.electronim body.has-navigation-rail {
+  margin-left: var(--material3-navigation-rail-width);
+}
+
+.electronim .material3.navigation-rail {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  width: var(--material3-navigation-rail-width);
+  padding: var(--material3-navigation-rail-gap) 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--material3-navigation-rail-gap);
+  background-color: var(--md-sys-color-surface);
+}
+
+.electronim body.has-top-app-bar .material3.navigation-rail {
+  top: var(--material3-top-app-bar-height);
+}
+
+.electronim .material3.navigation-rail .navigation-rail-button {
+  position: relative;
+  height: 56px;
+  outline: none;
+  text-decoration: none;
+  text-align: center;
+  color: var(--md-sys-color-on-surface-variant);
+}
+.electronim .material3.navigation-rail .navigation-rail-button.active {
+  color: var(--md-sys-color-on-surface);
+}
+
+.electronim .material3.navigation-rail .navigation-rail-button__icon {
+  position: relative;
+  height: 32px;
+  line-height: 32px;
+  margin-bottom: 4px;
+}
+
+.electronim .material3.navigation-rail .navigation-rail-button__icon.material3.icon-button::before {
+  top: -16.6666%;
+  left: -66.6666%;
+  height: 133.33%;
+  width: 233.33%
+}
+
+.electronim .material3.navigation-rail .hover .navigation-rail-button__icon.material3.icon-button::before {
+  opacity: var(--md-sys-state-hover-state-layer-opacity);
+}
+
+.electronim .material3.navigation-rail .active .navigation-rail-button__icon.material3.icon-button::before {
+  background-color: var(--md-sys-color-secondary-container);
+  opacity: 1;
+}
+
+.electronim .material3.navigation-rail .navigation-rail-button__label {
+  line-height: var(--md-sys-typescale-label-medium-line-height);
+  font-family: var(--md-sys-typescale-label-medium-font), sans-serif;
+  font-size: var(--md-sys-typescale-label-medium-size);
+  font-weight: var(--md-sys-typescale-label-medium-weight);
+}
+

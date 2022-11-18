@@ -17,6 +17,7 @@
 
 :root {
     --border-color: #dbdbdb;
+    overflow-y: auto;
 }
 
 .settings.container {

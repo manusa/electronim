@@ -16,7 +16,7 @@
 import {html} from './index.mjs';
 
 /**
- A card based on Material design (3) guidelines.
+ * A card based on Material design (3) guidelines.
  */
 export const Card = ({
   type = Card.types.elevated,

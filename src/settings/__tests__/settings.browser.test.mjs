@@ -28,6 +28,23 @@ describe('Settings in Browser test suite', () => {
     window.ipcRenderer = mockIpcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
+  describe('Navigation Rail', () => {
+    test('Shows navigation rail', () => {
+      expect(document.querySelector('.material3.navigation-rail')).not.toBeNull();
+    });
+    test.each([
+      {label: 'Services', icon: '\ue5c3'},
+      {label: 'Spell check', icon: '\ue8ce'},
+      {label: 'Other', icon: '\ue619'}
+    ])('Shows navigation rail item $label with $icon', ({label, icon}) => {
+      const items = Array.from(document.querySelectorAll('.navigation-rail-button'))
+        .map(b => ({
+          label: b.querySelector('.navigation-rail-button__label').textContent,
+          icon: b.querySelector('.navigation-rail-button__icon').textContent}
+        ));
+      expect(items).toContainEqual({label, icon});
+    });
+  });
   describe('Main Button events', () => {
     test('Submit should send form data', () => {
       // When
@@ -51,17 +68,6 @@ describe('Settings in Browser test suite', () => {
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('closeDialog');
-    });
-    test('Toggle global notifications should check input', async () => {
-      // Given
-      const $notificationCheckbox = document.querySelector('.settings__global-notifications input');
-      expect($notificationCheckbox.checked).toBe(false);
-      // When
-      fireEvent.click($notificationCheckbox);
-      // Then
-      await waitFor(() => {
-        expect($notificationCheckbox.checked).toBe(true);
-      });
     });
   });
   describe('New tab Input field', () => {
@@ -310,58 +316,6 @@ describe('Settings in Browser test suite', () => {
         fireEvent.input($input, {target: {value: 'missing-protocol-info.cern.ch'}});
         // Then
         await waitFor(() => expect($submitButton.hasAttribute('disabled')).toBe(true));
-      });
-    });
-  });
-  describe('Spell Check events', () => {
-    let $spellCheckContainer;
-    beforeEach(() => {
-      $spellCheckContainer = document.querySelector('.settings__spell-check');
-    });
-    test('toggle use native spell checker, should check use native spell checker', async () => {
-      // Given
-      const $useNativeSpellChecker = $spellCheckContainer
-        .querySelector('.settings__spell-check-common input[data-testid=use-native-spell-checker]');
-      expect($useNativeSpellChecker.checked).toBe(false);
-      // When
-      fireEvent.click($useNativeSpellChecker);
-      // Then
-      await waitFor(() => expect($useNativeSpellChecker.checked).toBe(true));
-    });
-    describe('dictionaries', () => {
-      let $dictionaries;
-      beforeEach(() => {
-        $dictionaries = $spellCheckContainer.querySelector('.settings__dictionaries');
-      });
-      test('toggle active dictionary, should uncheck dictionary', async () => {
-        // Given
-        const $enDict = $dictionaries.querySelector('input[value=en]');
-        expect($enDict.checked).toBe(true);
-        // When
-        fireEvent.click($enDict);
-        // Then
-        await waitFor(() => expect($enDict.checked).toBe(false));
-      });
-      test('toggle inactive dictionary, should check dictionary', async () => {
-        // Given
-        const $esDict = $dictionaries.querySelector('input[value=es]');
-        expect($esDict.checked).toBe(false);
-        // When
-        fireEvent.click($esDict);
-        // Then
-        await waitFor(() => expect($esDict.checked).toBe(true));
-      });
-      test('when not native, dictionaries should intersect available', async () => {
-        await waitFor(() => expect($dictionaries.querySelectorAll('input').length).toBe(2));
-      });
-      test('when native, dictionaries should intersect available', async () => {
-        // Given
-        const $useNativeSpellChecker = $spellCheckContainer
-          .querySelector('.settings__spell-check-common input[data-testid=use-native-spell-checker]');
-        // When
-        fireEvent.click($useNativeSpellChecker);
-        // Then
-        await waitFor(() => expect($dictionaries.querySelectorAll('input').length).toBe(1));
       });
     });
   });
