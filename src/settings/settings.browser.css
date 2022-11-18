@@ -25,6 +25,17 @@
     padding: 15px 0;
 }
 
+.settings .title,
+.settings h2.title {
+    font-family: var(--md-sys-typescale-title-large-font);
+    font-size: var(--md-sys-typescale-title-large-size);
+    font-weight: var(--md-sys-typescale-title-large-weight);
+    line-height: var(--md-sys-typescale-title-large-line-height);
+    border: 0;
+    padding: 0;
+    margin: 0 0 12px 0;
+}
+
 .settings__button.button {
     background: none;
     border-color: transparent;
@@ -45,8 +56,9 @@
 .settings__new-tab,
 .settings__tab-main,
 .settings__tab-advanced.container {
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    justify-content: flex-start;
     width: 100%;
 }
 
@@ -54,7 +66,7 @@
     transform: scaleY(0);
     height: 0;
     margin: 0;
-    transition: margin 0.3s  ease-out, transform 0.3s ease-out;
+    transition: margin-top 0.3s  ease-out, transform 0.3s ease-out;
     overflow: hidden;
 }
 

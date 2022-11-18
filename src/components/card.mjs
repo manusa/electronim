@@ -20,20 +20,31 @@ import {html} from './index.mjs';
  */
 export const Card = ({
   type = Card.types.elevated,
+  interactive = false,
+  className = '',
   image,
   headline,
   subHeadline,
   children
-}) => html`
-  <div class=${`material3 card body-medium ${type}`}>
-    <div class='card__content'>
-      ${image && html`<div class='card__image'>${image}</div>`}
-      ${headline && html`<div class='card__headline headline-large'>${headline}</div>`}
-      ${subHeadline && html`<div class='card__subHeadline headline-small'>${subHeadline}</div>`}
-      <div>${children}</div>
+}) => {
+  let cardClass = `material3 card body-medium ${type}`;
+  if (className) {
+    cardClass += ` ${className}`;
+  }
+  if (interactive) {
+    cardClass += ' interactive';
+  }
+  return html`
+    <div class=${cardClass}>
+      <div class='card__content'>
+        ${image && html`<div class='card__image'>${image}</div>`}
+        ${headline && html`<div class='card__headline headline-large'>${headline}</div>`}
+        ${subHeadline && html`<div class='card__subHeadline headline-small'>${subHeadline}</div>`}
+        <div>${children}</div>
+      </div>
     </div>
-  </div>
-`;
+  `;
+};
 
 Card.types = {
   elevated: 'elevated'

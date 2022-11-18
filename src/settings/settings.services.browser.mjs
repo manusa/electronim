@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {Checkbox, Panel, html} from '../components/index.mjs';
+import {Card, Checkbox, html} from '../components/index.mjs';
 import {ACTIONS, addTab, isPaneActive, setTabProperty, toggleTabProperty} from './settings.reducer.browser.mjs';
 
 const disabledIcon = disabled => (disabled === true ? 'fa-eye-slash' : 'fa-eye');
@@ -59,7 +59,8 @@ const TabAdvancedSettings = (
 const TabEntry = ({
   dispatch, invalidTabs, id, expanded, url, disabled, disableNotifications = false, ...tab
 }) => (html`
-  <div class='settings__tab ${expanded && 'settings__tab--expanded'} panel-block' data-id=${id}>
+  <${Card.Divider} />
+  <div class='settings__tab ${expanded && 'settings__tab--expanded'}' data-id=${id}>
     <div class='settings__tab-main'>
       <${ExpandButton} dispatch=${dispatch} id=${id} expanded=${expanded} />
       <div class='control'>
@@ -98,8 +99,9 @@ export const ServicesPane = ({dispatch, state}) => {
   };
 
   return isPaneActive(state)(ServicesPane.id) && html`
-    <${Panel} heading='Services' className='settings__services'>
-      <div class="settings__new-tab panel-block">
+    <h2 class='title'>Services</h2>
+    <${Card} className='settings__services'>
+      <div class='settings__new-tab'>
         <div class="control">
           <input type="text"
             class="input ${newTabClass(state)}"
@@ -119,7 +121,7 @@ export const ServicesPane = ({dispatch, state}) => {
           />
       `))}
       </div>
-    </${Panel}>
+    </${Card}>
   `;
 };
 

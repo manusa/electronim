@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {ELECTRONIM_VERSION, Checkbox, HorizontalField, Panel, Select, html} from '../components/index.mjs';
+import {ELECTRONIM_VERSION, Card, Checkbox, HorizontalField, Select, html} from '../components/index.mjs';
 import {
   isPaneActive,
   setTheme,
@@ -21,8 +21,11 @@ import {
 } from './settings.reducer.browser.mjs';
 
 export const OtherPane = ({dispatch, state}) => isPaneActive(state)(OtherPane.id) && html`
-  <${Panel} heading='Other' className='settings__other'>
-    <${Panel.Block}>
+  <h2 class='title'>Other</h2>
+  <${Card} className='settings__other'>
+    <div style=${{display: 'flex', justifyContent: 'flex-start' /* eslint-disable no-warning-comments *//*
+    TODO: remove when Bulma is out
+    */}}>
       <${HorizontalField} label='Theme' data-testid='settings-theme-select'>
         <${Select} value=${state.theme} onChange=${e => setTheme({dispatch})(e.target.value)}>
           <${Select.Option} value='system'>system</${Select.Option}>
@@ -30,22 +33,22 @@ export const OtherPane = ({dispatch, state}) => isPaneActive(state)(OtherPane.id
           <${Select.Option} value='dark'>dark</${Select.Option}>
         </${Select}>
       </${HorizontalField}>
-    </${Panel.Block}>
-    <${Panel.Block}>
-      <div class="settings__global-notifications container">
-        <${Checkbox}
-          label="Disable notifications globally"
-          icon=${state.disableNotificationsGlobally ? 'fa-bell-slash' : 'fa-bell'}
-          checked=${state.disableNotificationsGlobally}
-          value=${state.disableNotificationsGlobally}
-          onClick=${toggleNotifications({dispatch})}
-        />
-      </div>
-    </${Panel.Block}>
-    <${Panel.Block} className='is-italic' data-testid='settings-electronim-version'>
+    </div>
+    <${Card.Divider} />
+    <div class="settings__global-notifications container">
+      <${Checkbox}
+        label="Disable notifications globally"
+        icon=${state.disableNotificationsGlobally ? 'fa-bell-slash' : 'fa-bell'}
+        checked=${state.disableNotificationsGlobally}
+        value=${state.disableNotificationsGlobally}
+        onClick=${toggleNotifications({dispatch})}
+      />
+    </div>
+    <${Card.Divider} />
+    <div class='is-italic' data-testid='settings-electronim-version'>
       ElectronIM version ${ELECTRONIM_VERSION}
-    </${Panel.Block}>
-  </${Panel}>
+    </div>
+  </${Card}>
 `;
 
 OtherPane.id = 'other';
