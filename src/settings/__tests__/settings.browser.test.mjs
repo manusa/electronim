@@ -85,12 +85,15 @@ describe('Settings in Browser test suite', () => {
       await waitFor(() => expect($input.value).toBe('A'));
       expect($tabContainer.childElementCount).toBe(2);
     });
-    describe('keydown event, Enter key with URLS', () => {
+    describe.each([
+      'Enter',
+      'NumpadEnter'
+    ])('keydown event, "%s" key with URLS', code => {
       test('Empty URL, should do nothing', async () => {
         // Given
         fireEvent.input($input, {target: {value: ''}});
         // When
-        fireEvent.keyDown($input, {code: 'Enter'});
+        fireEvent.keyDown($input, {code});
         // Then
         expect($tabContainer.childElementCount).toBe(2);
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
@@ -100,7 +103,7 @@ describe('Settings in Browser test suite', () => {
         // Given
         fireEvent.input($input, {target: {value: 'invalid:1337:url'}});
         // When
-        fireEvent.keyDown($input, {code: 'Enter'});
+        fireEvent.keyDown($input, {code});
         // Then
         expect($tabContainer.childElementCount).toBe(2);
         await waitFor(() =>
@@ -114,7 +117,7 @@ describe('Settings in Browser test suite', () => {
         // Given
         fireEvent.input($input, {target: {value: 'info.cern.ch'}});
         // When
-        fireEvent.keyDown($input, {code: 'Enter'});
+        fireEvent.keyDown($input, {code});
         // Then
         await waitFor(() =>
           expect($tabContainer.childElementCount).toBe(3));
@@ -129,7 +132,7 @@ describe('Settings in Browser test suite', () => {
         // Given
         fireEvent.input($input, {target: {value: 'http://info.cern.ch'}});
         // When
-        fireEvent.keyDown($input, {code: 'Enter'});
+        fireEvent.keyDown($input, {code});
         // Then
         await waitFor(() =>
           expect($tabContainer.childElementCount).toBe(3));

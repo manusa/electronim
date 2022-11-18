@@ -143,6 +143,8 @@ export const reducer = (state, action) => {
 };
 
 // Action creators
+export const addTab = ({dispatch}) =>
+  () => dispatch({type: ACTIONS.ADD});
 export const setTabProperty = ({dispatch, property, value, id}) =>
   dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {id, property, value}});
 export const setTheme = ({dispatch}) =>

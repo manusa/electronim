@@ -17,7 +17,7 @@ const {ipcRenderer} = window;
 
 import {APP_EVENTS, html, render, useReducer, Checkbox, IconButton, TopAppBar} from '../components/index.mjs';
 import {
-  ACTIONS, reducer, dictionariesEnabled, setTabProperty, toggleTabProperty
+  ACTIONS, reducer, addTab, dictionariesEnabled, setTabProperty, toggleTabProperty
 } from './settings.reducer.browser.mjs';
 import {
   OtherContainer
@@ -106,10 +106,10 @@ const Settings = ({initialState}) => {
     type: ACTIONS.UPDATE_NEW_TAB_VALUE,
     payload: value
   });
-  const addTab = () => dispatch({type: ACTIONS.ADD});
+  const onAddTab = addTab({dispatch});
   const onNewKeyDown = ({code}) => {
-    if (code === 'Enter') {
-      addTab();
+    if (code === 'Enter' || code === 'NumpadEnter') {
+      onAddTab();
     }
   };
   const save = () => ipcRenderer.send(APP_EVENTS.settingsSave, {
@@ -140,7 +140,7 @@ const Settings = ({initialState}) => {
               onkeydown=${onNewKeyDown}
             />
           </div>
-          <${SettingsButton} icon='fa-plus' onClick=${addTab} disabled=${!state.newTabValid} />
+          <${SettingsButton} icon='fa-plus' onClick=${onAddTab} disabled=${!state.newTabValid} />
         </div>
         <div class="settings__tabs container field">
           ${state.tabs.map(tab => (html`
