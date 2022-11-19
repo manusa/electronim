@@ -24,5 +24,5 @@ export {IconButton} from './icon-button.mjs';
 export {Logo} from './electronim.mjs';
 export {Menu} from './menu.mjs';
 export {NavigationRail} from './navigation-rail.mjs';
-export {Panel} from './panel.mjs';
+export {TextField} from './text-field.mjs';
 export {TopAppBar} from './top-app-bar.mjs';

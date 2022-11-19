@@ -30,8 +30,9 @@ export const IconButton = ({
   className = '',
   ...properties
 }) => html`
-  <a href='#' ...${properties}
+  <a
     class=${`material3 icon-button ${disabled ? 'disabled ' : ''}${className}`}
     disabled=${disabled} onClick=${disabled ? null : onClick}
+    ...${properties}
   >${icon}</a>
 `;

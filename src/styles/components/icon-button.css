@@ -28,10 +28,13 @@
   outline: none;
   text-decoration: none;
   width: var(--material3-icon-button-size);
+  margin: 0 calc(var(--material3-icon-button-size) * 0.3333); /* Account for state layer size */
   height: var(--material3-icon-button-size);
   font-size: var(--material3-icon-button-size);
   line-height: var(--material3-icon-button-size);
   text-align: center;
+  user-select: none;
+  cursor: pointer;
 }
 
 .electronim .material3.icon-button::before {
