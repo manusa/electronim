@@ -1,0 +1,163 @@
+/*
+   Copyright 2022 Marc Nuri San Felix
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
+:root {
+  /*--material3-text-field-height: 56px;*/
+  /* Material 3 default height is too big for us, reduce it to something more appealing */
+  --material3-text-field-height: 40px;
+  --material3-text-field-padding-no-icon: 16px;
+  --material3-text-field-outlined-border: solid 1px transparent;
+  --material3-text-field-outlined-border-radius: 4px;
+  --material3-text-field-outlined-border-color: var(--md-sys-color-outline);
+  --material3-text-field-outlined-border-color-focused: var(--md-sys-color-primary);
+  --material3-text-field-outlined-border-color-errored: var(--md-sys-color-error);
+  --material3-text-field-transition-duration: 0.2s;
+}
+
+.electronim .material3.text-field {
+  position: relative;
+  height: var(--material3-text-field-height);
+  display: flex;
+  padding: 0 var(--material3-text-field-padding-no-icon);
+  align-items: center;
+}
+
+.electronim .material3.text-field.outlined {
+  border: var(--material3-text-field-outlined-border);
+  border-color: var(--material3-text-field-outlined-border-color);
+  border-radius: var(--material3-text-field-outlined-border-radius);
+}
+
+.electronim .material3.text-field.outlined.focused {
+  border-color: var(--material3-text-field-outlined-border-color-focused);
+}
+
+.electronim .material3.text-field.outlined.errored {
+  border-color: var(--material3-text-field-outlined-border-color-errored);
+}
+
+.electronim .material3.text-field.outlined.has-label.populated,
+.electronim .material3.text-field.outlined.has-label.focused,
+.electronim .material3.text-field.outlined.has-label.errored{
+  border-top-color: transparent;
+}
+
+.electronim .material3.text-field .text-field__label {
+  background: none;
+  pointer-events: none;
+  font-family: var(--md-sys-typescale-body-large-font);
+  font-size: var(--md-sys-typescale-body-large-size);
+  font-weight: var(--md-sys-typescale-body-large-weight);
+}
+
+.electronim .material3.text-field.outlined .text-field__label {
+  --label-offset: 9px;
+  position: absolute;
+  top: calc(-1 * var(--label-offset));
+  left: 0;
+  width: 100%;
+  max-height: 100%;
+  display: flex;
+  gap: 4px;
+  color: var(--md-sys-color-on-surface);
+  line-height: calc(var(--material3-text-field-height) + var(--label-offset) * 2);
+  transition:
+    line-height var(--material3-text-field-transition-duration) ease,
+    font-size var(--material3-text-field-transition-duration) ease,
+    color var(--material3-text-field-transition-duration) ease;
+}
+
+.electronim .material3.text-field.outlined.focused .text-field__label,
+.electronim .material3.text-field.outlined.populated .text-field__label {
+  color: var(--md-sys-color-primary);
+  font-size: var(--md-sys-typescale-body-small-size);
+  line-height: 16px;
+}
+
+.electronim .material3.text-field.outlined.errored .text-field__label {
+  color: var(--md-sys-color-error);
+}
+
+.electronim .material3.text-field.outlined .text-field__label::before,
+.electronim .material3.text-field.outlined .text-field__label::after {
+  content: '';
+  display: block;
+  margin-top: 8px;
+  border-top: var(--material3-text-field-outlined-border);
+}
+
+.electronim .material3.text-field.outlined .text-field__label::before {
+  min-width: calc(var(--material3-text-field-padding-no-icon) - 4px);
+  border-top-left-radius: var(--material3-text-field-outlined-border-radius);
+}
+
+.electronim .material3.text-field.outlined .text-field__label::after {
+  flex: 1;
+  border-top-right-radius: var(--material3-text-field-outlined-border-radius);
+}
+
+.electronim .material3.text-field.outlined.populated .text-field__label::before,
+.electronim .material3.text-field.outlined.populated .text-field__label::after {
+  border-color: var(--material3-text-field-outlined-border-color);
+}
+
+.electronim .material3.text-field.outlined.focused .text-field__label::before,
+.electronim .material3.text-field.outlined.focused .text-field__label::after {
+  border-color: var(--material3-text-field-outlined-border-color-focused);
+}
+
+.electronim .material3.text-field.outlined.errored .text-field__label::before,
+.electronim .material3.text-field.outlined.errored .text-field__label::after {
+  border-color: var(--material3-text-field-outlined-border-color-errored);
+}
+
+.electronim .material3.text-field .text-field__placeholder {
+  display: none;
+  position: absolute;
+  color: var(--md-sys-color-on-surface-variant);
+  font-family: var(--md-sys-typescale-body-large-font);
+  font-size: var(--md-sys-typescale-body-large-size);
+}
+
+.electronim .material3.text-field.focused.empty .text-field__placeholder {
+  display: block;
+}
+
+.electronim .material3.text-field .text-field__input {
+  z-index: 1;
+  flex: 1;
+  background: none;
+  padding: 0;
+  border: 0;
+  outline: none;
+  height: var(--material3-text-field-height);
+  line-height: var(--material3-text-field-height);
+}
+
+.electronim .material3.text-field.outlined .text-field__input {
+  color: var(--md-sys-color-on-surface);
+  font-family: var(--md-sys-typescale-body-large-font);
+  font-size: var(--md-sys-typescale-body-large-size);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+}
+
+.electronim .material3.text-field.errored .text-field__input {
+  color: var(--md-sys-color-error);
+}
+
+.electronim .material3.text-field.focused.errored .text-field__input {
+  color: var(--md-sys-color-on-surface);
+}

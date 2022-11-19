@@ -13,34 +13,22 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {Card, Checkbox, html} from '../components/index.mjs';
+import {html, Card, Checkbox, IconButton, TextField} from '../components/index.mjs';
 import {ACTIONS, addTab, isPaneActive, setTabProperty, toggleTabProperty} from './settings.reducer.browser.mjs';
 
-const disabledIcon = disabled => (disabled === true ? 'fa-eye-slash' : 'fa-eye');
+const disabledIcon = disabled => (disabled === true ? '\ue8f5' : '\ue8f4');
+const notificationIcon = disabled => (disabled === true ? '\ue7f6' : '\ue7f4');
 const sandboxedIcon = sandboxed => (sandboxed === true ? 'fa-lock' : 'fa-lock-open');
-const newTabClass = state => {
-  if (state.newTabValue.length === 0) {
-    return '';
-  }
-  return state.newTabValid ? 'is-success' : 'is-danger';
-};
-
-const SettingsButton = ({icon, disabled = false, title, onClick}) => (html`
-  <button class='settings__button button' disabled=${disabled} onClick=${onClick}>
-    <span class='icon is-medium' title='${title}'>
-      <i class='fas ${icon}'></i>
-    </span>
-  </button>
-`);
 
 const ExpandButton = ({dispatch, id, expanded = false}) => {
   const properties = {
-    icon: expanded ? 'fa-chevron-down' : 'fa-chevron-right',
+    className: 'expand-button',
+    icon: '\ue5cf',
     title: expanded ? 'Collapse' : 'Expand (show advanced settings)',
     onClick: () => dispatch({type: ACTIONS.TOGGLE_TAB_EXPANDED, payload: id})
   };
   return html`
-    <${SettingsButton} ...${properties} />
+    <${IconButton} ...${properties} />
   `;
 };
 
@@ -60,23 +48,23 @@ const TabEntry = ({
   dispatch, invalidTabs, id, expanded, url, disabled, disableNotifications = false, ...tab
 }) => (html`
   <${Card.Divider} />
-  <div class='settings__tab ${expanded && 'settings__tab--expanded'}' data-id=${id}>
+  <div class='settings__tab ${expanded ? 'settings__tab--expanded' : ''}' data-id=${id}>
     <div class='settings__tab-main'>
       <${ExpandButton} dispatch=${dispatch} id=${id} expanded=${expanded} />
-      <div class='control'>
-        <input type='text' class=${`input ${invalidTabs.has(id) ? 'is-danger' : ''}`} name='tabs'
-          oninput=${({target: {value}}) => setTabProperty({dispatch, property: 'url', value, id})}
-          value=${url} />
-      </div>
-      <${SettingsButton} icon=${disabledIcon(disabled)}
+      <${TextField}
+        hasError=${invalidTabs.has(id)}
+        onInput=${({target: {value}}) => setTabProperty({dispatch, property: 'url', value, id})}
+        value=${url}
+      />
+      <${IconButton} icon=${disabledIcon(disabled)} data-testid='button-disable'
         title=${disabled ? 'Tab disabled. Click to enable' : 'Tab enabled. Click to disable'}
         onClick=${toggleTabProperty(dispatch, 'disabled', id)}
       />
-      <${SettingsButton} icon=${disableNotifications ? 'fa-bell-slash' : 'fa-bell'}
+      <${IconButton} icon=${notificationIcon(disableNotifications)} data-testid='button-notification'
         title=${disableNotifications ? 'Notifications disabled. Click to enable' : 'Notifications enabled. Click to disable'}
         onClick=${toggleTabProperty(dispatch, 'disableNotifications', id)}
       />
-      <${SettingsButton} icon='fa-trash' title='Delete tab'
+      <${IconButton} icon='\ue872' title='Delete tab' data-testid='button-delete'
         onClick=${() => dispatch({type: ACTIONS.REMOVE, payload: {id}})}
       /> 
     </div>
@@ -97,21 +85,19 @@ export const ServicesPane = ({dispatch, state}) => {
       onAddTab();
     }
   };
-
   return isPaneActive(state)(ServicesPane.id) && html`
     <h2 class='title'>Services</h2>
     <${Card} className='settings__services'>
       <div class='settings__new-tab'>
-        <div class="control">
-          <input type="text"
-            class="input ${newTabClass(state)}"
-            placeholder="https://web.whatsapp.com"
+        <${TextField}
+            label='Service URL'
+            placeholder='https://web.whatsapp.com' 
             value=${state.newTabValue}
-            oninput=${onNewTabInput}
-            onkeydown=${onNewKeyDown}
-          />
-        </div>
-        <${SettingsButton} icon='fa-plus' onClick=${onAddTab} disabled=${!state.newTabValid} />
+            onInput=${onNewTabInput}
+            onKeyDown=${onNewKeyDown}
+            hasError=${state.newTabValue.length !== 0 && !state.newTabValid}
+        />
+        <${IconButton} icon='\ue145' onClick=${onAddTab} disabled=${!state.newTabValid} />
       </div>
       <div class="settings__tabs container field">
         ${state.tabs.map(tab => (html`

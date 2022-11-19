@@ -16,10 +16,9 @@
 import {html} from './index.mjs';
 
 /**
- A menu based on Material design (3) guidelines.
-
+ * A menu based on Material design (3) guidelines.
+ *
  * @param children the collection of Menu.Item components to be rendered.
- * @constructor
  */
 export const Menu = ({children}) => html`
   <div class='material3 menu elevation-2 surface body-large'>

@@ -15,6 +15,11 @@
  */
 import {html, useState, IconButton} from './index.mjs';
 
+/**
+ * A Navigation Rail based on Material design (3) guidelines.
+ *
+ * @param children the collection of NavigationRail.Button components to be rendered.
+ */
 export const NavigationRail = ({
   children
 }) => {

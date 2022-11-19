@@ -16,7 +16,7 @@
 import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
 import {ipcRenderer} from './settings.browser.mjs';
-import {fireEvent, waitFor} from '@testing-library/dom';
+import {fireEvent, getByTestId, getByText, waitFor} from '@testing-library/dom';
 
 describe('Settings in Browser test suite', () => {
   let mockIpcRenderer;
@@ -76,8 +76,8 @@ describe('Settings in Browser test suite', () => {
     let $addTabButton;
     let $submitButton;
     beforeEach(() => {
-      $input = document.querySelector('.settings__new-tab input[type="text"].input');
-      $addTabButton = document.querySelector('.settings__new-tab .button');
+      $input = document.querySelector('.settings__new-tab .material3.text-field input');
+      $addTabButton = document.querySelector('.settings__new-tab .material3.icon-button');
       $tabContainer = document.querySelector('.settings__tabs');
       $submitButton = document.querySelector('.settings__submit');
     });
@@ -113,7 +113,7 @@ describe('Settings in Browser test suite', () => {
         // Then
         expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(2);
         await waitFor(() =>
-          expect($input.classList.contains('is-danger')).toBe(true));
+          expect($input.parentElement.classList.contains('errored')).toBe(true));
         expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input').length).toBe(2);
         expect($input.value).toBe('invalid:1337:url');
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
@@ -152,14 +152,13 @@ describe('Settings in Browser test suite', () => {
       });
     });
     describe('input event', () => {
-      test('Valid URL, should add success class', async () => {
+      test('Valid URL, should enable addTabButton', async () => {
         // When
         fireEvent.input($input, {target: {value: 'http://info.cern.ch'}});
         // Then
         await waitFor(() =>
-          expect($input.classList.contains('is-success')).toBe(true));
-        expect($input.classList.contains('is-danger')).toBe(false);
-        expect($addTabButton.hasAttribute('disabled')).toBe(false);
+          expect($addTabButton.hasAttribute('disabled')).toBe(false));
+        expect($input.parentElement.classList.contains('errored')).toBe(false);
         expect($submitButton.hasAttribute('disabled')).toBe(true);
       });
       test('Invalid URL, should add danger class', async () => {
@@ -167,8 +166,7 @@ describe('Settings in Browser test suite', () => {
         fireEvent.input($input, {target: {value: 'http://invalid:1337:url'}});
         // Then
         await waitFor(() =>
-          expect($input.classList.contains('is-danger')).toBe(true));
-        expect($input.classList.contains('is-success')).toBe(false);
+          expect($input.parentElement.classList.contains('errored')).toBe(true));
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
         expect($submitButton.hasAttribute('disabled')).toBe(true);
       });
@@ -176,6 +174,7 @@ describe('Settings in Browser test suite', () => {
     test('addTabButton, click with valid URL, should add tab', async () => {
       // Given
       fireEvent.input($input, {target: {value: 'info.cern.ch'}});
+      await waitFor(() => expect($addTabButton.getAttribute('disabled')).toBeFalsy());
       // When
       fireEvent.click($addTabButton);
       // Then
@@ -189,50 +188,50 @@ describe('Settings in Browser test suite', () => {
     });
   });
   describe('Tab events', () => {
-    describe('Disable icon click', () => {
+    describe('Disable icon click (sequential test - ordered)', () => {
       let $disableIcon;
       beforeEach(() => {
-        $disableIcon = document.querySelector('.settings__tabs .icon .fa-eye');
+        $disableIcon = getByTestId(document.querySelector('.settings__tab'), 'button-disable');
       });
       test('with enabled tab, should disable', async () => {
         // When
         fireEvent.click($disableIcon);
         // Then
-        await waitFor(() => expect($disableIcon.classList.contains('fa-eye')).toBe(false));
-        expect($disableIcon.classList.contains('fa-eye-slash')).toBe(true);
+        await waitFor(() => expect($disableIcon.textContent).not.toBe('\ue8f4'));
+        expect($disableIcon.textContent).toBe('\ue8f5');
       });
       test('with disabled tab, should enable', async () => {
         // When
         fireEvent.click($disableIcon);
         // Then
-        await waitFor(() => expect($disableIcon.classList.contains('fa-eye-slash')).toBe(false));
-        expect($disableIcon.classList.contains('fa-eye')).toBe(true);
+        await waitFor(() => expect($disableIcon.textContent).not.toBe('\ue8f5'));
+        expect($disableIcon.textContent).toBe('\ue8f4');
       });
     });
     test('Notification disabled icon click, should enable notification', async () => {
       // Given
-      const $notificationEnabledIcon = document.querySelector('.settings__tabs .icon .fa-bell-slash');
+      const $notificationEnabledIcon = getByText(document.querySelector('.settings__tabs'), '\ue7f6');
       // When
       fireEvent.click($notificationEnabledIcon);
       // Then
       await waitFor(() =>
-        expect($notificationEnabledIcon.classList.contains('fa-bell-slash')).toBe(false));
-      expect($notificationEnabledIcon.classList.contains('fa-bell')).toBe(true);
+        expect($notificationEnabledIcon.textContent).not.toBe('\ue7f6'));
+      expect($notificationEnabledIcon.textContent).toBe('\ue7f4');
     });
     test('Notification enabled icon click, should disable notification', async () => {
       // Given
-      const $notificationEnabledIcon = document.querySelector('.settings__tabs .icon .fa-bell');
+      const $notificationEnabledIcon = getByText(document.querySelector('.settings__tabs'), '\ue7f4');
       // When
       fireEvent.click($notificationEnabledIcon);
       // Then
       await waitFor(() =>
-        expect($notificationEnabledIcon.classList.contains('fa-bell')).toBe(false));
-      expect($notificationEnabledIcon.classList.contains('fa-bell-slash')).toBe(true);
+        expect($notificationEnabledIcon.textContent).not.toBe('\ue7f4'));
+      expect($notificationEnabledIcon.textContent).toBe('\ue7f6');
     });
     test('Trash icon click, should remove tab', async () => {
       // Given
       const $tabContainer = document.querySelector('.settings__tabs');
-      const $trashIcon = $tabContainer.querySelector('.icon .fa-trash');
+      const $trashIcon = getByText($tabContainer.querySelector('.settings__tab'), '\ue872');
       const initialChildren = $tabContainer.querySelectorAll('.settings__tab').length;
       expect(initialChildren).toBeGreaterThan(0);
       // When
@@ -244,37 +243,36 @@ describe('Settings in Browser test suite', () => {
     describe('Expand/Collapse icon click', () => {
       test('collapsed tab, should expand tab', async () => {
         // Given
-        const $expandIcon = document.querySelector('.settings__tab[data-id="1"] .icon .fa-chevron-right');
-        const $collapsedTab = $expandIcon.closest('.settings__tab');
+        const $toggleIcon = getByText(document.querySelector('.settings__tab[data-id="1"]'), '\ue5cf');
+        const $collapsedTab = $toggleIcon.closest('.settings__tab');
         expect($collapsedTab.classList.contains('settings__tab--expanded')).toBe(false);
         // When
-        fireEvent.click($expandIcon);
+        fireEvent.click($toggleIcon);
         // Then
         await waitFor(() =>
-          expect($expandIcon.classList.contains('fa-chevron-down')).toBe(true));
+          expect($toggleIcon.getAttribute('title')).toStartWith('Collapse'));
         expect($collapsedTab.classList.contains('settings__tab--expanded')).toBe(true);
       });
       test('expanded tab, should collapse tab', async () => {
         // Given
-        const $tabIcon = document.querySelector('.settings__tab[data-id="2"] .icon');
-        fireEvent.click($tabIcon);
-        await waitFor(() => expect($tabIcon.title).toEqual('Collapse'));
-        const $expandedTab = $tabIcon.closest('.settings__tab');
+        const $toggleIcon = getByText(document.querySelector('.settings__tab[data-id="2"]'), '\ue5cf');
+        fireEvent.click($toggleIcon);
+        await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
+        const $expandedTab = $toggleIcon.closest('.settings__tab');
         expect($expandedTab.classList.contains('settings__tab--expanded')).toBe(true);
-        const $collapseIcon = $tabIcon.querySelector('.fa-chevron-down');
         // When
-        fireEvent.click($collapseIcon);
+        fireEvent.click($toggleIcon);
         // Then
         await waitFor(() =>
-          expect($collapseIcon.classList.contains('fa-chevron-right')).toBe(true));
+          expect($toggleIcon.getAttribute('title')).toStartWith('Expand'));
         expect($expandedTab.classList.contains('settings__tab--expanded')).toBe(false);
       });
       describe('Advanced settings', () => {
         test('Sandbox checkbox click, sandboxed session, should unlock', async () => {
           // Given
-          const $tabIcon = document.querySelector('.settings__tab[data-id="1"] .icon');
-          fireEvent.click($tabIcon);
-          await waitFor(() => expect($tabIcon.title).toEqual('Collapse'));
+          const $toggleIcon = document.querySelector('.settings__tab[data-id="1"] .expand-button');
+          fireEvent.click($toggleIcon);
+          await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
           const $lockCheckBox = document.querySelector('.settings__tab-advanced .checkbox .fa-lock');
           // When
           fireEvent.click($lockCheckBox);
@@ -285,9 +283,9 @@ describe('Settings in Browser test suite', () => {
         });
         test('Sandbox checkbox click, non-sandboxed session, should lock', async () => {
           // Given
-          const $tabIcon = document.querySelector('.settings__tab[data-id="2"] .icon');
-          fireEvent.click($tabIcon);
-          await waitFor(() => expect($tabIcon.title).toEqual('Collapse'));
+          const $toggleIcon = document.querySelector('.settings__tab[data-id="2"] .expand-button');
+          fireEvent.click($toggleIcon);
+          await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
           const $lockCheckBox = document.querySelector('.settings__tab-advanced .checkbox .fa-lock-open');
           // When
           fireEvent.click($lockCheckBox);
@@ -302,7 +300,7 @@ describe('Settings in Browser test suite', () => {
       let $input;
       let $submitButton;
       beforeEach(() => {
-        $input = document.querySelector('.settings__tab[data-id="1"] .input');
+        $input = document.querySelector('.settings__tab[data-id="1"] .text-field input');
         $submitButton = document.querySelector('.settings__submit');
       });
       test('with valid URL, should enable save button', async () => {

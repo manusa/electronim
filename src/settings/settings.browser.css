@@ -36,19 +36,6 @@
     margin: 0 0 12px 0;
 }
 
-.settings__button.button {
-    background: none;
-    border-color: transparent;
-}
-
-.settings__button.button:hover {
-    border-color: var(--border-color);
-}
-
-.settings__button.button:not(:last-child) {
-    margin-right: var(--default-spacing);
-}
-
 .settings__tab {
     flex-direction: column;
 }
@@ -59,6 +46,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    gap: var(--default-spacing);
     width: 100%;
 }
 
@@ -77,9 +65,16 @@
     margin: var(--margin) var(--margin) var(--default-spacing) var(--margin);
 }
 
-.settings__new-tab .control,
-.settings__tab .control {
-    margin-right: var(--default-spacing);
+.settings__tab .expand-button {
+    transition: transform 0.3s ease-out;
+}
+
+.settings__tab--expanded .expand-button {
+    transform: rotate(180deg);
+}
+
+.settings__new-tab .material3.text-field,
+.settings__tab .material3.text-field {
     flex: 1;
 }
 
