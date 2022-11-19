@@ -18,7 +18,6 @@ export {html, render, useLayoutEffect, useReducer, useState} from '../../bundles
 
 export {Card} from './card.mjs';
 export {Checkbox, Field, HorizontalField, Select, sizes} from './form/index.mjs';
-export {DropDown} from './drop-down.mjs';
 export {Icon} from './icon.mjs';
 export {IconButton} from './icon-button.mjs';
 export {Logo} from './electronim.mjs';
