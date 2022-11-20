@@ -15,6 +15,16 @@
  */
 import {html, useState} from './index.mjs';
 
+/**
+ A text field based on Material design (3) guidelines.
+ * @param type the text field type (one of outlined or filled)
+ * @param label the text field label
+ * @param placeholder the text to be displayed as a hint when the text field is empty
+ * @param onInput the function to be called when the text field value changes
+ * @param onKeyDown the function to be called when a key is pressed
+ * @param value the text field value
+ * @param hasError whether the text field has an error
+ */
 export const TextField = ({
   type = TextField.types.outlined,
   label,

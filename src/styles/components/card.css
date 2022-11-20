@@ -15,6 +15,7 @@
  */
 :root {
   --material3-card-padding: 16px;
+  --material3-card-spacing: 8px;
 }
 
 .electronim .material3.card {
@@ -55,6 +56,6 @@
 }
 
 .electronim .material3.card .card__divider {
-  margin: 8px calc(-1 * var(--material3-card-padding));
+  margin: var(--material3-card-spacing) calc(-1 * var(--material3-card-padding));
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }

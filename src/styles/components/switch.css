@@ -1,0 +1,85 @@
+/*
+   Copyright 2022 Marc Nuri San Felix
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
+:root {
+  --material3-switch-height: 32px;
+  --material3-switch-width: 52px;
+  --material3-switch-thumb-size: 16px;
+  --material3-switch-checked-thumb-size: 24px;
+  --material3-switch-transition-duration: 0.8s;
+}
+
+.electronim .material3.switch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  height: var(--material3-switch-height);
+  width: var(--material3-switch-width);
+  padding: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.electronim .material3.switch--checked {
+  padding: 4px;
+}
+
+.electronim .material3.switch .switch__input {
+  display: none;
+}
+
+.electronim .material3.switch .switch__track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  border-radius: var(--material3-switch-height);
+  background-color: var(--md-sys-color-surface-variant);
+  border: 2px solid var(--md-sys-color-outline);
+  transition:
+      background var(--material3-switch-transition-duration) ease,
+      border var(--material3-switch-transition-duration) ease;
+}
+
+.electronim .material3.switch--checked .switch__track {
+  background-color: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-primary);
+}
+
+.electronim .material3.switch .switch__thumb {
+  z-index: 1;
+  display: inline-block;
+  height: var(--material3-switch-thumb-size);
+  width: var(--material3-switch-thumb-size);
+  border-radius: 100%;
+  background-color: var(--md-sys-color-outline);
+  transition:
+      transform var(--material3-switch-transition-duration) ease,
+      background var(--material3-switch-transition-duration) ease,
+      border var(--material3-switch-transition-duration) ease,
+      height var(--material3-switch-transition-duration) ease,
+      width var(--material3-switch-transition-duration) ease;
+}
+
+.electronim .material3.switch--checked .switch__thumb {
+  height: var(--material3-switch-checked-thumb-size);
+  width: var(--material3-switch-checked-thumb-size);
+  transform: translateX(20px);
+  background-color: var(--md-sys-color-on-primary);
+}

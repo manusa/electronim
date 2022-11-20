@@ -13,12 +13,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {html, Card, Checkbox, IconButton, TextField} from '../components/index.mjs';
+import {html, Card, IconButton, Switch, TextField} from '../components/index.mjs';
 import {ACTIONS, addTab, isPaneActive, setTabProperty, toggleTabProperty} from './settings.reducer.browser.mjs';
 
 const disabledIcon = disabled => (disabled === true ? '\ue8f5' : '\ue8f4');
 const notificationIcon = disabled => (disabled === true ? '\ue7f6' : '\ue7f4');
-const sandboxedIcon = sandboxed => (sandboxed === true ? 'fa-lock' : 'fa-lock-open');
+const sandboxedIcon = sandboxed => (sandboxed === true ? '\ue88d' : '\ue898');
 
 const ExpandButton = ({dispatch, id, expanded = false}) => {
   const properties = {
@@ -34,15 +34,27 @@ const ExpandButton = ({dispatch, id, expanded = false}) => {
 
 const TabAdvancedSettings = (
   {dispatch, id, sandboxed = false}
-) => (html`
-  <div class="settings__tab-advanced container">
-    <${Checkbox} label="Sandbox" checked=${sandboxed} value=${id}
-      title='Use an isolated/sandboxed session for this tab'
-      icon=${sandboxedIcon(sandboxed)}
-      onClick=${toggleTabProperty(dispatch, 'sandboxed', id)}
-    />
-  </div>
-`);
+) => {
+  const onSandboxClick = event => {
+    event.stopPropagation();
+    toggleTabProperty(dispatch, 'sandboxed', id)();
+  };
+  return html`
+    <div class='settings__tab-advanced'>
+      <div
+        class='settings__option sandboxed-toggle' onClick=${onSandboxClick}
+        title='Use an isolated/sandboxed session for this tab'
+      >
+        <span class='material-icon'>${sandboxedIcon(sandboxed)}</span>
+        <span class='settings__option-label'>Sandbox</span>
+        <${Switch}
+          checked=${sandboxed} onClick=${onSandboxClick}
+          title='Use an isolated/sandboxed session for this tab'
+        />
+      </div>
+    </div>
+  `;
+};
 
 const TabEntry = ({
   dispatch, invalidTabs, id, expanded, url, disabled, disableNotifications = false, ...tab
@@ -99,7 +111,7 @@ export const ServicesPane = ({dispatch, state}) => {
         />
         <${IconButton} icon='\ue145' onClick=${onAddTab} disabled=${!state.newTabValid} />
       </div>
-      <div class="settings__tabs container field">
+      <div class='settings__tabs'>
         ${state.tabs.map(tab => (html`
           <${TabEntry}
             dispatch=${dispatch} expanded=${state.expandedTabs.includes(tab.id)} invalidTabs=${state.invalidTabs}

@@ -13,11 +13,22 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-@import './card.css';
-@import './checkbox.css';
-@import './icon-button.css';
-@import './menu.css';
-@import './navigation-rail.css';
-@import './switch.css';
-@import './text-field.css';
-@import './top-bar.css';
+import {html} from './index.mjs';
+
+export const Switch = ({
+  checked = false,
+  onClick,
+  ...properties
+}) => {
+  let switchClass = 'material3 switch';
+  if (checked) {
+    switchClass += ' switch--checked';
+  }
+  return html`
+    <div class=${switchClass} onClick=${onClick} ...${properties}>
+      <span class='switch__track' />
+      <span class='switch__thumb' />
+      <input type='checkbox' class='switch__input' checked=${checked} />
+    </div>
+  `;
+};
