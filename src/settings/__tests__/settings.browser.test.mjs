@@ -268,31 +268,71 @@ describe('Settings in Browser test suite', () => {
         expect($expandedTab.classList.contains('settings__tab--expanded')).toBe(false);
       });
       describe('Advanced settings', () => {
-        test('Sandbox checkbox click, sandboxed session, should unlock', async () => {
-          // Given
-          const $toggleIcon = document.querySelector('.settings__tab[data-id="1"] .expand-button');
-          fireEvent.click($toggleIcon);
-          await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
-          const $lockCheckBox = document.querySelector('.settings__tab-advanced .checkbox .fa-lock');
-          // When
-          fireEvent.click($lockCheckBox);
-          // Then
-          await waitFor(() =>
-            expect($lockCheckBox.classList.contains('fa-lock')).toBe(false));
-          expect($lockCheckBox.classList.contains('fa-lock-open')).toBe(true);
+        describe('with sandboxed session', () => {
+          let $settingsTab;
+          let $toggleIcon;
+          let $sandboxedEntry;
+          beforeEach(async () => {
+            $settingsTab = document.querySelector('.settings__tab[data-id="1"]');
+            $toggleIcon = $settingsTab.querySelector('.expand-button');
+            $sandboxedEntry = $settingsTab.querySelector('.sandboxed-toggle');
+            if ($toggleIcon.title.startsWith('Expand')) {
+              fireEvent.click($toggleIcon);
+              // eslint-disable-next-line jest/no-standalone-expect
+              await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
+            }
+          });
+          test('click on label, should unlock', async () => {
+            // Given
+            const $lockLabel = getByText($sandboxedEntry, 'Sandbox');
+            // When
+            fireEvent.click($lockLabel);
+            // Then
+            await waitFor(() => expect($settingsTab.textContent).not.toContain('\ue88d'));
+            expect($settingsTab.textContent).toContain('\ue898');
+          });
+          test('click on switch, should unlock', async () => {
+            // Given
+            const $switch = $sandboxedEntry.querySelector('.material3.switch');
+            // When
+            fireEvent.click($switch);
+            // Then
+            await waitFor(() => expect($settingsTab.textContent).not.toContain('\ue88d'));
+            expect($settingsTab.textContent).toContain('\ue898');
+          });
         });
-        test('Sandbox checkbox click, non-sandboxed session, should lock', async () => {
-          // Given
-          const $toggleIcon = document.querySelector('.settings__tab[data-id="2"] .expand-button');
-          fireEvent.click($toggleIcon);
-          await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
-          const $lockCheckBox = document.querySelector('.settings__tab-advanced .checkbox .fa-lock-open');
-          // When
-          fireEvent.click($lockCheckBox);
-          // Then
-          await waitFor(() =>
-            expect($lockCheckBox.classList.contains('fa-lock-open')).toBe(false));
-          expect($lockCheckBox.classList.contains('fa-lock')).toBe(true);
+        describe('with non-sandboxed session', () => {
+          let $settingsTab;
+          let $toggleIcon;
+          let $sandboxedEntry;
+          beforeEach(async () => {
+            $settingsTab = document.querySelector('.settings__tab[data-id="2"]');
+            $toggleIcon = $settingsTab.querySelector('.expand-button');
+            $sandboxedEntry = $settingsTab.querySelector('.sandboxed-toggle');
+            if ($toggleIcon.title.startsWith('Expand')) {
+              fireEvent.click($toggleIcon);
+              // eslint-disable-next-line jest/no-standalone-expect
+              await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
+            }
+          });
+          test('click on label, should unlock', async () => {
+            // Given
+            const $lockLabel = getByText($sandboxedEntry, 'Sandbox');
+            // When
+            fireEvent.click($lockLabel);
+            // Then
+            await waitFor(() => expect($settingsTab.textContent).not.toContain('\ue898'));
+            expect($settingsTab.textContent).toContain('\ue88d');
+          });
+          test('click on switch, should unlock', async () => {
+            // Given
+            const $switch = $sandboxedEntry.querySelector('.material3.switch');
+            // When
+            fireEvent.click($switch);
+            // Then
+            await waitFor(() => expect($settingsTab.textContent).not.toContain('\ue898'));
+            expect($settingsTab.textContent).toContain('\ue88d');
+          });
         });
       });
     });

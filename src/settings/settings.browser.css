@@ -41,8 +41,7 @@
 }
 
 .settings__new-tab,
-.settings__tab-main,
-.settings__tab-advanced.container {
+.settings__tab-main {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -50,19 +49,23 @@
     width: 100%;
 }
 
-.settings__tab .settings__tab-advanced.container {
+.settings__tab .settings__tab-advanced {
+    position: relative;
     transform: scaleY(0);
     height: 0;
-    margin: 0;
-    transition: margin-top 0.3s  ease-out, transform 0.3s ease-out;
+    --x-margin: calc(-1 * var(--material3-card-padding));
+    margin: 0 var(--x-margin);
+    transition:
+        margin-top 0.3s  ease-out,
+        height 0.3s  ease-out,
+        transform 0.3s ease-out;
     overflow: hidden;
 }
 
-.settings__tab--expanded .settings__tab-advanced.container {
+.settings__tab--expanded .settings__tab-advanced {
     transform: scaleY(1);
     height: 100%;
-    --margin: calc(2 * var(--default-spacing));
-    margin: var(--margin) var(--margin) var(--default-spacing) var(--margin);
+    margin-top: var(--material3-card-spacing) ;
 }
 
 .settings__tab .expand-button {
@@ -75,6 +78,26 @@
 
 .settings__new-tab .material3.text-field,
 .settings__tab .material3.text-field {
+    flex: 1;
+}
+
+.settings__tab .settings__option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 56px;
+    padding: 0 16px;
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    user-select: none;
+    cursor: pointer;
+}
+.settings__tab .settings__option:hover {
+    background-color: var(--md-sys-color-surface-variant);
+}
+
+.settings__tab .settings__option-label {
     flex: 1;
 }
 
