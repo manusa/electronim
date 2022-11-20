@@ -68,8 +68,8 @@
 
 .electronim .material3.menu .menu-item .menu-item__leading-icon,
 .electronim .material3.menu .menu-item .menu-item__trailing-icon {
+  display: inline-block;
   color: var(--md-sys-color-on-surface-variant);
-  font-family: 'Material Symbols Outlined', sans-serif;
   width: var(--material3-menu-item-size);
   height: var(--material3-menu-item-size);
   text-align: center;

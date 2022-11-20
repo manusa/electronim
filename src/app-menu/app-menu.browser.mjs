@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {html, render, Menu} from '../components/index.mjs';
+import {html, render, Icon, Menu} from '../components/index.mjs';
 
 const {aboutOpenDialog, close, helpOpenDialog, settingsOpenDialog} = window.electron;
 
@@ -29,11 +29,11 @@ const AppMenu = () => {
     <div class='wrapper' onClick=${close}>
       <div class='scrim'>
         <${Menu}>
-          <${Menu.Item} icon='\ue887' label='Help' data-testid='help-menu-entry'
+          <${Menu.Item} icon=${Icon.help} label='Help' data-testid='help-menu-entry'
             onClick=${noBubbling(helpOpenDialog)} />
-          <${Menu.Item} icon='\ue8b8' label='Settings' data-testid='settings-menu-entry'
+          <${Menu.Item} icon=${Icon.settings} label='Settings' data-testid='settings-menu-entry'
             onClick=${noBubbling(settingsOpenDialog)} />
-          <${Menu.Item} icon='\ue88e' label='About' data-testid='about-menu-entry'
+          <${Menu.Item} icon=${Icon.info} label='About' data-testid='about-menu-entry'
             onClick=${noBubbling(aboutOpenDialog)} />
         </${Menu}>
       </div>

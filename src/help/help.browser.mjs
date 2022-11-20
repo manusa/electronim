@@ -15,7 +15,7 @@
  */
 const {docs, close} = window.electron;
 
-import {ELECTRONIM_VERSION, html, render, TopAppBar} from '../components/index.mjs';
+import {ELECTRONIM_VERSION, html, render, Icon, TopAppBar} from '../components/index.mjs';
 
 const helpRoot = () => document.querySelector('.help-root');
 
@@ -53,7 +53,7 @@ const Content = () => html`
 `;
 
 const Help = () => html`
-    <${TopAppBar} headline='Help' icon='\uE5C4' iconClick=${close} />
+    <${TopAppBar} headline='Help' icon=${Icon.arrowBack} iconClick=${close} />
     <div class="help-content body-large">
       <${Toc} />
       <${Content} />

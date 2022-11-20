@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {html} from './index.mjs';
+import {html, Icon} from './index.mjs';
 
 /**
  * A menu based on Material design (3) guidelines.
@@ -33,8 +33,8 @@ Menu.Item = ({
   ...properties
 }) => html`
   <a class='menu-item' ...${properties}>
-    <div class='menu-item__leading-icon'>${icon}</div>
+    <${Icon} className='menu-item__leading-icon'>${icon}</${Icon}>
     <div class='menu-item__text'>${label}</div>
-    <div class='menu-item__trailing-icon'>${trailingIcon}</div>
+    <${Icon} className='menu-item__trailing-icon'>${trailingIcon}</${Icon}>
   </a>
 `;

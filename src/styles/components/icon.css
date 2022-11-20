@@ -13,12 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-@import './card.css';
-@import './checkbox.css';
-@import './icon.css';
-@import './icon-button.css';
-@import './menu.css';
-@import './navigation-rail.css';
-@import './switch.css';
-@import './text-field.css';
-@import './top-bar.css';
+
+.electronim .material3.icon,
+.electronim .material-icon,
+.material-icon {
+  font-family: 'Material Symbols Outlined', sans-serif;
+}

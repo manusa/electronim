@@ -13,17 +13,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {html, Card, IconButton, Switch, TextField} from '../components/index.mjs';
+import {html, Card, Icon, IconButton, Switch, TextField} from '../components/index.mjs';
 import {ACTIONS, addTab, isPaneActive, setTabProperty, toggleTabProperty} from './settings.reducer.browser.mjs';
 
-const disabledIcon = disabled => (disabled === true ? '\ue8f5' : '\ue8f4');
-const notificationIcon = disabled => (disabled === true ? '\ue7f6' : '\ue7f4');
-const sandboxedIcon = sandboxed => (sandboxed === true ? '\ue88d' : '\ue898');
+const disabledIcon = disabled => (disabled === true ? Icon.visibilityOff : Icon.visibility);
+const notificationIcon = disabled => (disabled === true ? Icon.notificationsOff : Icon.notifications);
+const sandboxedIcon = sandboxed => (sandboxed === true ? Icon.lock : Icon.lockOpen);
 
 const ExpandButton = ({dispatch, id, expanded = false}) => {
   const properties = {
     className: 'expand-button',
-    icon: '\ue5cf',
+    icon: Icon.expandMore,
     title: expanded ? 'Collapse' : 'Expand (show advanced settings)',
     onClick: () => dispatch({type: ACTIONS.TOGGLE_TAB_EXPANDED, payload: id})
   };
@@ -45,7 +45,7 @@ const TabAdvancedSettings = (
         class='settings__option sandboxed-toggle' onClick=${onSandboxClick}
         title='Use an isolated/sandboxed session for this tab'
       >
-        <span class='material-icon'>${sandboxedIcon(sandboxed)}</span>
+        <${Icon}>${sandboxedIcon(sandboxed)}</${Icon}>
         <span class='settings__option-label'>Sandbox</span>
         <${Switch}
           checked=${sandboxed} onClick=${onSandboxClick}
@@ -76,7 +76,7 @@ const TabEntry = ({
         title=${disableNotifications ? 'Notifications disabled. Click to enable' : 'Notifications enabled. Click to disable'}
         onClick=${toggleTabProperty(dispatch, 'disableNotifications', id)}
       />
-      <${IconButton} icon='\ue872' title='Delete tab' data-testid='button-delete'
+      <${IconButton} icon=${Icon.delete} title='Delete tab' data-testid='button-delete'
         onClick=${() => dispatch({type: ACTIONS.REMOVE, payload: {id}})}
       /> 
     </div>
@@ -109,7 +109,7 @@ export const ServicesPane = ({dispatch, state}) => {
             onKeyDown=${onNewKeyDown}
             hasError=${state.newTabValue.length !== 0 && !state.newTabValid}
         />
-        <${IconButton} icon='\ue145' onClick=${onAddTab} disabled=${!state.newTabValid} />
+        <${IconButton} icon=${Icon.add} onClick=${onAddTab} disabled=${!state.newTabValid} />
       </div>
       <div class='settings__tabs'>
         ${state.tabs.map(tab => (html`

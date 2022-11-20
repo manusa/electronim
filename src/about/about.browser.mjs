@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {ELECTRONIM_VERSION, html, render, Card, Logo, TopAppBar} from '../components/index.mjs';
+import {ELECTRONIM_VERSION, html, render, Card, Icon, Logo, TopAppBar} from '../components/index.mjs';
 
 const {close, versions} = window.electron;
 
@@ -29,7 +29,7 @@ const Version = ({component, value}) => html`
 `;
 
 const About = () => html`
-  <${TopAppBar} icon='\uE5C4' iconClick=${close} headline='About ElectronIM'/>
+  <${TopAppBar} icon=${Icon.arrowBack} iconClick=${close} headline='About ElectronIM'/>
   <div class='about-content'>
     <${Card}
         interactive=${true /* Enable state layer just for fun */}
