@@ -48,15 +48,27 @@ describe('Settings (Other) in Browser test suite', () => {
       }));
     }, 10000);
   });
-  test('Toggle global notifications should check input', async () => {
-    // Given
-    const $notificationCheckbox = document.querySelector('.settings__global-notifications input');
-    expect($notificationCheckbox.checked).toBe(false);
-    // When
-    fireEvent.click($notificationCheckbox);
-    // Then
-    await waitFor(() => {
-      expect($notificationCheckbox.checked).toBe(true);
+  describe('Toggle global notifications', () => {
+    let $notificationsSwitch;
+    beforeEach(() => {
+      $notificationsSwitch = document.querySelector('.settings__global-notifications .switch input');
+    });
+    test('when notifications enabled, should check input', async () => {
+      // Given
+      expect($notificationsSwitch.checked).toBe(false);
+      // When
+      fireEvent.click($notificationsSwitch);
+      // Then
+      await waitFor(() => expect($notificationsSwitch.checked).toBe(true));
+    });
+    test('when notifications disabled, should uncheck input', async () => {
+      // Given
+      fireEvent.click($notificationsSwitch);
+      await waitFor(() => expect($notificationsSwitch.checked).toBe(true));
+      // When
+      fireEvent.click($notificationsSwitch);
+      // Then
+      await waitFor(() => expect($notificationsSwitch.checked).toBe(false));
     });
   });
   test('ElectronIM version is visible', async () => {

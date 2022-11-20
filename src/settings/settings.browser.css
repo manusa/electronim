@@ -53,13 +53,11 @@
     position: relative;
     transform: scaleY(0);
     height: 0;
-    --x-margin: calc(-1 * var(--material3-card-padding));
-    margin: 0 var(--x-margin);
+    margin: 0;
     transition:
         margin-top 0.3s  ease-out,
         height 0.3s  ease-out,
         transform 0.3s ease-out;
-    overflow: hidden;
 }
 
 .settings__tab--expanded .settings__tab-advanced {
@@ -81,23 +79,30 @@
     flex: 1;
 }
 
-.settings__tab .settings__option {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    height: 56px;
-    padding: 0 16px;
+.settings__option {
+    --x-margin: calc(-1 * var(--material3-card-padding));
+    margin: 0 var(--x-margin);
+    padding: 0;
     font-family: var(--md-sys-typescale-body-large-font);
     font-size: var(--md-sys-typescale-body-large-size);
-    line-height: var(--md-sys-typescale-body-large-line-height);
     user-select: none;
     cursor: pointer;
 }
-.settings__tab .settings__option:hover {
+
+.settings__option-content {
+    display: flex;
+    align-items: center;
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    height: 56px;
+    gap: 6px;
+    padding: 0 var(--material3-card-padding);
+}
+
+.settings__option-content:hover {
     background-color: var(--md-sys-color-surface-variant);
 }
 
-.settings__tab .settings__option-label {
+.settings__option .settings__option-label {
     flex: 1;
 }
 
