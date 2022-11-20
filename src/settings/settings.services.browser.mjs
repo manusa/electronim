@@ -13,7 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {html, Card, Icon, IconButton, Switch, TextField} from '../components/index.mjs';
+import {html, Card, Icon, IconButton, TextField} from '../components/index.mjs';
+import {SettingsOption} from './settings.common.browser.mjs';
 import {ACTIONS, addTab, isPaneActive, setTabProperty, toggleTabProperty} from './settings.reducer.browser.mjs';
 
 const disabledIcon = disabled => (disabled === true ? Icon.visibilityOff : Icon.visibility);
@@ -41,17 +42,14 @@ const TabAdvancedSettings = (
   };
   return html`
     <div class='settings__tab-advanced'>
-      <div
-        class='settings__option sandboxed-toggle' onClick=${onSandboxClick}
+      <${SettingsOption}
+        onClick=${onSandboxClick}
+        checked=${sandboxed}
+        icon=${sandboxedIcon(sandboxed)}
+        label='Sandbox'
+        className='sandboxed-toggle'
         title='Use an isolated/sandboxed session for this tab'
-      >
-        <${Icon}>${sandboxedIcon(sandboxed)}</${Icon}>
-        <span class='settings__option-label'>Sandbox</span>
-        <${Switch}
-          checked=${sandboxed} onClick=${onSandboxClick}
-          title='Use an isolated/sandboxed session for this tab'
-        />
-      </div>
+      />
     </div>
   `;
 };

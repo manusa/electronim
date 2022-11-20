@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+import {html, Icon, Switch} from '../components/index.mjs';
 
 export const prependProtocol = url => {
   if (url && !url.match(/^https?:\/\/.+/)) {
@@ -40,3 +41,19 @@ export const newId = () => (
   new Date().getTime().toString(36) + Math.random().toString(36).slice(2) // NOSONAR
 );
 
+export const SettingsOption = ({
+  onClick,
+  checked,
+  icon,
+  label,
+  title,
+  className = ''
+}) => html`
+  <div class=${`settings__option ${className}`} onClick=${onClick} title=${title}>
+    <div class='settings__option-content'>
+      <${Icon}>${icon}</${Icon}>
+      <span class='settings__option-label'>${label}</span>
+      <${Switch} checked=${checked} onClick=${onClick} title=${title} />
+    </div>
+  </div>
+`;
