@@ -15,7 +15,7 @@
  */
 /* eslint-disable no-undef */
 import {
-  APP_EVENTS, html, render, useLayoutEffect, useReducer, useState, IconButton
+  APP_EVENTS, html, render, useLayoutEffect, useReducer, useState, Icon, IconButton
 } from '../components/index.mjs';
 import {
   initialState, reducer, activateTab, addTabs, moveTab, setNewVersionAvailable, setTabFavicon, setTabTitle,
@@ -70,7 +70,7 @@ const Favicon = ({favicon = ''}) => {
 };
 
 const NotificationIcon = ({disableNotifications = false}) => disableNotifications && html`
-  <div class="chrome-tab-notifications-mute">\ue7f6</div>
+  <${Icon} className='chrome-tab-notifications-mute'>${Icon.notificationsOff}</${Icon}>
 `;
 
 const BackgroundSvgGeometryLeft = ({...props}) => html`
@@ -172,7 +172,7 @@ const ChromeTabs = ({dispatch, state: {tabs}}) => {
 };
 
 const Menu = ({state: {newVersionAvailable}}) => {
-  const icon = newVersionAvailable ? '\uf182' : '\ue5d4';
+  const icon = newVersionAvailable ? Icon.arrowCircleUp : Icon.moreVert;
   return html`
     <${IconButton}
       icon=${icon} className='menu__button' onClick=${openMenu}

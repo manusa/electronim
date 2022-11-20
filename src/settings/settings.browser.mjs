@@ -16,7 +16,7 @@
 const {ipcRenderer} = window;
 
 import {
-  APP_EVENTS, html, render, useReducer, IconButton, NavigationRail, TopAppBar
+  APP_EVENTS, html, render, useReducer, Icon, IconButton, NavigationRail, TopAppBar
 } from '../components/index.mjs';
 import {
   reducer, activatePane, dictionariesEnabled, isPaneActive
@@ -46,17 +46,17 @@ const Settings = ({initialState}) => {
   });
   const cancel = () => ipcRenderer.send(APP_EVENTS.closeDialog);
   return html`
-    <${TopAppBar} headline='Settings' icon='\uE5C4' iconClick=${cancel}
+    <${TopAppBar} headline='Settings' icon=${Icon.arrowBack} iconClick=${cancel}
       trailingIcon=${html`<${IconButton}
-          className='settings__submit' icon='\ue161' onClick=${save}
+          className='settings__submit' icon=${Icon.save} onClick=${save}
           disabled=${!state.canSave || state.invalidTabs.size !== 0}/>`}
     />
     <${NavigationRail}>
-      <${NavigationRail.Button} label='Services' icon='\ue5c3'
+      <${NavigationRail.Button} label='Services' icon=${Icon.apps}
         active=${isPaneActive(state)(ServicesPane.id)} onClick=${() => onActivatePane(ServicesPane.id)} />
-      <${NavigationRail.Button} label='Spell check' icon='\ue8ce'
+      <${NavigationRail.Button} label='Spell check' icon=${Icon.spellcheck}
         active=${isPaneActive(state)(SpellCheckPane.id)} onClick=${() => onActivatePane(SpellCheckPane.id)} />
-      <${NavigationRail.Button} label='Other' icon='\ue619'
+      <${NavigationRail.Button} label='Other' icon=${Icon.more}
         active=${isPaneActive(state)(OtherPane.id)} onClick=${() => onActivatePane(OtherPane.id)} />
     </${NavigationRail}>
     <div class="container">

@@ -522,7 +522,3 @@
   text-transform: var(--md-sys-typescale-display-large-text-transform);
   text-decoration: var(--md-sys-typescale-display-large-text-decoration);
 }
-
-.material-icon {
-  font-family: 'Material Symbols Outlined', sans-serif;
-}

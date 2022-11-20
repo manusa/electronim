@@ -15,15 +15,37 @@
  */
 import {html} from './index.mjs';
 
-export const Icon = ({icon, children}) => {
-  const theIcon = html`<span class='icon'><i class=${icon}></i></span>`;
-  if (!children) {
-    return theIcon;
-  }
-  return (html`
-    <span class='icon-text'>
-      ${theIcon}
-      <span>${children}</span>
-    </span>
-  `);
-};
+/**
+ * An icon based on Material design (3) guidelines.
+ *
+ * @param children the icon to be rendered.
+ * @param className classes to be appended to the icon class attribute.
+ * @param properties any other properties to be added to the icon.
+ */
+export const Icon = ({
+  children,
+  className = '',
+  ...properties
+}) => html`
+  <span class=${`.material3.icon material-icon ${className}`} ...${properties}>${children}</span>
+`;
+
+Icon.add = '\ue145';
+Icon.apps = '\ue5c3';
+Icon.arrowBack = '\ue5c4';
+Icon.arrowCircleUp = '\uf182';
+Icon.delete = '\ue872';
+Icon.expandMore = '\ue5cf';
+Icon.help = '\ue887';
+Icon.info = '\ue88e';
+Icon.lock = '\ue88d';
+Icon.lockOpen = '\ue898';
+Icon.more = '\ue619';
+Icon.moreVert = '\ue5d4';
+Icon.notifications = '\ue7f4';
+Icon.notificationsOff = '\ue7f6';
+Icon.save = '\ue161';
+Icon.settings = '\ue8b8';
+Icon.spellcheck = '\ue8ce';
+Icon.visibility = '\ue8f4';
+Icon.visibilityOff = '\ue8f5';
