@@ -14,8 +14,10 @@
    limitations under the License.
  */
 const {app} = require('electron');
+const {registerAppShortcuts} = require('./browser-window');
 const main = require('./main');
 
 app.name = 'ElectronIM';
 
 app.on('ready', main.init);
+app.on('web-contents-created', registerAppShortcuts);

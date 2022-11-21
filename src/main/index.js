@@ -17,7 +17,6 @@ const path = require('path');
 const {
   BrowserWindow, Notification, app, desktopCapturer, ipcMain: eventBus, nativeTheme
 } = require('electron');
-const {registerGlobalShortcuts} = require('./keyboard-shortcuts');
 const {APP_EVENTS} = require('../constants');
 const {openAboutDialog} = require('../about');
 const {newAppMenu, isNotAppMenu} = require('../app-menu');
@@ -222,7 +221,6 @@ const browserVersionsReady = () => {
 };
 
 const init = () => {
-  registerGlobalShortcuts();
   fixUserDataLocation();
   loadDictionaries();
   const {width = 800, height = 600, theme} = loadSettings();

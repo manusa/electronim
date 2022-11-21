@@ -15,16 +15,15 @@
  */
 /* eslint-disable no-use-before-define */
 describe('Settings module test suite', () => {
-  let mockBrowserView;
+  let electron;
   let fs;
   let path;
   let settings;
   beforeEach(() => {
     jest.resetModules();
-    mockBrowserView = require('../../__tests__').mockBrowserWindowInstance();
-    jest.mock('electron', () => ({
-      BrowserView: jest.fn(() => mockBrowserView)
-    }));
+    jest.mock('../../constants', () => ({}));
+    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
+    electron = require('electron');
     jest.mock('fs');
     jest.mock('os', () => ({homedir: () => '$HOME'}));
     fs = require('fs');
@@ -125,10 +124,8 @@ describe('Settings module test suite', () => {
     let mainWindow;
     let openSettings;
     beforeEach(() => {
-      mainWindow = {
-        getContentBounds: jest.fn(() => ({width: 13, height: 37})),
-        setBrowserView: jest.fn()
-      };
+      mainWindow = electron.browserWindowInstance;
+      mainWindow.getContentBounds = jest.fn(() => ({width: 13, height: 37}));
       openSettings = settings.openSettingsDialog(mainWindow);
     });
     test('webPreferences is sandboxed and has no node integration', () => {
@@ -145,8 +142,9 @@ describe('Settings module test suite', () => {
       // When
       openSettings();
       // Then
-      expect(mockBrowserView.webContents.loadURL).toHaveBeenCalledTimes(1);
-      expect(mockBrowserView.webContents.loadURL).toHaveBeenCalledWith(expect.stringMatching(/.+?\/index.html$/));
+      expect(electron.browserViewInstance.webContents.loadURL).toHaveBeenCalledTimes(1);
+      expect(electron.browserViewInstance.webContents.loadURL)
+        .toHaveBeenCalledWith(expect.stringMatching(/.+?\/index.html$/));
     });
   });
   const expectHomeDirectoryCreated = () => {

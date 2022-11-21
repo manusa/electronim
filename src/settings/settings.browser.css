@@ -56,14 +56,15 @@
     margin: 0;
     transition:
         margin-top 0.3s  ease-out,
-        height 0.3s  ease-out,
         transform 0.3s ease-out;
+    overflow-y: hidden;
 }
 
 .settings__tab--expanded .settings__tab-advanced {
     transform: scaleY(1);
     height: 100%;
     margin-top: var(--material3-card-spacing) ;
+    overflow-y: clip;
 }
 
 .settings__tab .expand-button {
