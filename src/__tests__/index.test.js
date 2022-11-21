@@ -18,11 +18,7 @@ describe('Entrypoint test suite', () => {
   let main;
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('electron', () => ({
-      app: {
-        on: jest.fn()
-      }
-    }));
+    jest.mock('electron', () => require('../__tests__').mockElectronInstance());
     jest.mock('../main', () => ({
       init: jest.fn()
     }));
@@ -35,7 +31,16 @@ describe('Entrypoint test suite', () => {
     require('../index');
     // Then
     expect(app.name).toBe('ElectronIM');
-    expect(app.on).toHaveBeenCalledTimes(1);
+    expect(app.on).toHaveBeenCalledTimes(2);
     expect(app.on). toHaveBeenCalledWith('ready', main.init);
+  });
+  test('Adds event listener to register app keyboard shortcuts on every webContents', () => {
+    // Given
+    // When
+    require('../index');
+    // Then
+    expect(app.on).toHaveBeenCalledTimes(2);
+    expect(app.on)
+      .toHaveBeenCalledWith('web-contents-created', require('../browser-window').registerAppShortcuts);
   });
 });

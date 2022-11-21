@@ -20,14 +20,9 @@ describe('browser-window util module test suite', () => {
   });
   test('showDialog, should fill provided window with provided BrowserView', () => {
     // Given
-    const window = {
-      getContentBounds: jest.fn(() => ({width: 13, height: 37})),
-      setBrowserView: jest.fn()
-    };
-    const dialog = {
-      setBounds: jest.fn(),
-      setAutoResize: jest.fn()
-    };
+    const window = require('../../__tests__/electron').mockBrowserWindowInstance();
+    window.getContentBounds = jest.fn(() => ({width: 13, height: 37}));
+    const dialog = require('../../__tests__/electron').mockBrowserWindowInstance();
     // When
     browserWindow.showDialog(window, dialog);
     // Then
@@ -38,5 +33,6 @@ describe('browser-window util module test suite', () => {
     expect(dialog.setAutoResize).toHaveBeenCalledTimes(1);
     expect(dialog.setAutoResize)
       .toHaveBeenCalledWith({width: false, horizontal: false, height: false, vertical: false});
+    expect(dialog.webContents.focus).toHaveBeenCalledTimes(1);
   });
 });

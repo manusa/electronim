@@ -39,6 +39,7 @@ const mockBrowserWindowInstance = () => {
       cut: jest.fn(),
       destroy: jest.fn(),
       executeJavaScript: jest.fn(async () => {}),
+      focus: jest.fn(),
       goBack: jest.fn(),
       loadURL: jest.fn(url => {
         instance.webContents.loadedUrl = url;
@@ -67,6 +68,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     MenuItem: jest.fn(),
     app: {
       getPath: jest.fn(),
+      on: jest.fn(),
       setPath: jest.fn()
     },
     contextBridge: {
