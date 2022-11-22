@@ -59,7 +59,7 @@ describe('Tab Manager module test suite', () => {
       expect(result).toBeNull();
     });
   });
-  describe('getTabTraverse', () => {
+  describe('Tab traversal functions', () => {
     beforeEach(() => {
       tabManager.addTabs({send: jest.fn()})([
         {id: 'A'},
@@ -101,6 +101,26 @@ describe('Tab Manager module test suite', () => {
         const nextTab = tabManager.getPreviousTab();
         // Then
         expect(nextTab).toBe('C');
+      });
+    });
+    describe('getTabAt', () => {
+      test('with position in range, should return tab in range', () => {
+        // When
+        const nextTab = tabManager.getTabAt(2);
+        // Then
+        expect(nextTab).toBe('B');
+      });
+      test('with position out of range (upper), should return last', () => {
+        // When
+        const nextTab = tabManager.getTabAt(9);
+        // Then
+        expect(nextTab).toBe('C');
+      });
+      test('with position out of range (lower), should return last', () => {
+        // When
+        const nextTab = tabManager.getTabAt(-1);
+        // Then
+        expect(nextTab).toBe('A');
       });
     });
   });

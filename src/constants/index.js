@@ -50,6 +50,7 @@ const APP_EVENTS = {
   canNotify: 'canNotify',
   tabsReady: 'tabsReady',
   tabReorder: 'tabReorder',
+  tabSwitchToPosition: 'tabSwitchToPosition',
   tabTraverseNext: 'tabTraverseNext',
   tabTraversePrevious: 'tabTraversePrevious',
   zoomIn: 'zoomIn',

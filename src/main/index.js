@@ -102,6 +102,10 @@ const handleTabTraverse = getTabIdFunction => () => {
   activateTab(tabId);
 };
 
+const handleTabSwitchToPosition = tabPosition => {
+  handleTabTraverse(() => tabManager.getTabAt(tabPosition))();
+};
+
 const handleZoomIn = event => event.sender.setZoomFactor(event.sender.getZoomFactor() + 0.1);
 
 const handleZoomOut = event => {
@@ -213,6 +217,7 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.settingsLoad, loadSettings);
   eventBus.on(APP_EVENTS.settingsOpenDialog, openSettingsDialog(mainWindow));
   eventBus.on(APP_EVENTS.settingsSave, saveSettings);
+  eventBus.on(APP_EVENTS.tabSwitchToPosition, handleTabSwitchToPosition);
   eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(tabManager.getNextTab));
   eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(tabManager.getPreviousTab));
 };

@@ -215,8 +215,7 @@ describe('Main :: Global listeners module test suite', () => {
         browserWindow.getBrowserViews = jest.fn(() => [new electron.BrowserView(), new electron.BrowserView()]);
       });
       test('tabTraverseNext', () => {
-        jest.spyOn(tabManagerModule, 'getNextTab')
-          .mockImplementation(() => 'nextTabId');
+        jest.spyOn(tabManagerModule, 'getNextTab').mockImplementation(() => 'nextTabId');
         main.init();
         // When
         eventBus.listeners.tabTraverseNext();
@@ -224,13 +223,20 @@ describe('Main :: Global listeners module test suite', () => {
         expect(tabManagerModule.getTab).toHaveBeenCalledWith('nextTabId');
       });
       test('tabTraversePrevious', () => {
-        jest.spyOn(tabManagerModule, 'getPreviousTab')
-          .mockImplementation(() => 'previousTabId');
+        jest.spyOn(tabManagerModule, 'getPreviousTab').mockImplementation(() => 'previousTabId');
         main.init();
         // When
         eventBus.listeners.tabTraversePrevious();
         // Then
         expect(tabManagerModule.getTab).toHaveBeenCalledWith('previousTabId');
+      });
+      test('tabSwitchToPosition', () => {
+        jest.spyOn(tabManagerModule, 'getTabAt').mockImplementation(() => 'tabAtPosition');
+        main.init();
+        // When
+        eventBus.listeners.tabSwitchToPosition();
+        // Then
+        expect(tabManagerModule.getTab).toHaveBeenCalledWith('tabAtPosition');
       });
     });
   });
