@@ -15,6 +15,13 @@
  */
 import {html} from './index.mjs';
 
+/**
+ * A Switch based on Material design (3) guidelines.
+ *
+ * @param checked whether the switch is checked or not.
+ * @param onClick callback function to be executed when the switch is clicked.
+ * @param properties any other properties to be added to the switch.
+ */
 export const Switch = ({
   checked = false,
   onClick,

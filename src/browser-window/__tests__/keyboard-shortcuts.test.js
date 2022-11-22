@@ -38,6 +38,20 @@ describe('Main :: Global Keyboard Shortcuts module test suite', () => {
       browserWindow.listeners['before-input-event'](inputEvent, {key, control, shift});
       expect(electron.ipcMain.emit).toHaveBeenCalledWith(appEvent);
     });
+  describe.each([1, 2, 3, 4, 5, 6, 7, 8, 9])('Key "%s"', key => {
+    test('with ctrl, triggers "tabSwitchToPosition" app event', () => {
+      browserWindow.listeners['before-input-event'](inputEvent, {key, control: true});
+      expect(electron.ipcMain.emit).toHaveBeenCalledWith('tabSwitchToPosition', key);
+    });
+    test('with meta, triggers "tabSwitchToPosition" app event', () => {
+      browserWindow.listeners['before-input-event'](inputEvent, {key, meta: true});
+      expect(electron.ipcMain.emit).toHaveBeenCalledWith('tabSwitchToPosition', key);
+    });
+    test('with no modifiers, does nothing', () => {
+      browserWindow.listeners['before-input-event'](inputEvent, {key});
+      expect(electron.ipcMain.emit).not.toHaveBeenCalled();
+    });
+  });
   test('ignores keyUp events', () => {
     browserWindow.listeners['before-input-event'](inputEvent, {type: 'keyUp', key: 'Escape'});
     expect(electron.ipcMain.emit).not.toHaveBeenCalled();

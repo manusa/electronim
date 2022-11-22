@@ -28,6 +28,13 @@ EVENTS.set(eventKey({key: 'Escape'}), () => {
 
 EVENTS.set(eventKey({key: 'F11'}), () => eventBus.emit(APP_EVENTS.fullscreenToggle));
 
+Array(9).fill(1).forEach((min, idx) => {
+  const key = min + idx;
+  const func = () => eventBus.emit(APP_EVENTS.tabSwitchToPosition, key);
+  EVENTS.set(eventKey({key, control: true}), func);
+  EVENTS.set(eventKey({key, meta: true}), func);
+});
+
 EVENTS.set(eventKey({key: 'Tab', control: true}), () =>
   eventBus.emit(APP_EVENTS.tabTraverseNext));
 
