@@ -26,12 +26,19 @@ EVENTS.set(eventKey({key: 'Escape'}), () => {
   eventBus.emit(APP_EVENTS.closeDialog);
 });
 
-EVENTS.set(eventKey({key: 'F11'}), () => {
-  eventBus.emit(APP_EVENTS.fullscreenToggle);
-});
+EVENTS.set(eventKey({key: 'F11'}), () => eventBus.emit(APP_EVENTS.fullscreenToggle));
+
+EVENTS.set(eventKey({key: 'Tab', control: true}), () =>
+  eventBus.emit(APP_EVENTS.tabTraverseNext));
+
+EVENTS.set(eventKey({key: 'Tab', shift: true, control: true}), () =>
+  eventBus.emit(APP_EVENTS.tabTraversePrevious));
 
 const registerAppShortcuts = (_, webContents) => {
-  webContents.on('before-input-event', (event, {key, shift, control, alt, meta}) => {
+  webContents.on('before-input-event', (event, {type, key, shift, control, alt, meta}) => {
+    if (type === 'keyUp') {
+      return;
+    }
     const func = EVENTS.get(eventKey({key, shift, control, alt, meta}));
     if (func) {
       event.preventDefault();

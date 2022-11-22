@@ -94,6 +94,9 @@ const handleMainWindowResize = event => {
 const handleTabReload = event => event.sender.reloadIgnoringCache();
 
 const handleTabTraverse = getTabIdFunction => () => {
+  if (mainWindow.getBrowserViews().length === 1) {
+    return;
+  }
   const tabId = getTabIdFunction();
   tabContainer.webContents.send(APP_EVENTS.activateTabInContainer, {tabId});
   activateTab(tabId);
@@ -149,8 +152,6 @@ const initTabListener = () => {
   });
   eventBus.on(APP_EVENTS.reload, handleTabReload);
   eventBus.on(APP_EVENTS.tabReorder, handleTabReorder);
-  eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(tabManager.getNextTab));
-  eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(tabManager.getPreviousTab));
   eventBus.on(APP_EVENTS.zoomIn, handleZoomIn);
   eventBus.on(APP_EVENTS.zoomOut, handleZoomOut);
   eventBus.on(APP_EVENTS.zoomReset, handleZoomReset);
@@ -212,6 +213,8 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.settingsLoad, loadSettings);
   eventBus.on(APP_EVENTS.settingsOpenDialog, openSettingsDialog(mainWindow));
   eventBus.on(APP_EVENTS.settingsSave, saveSettings);
+  eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(tabManager.getNextTab));
+  eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(tabManager.getPreviousTab));
 };
 
 const browserVersionsReady = () => {

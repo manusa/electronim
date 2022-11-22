@@ -16,50 +16,26 @@
 /* eslint-disable no-undef */
 const {ipcRenderer} = require('electron');
 
-const triggerForActionMap = actionMap => ({key}) => {
-  if (actionMap[key]) {
-    ipcRenderer.send(actionMap[key]);
-  }
-};
+const eventKey = ({key, shiftKey = false, ctrlKey = false, altKey = false, metaKey = false}) =>
+  `${key}-${shiftKey}-${ctrlKey}-${altKey}-${metaKey}`;
 
-const triggerCode = event => triggerForActionMap({
-  F5: APP_EVENTS.reload
-})(event);
+const EVENTS = new Map();
 
-const triggerControlCode = event => triggerForActionMap({
-  r: APP_EVENTS.reload,
-  R: APP_EVENTS.reload,
-  '+': APP_EVENTS.zoomIn,
-  '-': APP_EVENTS.zoomOut,
-  0: APP_EVENTS.zoomReset,
-  Tab: APP_EVENTS.tabTraverseNext
-})(event);
-
-const triggerControlShiftCode = event => triggerForActionMap({
-  Tab: APP_EVENTS.tabTraversePrevious
-})(event);
-
-const triggerCommandCode = event => triggerForActionMap({
-  r: APP_EVENTS.reload,
-  R: APP_EVENTS.reload
-})(event);
-
-
-const isPlain = event => event.ctrlKey === false && event.metaKey === false && event.shiftKey === false;
-const isControl = event => event.ctrlKey === true && event.metaKey === false && event.shiftKey === false;
-const isControlShift = event => event.ctrlKey === true && event.metaKey === false && event.shiftKey === true;
-const isCommand = event => event.ctrlKey === false && event.metaKey === true && event.shiftKey === false;
+EVENTS.set(eventKey({key: 'F5'}), () => ipcRenderer.send(APP_EVENTS.reload));
+EVENTS.set(eventKey({key: 'R', ctrlKey: true}), () => ipcRenderer.send(APP_EVENTS.reload));
+EVENTS.set(eventKey({key: 'r', ctrlKey: true}), () => ipcRenderer.send(APP_EVENTS.reload));
+EVENTS.set(eventKey({key: 'R', metaKey: true}), () => ipcRenderer.send(APP_EVENTS.reload));
+EVENTS.set(eventKey({key: 'r', metaKey: true}), () => ipcRenderer.send(APP_EVENTS.reload));
+EVENTS.set(eventKey({key: '+', ctrlKey: true}), () => ipcRenderer.send(APP_EVENTS.zoomIn));
+EVENTS.set(eventKey({key: '-', ctrlKey: true}), () => ipcRenderer.send(APP_EVENTS.zoomOut));
+EVENTS.set(eventKey({key: '0', ctrlKey: true}), () => ipcRenderer.send(APP_EVENTS.zoomReset));
 
 const initKeyboardShortcuts = () => {
   window.addEventListener('keyup', event => {
-    if (isPlain(event)) {
-      triggerCode(event);
-    } else if (isControl(event)) {
-      triggerControlCode(event);
-    } else if (isControlShift(event)) {
-      triggerControlShiftCode(event);
-    } else if (isCommand(event)) {
-      triggerCommandCode(event);
+    const func = EVENTS.get(eventKey(event));
+    if (func) {
+      event.preventDefault();
+      func();
     }
   });
   window.addEventListener('load', () => {
