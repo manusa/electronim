@@ -366,29 +366,6 @@ describe('Main module test suite', () => {
       // Then
       expect(event.sender.reloadIgnoringCache).toHaveBeenCalledTimes(1);
     });
-    describe('handleTabTraverse', () => {
-      beforeEach(() => {
-        jest.spyOn(tabManagerModule, 'getTab').mockImplementation();
-      });
-      test('tabTraverseNext', () => {
-        jest.spyOn(tabManagerModule, 'getNextTab')
-          .mockImplementation(() => 'nextTabId');
-        main.init();
-        // When
-        mockIpc.listeners.tabTraverseNext();
-        // Then
-        expect(tabManagerModule.getTab).toHaveBeenCalledWith('nextTabId');
-      });
-      test('tabTraversePrevious', () => {
-        jest.spyOn(tabManagerModule, 'getPreviousTab')
-          .mockImplementation(() => 'previousTabId');
-        main.init();
-        // When
-        mockIpc.listeners.tabTraversePrevious();
-        // Then
-        expect(tabManagerModule.getTab).toHaveBeenCalledWith('previousTabId');
-      });
-    });
     test('handleZoomIn', () => {
       const event = {sender: {
         getZoomFactor: jest.fn(() => 0),

@@ -193,4 +193,45 @@ describe('Main :: Global listeners module test suite', () => {
       expect(electron.nativeTheme.themeSource).toEqual('system');
     });
   });
+  describe('handleTabTraverse', () => {
+    let tabManagerModule;
+    beforeEach(() => {
+      tabManagerModule = require('../../tab-manager');
+      jest.spyOn(tabManagerModule, 'getTab').mockImplementation();
+    });
+    test.each([
+      'tabTraverseNext', 'tabTraversePrevious'
+    ])('%s, with dialog visible, should not traverse', event => {
+      // Given
+      browserWindow.getBrowserViews = jest.fn(() => [new electron.BrowserView()]);
+      main.init();
+      // When
+      eventBus.listeners[event]();
+      // Then
+      expect(tabManagerModule.getTab).not.toHaveBeenCalled();
+    });
+    describe('with tabs visible, should traverse', () => {
+      beforeEach(() => {
+        browserWindow.getBrowserViews = jest.fn(() => [new electron.BrowserView(), new electron.BrowserView()]);
+      });
+      test('tabTraverseNext', () => {
+        jest.spyOn(tabManagerModule, 'getNextTab')
+          .mockImplementation(() => 'nextTabId');
+        main.init();
+        // When
+        eventBus.listeners.tabTraverseNext();
+        // Then
+        expect(tabManagerModule.getTab).toHaveBeenCalledWith('nextTabId');
+      });
+      test('tabTraversePrevious', () => {
+        jest.spyOn(tabManagerModule, 'getPreviousTab')
+          .mockImplementation(() => 'previousTabId');
+        main.init();
+        // When
+        eventBus.listeners.tabTraversePrevious();
+        // Then
+        expect(tabManagerModule.getTab).toHaveBeenCalledWith('previousTabId');
+      });
+    });
+  });
 });

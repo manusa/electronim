@@ -28,11 +28,19 @@ describe('Main :: Global Keyboard Shortcuts module test suite', () => {
     };
   });
   test.each([
-    [{key: 'Escape', appEvent: 'appMenuClose'}], [{key: 'Escape', appEvent: 'closeDialog'}],
-    [{key: 'F11', appEvent: 'fullscreenToggle'}]
-  ])('Key "$key" triggers "$appEvent" app event', ({key, appEvent}) => {
-    browserWindow.listeners['before-input-event'](inputEvent, {key});
-    expect(electron.ipcMain.emit).toHaveBeenCalledWith(appEvent);
+    {key: 'Escape', shift: false, control: false, appEvent: 'appMenuClose'},
+    {key: 'Escape', shift: false, control: false, appEvent: 'closeDialog'},
+    {key: 'F11', shift: false, control: false, appEvent: 'fullscreenToggle'},
+    {key: 'Tab', shift: false, control: true, appEvent: 'tabTraverseNext'},
+    {key: 'Tab', shift: true, control: true, appEvent: 'tabTraversePrevious'}
+  ])('Key "$key" (shift: $shift, ctrl: $control) triggers "$appEvent" app event',
+    ({key, control, shift, appEvent}) => {
+      browserWindow.listeners['before-input-event'](inputEvent, {key, control, shift});
+      expect(electron.ipcMain.emit).toHaveBeenCalledWith(appEvent);
+    });
+  test('ignores keyUp events', () => {
+    browserWindow.listeners['before-input-event'](inputEvent, {type: 'keyUp', key: 'Escape'});
+    expect(electron.ipcMain.emit).not.toHaveBeenCalled();
   });
   describe('preventDefault', () => {
     test('calls preventDefault if key is registered', () => {
