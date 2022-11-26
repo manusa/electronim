@@ -34,6 +34,7 @@ Icon.add = '\ue145';
 Icon.apps = '\ue5c3';
 Icon.arrowBack = '\ue5c4';
 Icon.arrowCircleUp = '\uf182';
+Icon.arrowDropDown = '\ue5c5';
 Icon.delete = '\ue872';
 Icon.expandMore = '\ue5cf';
 Icon.help = '\ue887';

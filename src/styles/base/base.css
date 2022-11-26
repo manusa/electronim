@@ -23,6 +23,17 @@ html.electronim,
   color: var(--color-fg-default);
 }
 
+html.electronim {
+  box-sizing: border-box;
+  text-size-adjust: 100%;
+}
+
+.electronim *,
+.electronim *::before,
+.electronim *::after {
+  box-sizing: inherit;
+}
+
 .electronim a {
   background-color: transparent;
   color: var(--color-accent-fg);

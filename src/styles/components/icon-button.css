@@ -13,9 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-:root {
-  --material3-icon-button-size: 24px;
-}
 
 .electronim .material3.icon-button,
 .electronim .material3.icon-button:active,

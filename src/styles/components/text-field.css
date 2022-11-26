@@ -15,10 +15,6 @@
  */
 
 :root {
-  /*--material3-text-field-height: 56px;*/
-  /* Material 3 default height is too big for us, reduce it to something more appealing */
-  --material3-text-field-height: 40px;
-  --material3-text-field-padding-no-icon: 16px;
   --material3-text-field-outlined-border: solid 1px transparent;
   --material3-text-field-outlined-border-radius: 4px;
   --material3-text-field-outlined-border-color: var(--md-sys-color-outline);
@@ -29,9 +25,9 @@
 
 .electronim .material3.text-field {
   position: relative;
-  height: var(--material3-text-field-height);
+  height: var(--material3-field-height);
   display: flex;
-  padding: 0 var(--material3-text-field-padding-no-icon);
+  padding: 0 var(--material3-field-padding-no-icon);
   align-items: center;
 }
 
@@ -73,7 +69,7 @@
   display: flex;
   gap: 4px;
   color: var(--md-sys-color-on-surface);
-  line-height: calc(var(--material3-text-field-height) + var(--label-offset) * 2);
+  line-height: calc(var(--material3-field-height) + var(--label-offset) * 2);
   transition:
     line-height var(--material3-text-field-transition-duration) ease,
     font-size var(--material3-text-field-transition-duration) ease,
@@ -100,7 +96,7 @@
 }
 
 .electronim .material3.text-field.outlined .text-field__label::before {
-  min-width: calc(var(--material3-text-field-padding-no-icon) - 4px);
+  min-width: calc(var(--material3-field-padding-no-icon) - 4px);
   border-top-left-radius: var(--material3-text-field-outlined-border-radius);
 }
 
@@ -125,15 +121,16 @@
 }
 
 .electronim .material3.text-field .text-field__placeholder {
-  display: none;
   position: absolute;
   color: var(--md-sys-color-on-surface-variant);
   font-family: var(--md-sys-typescale-body-large-font);
   font-size: var(--md-sys-typescale-body-large-size);
+  opacity: 0;
+  transition: opacity var(--material3-text-field-transition-duration) ease;
 }
 
 .electronim .material3.text-field.focused.empty .text-field__placeholder {
-  display: block;
+  opacity: 1;
 }
 
 .electronim .material3.text-field .text-field__input {
@@ -143,8 +140,8 @@
   padding: 0;
   border: 0;
   outline: none;
-  height: var(--material3-text-field-height);
-  line-height: var(--material3-text-field-height);
+  height: var(--material3-field-height);
+  line-height: var(--material3-field-height);
 }
 
 .electronim .material3.text-field.outlined .text-field__input {

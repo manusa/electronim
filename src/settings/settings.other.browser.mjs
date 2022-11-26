@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {ELECTRONIM_VERSION, html, Card, HorizontalField, Icon, Select} from '../components/index.mjs';
+import {ELECTRONIM_VERSION, html, Card, Icon, Select} from '../components/index.mjs';
 import {
   isPaneActive,
   setTheme,
@@ -29,16 +29,15 @@ export const OtherPane = ({dispatch, state}) => {
   return isPaneActive(state)(OtherPane.id) && html`
     <h2 class='title'>Other</h2>
     <${Card} className='settings__other'>
-      <div style=${{display: 'flex', justifyContent: 'flex-start' /* eslint-disable no-warning-comments *//*
-      TODO: remove when Bulma is out
-      */}}>
-        <${HorizontalField} label='Theme' data-testid='settings-theme-select'>
-          <${Select} value=${state.theme} onChange=${e => setTheme({dispatch})(e.target.value)}>
-            <${Select.Option} value='system'>system</${Select.Option}>
-            <${Select.Option} value='light'>light</${Select.Option}>
-            <${Select.Option} value='dark'>dark</${Select.Option}>
-          </${Select}>
-        </${HorizontalField}>
+      <div>
+        <${Select}
+          data-testid='settings-theme-select'
+          label='Theme' value=${state.theme} onChange=${e => setTheme({dispatch})(e.target.value)}
+        >
+          <${Select.Option} value='system'>system</${Select.Option}>
+          <${Select.Option} value='light'>light</${Select.Option}>
+          <${Select.Option} value='dark'>dark</${Select.Option}>
+        </${Select}>
       </div>
       <${Card.Divider} />
       <${SettingsOption}
@@ -49,7 +48,7 @@ export const OtherPane = ({dispatch, state}) => {
           onClick=${onToggleGlobalNotifications}
       />
       <${Card.Divider} />
-      <div class='is-italic' data-testid='settings-electronim-version'>
+      <div data-testid='settings-electronim-version'>
         ElectronIM version ${ELECTRONIM_VERSION}
       </div>
     </${Card}>

@@ -23,4 +23,3 @@ export const sizes = {
 
 export {Checkbox} from './checkbox.mjs';
 export {Field, HorizontalField} from './field.mjs';
-export {Select} from './select.mjs';
