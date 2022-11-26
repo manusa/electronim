@@ -17,7 +17,7 @@ export {APP_EVENTS, ELECTRONIM_VERSION} from '../../bundles/constants.mjs';
 export {html, render, useLayoutEffect, useReducer, useState} from '../../bundles/preact.mjs';
 
 export {Card} from './card.mjs';
-export {Checkbox, Field, HorizontalField, sizes} from './form/index.mjs';
+export {Checkbox} from './checkbox.mjs';
 export {Icon} from './icon.mjs';
 export {IconButton} from './icon-button.mjs';
 export {Logo} from './electronim.mjs';

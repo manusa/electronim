@@ -21,12 +21,15 @@ import {
   toggleDictionary,
   useNativeSpellChecker, isPaneActive
 } from './settings.reducer.browser.mjs';
+import {SettingsOption} from './settings.common.browser.mjs';
 
 const LanguageEntry = ({dispatch, languageKey, name, enabled = false}) => html`
-  <${Checkbox} label=${`${name} (${languageKey})`} checked=${enabled}
-    value=${languageKey}
-    onClick=${toggleDictionary({dispatch, languageKey})}
-  />
+  <div className='settings__language-entry'>
+    <${Checkbox} label=${`${name} (${languageKey})`}
+      checked=${enabled} value=${languageKey}
+      onClick=${toggleDictionary({dispatch, languageKey})}
+    />
+  </div>
 `;
 
 export const SpellCheckPane = ({dispatch, state}) => {
@@ -35,13 +38,12 @@ export const SpellCheckPane = ({dispatch, state}) => {
   return isPaneActive(state)(SpellCheckPane.id) && html`
     <h2 class='title'>Spell check</h2>
     <${Card} className='settings__spell-check'>
-      <div class='settings__spell-check-common'>
-        <${Checkbox}
-            label='Use Native Spell Checker' checked=${useNative} value=${useNative}
-            onClick="${toggleUseNativeSpellChecker({dispatch})}"
-            data-testid='use-native-spell-checker'
-        />
-      </div>
+      <${SettingsOption}
+          className='settings__use-native-spell-checker'
+          label='Use Native Spell Checker'
+          checked=${useNative}
+          onClick=${toggleUseNativeSpellChecker({dispatch})}
+      />
       <${Card.Divider} />
       <div class='settings__dictionaries'>${
   Object.entries(dictionaries(state))

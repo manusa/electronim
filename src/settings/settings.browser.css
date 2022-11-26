@@ -130,7 +130,3 @@
         column-count: 5;
     }
 }
-
-.settings__dictionaries .control input[type="checkbox"] {
-    margin-right: var(--default-spacing);
-}

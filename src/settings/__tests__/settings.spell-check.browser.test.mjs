@@ -36,7 +36,7 @@ describe('Settings (Spell check) in Browser test suite', () => {
   test('toggle use native spell checker, should check use native spell checker', async () => {
     // Given
     const $useNativeSpellChecker = $spellCheckContainer
-      .querySelector('.settings__spell-check-common input[data-testid=use-native-spell-checker]');
+      .querySelector('.settings__use-native-spell-checker input.switch__input');
     expect($useNativeSpellChecker.checked).toBe(false);
     // When
     fireEvent.click($useNativeSpellChecker);
@@ -72,7 +72,7 @@ describe('Settings (Spell check) in Browser test suite', () => {
     test('when native, dictionaries should intersect available', async () => {
       // Given
       const $useNativeSpellChecker = $spellCheckContainer
-        .querySelector('.settings__spell-check-common input[data-testid=use-native-spell-checker]');
+        .querySelector('.settings__use-native-spell-checker input.switch__input');
       // When
       fireEvent.click($useNativeSpellChecker);
       // Then

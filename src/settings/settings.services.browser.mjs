@@ -35,24 +35,18 @@ const ExpandButton = ({dispatch, id, expanded = false}) => {
 
 const TabAdvancedSettings = (
   {dispatch, id, sandboxed = false}
-) => {
-  const onSandboxClick = event => {
-    event.stopPropagation();
-    toggleTabProperty(dispatch, 'sandboxed', id)();
-  };
-  return html`
-    <div class='settings__tab-advanced'>
-      <${SettingsOption}
-        onClick=${onSandboxClick}
-        checked=${sandboxed}
-        icon=${sandboxedIcon(sandboxed)}
-        label='Sandbox'
-        className='sandboxed-toggle'
-        title='Use an isolated/sandboxed session for this tab'
-      />
-    </div>
-  `;
-};
+) => html`
+  <div class='settings__tab-advanced'>
+    <${SettingsOption}
+      onClick=${toggleTabProperty(dispatch, 'sandboxed', id)}
+      checked=${sandboxed}
+      icon=${sandboxedIcon(sandboxed)}
+      label='Sandbox'
+      className='sandboxed-toggle'
+      title='Use an isolated/sandboxed session for this tab'
+    />
+  </div>
+`;
 
 const TabEntry = ({
   dispatch, invalidTabs, id, expanded, url, disabled, disableNotifications = false, ...tab

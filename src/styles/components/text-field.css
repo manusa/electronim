@@ -20,7 +20,6 @@
   --material3-text-field-outlined-border-color: var(--md-sys-color-outline);
   --material3-text-field-outlined-border-color-focused: var(--md-sys-color-primary);
   --material3-text-field-outlined-border-color-errored: var(--md-sys-color-error);
-  --material3-text-field-transition-duration: 0.2s;
 }
 
 .electronim .material3.text-field {
@@ -71,9 +70,9 @@
   color: var(--md-sys-color-on-surface);
   line-height: calc(var(--material3-field-height) + var(--label-offset) * 2);
   transition:
-    line-height var(--material3-text-field-transition-duration) ease,
-    font-size var(--material3-text-field-transition-duration) ease,
-    color var(--material3-text-field-transition-duration) ease;
+    line-height var(--material3-transition-duration) ease,
+    font-size var(--material3-transition-duration) ease,
+    color var(--material3-transition-duration) ease;
 }
 
 .electronim .material3.text-field.outlined.focused .text-field__label,
@@ -126,7 +125,7 @@
   font-family: var(--md-sys-typescale-body-large-font);
   font-size: var(--md-sys-typescale-body-large-size);
   opacity: 0;
-  transition: opacity var(--material3-text-field-transition-duration) ease;
+  transition: opacity var(--material3-transition-duration) ease;
 }
 
 .electronim .material3.text-field.focused.empty .text-field__placeholder {
