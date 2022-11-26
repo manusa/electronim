@@ -13,12 +13,71 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-
-.electronim .control .checkbox {
-  user-select: none;
+:root {
+  --material3-checkbox-icon-size: 18px;
+  --material3-checkbox-border-width: 2px;
 }
 
-.electronim .control .checkbox .checkbox__icon {
-  width: calc(1em + var(--default-spacing));
-  text-align: center;
+.electronim .material3.checkbox {
+  display: inline-flex;
+  position: relative;
+  user-select: none;
+  cursor: pointer;
+  height: 40px;
+  gap: 12px;
+  align-items: center;
+}
+
+.electronim .material3.checkbox .checkbox__box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box; /* Required to provide relative height/width/top/left values for state layer */
+  --size: calc(var(--material3-checkbox-icon-size) - var(--material3-checkbox-border-width) * 2);
+  height: var(--size);
+  width: var(--size);
+  min-width: var(--size);
+  border: var(--material3-checkbox-border-width) solid var(--md-sys-color-on-surface);
+  border-radius: 2px;
+  transition: background var(--material3-transition-duration) ease-out;
+}
+
+.electronim .material3.checkbox.checked .checkbox__box {
+  background-color: var(--md-sys-color-primary);
+  border-color: transparent;
+}
+
+.electronim .material3.checkbox .checkbox__box .checkbox__icon {
+  font-size: 18px;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity var(--material3-transition-duration) ease-out;
+}
+
+.electronim .material3.checkbox.checked .checkbox__box .checkbox__icon {
+  opacity: 1;
+  color: var(--md-sys-color-on-primary);
+}
+
+.electronim .material3.checkbox .checkbox__box::before {
+  content: '';
+  background: var(--md-sys-color-primary);
+  position: absolute;
+  top: -92.8571429%;
+  left: -92.8571429%;
+  height: 285.7142857%; /* 40/(18-2-2) */
+  width: 285.7142857%;
+  border-radius: 100px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity var(--material3-transition-duration) linear;
+}
+
+.electronim .material3.checkbox .checkbox__box:hover::before {
+  opacity: var(--md-sys-state-hover-state-layer-opacity);
+}
+
+.electronim .material3.checkbox .checkbox__input {
+  appearance: none;
 }

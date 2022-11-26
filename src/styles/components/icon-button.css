@@ -45,7 +45,7 @@
   border-radius: 100px;
   z-index: -1;
   opacity: 0;
-  transition: opacity 200ms linear;
+  transition: opacity var(--material3-transition-duration) linear;
 }
 
 .electronim .material3.icon-button:hover::before {

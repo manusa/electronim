@@ -27,7 +27,7 @@ export const Icon = ({
   className = '',
   ...properties
 }) => html`
-  <span class=${`.material3.icon material-icon ${className}`} ...${properties}>${children}</span>
+  <span class=${`material3 icon material-icon ${className}`} ...${properties}>${children}</span>
 `;
 
 Icon.add = '\ue145';
@@ -35,6 +35,9 @@ Icon.apps = '\ue5c3';
 Icon.arrowBack = '\ue5c4';
 Icon.arrowCircleUp = '\uf182';
 Icon.arrowDropDown = '\ue5c5';
+Icon.check = '\ue5ca';
+Icon.checkBox = '\ue834';
+Icon.checkBoxOutlineBlank = '\ue835';
 Icon.delete = '\ue872';
 Icon.expandMore = '\ue5cf';
 Icon.help = '\ue887';

@@ -43,7 +43,7 @@
   right: 0;
   z-index: -1;
   opacity: 0;
-  transition: opacity 200ms linear;
+  transition: opacity var(--material3-transition-duration) linear;
 }
 
 .electronim .material3.card.interactive.elevated:hover::before {

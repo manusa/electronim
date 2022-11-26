@@ -31,8 +31,13 @@ export const Switch = ({
   if (checked) {
     switchClass += ' switch--checked';
   }
+  const onSwitch = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClick(e);
+  };
   return html`
-    <div class=${switchClass} onClick=${onClick} ...${properties}>
+    <div class=${switchClass} onClick=${onSwitch} ...${properties}>
       <span class='switch__track' />
       <span class='switch__thumb' />
       <input type='checkbox' class='switch__input' checked=${checked} />
