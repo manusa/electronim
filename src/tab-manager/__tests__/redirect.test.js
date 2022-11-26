@@ -195,6 +195,14 @@ describe('Tab Manager Redirect module test suite', () => {
         // Then
         expect(result).toBe(false);
       });
+      test('From Zoom home to one time password (OTP), should return false', () => {
+        // Given
+        mockBrowserViewUrl = 'https://zoom.us/signin';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockBrowserView, new URL('https://us04web.zoom.us/signin/otp/verify_help'));
+        // Then
+        expect(result).toBe(false);
+      });
     });
   });
 });
