@@ -1,0 +1,120 @@
+/*
+   Copyright 2022 Marc Nuri San Felix
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
+.electronim .material3.select {
+  position: relative;
+  height: var(--material3-field-height);
+  display: inline-flex;
+  padding: 0;
+  align-items: center;
+  user-select: none;
+}
+
+.electronim .material3.select.outlined {
+  border: var(--material3-text-field-outlined-border);
+  border-color: var(--material3-text-field-outlined-border-color);
+  border-radius: var(--material3-text-field-outlined-border-radius);
+  border-top-color: transparent;
+}
+
+.electronim .material3.select.outlined.focused {
+  border-color: var(--material3-text-field-outlined-border-color-focused);
+  border-top-color: transparent;
+}
+
+.electronim .material3.select .select__label {
+  background: none;
+  pointer-events: none;
+  font-size: var(--md-sys-typescale-body-small-size);
+  font-family: var(--md-sys-typescale-body-large-font);
+  font-weight: var(--md-sys-typescale-body-large-weight);
+}
+
+.electronim .material3.select.outlined .select__label {
+  --label-offset: 9px;
+  position: absolute;
+  top: calc(-1 * var(--label-offset));
+  left: 0;
+  width: 100%;
+  max-height: 100%;
+  display: flex;
+  gap: 4px;
+  color: var(--md-sys-color-on-surface);
+  line-height: 16px;
+}
+.electronim .material3.select.outlined.focused .select__label {
+  color: var(--md-sys-color-primary);
+}
+
+.electronim .material3.select.outlined .select__label::before,
+.electronim .material3.select.outlined .select__label::after {
+  content: '';
+  display: block;
+  margin-top: 8px;
+  border-top: var(--material3-text-field-outlined-border);
+  border-color: var(--material3-text-field-outlined-border-color);
+}
+
+.electronim .material3.select.outlined .select__label::before {
+  min-width: calc(var(--material3-field-padding-no-icon) - 4px);
+  border-top-left-radius: var(--material3-text-field-outlined-border-radius);
+}
+
+.electronim .material3.select.outlined .select__label::after {
+  flex: 1;
+  border-top-right-radius: var(--material3-text-field-outlined-border-radius);
+}
+
+.electronim .material3.select.outlined.focused .select__label::before,
+.electronim .material3.select.outlined.focused .select__label::after {
+  border-color: var(--material3-text-field-outlined-border-color-focused);
+}
+
+.electronim .material3.select .select__arrow {
+  position: absolute;
+  right: calc(var(--material3-field-padding-no-icon) / 2);
+}
+
+.electronim .material3.select.outlined .select__arrow {
+  color: var(--md-sys-color-on-surface);
+  font-size: var(--md-sys-typescale-body-large-size);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+}
+
+.electronim .material3.select .select__select {
+  z-index: 1;
+  flex: 1;
+  appearance: none;
+  background: none;
+  padding: 0 calc(var(--material3-field-padding-no-icon) + var(--material3-icon-button-size)) 0 var(--material3-field-padding-no-icon);
+  border: 0;
+  outline: none;
+  height: var(--material3-field-height);
+  line-height: var(--material3-field-height);
+  cursor: pointer;
+}
+
+.electronim .material3.select.outlined .select__select {
+  color: var(--md-sys-color-on-surface);
+  font-family: var(--md-sys-typescale-body-large-font);
+  font-size: var(--md-sys-typescale-body-large-size);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+}
+
+.electronim .material3.select.outlined .select__select option {
+  background-color: var(--md-sys-color-surface);
+  cursor: pointer;
+}

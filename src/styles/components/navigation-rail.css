@@ -62,9 +62,9 @@
 }
 
 .electronim .material3.navigation-rail .navigation-rail-button__icon.material3.icon-button::before {
-  top: -16.6666%;
+  top: 0;
   left: -66.6666%;
-  height: 133.33%;
+  height: 100%;
   width: 233.33%
 }
 

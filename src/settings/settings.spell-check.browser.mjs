@@ -43,7 +43,7 @@ export const SpellCheckPane = ({dispatch, state}) => {
         />
       </div>
       <${Card.Divider} />
-      <div class="settings__dictionaries container">${
+      <div class='settings__dictionaries'>${
   Object.entries(dictionaries(state))
     .sort(([, {name: name1}], [, {name: name2}]) => name1.localeCompare(name2))
     .map(([key, {name}]) => (html`

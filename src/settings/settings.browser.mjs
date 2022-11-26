@@ -59,12 +59,10 @@ const Settings = ({initialState}) => {
       <${NavigationRail.Button} label='Other' icon=${Icon.more}
         active=${isPaneActive(state)(OtherPane.id)} onClick=${() => onActivatePane(OtherPane.id)} />
     </${NavigationRail}>
-    <div class="container">
-      <div class="form">
-        <${ServicesPane} dispatch=${dispatch} state=${state} />
-        <${SpellCheckPane} dispatch=${dispatch} state=${state} />
-        <${OtherPane} dispatch=${dispatch} state=${state} />
-      </div>
+    <div>
+      <${ServicesPane} dispatch=${dispatch} state=${state} />
+      <${SpellCheckPane} dispatch=${dispatch} state=${state} />
+      <${OtherPane} dispatch=${dispatch} state=${state} />
     </div>
   `;
 };

@@ -20,9 +20,9 @@
     overflow-y: auto;
 }
 
-.settings.container {
-    margin:0;
-    padding: 15px 0;
+.settings {
+    margin: 0;
+    padding: 16px;
 }
 
 .settings .title,

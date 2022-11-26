@@ -16,4 +16,9 @@
 :root {
   --default-spacing: 6px;
   --tab-container-height: 46px;
+  /*--material3-field-height: 56px;*/
+  /* Material 3 default height is too big for us, reduce it to something more appealing */
+  --material3-field-height: 40px;
+  --material3-field-padding-no-icon: 16px;
+  --material3-icon-button-size: 24px;
 }

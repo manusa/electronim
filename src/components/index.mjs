@@ -17,12 +17,13 @@ export {APP_EVENTS, ELECTRONIM_VERSION} from '../../bundles/constants.mjs';
 export {html, render, useLayoutEffect, useReducer, useState} from '../../bundles/preact.mjs';
 
 export {Card} from './card.mjs';
-export {Checkbox, Field, HorizontalField, Select, sizes} from './form/index.mjs';
+export {Checkbox, Field, HorizontalField, sizes} from './form/index.mjs';
 export {Icon} from './icon.mjs';
 export {IconButton} from './icon-button.mjs';
 export {Logo} from './electronim.mjs';
 export {Menu} from './menu.mjs';
 export {NavigationRail} from './navigation-rail.mjs';
+export {Select} from './select.mjs';
 export {Switch} from './switch.mjs';
 export {TextField} from './text-field.mjs';
 export {TopAppBar} from './top-app-bar.mjs';
