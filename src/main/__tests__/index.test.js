@@ -28,7 +28,6 @@ describe('Main module test suite', () => {
   let appMenuModule;
   let settingsModule;
   let tabManagerModule;
-  let userAgentModule;
   let main;
   beforeEach(() => {
     jest.resetModules();
@@ -52,13 +51,12 @@ describe('Main module test suite', () => {
     jest.spyOn(settingsModule, 'loadSettings').mockImplementation(() => mockSettings);
     jest.spyOn(settingsModule, 'updateSettings').mockImplementation();
     tabManagerModule = require('../../tab-manager');
-    jest.mock('../../user-agent');
-    userAgentModule = require('../../user-agent');
-    userAgentModule.userAgentForView.mockImplementation(() => 'UserAgent String');
-    userAgentModule.initBrowserVersions.mockImplementation(() => ({then: func => {
-      func.call();
-      return {catch: () => {}};
-    }}));
+    jest.spyOn(require('../../user-agent'), 'initBrowserVersions').mockImplementation(() => ({
+      then: func => {
+        func.call();
+        return {catch: () => {}};
+      }
+    }));
     main = require('../');
   });
   afterEach(() => {
@@ -66,21 +64,14 @@ describe('Main module test suite', () => {
   });
   describe('init - environment preparation', () => {
     describe('theme', () => {
-      test('fallbacks to system', () => {
-        // When
-        main.init();
-        jest.runAllTimers();
-        // Then
-        expect(mockNativeTheme.themeSource).toBe('system');
-      });
-      test('uses theme from saved settings', () => {
+      test.each(['dark', 'light', 'system'])('uses theme from saved settings (%s)', theme => {
         // Given
-        mockSettings.theme = 'dark';
+        mockSettings.theme = theme;
         // When
         main.init();
         jest.runAllTimers();
         // Then
-        expect(mockNativeTheme.themeSource).toBe('dark');
+        expect(mockNativeTheme.themeSource).toBe(theme);
       });
     });
     describe('icon', () => {
@@ -104,22 +95,6 @@ describe('Main module test suite', () => {
           icon: expect.stringMatching(/icon\.png$/)
         }));
       });
-    });
-    test('initBrowserVersions, successful, should be set to defaultUserAgent', () => {
-      // When
-      main.init();
-      // Then
-      expect(electron.app.userAgentFallback).toBe('UserAgent String');
-    });
-    test('initBrowserVersions, throws error, should be set to defaultUserAgent and show Notification', () => {
-      // Given
-      userAgentModule.initBrowserVersions.mockImplementation(() => ({then: () => ({catch: func => func.call()})}));
-      mockNotification.show = jest.fn();
-      // When
-      main.init();
-      // Then
-      expect(electron.app.userAgentFallback).toBe('UserAgent String');
-      expect(mockNotification.show).toHaveBeenCalledTimes(1);
     });
     test('fixUserDataLocation, should set a location in lower-case (Electron <14 compatible)', () => {
       // Given

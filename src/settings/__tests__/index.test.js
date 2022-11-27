@@ -42,6 +42,7 @@ describe('Settings module test suite', () => {
       expect(fs.readFileSync).not.toHaveBeenCalled();
       expect(result.tabs).toEqual([]);
       expect(result.enabledDictionaries).toEqual(['en-US']);
+      expect(result.theme).toEqual('system');
     });
     test('settings (empty) exist, should load settings from file system and merge with defaults', () => {
       // Given
@@ -55,6 +56,8 @@ describe('Settings module test suite', () => {
       expect(fs.readFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'));
       expect(result.tabs).toEqual([]);
       expect(result.enabledDictionaries).toEqual(['en-US']);
+      expect(result.theme).toEqual('system');
+      expect(result.trayEnabled).toEqual(false);
     });
     test('settings exist, should load settings from file system and merge with defaults', () => {
       // Given
@@ -81,6 +84,20 @@ describe('Settings module test suite', () => {
       expect(result.tabs).toEqual([{id: '1', disabled: true}, {id: '2'}]);
       expect(result.activeTab).toBe('2');
     });
+    test.each([
+      {key: 'theme', value: '"light"', expected: 'light'},
+      {key: 'activeTab', value: 42, expected: 42},
+      {key: 'useNativeSpellChecker', value: true, expected: true},
+      {key: 'trayEnabled', value: true, expected: true}
+    ])('settings with $key, should preserve $key', ({key, value, expected}) => {
+      // Given
+      fs.existsSync.mockImplementationOnce(() => true);
+      fs.readFileSync.mockImplementationOnce(() => `{"${key}": ${value}}`);
+      // When
+      const result = settings.loadSettings();
+      // Then
+      expect(result[key]).toBe(expected);
+    });
   });
   describe('updateSettings', () => {
     test('empty object and NO saved settings, should write default settings', () => {
@@ -91,7 +108,8 @@ describe('Settings module test suite', () => {
       // Then
       expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
       expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
-        '{\n  "tabs": [],\n  "useNativeSpellChecker": false,\n  "enabledDictionaries": [\n    "en-US"\n  ]\n}');
+        '{\n  "tabs": [],\n  "useNativeSpellChecker": false,\n  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
+        '  "theme": "system",\n  "trayEnabled": false\n}');
     });
     test('object and saved settings, should overwrite overlapping settings', () => {
       // Given
@@ -104,6 +122,8 @@ describe('Settings module test suite', () => {
         '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n' +
         '  "useNativeSpellChecker": false,\n' +
         '  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
+        '  "theme": "system",\n' +
+        '  "trayEnabled": false,\n' +
         '  "activeTab": 1337,\n  "otherSetting": "1337"\n}');
     });
     test('object and saved settings with activeTab removed, should update activeTab', () => {
@@ -117,6 +137,8 @@ describe('Settings module test suite', () => {
         '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n' +
         '  "useNativeSpellChecker": false,\n' +
         '  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
+        '  "theme": "system",\n' +
+        '  "trayEnabled": false,\n' +
         '  "activeTab": 1337\n}');
     });
   });

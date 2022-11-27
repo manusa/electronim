@@ -41,6 +41,7 @@ Icon.checkBoxOutlineBlank = '\ue835';
 Icon.delete = '\ue872';
 Icon.expandMore = '\ue5cf';
 Icon.help = '\ue887';
+Icon.inbox = '\ue156';
 Icon.info = '\ue88e';
 Icon.lock = '\ue88d';
 Icon.lockOpen = '\ue898';

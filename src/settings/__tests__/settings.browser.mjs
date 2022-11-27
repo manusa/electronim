@@ -28,7 +28,8 @@ export const ipcRenderer = () => {
       {id: '1', url: 'https://initial-tab.com', sandboxed: true},
       {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true}
     ],
-    theme: 'dark'
+    theme: 'dark',
+    trayEnabled: true
   };
   return {
     mockDictionariesAvailableNative,

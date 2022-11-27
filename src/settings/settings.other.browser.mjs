@@ -17,42 +17,45 @@ import {ELECTRONIM_VERSION, html, Card, Icon, Select} from '../components/index.
 import {
   isPaneActive,
   setTheme,
-  toggleNotifications
+  toggleNotifications,
+  toggleTray
 } from './settings.reducer.browser.mjs';
 import {SettingsOption} from './settings.common.browser.mjs';
 
-export const OtherPane = ({dispatch, state}) => {
-  const onToggleGlobalNotifications = event => {
-    event.stopPropagation();
-    toggleNotifications({dispatch})();
-  };
-  return isPaneActive(state)(OtherPane.id) && html`
-    <h2 class='title'>Other</h2>
-    <${Card} className='settings__other'>
-      <div>
-        <${Select}
-          data-testid='settings-theme-select'
-          label='Theme' value=${state.theme} onChange=${e => setTheme({dispatch})(e.target.value)}
-        >
-          <${Select.Option} value='system'>system</${Select.Option}>
-          <${Select.Option} value='light'>light</${Select.Option}>
-          <${Select.Option} value='dark'>dark</${Select.Option}>
-        </${Select}>
-      </div>
-      <${Card.Divider} />
-      <${SettingsOption}
-          className='settings__global-notifications'
-          label='Disable notifications globally'
-          icon=${state.disableNotificationsGlobally ? Icon.notificationsOff : Icon.notifications}
-          checked=${state.disableNotificationsGlobally}
-          onClick=${onToggleGlobalNotifications}
-      />
-      <${Card.Divider} />
-      <div data-testid='settings-electronim-version'>
-        ElectronIM version ${ELECTRONIM_VERSION}
-      </div>
-    </${Card}>
-  `;
-};
+export const OtherPane = ({dispatch, state}) => isPaneActive(state)(OtherPane.id) && html`
+  <h2 class='title'>Other</h2>
+  <${Card} className='settings__other'>
+    <div>
+      <${Select}
+        data-testid='settings-theme-select'
+        label='Theme' value=${state.theme} onChange=${e => setTheme({dispatch})(e.target.value)}
+      >
+        <${Select.Option} value='system'>system</${Select.Option}>
+        <${Select.Option} value='light'>light</${Select.Option}>
+        <${Select.Option} value='dark'>dark</${Select.Option}>
+      </${Select}>
+    </div>
+    <${Card.Divider} />
+    <${SettingsOption}
+        className='settings__global-notifications'
+        label='Disable notifications globally'
+        icon=${state.disableNotificationsGlobally ? Icon.notificationsOff : Icon.notifications}
+        checked=${state.disableNotificationsGlobally}
+        onClick=${toggleNotifications({dispatch})}
+    />
+    <${Card.Divider} />
+    <${SettingsOption}
+        className='settings__tray'
+        label='Show ElectronIM in System Tray'
+        icon=${Icon.inbox}
+        checked=${state.trayEnabled}
+        onClick=${toggleTray({dispatch})}
+    />
+    <${Card.Divider} />
+    <div data-testid='settings-electronim-version'>
+      ElectronIM version ${ELECTRONIM_VERSION}
+    </div>
+  </${Card}>
+`;
 
 OtherPane.id = 'other';

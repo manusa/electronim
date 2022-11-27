@@ -42,7 +42,8 @@ const Settings = ({initialState}) => {
     useNativeSpellChecker: state.useNativeSpellChecker,
     enabledDictionaries,
     disableNotificationsGlobally: state.disableNotificationsGlobally,
-    theme: state.theme
+    theme: state.theme,
+    trayEnabled: state.trayEnabled
   });
   const cancel = () => ipcRenderer.send(APP_EVENTS.closeDialog);
   return html`
@@ -91,7 +92,8 @@ Promise.all([
       newTabValid: false,
       newTabValue: '',
       disableNotificationsGlobally: currentSettings.disableNotificationsGlobally,
-      theme: currentSettings.theme
+      theme: currentSettings.theme,
+      trayEnabled: currentSettings.trayEnabled
     };
     render(html`<${Settings} initialState=${initialState} />`, settingsRoot());
   }

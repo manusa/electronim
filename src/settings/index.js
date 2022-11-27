@@ -21,7 +21,13 @@ const {showDialog} = require('../browser-window');
 
 const APP_DIR = '.electronim';
 const SETTINGS_FILE = 'settings.json';
-const DEFAULT_SETTINGS = {tabs: [], useNativeSpellChecker: false, enabledDictionaries: ['en-US']};
+const DEFAULT_SETTINGS = {
+  tabs: [],
+  useNativeSpellChecker: false,
+  enabledDictionaries: ['en-US'],
+  theme: 'system',
+  trayEnabled: false
+};
 
 const webPreferences = {
   contextIsolation: false,
@@ -44,7 +50,8 @@ const getPlatform = () => process.platform;
 
 const containsTabId = tabs => tabId => tabs.map(({id}) => id).includes(tabId);
 
-const ensureActiveTab = settings => {
+const ensureDefaultValues = settings => {
+  settings = Object.assign(DEFAULT_SETTINGS, settings);
   let {activeTab} = settings;
   const enabledTabs = settings.tabs.filter(({disabled}) => !disabled);
   if (enabledTabs.length > 0 && !containsTabId(enabledTabs)(activeTab)) {
@@ -61,7 +68,7 @@ const loadSettings = () => {
   if (fs.existsSync(settingsPath)) {
     loadedSettings = JSON.parse(fs.readFileSync(settingsPath));
   }
-  return ensureActiveTab(Object.assign(DEFAULT_SETTINGS, loadedSettings));
+  return ensureDefaultValues(loadedSettings);
 };
 
 const writeSettings = settings => {
@@ -70,7 +77,7 @@ const writeSettings = settings => {
 };
 
 const updateSettings = settings =>
-  writeSettings(ensureActiveTab({...loadSettings(), ...settings}));
+  writeSettings(ensureDefaultValues({...loadSettings(), ...settings}));
 
 const openSettingsDialog = mainWindow => () => {
   const settingsView = new BrowserView({webPreferences});
