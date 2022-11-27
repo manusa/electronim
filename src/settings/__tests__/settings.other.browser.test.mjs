@@ -48,9 +48,10 @@ describe('Settings (Other) in Browser test suite', () => {
       }));
     }, 10000);
   });
-  describe('Toggle global notifications', () => {
+  describe('Toggle disable global notifications click', () => {
     let $notificationsSwitch;
     beforeEach(() => {
+      // In tests notifications are "Disable global notifications" is disabled by default
       $notificationsSwitch = document.querySelector('.settings__global-notifications .switch input');
     });
     test('when notifications enabled, should check input', async () => {
@@ -69,6 +70,30 @@ describe('Settings (Other) in Browser test suite', () => {
       fireEvent.click($notificationsSwitch);
       // Then
       await waitFor(() => expect($notificationsSwitch.checked).toBe(false));
+    });
+  });
+  describe('Toggle System Tray click', () => {
+    let $traySwitch;
+    beforeEach(() => {
+      // In tests, tray is enabled by default
+      $traySwitch = document.querySelector('.settings__tray .switch input');
+    });
+    test('when tray enabled, should uncheck input', async () => {
+      // Given
+      expect($traySwitch.checked).toBe(true);
+      // When
+      fireEvent.click($traySwitch);
+      // Then
+      await waitFor(() => expect($traySwitch.checked).toBe(false));
+    });
+    test('when tray disabled, should check input', async () => {
+      // Given
+      fireEvent.click($traySwitch);
+      await waitFor(() => expect($traySwitch.checked).toBe(false));
+      // When
+      fireEvent.click($traySwitch);
+      // Then
+      await waitFor(() => expect($traySwitch.checked).toBe(true));
     });
   });
   test('ElectronIM version is visible', async () => {

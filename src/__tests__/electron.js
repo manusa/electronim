@@ -66,6 +66,8 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     browserWindowInstance,
     Menu: jest.fn(),
     MenuItem: jest.fn(),
+    Notification: jest.fn(),
+    Tray: jest.fn(),
     app: {
       getPath: jest.fn(),
       on: jest.fn(),

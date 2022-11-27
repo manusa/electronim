@@ -59,7 +59,8 @@ describe('Settings in Browser test suite', () => {
           ],
           enabledDictionaries: ['en'],
           disableNotificationsGlobally: false,
-          theme: 'dark'
+          theme: 'dark',
+          trayEnabled: true
         });
     });
     test('Cancel should send close dialog event', () => {

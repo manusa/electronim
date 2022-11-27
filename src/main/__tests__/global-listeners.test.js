@@ -16,7 +16,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-describe('Main :: Global listeners module test suite', () => {
+describe('Main :: Global listeners test suite', () => {
   let electron;
   let main;
   let browserWindow;
@@ -25,7 +25,9 @@ describe('Main :: Global listeners module test suite', () => {
     jest.resetModules();
     // Always mock settings unless we want to overwrite the real settings file !
     jest.mock('../../settings');
-    require('../../settings').loadSettings.mockImplementation(() => ({}));
+    require('../../settings').loadSettings.mockImplementation(() => ({
+      trayEnabled: true
+    }));
     require('../../settings').openSettingsDialog = jest.requireActual('../../settings').openSettingsDialog;
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance({
       // Return a **different** instance for each view
@@ -186,12 +188,6 @@ describe('Main :: Global listeners module test suite', () => {
       // Then
       expect(electron.nativeTheme.themeSource).toEqual('light');
     });
-    test('should fallback theme to system', () => {
-      // When
-      eventBus.listeners.settingsSave({}, {});
-      // Then
-      expect(electron.nativeTheme.themeSource).toEqual('system');
-    });
   });
   describe('handleTabTraverse', () => {
     let tabManagerModule;
@@ -239,5 +235,11 @@ describe('Main :: Global listeners module test suite', () => {
         expect(tabManagerModule.getTab).toHaveBeenCalledWith('tabAtPosition');
       });
     });
+  });
+  test('trayInit, should initialize tray', () => {
+    // When
+    eventBus.listeners.trayInit();
+    // Then
+    expect(electron.Tray).toHaveBeenCalledTimes(1);
   });
 });

@@ -16,7 +16,7 @@
 const {app, BrowserView, session} = require('electron');
 const path = require('path');
 const {APP_EVENTS} = require('../constants');
-const settings = require('../settings');
+const {loadSettings, updateSettings} = require('../settings');
 const {getEnabledDictionaries, getUseNativeSpellChecker} = require('../spell-check');
 const {userAgentForView, addUserAgentInterceptor} = require('../user-agent');
 const {handleContextMenu} = require('./context-menu');
@@ -121,7 +121,7 @@ const getActiveTab = () => activeTab;
 
 const setActiveTab = tabId => {
   activeTab = tabId.toString();
-  settings.updateSettings({activeTab});
+  updateSettings({activeTab});
 };
 
 const getTabTraverse = operation => () => {
@@ -156,7 +156,7 @@ const removeAll = () => {
 const reload = () => Object.values(tabs).forEach(browserView => browserView.webContents.reload());
 
 const canNotify = tabId => {
-  const {tabs: tabsSettings, disableNotificationsGlobally} = settings.loadSettings();
+  const {tabs: tabsSettings, disableNotificationsGlobally} = loadSettings();
   const currentTab = tabsSettings.find(tab => tab.id === tabId);
   if (disableNotificationsGlobally === true) {
     return false;

@@ -53,6 +53,7 @@ const APP_EVENTS = {
   tabSwitchToPosition: 'tabSwitchToPosition',
   tabTraverseNext: 'tabTraverseNext',
   tabTraversePrevious: 'tabTraversePrevious',
+  trayInit: 'trayInit',
   zoomIn: 'zoomIn',
   zoomOut: 'zoomOut',
   zoomReset: 'zoomReset'

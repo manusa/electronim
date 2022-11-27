@@ -27,6 +27,7 @@ const {
   getAvailableDictionaries, getAvailableNativeDictionaries, loadDictionaries, getEnabledDictionaries
 } = require('../spell-check');
 const tabManager = require('../tab-manager');
+const {initTray} = require('../tray');
 const {initBrowserVersions, userAgentForView} = require('../user-agent');
 
 const webPreferences = {
@@ -195,13 +196,14 @@ const closeDialog = () => {
 const saveSettings = (_event, settings) => {
   updateSettings(settings);
   loadDictionaries();
-  nativeTheme.themeSource = settings.theme ?? 'system';
+  nativeTheme.themeSource = settings.theme;
   const currentBrowserView = mainWindow.getBrowserView();
   mainWindow.removeBrowserView(currentBrowserView);
   tabManager.removeAll();
   const viewsToDestroy = [currentBrowserView, tabContainer];
   viewsToDestroy.forEach(view => view.webContents.destroy());
   tabContainer = newTabContainer();
+  eventBus.emit(APP_EVENTS.trayInit);
 };
 
 const initGlobalListeners = () => {
@@ -220,19 +222,21 @@ const initGlobalListeners = () => {
   eventBus.on(APP_EVENTS.tabSwitchToPosition, handleTabSwitchToPosition);
   eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(tabManager.getNextTab));
   eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(tabManager.getPreviousTab));
+  eventBus.on(APP_EVENTS.trayInit, initTray);
 };
 
 const browserVersionsReady = () => {
   app.userAgentFallback = userAgentForView(mainWindow);
   tabContainer = newTabContainer();
   appMenu = newAppMenu();
+  eventBus.emit(APP_EVENTS.trayInit);
 };
 
 const init = () => {
   fixUserDataLocation();
   loadDictionaries();
   const {width = 800, height = 600, theme} = loadSettings();
-  nativeTheme.themeSource = theme ?? 'system';
+  nativeTheme.themeSource = theme;
   mainWindow = new BrowserWindow({
     width, height, resizable: true, maximizable: true,
     icon: path.resolve(__dirname, '..', '..', 'assets', getPlatform() === 'linux' ? 'icon.png' : 'icon.ico'),

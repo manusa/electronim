@@ -23,9 +23,10 @@ export const ACTIONS = {
   SET_THEME: 'SET_THEME',
   TOGGLE_USE_NATIVE_SPELL_CHECKER: 'TOGGLE_USE_NATIVE_SPELL_CHECKER',
   TOGGLE_DICTIONARY: 'TOGGLE_DICTIONARY',
+  TOGGLE_GLOBAL_NOTIFICATIONS: 'TOGGLE_GLOBAL_NOTIFICATIONS',
   TOGGLE_TAB_EXPANDED: 'TOGGLE_TAB_EXPANDED',
   TOGGLE_TAB_PROPERTY: 'TOGGLE_TAB_PROPERTY',
-  TOGGLE_GLOBAL_NOTIFICATIONS: 'TOGGLE_GLOBAL_NOTIFICATIONS',
+  TOGGLE_TRAY: 'TOGGLE_TRAY',
   UPDATE_NEW_TAB_VALUE: 'UPDATE_NEW_TAB_VALUE'
 };
 
@@ -136,6 +137,11 @@ export const reducer = (state, action) => {
         disableNotificationsGlobally: !state.disableNotificationsGlobally
       };
     }
+    case ACTIONS.TOGGLE_TRAY: {
+      return {...state,
+        trayEnabled: !state.trayEnabled
+      };
+    }
     case ACTIONS.UPDATE_NEW_TAB_VALUE: {
       return {...state,
         newTabValid: validateUrl(action.payload),
@@ -156,11 +162,13 @@ export const setTabProperty = ({dispatch, property, value, id}) =>
   dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {id, property, value}});
 export const setTheme = ({dispatch}) =>
   theme => dispatch({type: ACTIONS.SET_THEME, payload: {theme}});
-export const toggleUseNativeSpellChecker = ({dispatch}) =>
-  () => dispatch({type: ACTIONS.TOGGLE_USE_NATIVE_SPELL_CHECKER});
 export const toggleDictionary = ({dispatch, languageKey}) =>
   () => dispatch({type: ACTIONS.TOGGLE_DICTIONARY, payload: languageKey});
 export const toggleNotifications = ({dispatch}) =>
   () => dispatch({type: ACTIONS.TOGGLE_GLOBAL_NOTIFICATIONS});
 export const toggleTabProperty = (dispatch, property, id) =>
   () => dispatch({type: ACTIONS.TOGGLE_TAB_PROPERTY, payload: {id, property}});
+export const toggleTray = ({dispatch}) =>
+  () => dispatch({type: ACTIONS.TOGGLE_TRAY});
+export const toggleUseNativeSpellChecker = ({dispatch}) =>
+  () => dispatch({type: ACTIONS.TOGGLE_USE_NATIVE_SPELL_CHECKER});
