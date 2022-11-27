@@ -38,8 +38,8 @@ electronim
 - 🔔 Desktop notifications: ElectronIM will notify you using your native system notifications.
 - 🧐 Spellchecker: ElectronIM contains spellchecker dictionaries for many languages,
   if your language is not supported, just [file an issue](https://github.com/manusa/electronim/issues/new).
-- Supports any web based IM solution
-- Drag-and-drop tab reordering
+- 🕸 Supports any web based IM solution
+- 👋 Drag-and-drop tab reordering
 - 🔒 Configurable context for tabs (Isolated/sandboxed or shared). i.e. You can have multiple
   tabs/instances of the same service/web application if the context is sandboxed.
 - 🔕 Notifications can be disabled for individual Applications
@@ -47,6 +47,7 @@ electronim
 - ⌨ Keyboard [shortcuts](docs/Keyboard-shortcuts.md)
 - 🖥️ Screen sharing
 - 🌗 Light and Dark themes with system override
+- 🗕 System Tray 
 
 ## [Screenshot](docs/Screenshots.md)
 
