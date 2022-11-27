@@ -97,7 +97,8 @@
     "linux": {
       "artifactName": "electronim-linux-${arch}.${ext}",
       "executableName": "electronim",
-      "category": "Network",
+      "category": "Network;InstantMessaging;",
+      "synopsis": "Free/Libre open source Electron based multi instant messaging (IM) client.",
       "desktop": {
         "Terminal": "false",
         "Type": "Application",
