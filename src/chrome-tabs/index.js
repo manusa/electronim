@@ -67,7 +67,7 @@ const newTabContainer = () => {
   tabContainer.webContents.loadURL(`file://${__dirname}/index.html`,
     {extraHeaders: 'pragma: no-cache\nCache-control: no-cache'});
   tabContainer.webContents.on('context-menu', handleContextMenu);
-  checkForUpdates(tabContainer.webContents);
+  eventBus.once(APP_EVENTS.tabsReady, () => checkForUpdates(tabContainer.webContents));
   setInterval(() => checkForUpdates(tabContainer.webContents), 1000 * 60 * 30).unref();
   return tabContainer;
 };
