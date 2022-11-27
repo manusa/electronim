@@ -84,13 +84,21 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     },
     ipcMain: {
       listeners: {},
+      _listen: (eventName, func) => {
+        if (instance.ipcMain.listeners[eventName]) {
+          const oldFunc = instance.ipcMain.listeners[eventName];
+          const newFunc = func;
+          func = (event, args) => {
+            oldFunc(event, args);
+            newFunc(event, args);
+          };
+        }
+        instance.ipcMain.listeners[eventName] = func;
+      },
       emit: jest.fn(),
-      handle: jest.fn((eventName, func) => {
-        instance.ipcMain.listeners[eventName] = func;
-      }),
-      on: jest.fn((eventName, func) => {
-        instance.ipcMain.listeners[eventName] = func;
-      }),
+      handle: jest.fn((eventName, func) => instance.ipcMain._listen(eventName, func)),
+      on: jest.fn((eventName, func) => instance.ipcMain._listen(eventName, func)),
+      once: jest.fn((eventName, func) => instance.ipcMain._listen(eventName, func)),
       removeHandler: jest.fn(eventName => {
         delete instance.ipcMain.listeners[eventName];
       })
