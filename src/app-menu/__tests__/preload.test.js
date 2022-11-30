@@ -30,6 +30,7 @@ describe('App Menu Module preload test suite', () => {
         aboutOpenDialog: expect.toBeFunction(),
         close: expect.toBeFunction(),
         helpOpenDialog: expect.toBeFunction(),
+        quit: expect.toBeFunction(),
         settingsOpenDialog: expect.toBeFunction()
       });
     });
@@ -42,6 +43,7 @@ describe('App Menu Module preload test suite', () => {
         ['aboutOpenDialog', 'aboutOpenDialog'],
         ['close', 'appMenuClose'],
         ['helpOpenDialog', 'helpOpenDialog'],
+        ['quit', 'quit'],
         ['settingsOpenDialog', 'settingsOpenDialog']
       ])('%s invokes %s', (apiMethod, event) => {
         api[apiMethod]();
@@ -58,6 +60,7 @@ describe('App Menu Module preload test suite', () => {
         aboutOpenDialog: expect.toBeFunction(),
         close: expect.toBeFunction(),
         helpOpenDialog: expect.toBeFunction(),
+        quit: expect.toBeFunction(),
         settingsOpenDialog: expect.toBeFunction()
       });
     });

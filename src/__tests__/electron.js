@@ -71,6 +71,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     app: {
       getPath: jest.fn(),
       on: jest.fn(),
+      quit: jest.fn(),
       setPath: jest.fn()
     },
     contextBridge: {

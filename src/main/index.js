@@ -216,6 +216,7 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.dictionaryGetEnabled, getEnabledDictionaries);
   eventBus.on(APP_EVENTS.fullscreenToggle, fullscreenToggle);
   eventBus.on(APP_EVENTS.helpOpenDialog, openHelpDialog);
+  eventBus.on(APP_EVENTS.quit, () => app.quit());
   eventBus.handle(APP_EVENTS.settingsLoad, loadSettings);
   eventBus.on(APP_EVENTS.settingsOpenDialog, openSettingsDialog(mainWindow));
   eventBus.on(APP_EVENTS.settingsSave, saveSettings);
