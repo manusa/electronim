@@ -143,6 +143,12 @@ describe('Main :: Global listeners test suite', () => {
     expect(browserView.webContents.loadURL)
       .toHaveBeenCalledWith(expect.stringMatching(/help\/index.html$/));
   });
+  test('quit, should exit the application', () => {
+    // When
+    eventBus.listeners.quit();
+    // Then
+    expect(electron.app.quit).toHaveBeenCalledTimes(1);
+  });
   test('settingsOpenDialog, should open settings dialog', () => {
     // When
     eventBus.listeners.settingsOpenDialog();

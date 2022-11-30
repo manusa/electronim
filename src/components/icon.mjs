@@ -38,6 +38,7 @@ Icon.arrowDropDown = '\ue5c5';
 Icon.check = '\ue5ca';
 Icon.checkBox = '\ue834';
 Icon.checkBoxOutlineBlank = '\ue835';
+Icon.close = '\ue5cd';
 Icon.delete = '\ue872';
 Icon.expandMore = '\ue5cf';
 Icon.help = '\ue887';

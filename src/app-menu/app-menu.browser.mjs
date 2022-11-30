@@ -15,7 +15,7 @@
  */
 import {html, render, Icon, Menu} from '../components/index.mjs';
 
-const {aboutOpenDialog, close, helpOpenDialog, settingsOpenDialog} = window.electron;
+const {aboutOpenDialog, close, helpOpenDialog, quit, settingsOpenDialog} = window.electron;
 
 const getAppMenu = () => document.querySelector('.app-menu');
 
@@ -35,6 +35,8 @@ const AppMenu = () => {
             onClick=${noBubbling(settingsOpenDialog)} />
           <${Menu.Item} icon=${Icon.info} label='About' data-testid='about-menu-entry'
             onClick=${noBubbling(aboutOpenDialog)} />
+          <${Menu.Item} icon=${Icon.close} label='Quit' data-testid='quit-menu-entry'
+            onClick=${noBubbling(quit)} />
         </${Menu}>
       </div>
     </div>
