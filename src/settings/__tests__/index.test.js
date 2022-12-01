@@ -21,12 +21,14 @@ describe('Settings module test suite', () => {
   let settings;
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('../../constants', () => ({}));
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
-    jest.mock('fs');
     jest.mock('os', () => ({homedir: () => '$HOME'}));
     fs = require('fs');
+    jest.spyOn(fs, 'existsSync');
+    jest.spyOn(fs, 'readFileSync');
+    jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
+    jest.spyOn(fs, 'mkdirSync').mockImplementation(() => {});
     path = require('path');
     jest.spyOn(path, 'join');
     settings = require('../');
@@ -39,7 +41,7 @@ describe('Settings module test suite', () => {
       const result = settings.loadSettings();
       // Then
       expectHomeDirectoryCreated();
-      expect(fs.readFileSync).not.toHaveBeenCalled();
+      expect(fs.readFileSync).toHaveBeenCalledTimes(1);
       expect(result.tabs).toEqual([]);
       expect(result.enabledDictionaries).toEqual(['en-US']);
       expect(result.theme).toEqual('system');
@@ -52,7 +54,6 @@ describe('Settings module test suite', () => {
       const result = settings.loadSettings();
       // Then
       expectHomeDirectoryCreated();
-      expect(fs.readFileSync).toHaveBeenCalledTimes(1);
       expect(fs.readFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'));
       expect(result.tabs).toEqual([]);
       expect(result.enabledDictionaries).toEqual(['en-US']);
@@ -67,7 +68,6 @@ describe('Settings module test suite', () => {
       const result = settings.loadSettings();
       // Then
       expectHomeDirectoryCreated();
-      expect(fs.readFileSync).toHaveBeenCalledTimes(1);
       expect(fs.readFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'));
       expect(result.tabs).toEqual([{id: '1'}]);
       expect(result.enabledDictionaries).toEqual(['en-US']);
@@ -108,8 +108,12 @@ describe('Settings module test suite', () => {
       // Then
       expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
       expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
-        '{\n  "tabs": [],\n  "useNativeSpellChecker": false,\n  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
-        '  "theme": "system",\n  "trayEnabled": false\n}');
+        '{\n  "tabs": [],\n' +
+        '  "useNativeSpellChecker": false,\n' +
+        '  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
+        '  "theme": "system",\n  "trayEnabled": false,\n' +
+        '  "closeButtonBehavior": "quit"\n' +
+        '}');
     });
     test('object and saved settings, should overwrite overlapping settings', () => {
       // Given
@@ -117,14 +121,16 @@ describe('Settings module test suite', () => {
       // When
       settings.updateSettings({tabs: [{id: 1337}], activeTab: 1337, otherSetting: '1337'});
       // Then
-      expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
       expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
         '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n' +
         '  "useNativeSpellChecker": false,\n' +
         '  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
         '  "theme": "system",\n' +
         '  "trayEnabled": false,\n' +
-        '  "activeTab": 1337,\n  "otherSetting": "1337"\n}');
+        '  "closeButtonBehavior": "quit",\n' +
+        '  "activeTab": 1337,\n' +
+        '  "otherSetting": "1337"\n' +
+        '}');
     });
     test('object and saved settings with activeTab removed, should update activeTab', () => {
       // Given
@@ -132,13 +138,13 @@ describe('Settings module test suite', () => {
       // When
       settings.updateSettings({tabs: [{id: 1337}], activeTab: 31337});
       // Then
-      expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
       expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
         '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n' +
         '  "useNativeSpellChecker": false,\n' +
         '  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
         '  "theme": "system",\n' +
         '  "trayEnabled": false,\n' +
+        '  "closeButtonBehavior": "quit",\n' +
         '  "activeTab": 1337\n}');
     });
   });
@@ -170,7 +176,6 @@ describe('Settings module test suite', () => {
     });
   });
   const expectHomeDirectoryCreated = () => {
-    expect(fs.mkdirSync).toHaveBeenCalledTimes(1);
     expect(fs.mkdirSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim'), {recursive: true});
   };
 });

@@ -72,6 +72,22 @@ describe('Settings (Other) in Browser test suite', () => {
       await waitFor(() => expect($notificationsSwitch.checked).toBe(false));
     });
   });
+  describe('Close button behavior selection', () => {
+    let $closeButtonBehaviorContainer;
+    beforeEach(async () => {
+      $closeButtonBehaviorContainer = await findByTestId(document, 'settings-close-button-behavior-select');
+    });
+    test('Select shows quit', () => {
+      expect($closeButtonBehaviorContainer.querySelector('select').value).toBe('quit');
+    });
+    test('Different behavior can be selected', async () => {
+      await user.selectOptions($closeButtonBehaviorContainer.querySelector('select'), 'minimize');
+      await user.click(document.querySelector('.settings__submit'));
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('settingsSave', expect.objectContaining({
+        closeButtonBehavior: 'minimize'
+      }));
+    }, 10000);
+  });
   describe('Toggle System Tray click', () => {
     let $traySwitch;
     beforeEach(() => {

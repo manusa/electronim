@@ -147,7 +147,7 @@ describe('Main :: Global listeners test suite', () => {
     // When
     eventBus.listeners.quit();
     // Then
-    expect(electron.app.quit).toHaveBeenCalledTimes(1);
+    expect(electron.app.exit).toHaveBeenCalledTimes(1);
   });
   test('settingsOpenDialog, should open settings dialog', () => {
     // When

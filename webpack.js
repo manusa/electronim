@@ -20,7 +20,7 @@ const path = require('path');
 const fsp = require('fs/promises');
 const fs = require('fs');
 
-const {APP_EVENTS, ELECTRONIM_VERSION} = require('./src/constants');
+const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION} = require('./src/constants');
 
 const BUNDLES_DIR = 'bundles';
 
@@ -161,6 +161,7 @@ const esmBundle = webpack({
   plugins: [
     new webpack.DefinePlugin({
       APP_EVENTS_TO_BE_REPLACED: JSON.stringify(APP_EVENTS),
+      CLOSE_BUTTON_BEHAVIORS_TO_BE_REPLACED: JSON.stringify(CLOSE_BUTTON_BEHAVIORS),
       ELECTRONIM_VERSION_TO_BE_REPLACED: JSON.stringify(ELECTRONIM_VERSION)
     })
   ]

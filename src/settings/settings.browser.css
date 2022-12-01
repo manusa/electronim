@@ -16,7 +16,7 @@
 @import '../styles/main.css';
 
 :root {
-    --border-color: #dbdbdb;
+    --settings-row-height: 56px;
     overflow-y: auto;
 }
 
@@ -80,6 +80,16 @@
     flex: 1;
 }
 
+.settings__row {
+    display: flex;
+    align-items: center;
+    height: var(--settings-row-height);
+}
+
+.settings .material3.select {
+    min-width: 180px;
+}
+
 .settings__option {
     --x-margin: calc(-1 * var(--material3-card-padding));
     margin: 0 var(--x-margin);
@@ -94,7 +104,7 @@
     display: flex;
     align-items: center;
     line-height: var(--md-sys-typescale-body-large-line-height);
-    height: 56px;
+    height: var(--settings-row-height);
     gap: 6px;
     padding: 0 var(--material3-card-padding);
 }

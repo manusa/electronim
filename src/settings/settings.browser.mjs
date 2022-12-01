@@ -43,7 +43,8 @@ const Settings = ({initialState}) => {
     enabledDictionaries,
     disableNotificationsGlobally: state.disableNotificationsGlobally,
     theme: state.theme,
-    trayEnabled: state.trayEnabled
+    trayEnabled: state.trayEnabled,
+    closeButtonBehavior: state.closeButtonBehavior
   });
   const cancel = () => ipcRenderer.send(APP_EVENTS.closeDialog);
   return html`
@@ -93,7 +94,8 @@ Promise.all([
       newTabValue: '',
       disableNotificationsGlobally: currentSettings.disableNotificationsGlobally,
       theme: currentSettings.theme,
-      trayEnabled: currentSettings.trayEnabled
+      trayEnabled: currentSettings.trayEnabled,
+      closeButtonBehavior: currentSettings.closeButtonBehavior
     };
     render(html`<${Settings} initialState=${initialState} />`, settingsRoot());
   }

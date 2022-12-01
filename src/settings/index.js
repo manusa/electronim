@@ -17,6 +17,7 @@ const {BrowserView} = require('electron');
 const fs = require('fs');
 const path = require('path');
 const HOME_DIR = require('os').homedir();
+const {CLOSE_BUTTON_BEHAVIORS} = require('../constants');
 const {showDialog} = require('../browser-window');
 
 const APP_DIR = '.electronim';
@@ -26,7 +27,8 @@ const DEFAULT_SETTINGS = {
   useNativeSpellChecker: false,
   enabledDictionaries: ['en-US'],
   theme: 'system',
-  trayEnabled: false
+  trayEnabled: false,
+  closeButtonBehavior: CLOSE_BUTTON_BEHAVIORS.quit
 };
 
 const webPreferences = {

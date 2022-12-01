@@ -17,7 +17,7 @@ const path = require('path');
 const {
   BrowserWindow, Notification, app, desktopCapturer, ipcMain: eventBus, nativeTheme
 } = require('electron');
-const {APP_EVENTS} = require('../constants');
+const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS} = require('../constants');
 const {openAboutDialog} = require('../about');
 const {newAppMenu, isNotAppMenu} = require('../app-menu');
 const {TABS_CONTAINER_HEIGHT, newTabContainer, isNotTabContainer} = require('../chrome-tabs');
@@ -193,6 +193,20 @@ const closeDialog = () => {
   dialogView.webContents.destroy();
 };
 
+const handleWindowClose = event => {
+  event.preventDefault();
+  const {closeButtonBehavior} = loadSettings();
+  if (closeButtonBehavior === CLOSE_BUTTON_BEHAVIORS.minimize) {
+    mainWindow.minimize();
+    // Inconsistent tray icon behaviors across platforms make it impossible to provide a consistent experience
+    // to hide the app from the task bar and just show it on the tray (mainWindow.hide()).
+    // Therefore, we minimize the window instead (always visible in the taskbar).
+    return false;
+  }
+  app.exit();
+  return true;
+};
+
 const saveSettings = (_event, settings) => {
   updateSettings(settings);
   loadDictionaries();
@@ -216,7 +230,7 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.dictionaryGetEnabled, getEnabledDictionaries);
   eventBus.on(APP_EVENTS.fullscreenToggle, fullscreenToggle);
   eventBus.on(APP_EVENTS.helpOpenDialog, openHelpDialog);
-  eventBus.on(APP_EVENTS.quit, () => app.quit());
+  eventBus.on(APP_EVENTS.quit, app.exit);
   eventBus.handle(APP_EVENTS.settingsLoad, loadSettings);
   eventBus.on(APP_EVENTS.settingsOpenDialog, openSettingsDialog(mainWindow));
   eventBus.on(APP_EVENTS.settingsSave, saveSettings);
@@ -246,7 +260,7 @@ const init = () => {
   mainWindow.removeMenu();
   ['resize', 'maximize']
     .forEach(event => mainWindow.on(event, handleMainWindowResize));
-  mainWindow.on('closed', () => app.quit());
+  mainWindow.on('close', handleWindowClose);
   initTabListener();
   initDesktopCapturerHandler();
   initGlobalListeners();
