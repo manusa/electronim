@@ -19,8 +19,8 @@ export const ACTIONS = {
   ACTIVATE_PANE: 'ACTIVATE_PANE',
   ADD: 'ADD',
   REMOVE: 'REMOVE',
+  SET_PROPERTY: 'SET_PROPERTY',
   SET_TAB_PROPERTY: 'SET_TAB_PROPERTY',
-  SET_THEME: 'SET_THEME',
   TOGGLE_USE_NATIVE_SPELL_CHECKER: 'TOGGLE_USE_NATIVE_SPELL_CHECKER',
   TOGGLE_DICTIONARY: 'TOGGLE_DICTIONARY',
   TOGGLE_GLOBAL_NOTIFICATIONS: 'TOGGLE_GLOBAL_NOTIFICATIONS',
@@ -32,6 +32,8 @@ export const ACTIONS = {
 
 // Selectors
 export const isPaneActive = state => paneId => state.activePane === paneId;
+export const closeButtonBehavior = state => state.closeButtonBehavior;
+export const theme = state => state.theme;
 export const useNativeSpellChecker = state => state.useNativeSpellChecker;
 export const dictionariesEnabled = state => state.dictionaries.enabled;
 const dictionariesAvailableNative = state => state.dictionaries.availableNative;
@@ -92,10 +94,10 @@ export const reducer = (state, action) => {
       });
       return newState;
     }
-    case ACTIONS.SET_THEME: {
-      return {...state,
-        theme: action.payload.theme
-      };
+    case ACTIONS.SET_PROPERTY: {
+      const newState = {...state};
+      newState[action.payload.property] = action.payload.value;
+      return newState;
     }
     case ACTIONS.TOGGLE_USE_NATIVE_SPELL_CHECKER: {
       return {...state,
@@ -160,8 +162,8 @@ export const addTab = ({dispatch}) =>
   () => dispatch({type: ACTIONS.ADD});
 export const setTabProperty = ({dispatch, property, value, id}) =>
   dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {id, property, value}});
-export const setTheme = ({dispatch}) =>
-  theme => dispatch({type: ACTIONS.SET_THEME, payload: {theme}});
+export const setProperty = ({dispatch}) =>
+  ({property, value}) => dispatch({type: ACTIONS.SET_PROPERTY, payload: {property, value}});
 export const toggleDictionary = ({dispatch, languageKey}) =>
   () => dispatch({type: ACTIONS.TOGGLE_DICTIONARY, payload: languageKey});
 export const toggleNotifications = ({dispatch}) =>

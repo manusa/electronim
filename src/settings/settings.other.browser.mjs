@@ -13,49 +13,66 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {ELECTRONIM_VERSION, html, Card, Icon, Select} from '../components/index.mjs';
+import {CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, html, Card, Icon, Select} from '../components/index.mjs';
 import {
   isPaneActive,
-  setTheme,
+  closeButtonBehavior,
+  setProperty,
+  theme,
   toggleNotifications,
   toggleTray
 } from './settings.reducer.browser.mjs';
-import {SettingsOption} from './settings.common.browser.mjs';
+import {SettingsOption, SettingsRow} from './settings.common.browser.mjs';
 
-export const OtherPane = ({dispatch, state}) => isPaneActive(state)(OtherPane.id) && html`
-  <h2 class='title'>Other</h2>
-  <${Card} className='settings__other'>
-    <div>
-      <${Select}
-        data-testid='settings-theme-select'
-        label='Theme' value=${state.theme} onChange=${e => setTheme({dispatch})(e.target.value)}
-      >
-        <${Select.Option} value='system'>system</${Select.Option}>
-        <${Select.Option} value='light'>light</${Select.Option}>
-        <${Select.Option} value='dark'>dark</${Select.Option}>
-      </${Select}>
-    </div>
-    <${Card.Divider} />
-    <${SettingsOption}
-        className='settings__global-notifications'
-        label='Disable notifications globally'
-        icon=${state.disableNotificationsGlobally ? Icon.notificationsOff : Icon.notifications}
-        checked=${state.disableNotificationsGlobally}
-        onClick=${toggleNotifications({dispatch})}
-    />
-    <${Card.Divider} />
-    <${SettingsOption}
-        className='settings__tray'
-        label='Show ElectronIM in System Tray'
-        icon=${Icon.inbox}
-        checked=${state.trayEnabled}
-        onClick=${toggleTray({dispatch})}
-    />
-    <${Card.Divider} />
-    <div data-testid='settings-electronim-version'>
-      ElectronIM version ${ELECTRONIM_VERSION}
-    </div>
-  </${Card}>
-`;
+export const OtherPane = ({dispatch, state}) => {
+  const dispatchSetProperty = setProperty({dispatch});
+  const setTheme = e => dispatchSetProperty({property: 'theme', value: e.target.value});
+  const setCloseButtonBehavior = e => dispatchSetProperty({property: 'closeButtonBehavior', value: e.target.value});
+  return isPaneActive(state)(OtherPane.id) && html`
+    <h2 class='title'>Other</h2>
+    <${Card} className='settings__other'>
+      <${SettingsRow}>
+        <${Select}
+          data-testid='settings-theme-select'
+          label='Theme' value=${theme(state)} onChange=${setTheme}
+        >
+          <${Select.Option} value='system'>system</${Select.Option}>
+          <${Select.Option} value='light'>light</${Select.Option}>
+          <${Select.Option} value='dark'>dark</${Select.Option}>
+        </${Select}>
+      </${SettingsRow}>
+      <${Card.Divider} />
+      <${SettingsOption}
+          className='settings__global-notifications'
+          label='Disable notifications globally'
+          icon=${state.disableNotificationsGlobally ? Icon.notificationsOff : Icon.notifications}
+          checked=${state.disableNotificationsGlobally}
+          onClick=${toggleNotifications({dispatch})}
+      />
+      <${Card.Divider} />
+      <${SettingsRow}>
+        <${Select}
+            data-testid='settings-close-button-behavior-select'
+            label='Close button behavior'
+            value=${closeButtonBehavior(state)} onChange=${setCloseButtonBehavior}
+        >
+          <${Select.Option} value=${CLOSE_BUTTON_BEHAVIORS.quit}>Quit</${Select.Option}>
+          <${Select.Option} value=${CLOSE_BUTTON_BEHAVIORS.minimize}>Minimize</${Select.Option}>
+        </${Select}>
+      </${SettingsRow}>
+      <${SettingsOption}
+          className='settings__tray'
+          label='Show ElectronIM in System Tray'
+          icon=${Icon.inbox}
+          checked=${state.trayEnabled}
+          onClick=${toggleTray({dispatch})}
+      />
+      <${Card.Divider} />
+      <div data-testid='settings-electronim-version'>
+        ElectronIM version ${ELECTRONIM_VERSION}
+      </div>
+    </${Card}>
+  `;
+};
 
 OtherPane.id = 'other';

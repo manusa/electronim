@@ -22,6 +22,7 @@ const mockBrowserWindowInstance = () => {
     getContentBounds: jest.fn(() => ({})),
     isFullScreen: jest.fn(),
     loadURL: jest.fn(),
+    minimize: jest.fn(),
     on: jest.fn((eventName, func) => {
       instance.listeners[eventName] = func;
     }),
@@ -71,7 +72,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     app: {
       getPath: jest.fn(),
       on: jest.fn(),
-      quit: jest.fn(),
+      exit: jest.fn(),
       setPath: jest.fn()
     },
     contextBridge: {

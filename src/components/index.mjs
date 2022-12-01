@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-export {APP_EVENTS, ELECTRONIM_VERSION} from '../../bundles/constants.mjs';
+export {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION} from '../../bundles/constants.mjs';
 export {html, render, useLayoutEffect, useReducer, useState} from '../../bundles/preact.mjs';
 
 export {Card} from './card.mjs';
