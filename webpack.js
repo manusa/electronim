@@ -40,7 +40,6 @@ const ESM_ENTRIES = {
 
 const LIB_DIR = 'lib';
 const LIB_ENTRIES = [
-  '@fortawesome/fontawesome-free/css/all.css',
   'bulma/css/bulma.css',
   'chrome-tabs/css/chrome-tabs.css',
   'chrome-tabs/css/chrome-tabs-dark-theme.css'
