@@ -43,13 +43,12 @@ describe('Tray module test suite', () => {
     test('destroy previous tray', () => {
       // Given
       mockSettings = {trayEnabled: true};
-      const destroy = jest.fn();
-      electron.Tray.mockImplementation(() => ({destroy}));
       tray.initTray();
+      electron.trayInstance.destroy.mockClear(); // previous tests might have already created a tray instance
       // When
       tray.initTray();
       // Then
-      expect(destroy).toHaveBeenCalledTimes(1);
+      expect(electron.trayInstance.destroy).toHaveBeenCalledTimes(1);
     });
   });
 });

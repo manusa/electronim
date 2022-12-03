@@ -138,7 +138,7 @@ describe('Main :: Global listeners test suite', () => {
     eventBus.listeners.helpOpenDialog({sender: browserWindow.webContents});
     // Then
     const browserView = electron.BrowserView.mock.results
-      .map(r => r.value).filter(bv => bv.webContents.loadedUrl.endsWith('/help/index.html'))[0];
+      .map(r => r.value).filter(bv => bv.webContents.loadedUrl.endsWith('help/index.html'))[0];
     expect(browserWindow.setBrowserView).toHaveBeenCalledWith(browserView);
     expect(browserView.webContents.loadURL)
       .toHaveBeenCalledWith(expect.stringMatching(/help\/index.html$/));
@@ -154,7 +154,7 @@ describe('Main :: Global listeners test suite', () => {
     eventBus.listeners.settingsOpenDialog();
     // Then
     const browserView = electron.BrowserView.mock.results
-      .map(r => r.value).filter(bv => bv.webContents.loadedUrl.endsWith('/settings/index.html'))[0];
+      .map(r => r.value).filter(bv => bv.webContents.loadedUrl.endsWith('settings/index.html'))[0];
     expect(browserWindow.setBrowserView).toHaveBeenCalledWith(browserView);
     expect(browserView.webContents.loadURL)
       .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
@@ -243,8 +243,6 @@ describe('Main :: Global listeners test suite', () => {
     });
   });
   test('trayInit, should initialize tray', () => {
-    // When
-    eventBus.listeners.trayInit();
     // Then
     expect(electron.Tray).toHaveBeenCalledTimes(1);
   });

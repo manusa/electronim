@@ -13,7 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {Tray} = require('electron');
+const {ipcMain: eventBus, Tray} = require('electron');
+const {APP_EVENTS} = require('../constants');
 const path = require('path');
 const {getPlatform, loadSettings} = require('../settings');
 let tray;
@@ -26,6 +27,7 @@ const initTray = () => {
   const {trayEnabled} = loadSettings();
   if (trayEnabled) {
     tray = new Tray(path.resolve(__dirname, '..', '..', 'assets', getPlatform() === 'linux' ? 'icon.png' : 'icon.ico'));
+    tray.on('click', () => eventBus.emit(APP_EVENTS.restore));
   }
 };
 

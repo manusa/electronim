@@ -62,6 +62,10 @@ const mockBrowserWindowInstance = () => {
 const mockElectronInstance = ({...overriddenProps} = {}) => {
   const browserViewInstance = mockBrowserWindowInstance();
   const browserWindowInstance = mockBrowserWindowInstance();
+  const trayInstance = {
+    destroy: jest.fn(),
+    on: jest.fn()
+  };
   const instance = {
     BrowserView: jest.fn(() => browserViewInstance),
     browserViewInstance,
@@ -70,7 +74,8 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     Menu: jest.fn(),
     MenuItem: jest.fn(),
     Notification: jest.fn(),
-    Tray: jest.fn(),
+    Tray: jest.fn(() => trayInstance),
+    trayInstance,
     app: {
       getPath: jest.fn(),
       on: jest.fn(),
@@ -99,7 +104,12 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
         }
         instance.ipcMain.listeners[eventName] = func;
       },
-      emit: jest.fn(),
+      emit: jest.fn((channel, event) => {
+        const func = instance.ipcMain.listeners[channel];
+        if (func) {
+          func(event);
+        }
+      }),
       handle: jest.fn((eventName, func) => instance.ipcMain._listen(eventName, func)),
       on: jest.fn((eventName, func) => instance.ipcMain._listen(eventName, func)),
       once: jest.fn((eventName, func) => instance.ipcMain._listen(eventName, func)),
