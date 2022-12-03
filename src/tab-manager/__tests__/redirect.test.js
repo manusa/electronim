@@ -19,9 +19,9 @@ describe('Tab Manager Redirect module test suite', () => {
   let mockBrowserViewUrl;
   beforeEach(() => {
     mockBrowserViewUrl = 'http://localhost';
-    mockBrowserView = {
-      webContents: {getURL: jest.fn(() => mockBrowserViewUrl)}
-    };
+    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
+    mockBrowserView = require('electron').browserViewInstance;
+    mockBrowserView.webContents.getURL.mockImplementation(() => mockBrowserViewUrl);
     redirect = require('../redirect');
   });
   describe('shouldOpenInExternalBrowser', () => {
@@ -203,6 +203,21 @@ describe('Tab Manager Redirect module test suite', () => {
         // Then
         expect(result).toBe(false);
       });
+    });
+  });
+  describe('windowOpenHandler', () => {
+    test('same origin, opens window in Electron', () => {
+      // When
+      const result = redirect.windowOpenHandler(mockBrowserView)({url: 'http://localhost/terms-and-conditions'});
+      // Then
+      expect(result).toEqual({action: 'allow'});
+    });
+    test('different origin, opens window in external browser', () => {
+      // When
+      const result = redirect.windowOpenHandler(mockBrowserView)({url: 'https://example.com/site-page'});
+      // Then
+      expect(require('electron').shell.openExternal).toHaveBeenCalledWith('https://example.com/site-page');
+      expect(result).toEqual({action: 'deny'});
     });
   });
 });

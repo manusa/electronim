@@ -59,6 +59,14 @@ const handleRedirect = browserView => (e, urlString) => {
   }
 };
 
+const windowOpenHandler = browserView => ({url}) => {
+  if (isSameOrigin(new URL(browserView.webContents.getURL()), new URL(url))) {
+    return {action: 'allow'};
+  }
+  shell.openExternal(url);
+  return {action: 'deny'};
+};
+
 module.exports = {
-  handleRedirect, shouldOpenInExternalBrowser
+  handleRedirect, shouldOpenInExternalBrowser, windowOpenHandler
 };
