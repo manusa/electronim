@@ -228,6 +228,14 @@ describe('Tab Manager module test suite', () => {
             .toHaveBeenCalledWith('setTabFavicon', {id: '1337', favicon: 'http://url-to-favicon/julia.png'});
         });
       });
+      test('windowOpen (was new-window)', () => {
+        // Given
+        mockBrowserView.webContents.getURL.mockReturnValue('file://tab/index.html');
+        // When
+        mockBrowserView.webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
+        // Then
+        expect(require('electron').shell.openExternal).toHaveBeenCalledWith('https://example.com');
+      });
     });
   });
   describe('activeTab', () => {

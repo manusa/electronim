@@ -41,6 +41,7 @@ const mockBrowserWindowInstance = () => {
       destroy: jest.fn(),
       executeJavaScript: jest.fn(async () => {}),
       focus: jest.fn(),
+      getURL: jest.fn(),
       goBack: jest.fn(),
       loadURL: jest.fn(url => {
         instance.webContents.loadedUrl = url;
@@ -51,6 +52,7 @@ const mockBrowserWindowInstance = () => {
       reload: jest.fn(),
       send: jest.fn(),
       session: {},
+      setWindowOpenHandler: jest.fn(),
       userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36'
     }
   };
@@ -114,6 +116,9 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
         userAgentInterceptor: true
       })),
       defaultSession: {userAgentInterceptor: true}
+    },
+    shell: {
+      openExternal: jest.fn()
     },
     ...overriddenProps
   };

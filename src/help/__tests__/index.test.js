@@ -53,6 +53,15 @@ describe('Help module test suite', () => {
         });
       });
     });
+    test('hasWindowOpenHandler', () => {
+      // Given
+      electron.browserViewInstance.webContents.getURL.mockReturnValue('file://help/index.html');
+      help.openHelpDialog({sender});
+      // When
+      electron.browserViewInstance.webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
+      // Then
+      expect(electron.shell.openExternal).toHaveBeenCalledWith('https://example.com');
+    });
     test('should open dialog and add event listeners', () => {
       // When
       help.openHelpDialog({sender: electron.browserWindowInstance.webContents});

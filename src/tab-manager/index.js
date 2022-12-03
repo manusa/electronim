@@ -20,7 +20,7 @@ const {loadSettings, updateSettings} = require('../settings');
 const {getEnabledDictionaries, getUseNativeSpellChecker} = require('../spell-check');
 const {userAgentForView, addUserAgentInterceptor} = require('../user-agent');
 const {handleContextMenu} = require('./context-menu');
-const {handleRedirect} = require('./redirect');
+const {handleRedirect, windowOpenHandler} = require('./redirect');
 
 let activeTab = null;
 const tabs = {};
@@ -95,9 +95,8 @@ const addTabs = ipcSender => tabsMetadata => {
     cleanUserAgent(tab);
     tab.webContents.loadURL(url);
 
-    const handleRedirectForCurrentUrl = handleRedirect(tab);
-    tab.webContents.on('will-navigate', handleRedirectForCurrentUrl);
-    tab.webContents.on('new-window', handleRedirectForCurrentUrl);
+    tab.webContents.on('will-navigate', handleRedirect(tab));
+    tab.webContents.setWindowOpenHandler(windowOpenHandler(tab));
 
     const handlePageTitleUpdatedForCurrentTab = handlePageTitleUpdated(ipcSender, id);
     tab.webContents.on('page-title-updated', handlePageTitleUpdatedForCurrentTab);

@@ -15,8 +15,8 @@
  */
 const {BrowserView, BrowserWindow} = require('electron');
 const path = require('path');
-const {handleRedirect} = require('../tab-manager/redirect');
 const {showDialog} = require('../browser-window');
+const {handleRedirect, windowOpenHandler} = require('../tab-manager/redirect');
 
 const webPreferences = {
   contextIsolation: true,
@@ -28,9 +28,8 @@ const webPreferences = {
 const openAboutDialog = event => {
   const aboutView = new BrowserView({webPreferences});
   aboutView.webContents.loadURL(`file://${__dirname}/index.html`);
-  const handleRedirectForCurrentUrl = handleRedirect(aboutView);
-  aboutView.webContents.on('will-navigate', handleRedirectForCurrentUrl);
-  aboutView.webContents.on('new-window', handleRedirectForCurrentUrl);
+  aboutView.webContents.on('will-navigate', handleRedirect(aboutView));
+  aboutView.webContents.setWindowOpenHandler(windowOpenHandler(aboutView));
   showDialog(BrowserWindow.fromWebContents(event.sender), aboutView);
 };
 
