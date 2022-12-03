@@ -151,8 +151,7 @@ const initTabListener = () => {
   });
   eventBus.on(APP_EVENTS.notificationClick, (_event, {tabId}) => {
     tabContainer.webContents.send(APP_EVENTS.activateTabInContainer, {tabId});
-    mainWindow.restore();
-    mainWindow.show();
+    eventBus.emit(APP_EVENTS.restore);
     activateTab(tabId);
   });
   eventBus.on(APP_EVENTS.reload, handleTabReload);
@@ -231,6 +230,10 @@ const initGlobalListeners = () => {
   eventBus.on(APP_EVENTS.fullscreenToggle, fullscreenToggle);
   eventBus.on(APP_EVENTS.helpOpenDialog, openHelpDialog);
   eventBus.on(APP_EVENTS.quit, app.exit);
+  eventBus.on(APP_EVENTS.restore, () => {
+    mainWindow.restore();
+    mainWindow.show();
+  });
   eventBus.handle(APP_EVENTS.settingsLoad, loadSettings);
   eventBus.on(APP_EVENTS.settingsOpenDialog, openSettingsDialog(mainWindow));
   eventBus.on(APP_EVENTS.settingsSave, saveSettings);

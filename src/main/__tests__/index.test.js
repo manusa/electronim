@@ -48,6 +48,7 @@ describe('Main module test suite', () => {
     appMenuModule = require('../../app-menu');
     jest.spyOn(appMenuModule, 'newAppMenu');
     settingsModule = require('../../settings');
+    jest.spyOn(settingsModule, 'getPlatform').mockImplementation(() => 'linux');
     jest.spyOn(settingsModule, 'loadSettings').mockImplementation(() => mockSettings);
     jest.spyOn(settingsModule, 'updateSettings').mockImplementation();
     tabManagerModule = require('../../tab-manager');
@@ -76,8 +77,6 @@ describe('Main module test suite', () => {
     });
     describe('icon', () => {
       test('uses icon.png', () => {
-        // Given
-        jest.spyOn(settingsModule, 'getPlatform').mockImplementation(() => 'linux');
         // When
         main.init();
         // Then
@@ -87,12 +86,12 @@ describe('Main module test suite', () => {
       });
       test('in windows, uses icon.ico', () => {
         // Given
-        jest.spyOn(settingsModule, 'getPlatform').mockImplementation(() => 'win32');
+        settingsModule.getPlatform.mockImplementation(() => 'win32');
         // When
         main.init();
         // Then
         expect(electron.BrowserWindow).toHaveBeenCalledWith(expect.objectContaining({
-          icon: expect.stringMatching(/icon\.png$/)
+          icon: expect.stringMatching(/icon\.ico$/)
         }));
       });
     });
