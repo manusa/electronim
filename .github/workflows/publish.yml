@@ -44,6 +44,8 @@ jobs:
         run: ./utils/upload-artifact.js electronim-linux-x64.tar.gz application/tar+gzip
       - name: Upload AppImage
         run: ./utils/upload-artifact.js electronim-linux-x86_64.AppImage application/octet-stream
+      - name: Upload RPM
+        run: ./utils/upload-artifact.js electronim-linux-x86_64.rpm application/octet-stream
       - name: Publish Snap
         run: |
           sudo apt-get install snapd
