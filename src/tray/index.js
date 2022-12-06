@@ -26,7 +26,7 @@ const initTray = () => {
   }
   const {trayEnabled} = loadSettings();
   if (trayEnabled) {
-    tray = new Tray(path.resolve(__dirname, '..', '..', 'assets', getPlatform() === 'linux' ? 'icon.png' : 'icon.ico'));
+    tray = new Tray(path.resolve(__dirname, '..', 'assets', getPlatform() === 'linux' ? 'icon.png' : 'icon.ico'));
     tray.on('click', () => eventBus.emit(APP_EVENTS.restore));
   }
 };
