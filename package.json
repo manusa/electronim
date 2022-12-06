@@ -69,6 +69,9 @@
       "output": "dist",
       "buildResources": "assets"
     },
+    "extraResources": [
+      "assets/*"
+    ],
     "snap": {
       "summary": "Free/Libre open source Electron based multi instant messaging (IM) client.",
       "plugs": [
