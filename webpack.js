@@ -40,12 +40,8 @@ const ESM_ENTRIES = {
 
 const LIB_DIR = 'lib';
 const LIB_ENTRIES = [
-  'bulma/css/bulma.css',
   'chrome-tabs/css/chrome-tabs.css',
   'chrome-tabs/css/chrome-tabs-dark-theme.css'
-];
-const CUSTOM_LIB_ENTRIES = [
-  '/bulma/bulma.dark.scss'
 ];
 
 const preloadBundle = webpack({
@@ -181,8 +177,7 @@ const exec = async () => {
   await Promise.all([
     ...PRELOAD_ENTRIES.map(entry => path.resolve(__dirname, 'src', entry, 'preload.js')),
     ...Object.values(ESM_ENTRIES).map(entry => path.resolve(__dirname, entry.substring(1))),
-    ...LIB_ENTRIES.map(entry => path.resolve(__dirname, 'node_modules', entry)),
-    ...CUSTOM_LIB_ENTRIES.map(entry => path.resolve(__dirname, entry.substring(1)))
+    ...LIB_ENTRIES.map(entry => path.resolve(__dirname, 'node_modules', entry))
   ].map(p => fsp.access(p, fs.constants.R_OK)));
   console.log('✅ Required files exist');
   const bundles = [preloadBundle, esmBundle];
@@ -191,7 +186,6 @@ const exec = async () => {
     await Promise.all([bundlesDir].map(dir => fsp.rm(dir, {recursive: true, force: true})));
     console.log('🧹 Cleaned previous build...');
     bundles.push(libBundle({name: 'lib', entries: LIB_ENTRIES}));
-    bundles.push(libBundle({name: 'custom-lib', entries: CUSTOM_LIB_ENTRIES}));
   }
   let hasErrors = false;
   for (const bundlePromise of bundles.map(toPromise)) {

@@ -169,7 +169,6 @@
   "devDependencies": {
     "@testing-library/dom": "8.19.0",
     "@testing-library/user-event": "14.4.3",
-    "bulma": "0.9.4",
     "chrome-tabs": "5.4.0",
     "css-loader": "6.7.1",
     "electron-builder": "23.6.0",

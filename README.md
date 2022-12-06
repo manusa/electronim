@@ -70,7 +70,6 @@ spell checking for free.
 ## Acknowledgements
 
 - [Electron](https://electronjs.org/)
-- [Bulma](https://github.com/jgthms/bulma)
 - [Preact](https://github.com/preactjs/preact)
 - [Chrome tabs](https://github.com/adamschwartz/chrome-tabs#readme)
 - [Nodehun](https://github.com/Wulf/nodehun/)
