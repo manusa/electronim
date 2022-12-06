@@ -257,7 +257,7 @@ const init = () => {
   nativeTheme.themeSource = theme;
   mainWindow = new BrowserWindow({
     width, height, resizable: true, maximizable: true,
-    icon: path.resolve(__dirname, '..', '..', 'assets', getPlatform() === 'linux' ? 'icon.png' : 'icon.ico'),
+    icon: path.resolve(__dirname, '..', 'assets', getPlatform() === 'linux' ? 'icon.png' : 'icon.ico'),
     webPreferences
   });
   mainWindow.removeMenu();
