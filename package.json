@@ -12,6 +12,7 @@
     "electronim": "bin.js"
   },
   "files": [
+    "assets",
     "build-config",
     "bundles",
     "docs",
