@@ -4,6 +4,7 @@
   "description": "Free/Libre open source Electron based multi instant messaging (IM) client.",
   "author": {
     "name": "Marc Nuri",
+    "email": "electronim@marcnuri.com",
     "url": "https://www.marcnuri.com"
   },
   "main": "src/index.js",
@@ -107,6 +108,7 @@
       "icon": "icon_1024x1024.png",
       "target": [
         "AppImage",
+        "rpm",
         "snap",
         "tar.gz"
       ]
