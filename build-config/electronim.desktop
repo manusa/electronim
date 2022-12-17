@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=ElectronIM
+Exec=/opt/electronim/electronim %U
+Terminal=false
+Type=Application
+Icon=/opt/electronim/assets/icon_1024x1024.png
+StartupWMClass=ElectronIM
+Categories=Network;InstantMessaging;
+Comment=Free/Libre open source Electron based multi instant messaging (IM) client.
