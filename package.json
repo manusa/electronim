@@ -112,7 +112,6 @@
       "icon": "icon_1024x1024.png",
       "target": [
         "AppImage",
-        "rpm",
         "snap",
         "tar.gz"
       ]
