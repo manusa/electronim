@@ -74,11 +74,6 @@ jobs:
         with:
           name: electronim-linux-x86_64.AppImage
           path: dist/electronim-linux-x86_64.AppImage
-      - name: CI Artifact for RPM
-        uses: actions/upload-artifact@v3
-        with:
-          name: electronim-linux-x86_64.rpm
-          path: dist/electronim-linux-x86_64.rpm
   macos-build:
     name: macOS Build
     runs-on: macos-latest
