@@ -39,6 +39,9 @@ GITHUB_REF=refs/tags/v%{version} node ./utils/version-from-tag.js
 node ./utils/prepare-electron-builder.js
 npm run build:linux
 
+# Remove bin files that might collision with local system binaries
+rm -f dist/linux-unpacked/resources/app.asar.unpacked/node_modules/nodehun/build/node_gyp_bins/python3
+
 %install
 # install everything to /opt/%%{pkg_name}
 install -dp %{buildroot}%{_optpkgdir}
