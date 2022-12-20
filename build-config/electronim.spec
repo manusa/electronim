@@ -61,6 +61,6 @@ install -Dp -m0755 %{SOURCE1} %{buildroot}%{_datadir}/applications
 %{_optpkgdir}/*
 %dir %{_datadir}/applications
 %{_datadir}/applications/%{name}.desktop
-%{_bindir}/*
+%{_bindir}/electronim
 
 
