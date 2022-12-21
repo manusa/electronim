@@ -182,7 +182,7 @@
     "jest": "29.3.1",
     "jest-environment-jsdom": "29.3.1",
     "jest-environment-node": "29.3.1",
-    "jest-extended": "3.1.0",
+    "jest-extended": "3.2.0",
     "sass": "1.57.0",
     "sass-loader": "13.2.0",
     "style-loader": "3.3.1",
