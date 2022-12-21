@@ -35,6 +35,7 @@ const isOAuth = matchUrls([
   /^https:\/\/.+\.twitter\.com\/login.*/, // NOSONAR
   /^https:\/\/.+\.twitter\.com\/logout.*/, // NOSONAR
   /^https:\/\/idbroker\.webex\.com\/idb\/oauth2\/.*/, // NOSONAR
+  /^https:\/\/accounts\.zoho\.(eu|com)\/signin.*/, // NOSONAR
   /^https:\/\/.+\.zoom\.us\/profile.*/, // NOSONAR
   /^https:\/\/.+\.zoom\.us\/signin.*/ // NOSONAR
 ]);
