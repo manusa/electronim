@@ -186,6 +186,24 @@ describe('Tab Manager Redirect module test suite', () => {
         expect(result).toBe(false);
       });
     });
+    describe('Zoho login', () => {
+      test('From Zoho mail to login, should return false', () => {
+        // Given
+        mockBrowserViewUrl = 'https://mail.zoho.com';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockBrowserView, new URL('https://accounts.zoho.com/signin?servicename&serviceurl=https://mail.zoho.com'));
+        // Then
+        expect(result).toBe(false);
+      });
+      test('From Zoho mail to login (eu), should return false', () => {
+        // Given
+        mockBrowserViewUrl = 'https://mail.zoho.com';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockBrowserView, new URL('https://accounts.zoho.eu/signin?servicename&serviceurl=https://mail.zoho.eu'));
+        // Then
+        expect(result).toBe(false);
+      });
+    });
     describe('Zoom login', () => {
       test('From Zoom home to login (profile), should return false', () => {
         // Given
