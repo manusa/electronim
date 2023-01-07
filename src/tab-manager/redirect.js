@@ -40,12 +40,17 @@ const isOAuth = matchUrls([
   /^https:\/\/.+\.zoom\.us\/signin.*/ // NOSONAR
 ]);
 
+const isHandledInternally = matchUrls([
+  /^https:\/\/files\.slack\.com\/.*/ // NOSONAR
+]);
+
 const isSameOrigin = (browserViewUrl, url) => url.origin === browserViewUrl.origin;
 
 const shouldOpenInExternalBrowser = (browserView, url) => {
+  const browserViewUrl = new URL(browserView.webContents.getURL());
   let ret = true;
-  [isSameOrigin, isOAuth].forEach(f => {
-    if (ret && f(new URL(browserView.webContents.getURL()), url)) {
+  [isSameOrigin, isOAuth, isHandledInternally].forEach(f => {
+    if (ret && f(browserViewUrl, url)) {
       ret = false;
     }
   });
@@ -61,7 +66,7 @@ const handleRedirect = browserView => (e, urlString) => {
 };
 
 const windowOpenHandler = browserView => ({url}) => {
-  if (isSameOrigin(new URL(browserView.webContents.getURL()), new URL(url))) {
+  if (!shouldOpenInExternalBrowser(browserView, new URL(url))) {
     return {action: 'allow'};
   }
   shell.openExternal(url);

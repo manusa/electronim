@@ -35,6 +35,14 @@ describe('Tab Manager Redirect module test suite', () => {
         expect(result).toBe(true);
       });
     });
+    test.each([
+      'https://files.slack.com/files-pri/ID123/download/image.png?origin_team=ID456'
+    ])('URLs handled internally -isHandledInternally- (%s) , should return false', url => {
+      // When
+      const result = redirect.shouldOpenInExternalBrowser(mockBrowserView, new URL(url));
+      // Then
+      expect(result).toBe(false);
+    });
     describe('Google OAuth', () => {
       test('From OAuth to Slack, should return false', () => {
         // Given
@@ -223,14 +231,43 @@ describe('Tab Manager Redirect module test suite', () => {
       });
     });
   });
+  describe('handleRedirect', () => {
+    let event;
+    beforeEach(() => {
+      event = {preventDefault: jest.fn()};
+    });
+    describe('different origin and not handled', () => {
+      beforeEach(() => {
+        redirect.handleRedirect(mockBrowserView)(event, 'https://example.com/site-page');
+      });
+      test('should prevent default', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+      test('should open window in external browser', () => {
+        expect(require('electron').shell.openExternal).toHaveBeenCalledWith('https://example.com/site-page');
+      });
+    });
+  });
   describe('windowOpenHandler', () => {
-    test('same origin, opens window in Electron', () => {
+    test('same origin, opens window in Electron popup', () => {
       // When
       const result = redirect.windowOpenHandler(mockBrowserView)({url: 'http://localhost/terms-and-conditions'});
       // Then
       expect(result).toEqual({action: 'allow'});
     });
-    test('different origin, opens window in external browser', () => {
+    test('handled oauth, opens window in Electron popup', () => {
+      // When
+      const result = redirect.windowOpenHandler(mockBrowserView)({url: 'https://accounts.google.com/o/oauth2/auth'});
+      // Then
+      expect(result).toEqual({action: 'allow'});
+    });
+    test('handled internally, opens window in Electron popup', () => {
+      // When
+      const result = redirect.windowOpenHandler(mockBrowserView)({url: 'https://files.slack.com/files-pri/ID123/download/image.png?origin_team=ID456'});
+      // Then
+      expect(result).toEqual({action: 'allow'});
+    });
+    test('different origin and not handled, opens window in external browser', () => {
       // When
       const result = redirect.windowOpenHandler(mockBrowserView)({url: 'https://example.com/site-page'});
       // Then
