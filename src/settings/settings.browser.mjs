@@ -19,7 +19,7 @@ import {
   APP_EVENTS, html, render, useReducer, Icon, IconButton, NavigationRail, TopAppBar
 } from '../components/index.mjs';
 import {
-  reducer, activatePane, dictionariesEnabled, isPaneActive
+  reducer, activatePane, canCancel, canSave, dictionariesEnabled, isPaneActive
 } from './settings.reducer.browser.mjs';
 import {
   OtherPane
@@ -48,10 +48,10 @@ const Settings = ({initialState}) => {
   });
   const cancel = () => ipcRenderer.send(APP_EVENTS.closeDialog);
   return html`
-    <${TopAppBar} headline='Settings' icon=${Icon.arrowBack} iconClick=${cancel}
+    <${TopAppBar} headline='Settings' icon=${Icon.arrowBack} iconClick=${cancel} iconDisabled=${!canCancel(state)}
       trailingIcon=${html`<${IconButton}
           className='settings__submit' icon=${Icon.save} onClick=${save}
-          disabled=${!state.canSave || state.invalidTabs.size !== 0}/>`}
+          disabled=${!canSave(state) || state.invalidTabs.size !== 0}/>`}
     />
     <${NavigationRail}>
       <${NavigationRail.Button} label='Services' icon=${Icon.apps}
@@ -81,6 +81,7 @@ Promise.all([
     const initialState = {
       activePane: ServicesPane.id,
       invalidTabs: new Set(),
+      canCancel: currentSettings.tabs.length > 0,
       canSave: currentSettings.tabs.length > 0,
       dictionaries: {
         available: availableDictionaries,

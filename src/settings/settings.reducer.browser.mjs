@@ -31,6 +31,8 @@ export const ACTIONS = {
 };
 
 // Selectors
+export const canCancel = state => state.canCancel ?? false;
+export const canSave = state => state.canSave ?? false;
 export const isPaneActive = state => paneId => state.activePane === paneId;
 export const closeButtonBehavior = state => state.closeButtonBehavior;
 export const theme = state => state.theme;

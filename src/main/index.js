@@ -142,7 +142,7 @@ const initTabListener = () => {
       const ipcSender = event.sender;
       tabManager.addTabs(ipcSender)(tabs);
     } else {
-      openSettingsDialog(mainWindow)();
+      eventBus.emit(APP_EVENTS.settingsOpenDialog);
     }
   });
   eventBus.on(APP_EVENTS.activateTab, (_event, data) => activateTab(data.id));
