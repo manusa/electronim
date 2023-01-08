@@ -28,6 +28,57 @@ describe('Settings in Browser test suite', () => {
     window.ipcRenderer = mockIpcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
+  describe('TopApp Bar', () => {
+    describe('Main Button states', () => {
+      describe('With pre-existing settings', () => {
+        test('Cancel/Back button is enabled', () => {
+          const button = document.querySelector('.top-app-bar .leading-navigation-icon');
+          expect(button.hasAttribute('disabled')).toBe(false);
+        });
+      });
+      describe('With no pre-existing settings', () => {
+        beforeEach(async () => {
+          jest.resetModules();
+          mockIpcRenderer.mockCurrentSettings.tabs = [];
+          await loadDOM({meta: import.meta, path: ['..', 'index.html']});
+        });
+        test('Cancel/Back button is disabled', () => {
+          const button = document.querySelector('.top-app-bar .leading-navigation-icon');
+          expect(button.getAttribute('disabled')).toBe('true');
+        });
+        test('Save button is disabled', () => {
+          const button = document.querySelector('.settings__submit');
+          expect(button.getAttribute('disabled')).toBe('true');
+        });
+      });
+    });
+    describe('Main Button events', () => {
+      test('Submit should send form data', () => {
+        // When
+        fireEvent.click(document.querySelector('.settings__submit'));
+        // Then
+        expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
+        expect(mockIpcRenderer.send).toHaveBeenCalledWith('settingsSave',
+          {
+            tabs: [
+              {id: '1', url: 'https://initial-tab.com', sandboxed: true},
+              {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true}
+            ],
+            enabledDictionaries: ['en'],
+            disableNotificationsGlobally: false,
+            theme: 'dark',
+            trayEnabled: true
+          });
+      });
+      test('Cancel should send close dialog event', () => {
+        // When
+        fireEvent.click(document.querySelector('.top-app-bar .leading-navigation-icon'));
+        // Then
+        expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
+        expect(mockIpcRenderer.send).toHaveBeenCalledWith('closeDialog');
+      });
+    });
+  });
   describe('Navigation Rail', () => {
     test('Shows navigation rail', () => {
       expect(document.querySelector('.material3.navigation-rail')).not.toBeNull();
@@ -43,32 +94,6 @@ describe('Settings in Browser test suite', () => {
           icon: b.querySelector('.navigation-rail-button__icon').textContent}
         ));
       expect(items).toContainEqual({label, icon});
-    });
-  });
-  describe('Main Button events', () => {
-    test('Submit should send form data', () => {
-      // When
-      fireEvent.click(document.querySelector('.settings__submit'));
-      // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('settingsSave',
-        {
-          tabs: [
-            {id: '1', url: 'https://initial-tab.com', sandboxed: true},
-            {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true}
-          ],
-          enabledDictionaries: ['en'],
-          disableNotificationsGlobally: false,
-          theme: 'dark',
-          trayEnabled: true
-        });
-    });
-    test('Cancel should send close dialog event', () => {
-      // When
-      fireEvent.click(document.querySelector('.top-app-bar .leading-navigation-icon'));
-      // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('closeDialog');
     });
   });
   describe('New tab Input field', () => {

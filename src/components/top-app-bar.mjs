@@ -27,13 +27,16 @@ import {html, IconButton} from './index.mjs';
 export const TopAppBar = ({
   icon,
   iconClick = () => {},
+  iconDisabled = false,
   headline,
   trailingIcon
 }) => {
   document.body.classList.add('has-top-app-bar');
   return html`
     <div class='material3 top-app-bar small elevation-0 surface'>
-      <${IconButton} className='leading-navigation-icon title-large' icon=${icon} onClick=${iconClick}/>
+      <${IconButton}
+          className='leading-navigation-icon title-large' icon=${icon} onClick=${iconClick} disabled=${iconDisabled}
+      />
       <div class='top-app-bar__headline title-large'>${headline}</div>
       <div class='trailing-icon title-large'>${trailingIcon}</div>
     </div>
