@@ -36,6 +36,7 @@ describe('Tab Manager Redirect module test suite', () => {
       });
     });
     test.each([
+      'https://app.slack.com/client/ID1337',
       'https://files.slack.com/files-pri/ID123/download/image.png?origin_team=ID456'
     ])('URLs handled internally -isHandledInternally- (%s) , should return false', url => {
       // When
