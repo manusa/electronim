@@ -41,6 +41,7 @@ const isOAuth = matchUrls([
 ]);
 
 const isHandledInternally = matchUrls([
+  /^https:\/\/app\.slack\.com\/.*/, // NOSONAR
   /^https:\/\/files\.slack\.com\/.*/ // NOSONAR
 ]);
 
