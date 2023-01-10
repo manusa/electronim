@@ -39,6 +39,12 @@ $ tar xz electronim-linux-x64.tar.gz
 $ cd electronim-linux-x64
 $ ./electronim
 ```
+Note: if you are not able to extract the compressed files into a directory(happened on Arch Linux) try
+
+
+```
+$ tar xfz electronim-linux-x64.tar.gz
+```
 
 ##### [AppImage](https://appimage.org/) package
 
