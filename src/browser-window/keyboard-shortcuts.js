@@ -19,27 +19,37 @@ const {APP_EVENTS} = require('../constants');
 const eventKey = ({key, shift = false, control = false, alt = false, meta = false}) =>
   `${key}-${shift}-${control}-${alt}-${meta}`;
 
+// eslint-disable-next-line arrow-body-style
+const eventAction = (func, {preventDefault = true} = {}) => {
+  return event => {
+    func(event);
+    if (preventDefault) {
+      event.preventDefault();
+    }
+  };
+};
+
 const EVENTS = new Map();
 
-EVENTS.set(eventKey({key: 'Escape'}), () => {
+EVENTS.set(eventKey({key: 'Escape'}), eventAction(() => {
   eventBus.emit(APP_EVENTS.appMenuClose);
   eventBus.emit(APP_EVENTS.closeDialog);
-});
+}, {preventDefault: false}));
 
-EVENTS.set(eventKey({key: 'F11'}), () => eventBus.emit(APP_EVENTS.fullscreenToggle));
+EVENTS.set(eventKey({key: 'F11'}), eventAction(() => eventBus.emit(APP_EVENTS.fullscreenToggle)));
 
 Array(9).fill(1).forEach((min, idx) => {
   const key = min + idx;
   const func = () => eventBus.emit(APP_EVENTS.tabSwitchToPosition, key);
-  EVENTS.set(eventKey({key, control: true}), func);
-  EVENTS.set(eventKey({key, meta: true}), func);
+  EVENTS.set(eventKey({key, control: true}), eventAction(func));
+  EVENTS.set(eventKey({key, meta: true}), eventAction(func));
 });
 
-EVENTS.set(eventKey({key: 'Tab', control: true}), () =>
-  eventBus.emit(APP_EVENTS.tabTraverseNext));
+EVENTS.set(eventKey({key: 'Tab', control: true}), eventAction(() =>
+  eventBus.emit(APP_EVENTS.tabTraverseNext)));
 
-EVENTS.set(eventKey({key: 'Tab', shift: true, control: true}), () =>
-  eventBus.emit(APP_EVENTS.tabTraversePrevious));
+EVENTS.set(eventKey({key: 'Tab', shift: true, control: true}), eventAction(() =>
+  eventBus.emit(APP_EVENTS.tabTraversePrevious)));
 
 const registerAppShortcuts = (_, webContents) => {
   webContents.on('before-input-event', (event, {type, key, shift, control, alt, meta}) => {
@@ -48,8 +58,7 @@ const registerAppShortcuts = (_, webContents) => {
     }
     const func = EVENTS.get(eventKey({key, shift, control, alt, meta}));
     if (func) {
-      event.preventDefault();
-      func();
+      func(event);
     }
   });
 };

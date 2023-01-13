@@ -58,8 +58,12 @@ describe('Main :: Global Keyboard Shortcuts module test suite', () => {
   });
   describe('preventDefault', () => {
     test('calls preventDefault if key is registered', () => {
-      browserWindow.listeners['before-input-event'](inputEvent, {key: 'Escape'});
+      browserWindow.listeners['before-input-event'](inputEvent, {key: 'F11'});
       expect(inputEvent.preventDefault).toHaveBeenCalled();
+    });
+    test('doesn\'t call preventDefault if key is registered and preventDefault is disabled', () => {
+      browserWindow.listeners['before-input-event'](inputEvent, {key: 'Esc'});
+      expect(inputEvent.preventDefault).not.toHaveBeenCalled();
     });
     test('doesn\'t call preventDefault if key is not registered', () => {
       browserWindow.listeners['before-input-event'](inputEvent, {});
