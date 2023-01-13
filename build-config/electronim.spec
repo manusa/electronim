@@ -5,7 +5,7 @@
 
 Name: electronim
 # TODO   v---- Automate -- Try to use copr-cli from GitHub Actions upon release `copt-cli build build-config/electronim.spec #...`
-Version: 0.0.87
+Version: 0.0.88
 Release: 0%{?dist}
 Summary: Electron based multi IM (Instant Messaging) client
 License: Apache-2.0
