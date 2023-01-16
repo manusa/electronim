@@ -40,10 +40,10 @@ const isOAuth = matchUrls([
   /^https:\/\/.+\.zoom\.us\/signin.*/ // NOSONAR
 ]);
 
-const isHandledInternally = matchUrls([
+const isHandledInternally = (browserViewUrl, url) => [
   /^https:\/\/app\.slack\.com\/.*/, // NOSONAR
   /^https:\/\/files\.slack\.com\/.*/ // NOSONAR
-]);
+].some(regex => url.href.match(regex));
 
 const isSameOrigin = (browserViewUrl, url) => url.origin === browserViewUrl.origin;
 
