@@ -62,6 +62,13 @@ const mockBrowserWindowInstance = () => {
 const mockElectronInstance = ({...overriddenProps} = {}) => {
   const browserViewInstance = mockBrowserWindowInstance();
   const browserWindowInstance = mockBrowserWindowInstance();
+  const sessionInstance = {
+    clearCache: jest.fn(),
+    clearCodeCaches: jest.fn(),
+    clearHostResolverCache: jest.fn(),
+    clearStorageData: jest.fn(),
+    userAgentInterceptor: true
+  };
   const trayInstance = {
     destroy: jest.fn(),
     on: jest.fn()
@@ -122,10 +129,8 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     },
     nativeTheme: {},
     session: {
-      fromPartition: jest.fn(() => ({
-        userAgentInterceptor: true
-      })),
-      defaultSession: {userAgentInterceptor: true}
+      fromPartition: jest.fn(() => sessionInstance),
+      defaultSession: sessionInstance
     },
     shell: {
       openExternal: jest.fn()

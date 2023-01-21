@@ -15,9 +15,10 @@
  */
 const {app} = require('electron');
 const {registerAppShortcuts} = require('./browser-window');
-const main = require('./main');
+const {init, quit} = require('./main');
 
 app.name = 'ElectronIM';
 
-app.on('ready', main.init);
+app.on('ready', init);
+app.on('quit', quit);
 app.on('web-contents-created', registerAppShortcuts);
