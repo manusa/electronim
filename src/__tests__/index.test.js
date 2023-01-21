@@ -25,22 +25,14 @@ describe('Entrypoint test suite', () => {
     app = require('electron').app;
     main = require('../main');
   });
-  test('App initialization', () => {
-    // Given
-    // When
-    require('../index');
-    // Then
-    expect(app.name).toBe('ElectronIM');
-    expect(app.on).toHaveBeenCalledTimes(2);
-    expect(app.on). toHaveBeenCalledWith('ready', main.init);
-  });
-  test('Adds event listener to register app keyboard shortcuts on every webContents', () => {
-    // Given
-    // When
-    require('../index');
-    // Then
-    expect(app.on).toHaveBeenCalledTimes(2);
-    expect(app.on)
-      .toHaveBeenCalledWith('web-contents-created', require('../browser-window').registerAppShortcuts);
+  describe('App initialization', () => {
+    beforeEach(() => require('../'));
+    test('Sets app name', () => expect(app.name).toBe('ElectronIM'));
+    test('Adds ready event listener', () => expect(app.on).toHaveBeenCalledWith('ready', main.init));
+    test('Adds quit event listener', () => expect(app.on).toHaveBeenCalledWith('quit', main.quit));
+    test('Registers app keyboard shortcuts on every webContents created (web-contents-created)', () => {
+      expect(app.on)
+        .toHaveBeenCalledWith('web-contents-created', require('../browser-window').registerAppShortcuts);
+    });
   });
 });
