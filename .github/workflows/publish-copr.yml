@@ -1,0 +1,48 @@
+#   Copyright 2023 Marc Nuri San Felix
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+name: Publish Copr (Fedora)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish'
+        required: true
+        default: 'v0.0.0'
+# TODO: enable once completely tested
+#  push:
+#    tags:
+#    - '*'
+
+jobs:
+  copr:
+    name: Copr Publish
+    runs-on: ubuntu-latest
+    env:
+      COPR_API_KEY: ${{ secrets.COPR_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set API key
+        run: echo "${COPR_API_KEY}" > ~/.config/copr
+      - name: Install copr-cli
+        run: pip install copr-cli
+      - name: Version from dispatch inputs
+        if: github.event_name == 'workflow_dispatch'
+        run: echo "WORKFLOW_DISPATCH_GITHUB_REF=refs/tags/${{ inputs.version }}" >> $GITHUB_ENV
+      - name: Change build-config/electronim.spec version
+        run: ./utils/version-from-tag.js
+      - name: Publish
+        run: |
+          copr-cli build manusa/electronim build-config/electronim.spec --enable-net on
