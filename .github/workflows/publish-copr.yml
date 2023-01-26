@@ -20,10 +20,9 @@ on:
         description: 'Version to publish'
         required: true
         default: 'v0.0.0'
-# TODO: enable once completely tested
-#  push:
-#    tags:
-#    - '*'
+  push:
+    tags:
+    - '*'
 
 jobs:
   copr:
