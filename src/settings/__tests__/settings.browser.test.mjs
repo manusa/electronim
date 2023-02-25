@@ -214,10 +214,16 @@ describe('Settings in Browser test suite', () => {
     });
   });
   describe('Tab events', () => {
-    describe('Disable icon click (sequential test - ordered)', () => {
+    describe('Disable icon click', () => {
       let $disableIcon;
-      beforeEach(() => {
+      beforeEach(async () => {
         $disableIcon = getByTestId(document.querySelector('.settings__tab'), 'button-disable');
+        // Ensure Tab is always enabled
+        if ($disableIcon.textContent === '\ue8f5') {
+          fireEvent.click($disableIcon);
+          // eslint-disable-next-line jest/no-standalone-expect
+          await waitFor(() => expect($disableIcon.textContent).toBe('\ue8f4'));
+        }
       });
       test('with enabled tab, should disable', async () => {
         // When
@@ -227,6 +233,9 @@ describe('Settings in Browser test suite', () => {
         expect($disableIcon.textContent).toBe('\ue8f5');
       });
       test('with disabled tab, should enable', async () => {
+        // Given
+        fireEvent.click($disableIcon);
+        await waitFor(() => expect($disableIcon.textContent).toBe('\ue8f5'));
         // When
         fireEvent.click($disableIcon);
         // Then
