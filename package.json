@@ -172,7 +172,7 @@
     "verbose": true
   },
   "devDependencies": {
-    "@testing-library/dom": "8.20.0",
+    "@testing-library/dom": "9.0.0",
     "@testing-library/user-event": "14.4.3",
     "chrome-tabs": "5.4.0",
     "css-loader": "6.7.3",
