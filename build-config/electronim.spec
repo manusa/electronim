@@ -12,11 +12,16 @@ Url: https://github.com/manusa/electronim
 # Tag sources
 Source0: %{url}/archive/refs/tags/v%{version}.zip
 
+%if 0%{?fedora} >= 37
+BuildRequires: nodejs-npm
+%else
+BuildRequires: npm
+%endif
+
 BuildRequires: python3-devel
 BuildRequires: gcc-c++
 BuildRequires: git-core
 BuildRequires: make
-BuildRequires: npm
 BuildRequires: libglvnd-devel
 BuildRequires: libxcrypt-compat
 ExclusiveArch: x86_64
