@@ -117,12 +117,24 @@
       ]
     },
     "mac": {
-      "artifactName": "electronim-mac.${ext}",
+      "artifactName": "electronim-mac-${arch}.${ext}",
       "category": "public.app-category.utilities",
       "icon": "icon_1024x1024.png",
       "target": [
-        "dmg",
-        "tar.gz"
+        {
+          "target":"dmg", 
+          "arch": [
+            "x64", 
+            "arm64"
+          ]
+        },
+        {
+          "target":"tar.gz", 
+          "arch": [
+            "x64", 
+            "arm64"
+          ]
+        }
       ],
       "entitlements": "build-config/entitlements.mac.plist",
       "entitlementsInherit": "build-config/entitlements.mac.plist"
