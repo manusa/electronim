@@ -15,9 +15,9 @@
  */
 const {registerAppShortcuts} = require('./keyboard-shortcuts');
 
-const showDialog = (window, browserView) => {
-  window.setBrowserView(browserView);
-  const {width, height} = window.getContentBounds();
+const showDialog = (browserWindow, browserView) => {
+  browserWindow.setBrowserView(browserView);
+  const {width, height} = browserWindow.getContentBounds();
   browserView.setBounds({x: 0, y: 0, width, height});
   browserView.setAutoResize({width: false, horizontal: false, height: false, vertical: false});
   browserView.webContents.focus();

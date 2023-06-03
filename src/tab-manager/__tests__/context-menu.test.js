@@ -43,7 +43,6 @@ describe('Tab Manager context-menu test suite', () => {
     electron.browserViewInstance.webContents.canGoBack = jest.fn(() => false);
     listeners = electron.browserViewInstance.listeners;
     event = new Event('');
-    event.sender = electron.browserViewInstance.webContents;
     params = {x: 13, y: 37};
     tabManager = require('../');
     tabManager.addTabs({send: jest.fn()})([{id: '1337', url: 'https://localhost'}]);

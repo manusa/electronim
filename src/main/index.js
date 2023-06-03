@@ -68,19 +68,18 @@ const activateTab = tabId => {
   }
 };
 
-const handleMainWindowResize = event => {
-  const window = event.sender;
-  const [windowWidth, windowHeight] = window.getSize();
+const handleMainWindowResize = () => {
+  const [windowWidth, windowHeight] = mainWindow.getSize();
   updateSettings({width: windowWidth, height: windowHeight});
 
   setTimeout(() => {
-    const {width: contentWidth, height: contentHeight} = window.getContentBounds();
+    const {width: contentWidth, height: contentHeight} = mainWindow.getContentBounds();
     if (appMenu && appMenu.setBounds) {
       appMenu.setBounds({x: 0, y: 0, width: contentWidth, height: contentHeight});
     }
     let totalHeight = 0;
     const isLast = (idx, array) => idx === array.length - 1;
-    window.getBrowserViews().filter(isNotAppMenu).forEach((bv, idx, array) => {
+    mainWindow.getBrowserViews().filter(isNotAppMenu).forEach((bv, idx, array) => {
       const {x: currentX, y: currentY, height: currentHeight} = bv.getBounds();
       let newHeight = currentHeight;
       if (isLast(idx, array)) {
@@ -228,7 +227,7 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.dictionaryGetAvailableNative, getAvailableNativeDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetEnabled, getEnabledDictionaries);
   eventBus.on(APP_EVENTS.fullscreenToggle, fullscreenToggle);
-  eventBus.on(APP_EVENTS.helpOpenDialog, openHelpDialog);
+  eventBus.on(APP_EVENTS.helpOpenDialog, openHelpDialog(mainWindow));
   eventBus.on(APP_EVENTS.quit, app.exit);
   eventBus.on(APP_EVENTS.restore, () => {
     mainWindow.restore();

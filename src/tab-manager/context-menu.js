@@ -16,8 +16,7 @@
 const {Menu, MenuItem} = require('electron');
 const {contextMenuHandler, contextMenuNativeHandler} = require('../spell-check');
 
-const entries = (event, params) => {
-  const webContents = event.sender;
+const entries = ({webContents, params}) => {
   return [
     [{
       label: 'Back',
@@ -49,13 +48,13 @@ const entries = (event, params) => {
   ];
 };
 
-const spellCheckContextMenu = async (event, params) => {
+const spellCheckContextMenu = async ({webContents, params}) => {
   const menu = new Menu();
   let spellingSuggestions;
-  if (event.sender.session.spellcheck) {
-    spellingSuggestions = contextMenuNativeHandler(event, params);
+  if (webContents.session.spellcheck) {
+    spellingSuggestions = contextMenuNativeHandler(webContents, params);
   } else {
-    spellingSuggestions = await contextMenuHandler(event, params);
+    spellingSuggestions = await contextMenuHandler(webContents, params);
   }
   if (spellingSuggestions && spellingSuggestions.length > 0) {
     spellingSuggestions.forEach(mi => menu.append(mi));
@@ -63,10 +62,10 @@ const spellCheckContextMenu = async (event, params) => {
   return menu;
 };
 
-const regularContextMenu = (event, params) => {
+const regularContextMenu = ({webContents, params}) => {
   const menu = new Menu();
   const isVisible = me => !Object.keys(me).includes('visible') || me.visible === true;
-  entries(event, params).forEach((group, idx, arr) => {
+  entries({webContents, params}).forEach((group, idx, arr) => {
     for (const entry of group) {
       menu.append(new MenuItem({...entry}));
     }
@@ -77,12 +76,17 @@ const regularContextMenu = (event, params) => {
   return menu;
 };
 
-const handleContextMenu = async (event, params) => {
+/**
+ * @param {BrowserView|BrowserWindow} viewOrWindow
+ * @returns {(function(*, *): Promise<void>)|*}
+ */
+const handleContextMenu = viewOrWindow => async (_event, params) => {
+  const {webContents} = viewOrWindow;
   let menu;
   if (params.misspelledWord) {
-    menu = await spellCheckContextMenu(event, params);
+    menu = await spellCheckContextMenu({webContents, params});
   } else {
-    menu = regularContextMenu(event, params);
+    menu = regularContextMenu({webContents, params});
   }
   const {x, y} = params;
   menu.popup({x, y});

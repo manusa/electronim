@@ -103,7 +103,7 @@ const addTabs = ipcSender => tabsMetadata => {
     const handlePageFaviconUpdatedForCurrentTab = handlePageFaviconUpdated(tab, ipcSender, id);
     tab.webContents.on('page-favicon-updated', handlePageFaviconUpdatedForCurrentTab);
 
-    tab.webContents.on('context-menu', handleContextMenu);
+    tab.webContents.on('context-menu', handleContextMenu(tab));
 
     const registerIdInTab = () => tab.webContents.executeJavaScript(`window.tabId = '${id}';`);
     tab.webContents.on('dom-ready', registerIdInTab);

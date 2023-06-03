@@ -37,8 +37,7 @@ const checkForUpdates = webContents => {
     .catch(e => console.debug('Error checking for updates', e));
 };
 
-const handleContextMenu = (event, params) => {
-  const webContents = event.sender;
+const handleContextMenu = viewOrWindow => (event, params) => {
   const menu = new Menu();
   menu.append(new MenuItem({
     label: 'Settings',
@@ -50,7 +49,7 @@ const handleContextMenu = (event, params) => {
   }));
   menu.append(new MenuItem({
     label: 'DevTools',
-    click: () => webContents.openDevTools({mode: 'detach', activate: true})
+    click: () => viewOrWindow.webContents.openDevTools({mode: 'detach', activate: true})
   }));
   const {x, y} = params;
   menu.popup({x, y});
@@ -66,7 +65,7 @@ const newTabContainer = () => {
   tabContainer.setAutoResize({width: false, horizontal: false, height: false, vertical: false});
   tabContainer.webContents.loadURL(`file://${__dirname}/index.html`,
     {extraHeaders: 'pragma: no-cache\nCache-control: no-cache'});
-  tabContainer.webContents.on('context-menu', handleContextMenu);
+  tabContainer.webContents.on('context-menu', handleContextMenu(tabContainer));
   eventBus.once(APP_EVENTS.tabsReady, () => checkForUpdates(tabContainer.webContents));
   setInterval(() => checkForUpdates(tabContainer.webContents), 1000 * 60 * 30).unref();
   return tabContainer;

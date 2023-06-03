@@ -15,20 +15,22 @@
  */
 describe('Help module test suite', () => {
   let electron;
-  let sender;
   let help;
   beforeEach(() => {
     jest.resetModules();
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
-    sender = electron.browserWindowInstance.webContents;
     help = require('../');
   });
   describe('openHelpDialog', () => {
+    let openHelp;
+    beforeEach(() => {
+      openHelp = help.openHelpDialog(electron.browserWindowInstance);
+    });
     describe('webPreferences', () => {
       test('is sandboxed', () => {
         // When
-        help.openHelpDialog({sender});
+        openHelp();
         // Then
         const BrowserView = electron.BrowserView;
         expect(BrowserView).toHaveBeenCalledTimes(1);
@@ -38,7 +40,7 @@ describe('Help module test suite', () => {
       });
       test('has no node integration', () => {
         // When
-        help.openHelpDialog({sender});
+        openHelp();
         // Then
         expect(electron.BrowserView).toHaveBeenCalledWith({
           webPreferences: expect.objectContaining({nodeIntegration: false})
@@ -46,7 +48,7 @@ describe('Help module test suite', () => {
       });
       test('has context isolation', () => {
         // When
-        help.openHelpDialog({sender});
+        openHelp();
         // Then
         expect(electron.BrowserView).toHaveBeenCalledWith({
           webPreferences: expect.objectContaining({contextIsolation: true})
@@ -56,7 +58,7 @@ describe('Help module test suite', () => {
     test('hasWindowOpenHandler', () => {
       // Given
       electron.browserViewInstance.webContents.getURL.mockReturnValue('file://help/index.html');
-      help.openHelpDialog({sender});
+      openHelp();
       // When
       electron.browserViewInstance.webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
       // Then
@@ -64,7 +66,7 @@ describe('Help module test suite', () => {
     });
     test('should open dialog and add event listeners', () => {
       // When
-      help.openHelpDialog({sender: electron.browserWindowInstance.webContents});
+      openHelp();
       // Then
       expect(electron.browserViewInstance.webContents.loadURL).toHaveBeenCalledTimes(1);
       expect(electron.browserViewInstance.webContents.loadURL)
