@@ -122,16 +122,16 @@
       "icon": "icon_1024x1024.png",
       "target": [
         {
-          "target":"dmg", 
+          "target":"dmg",
           "arch": [
-            "x64", 
+            "x64",
             "arm64"
           ]
         },
         {
-          "target":"tar.gz", 
+          "target":"tar.gz",
           "arch": [
-            "x64", 
+            "x64",
             "arm64"
           ]
         }
