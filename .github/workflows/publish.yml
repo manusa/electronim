@@ -25,6 +25,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       SNAPCRAFT_LOGIN: ${{ secrets.SNAPCRAFT_LOGIN }}
+      SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_LOGIN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -49,8 +50,6 @@ jobs:
           sudo apt-get install snapd
           sudo chown root:root / # Snapcraft requires '/' to be root owned
           sudo snap install snapcraft --classic
-          echo $SNAPCRAFT_LOGIN | base64 --decode --ignore-garbage > snapcraft.login
-          snapcraft login --with snapcraft.login
           snapcraft push --release=stable ./dist/electronim-linux-amd64.snap
   macOS:
     name: macOS Artifact
