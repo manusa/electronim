@@ -117,21 +117,21 @@ const menuItem = ({webContents, suggestion}) => new MenuItem({
   }
 });
 
-const contextMenuHandler = async (event, {misspelledWord}) => {
+const contextMenuHandler = async (webContents, {misspelledWord}) => {
   const ret = [];
   if (misspelledWord && misspelledWord.length > 0) {
     const suggestions = await fakeRendererWorker.webContents.executeJavaScript(`getSuggestions('${misspelledWord}')`);
     suggestions.forEach(suggestion =>
-      ret.push(menuItem({webContents: event.sender, suggestion})));
+      ret.push(menuItem({webContents, suggestion})));
   }
   return ret;
 };
 
-const contextMenuNativeHandler = (event, {misspelledWord, dictionarySuggestions = []}) => {
+const contextMenuNativeHandler = (webContents, {misspelledWord, dictionarySuggestions = []}) => {
   const ret = [];
   if (misspelledWord && misspelledWord.length > 0) {
     dictionarySuggestions.forEach(suggestion =>
-      ret.push(menuItem({webContents: event.sender, suggestion})));
+      ret.push(menuItem({webContents, suggestion})));
   }
   return ret;
 };
