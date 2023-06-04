@@ -47,6 +47,41 @@ body {
   }
 }
 
+.tab-container .chrome-tabs .chrome-tab .chrome-tab-title {
+  /*font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;*/
+  /* https://github.com/vaadin/web-components/issues/4183 */
+  /* Prevents https://bugs.chromium.org/p/chromium/issues/detail?id=1399431 */
+  -webkit-mask-image: none;
+}
+
+.tab-container .chrome-tabs .chrome-tab .chrome-tab-content::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to right, #EEEEEE00 50%, #EEEEEEFF 100%); /* #EEE */
+}
+.tab-container .chrome-tabs .chrome-tab .chrome-tab-content:hover::after {
+  background: linear-gradient(to right, #F4F5F600 50%, #F4F5F6FF 100%);
+}
+.tab-container .chrome-tabs .chrome-tab[active] .chrome-tab-content::after {
+  background: linear-gradient(to right, #FFFFFF00 50%, #FFFFFFFF 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  .tab-container .chrome-tabs .chrome-tab .chrome-tab-content::after {
+    background: linear-gradient(to right, #20212400 50%, #202124FF 100%);
+  }
+  .tab-container .chrome-tabs .chrome-tab .chrome-tab-content:hover::after {
+    background: linear-gradient(to right, #292B2E00 50%, #292B2EFF 100%);
+  }
+  .tab-container .chrome-tabs .chrome-tab[active] .chrome-tab-content::after {
+    background: linear-gradient(to right, #32363900 50%, #323639FF 100%);
+  }
+}
+
 .tab-container .chrome-tabs .chrome-tab-close {
   display: none;
 }
