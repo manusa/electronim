@@ -58,11 +58,18 @@ const shouldOpenInExternalBrowser = (browserView, url) => {
   return ret;
 };
 
+const openExternal = urlString => {
+  if (!['http:', 'https:', 'ftp:', 'ftps:'].includes(new URL(urlString).protocol)) {
+    return;
+  }
+  shell.openExternal(urlString).then(() => {});
+};
+
 const handleRedirect = browserView => (e, urlString) => {
   const url = new URL(urlString);
   if (shouldOpenInExternalBrowser(browserView, url)) {
     e.preventDefault();
-    shell.openExternal(urlString);
+    openExternal(urlString);
   }
 };
 
@@ -70,7 +77,7 @@ const windowOpenHandler = browserView => ({url}) => {
   if (!shouldOpenInExternalBrowser(browserView, new URL(url))) {
     return {action: 'allow'};
   }
-  shell.openExternal(url);
+  openExternal(url);
   return {action: 'deny'};
 };
 

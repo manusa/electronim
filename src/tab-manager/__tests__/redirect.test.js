@@ -248,6 +248,17 @@ describe('Tab Manager Redirect module test suite', () => {
         expect(require('electron').shell.openExternal).toHaveBeenCalledWith('https://example.com/site-page');
       });
     });
+    describe('different origin, not handled, and invalid protocol', () => {
+      beforeEach(() => {
+        redirect.handleRedirect(mockBrowserView)(event, 'smb://example.com/share');
+      });
+      test('should prevent default', () => {
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
+      test('should not open window in external browser', () => {
+        expect(require('electron').shell.openExternal).not.toHaveBeenCalledWith('smb://example.com/share');
+      });
+    });
   });
   describe('windowOpenHandler', () => {
     test('same origin, opens window in Electron popup', () => {
