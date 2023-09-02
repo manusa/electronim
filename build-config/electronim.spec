@@ -19,6 +19,8 @@ BuildRequires: npm
 %endif
 
 BuildRequires: python3-devel
+# gyp requires distutils provided now by python3-setuptools https://fedoraproject.org/wiki/Changes/Python3.12#The_Python_standard_library_distutils_module_will_be_removed
+BuildRequires: python3-setuptools
 BuildRequires: gcc-c++
 BuildRequires: git-core
 BuildRequires: make
