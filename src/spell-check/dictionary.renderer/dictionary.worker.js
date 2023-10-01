@@ -33,7 +33,7 @@ window.getSuggestions = word => {
   dictionaries.map(dictionary => dictionary.suggestSync(word))
     .flatMap(suggestions => suggestions)
     .forEach(suggestion => ret.add(suggestion));
-    return Array.from(ret.values()).sort((w1, w2) => w1.localeCompare(w2)).slice(0, 10);
+  return Array.from(ret.values()).sort((w1, w2) => w1.localeCompare(w2)).slice(0, 10);
 };
 
 window.reloadDictionaries = () => {
