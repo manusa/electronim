@@ -29,7 +29,7 @@ const Version = ({component, value}) => html`
 `;
 
 const About = () => html`
-  <${TopAppBar} icon=${Icon.arrowBack} iconClick=${close} headline='About ElectronIM'/>
+  <${TopAppBar} icon=${Icon.arrowBack} iconClick=${() => close()} headline='About ElectronIM'/>
   <div class='about-content'>
     <${Card}
         interactive=${true /* Enable state layer just for fun */}
