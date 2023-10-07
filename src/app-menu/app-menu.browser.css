@@ -51,4 +51,5 @@ html.electronim,
   position: absolute;
   left: auto;
   right: 0;
+  user-select: none;
 }
