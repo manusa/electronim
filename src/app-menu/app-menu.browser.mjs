@@ -26,7 +26,7 @@ const AppMenu = () => {
     func();
   };
   return (html`
-    <div class='wrapper' onClick=${close}>
+    <div class='wrapper' onClick=${() => close() /* n.b. can't be referenced directly, keep nested function */}>
       <div class='scrim'>
         <${Menu}>
           <${Menu.Item} icon=${Icon.help} label='Help' data-testid='help-menu-entry'

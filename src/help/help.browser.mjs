@@ -53,7 +53,7 @@ const Content = () => html`
 `;
 
 const Help = () => html`
-    <${TopAppBar} headline='Help' icon=${Icon.arrowBack} iconClick=${close} />
+    <${TopAppBar} headline='Help' icon=${Icon.arrowBack} iconClick=${() => close()} />
     <div class="help-content body-large">
       <${Toc} />
       <${Content} />
