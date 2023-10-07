@@ -28,10 +28,10 @@ const quit = () => {
   const persistentSessions = loadSettings()
     .tabs.filter(({ sandboxed = false }) => sandboxed)
     .map(({ id }) => session.fromPartition(`persist:${id}`));
-  // eslint-disable-next-line no-console
-  [...persistentSessions, session.defaultSession].forEach((s) =>{
-    clearCache(s).catch(console.error)
-});
+    [...persistentSessions, session.defaultSession].forEach(s => {
+      // eslint-disable-next-line no-console
+      clearCache(s).catch(console.error);
+    });
 };
 
 module.exports = { quit };
