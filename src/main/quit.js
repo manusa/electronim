@@ -13,22 +13,25 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {session} = require('electron');
-const {loadSettings} = require('../settings');
+const { session } = require("electron");
+const { loadSettings } = require("../settings");
 
-const clearCache = s => Promise.all([
-  s.clearCache(),
-  s.clearCodeCaches({}),
-  s.clearHostResolverCache(),
-  s.clearStorageData({storages: ['serviceworkers', 'cachestorage']})
-]);
+const clearCache = (s) =>
+  Promise.all([
+    s.clearCache(),
+    s.clearCodeCaches({}),
+    s.clearHostResolverCache(),
+    s.clearStorageData({ storages: ["serviceworkers", "cachestorage"] }),
+  ]);
 
 const quit = () => {
-  const persistentSessions = loadSettings().tabs
-    .filter(({sandboxed = false}) => sandboxed)
-    .map(({id}) => session.fromPartition(`persist:${id}`));
+  const persistentSessions = loadSettings()
+    .tabs.filter(({ sandboxed = false }) => sandboxed)
+    .map(({ id }) => session.fromPartition(`persist:${id}`));
   // eslint-disable-next-line no-console
-  [...persistentSessions, session.defaultSession].forEach(s => clearCache(s).catch(console.error));
+  [...persistentSessions, session.defaultSession].forEach((s) =>{
+    clearCache(s).catch(console.error)
+});
 };
 
-module.exports = {quit};
+module.exports = { quit };
