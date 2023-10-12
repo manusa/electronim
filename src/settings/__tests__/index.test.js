@@ -43,7 +43,7 @@ describe('Settings module test suite', () => {
       expectHomeDirectoryCreated();
       expect(fs.readFileSync).toHaveBeenCalledTimes(1);
       expect(result.tabs).toEqual([]);
-      expect(result.enabledDictionaries).toEqual(['en-US']);
+      expect(result.enabledDictionaries).toEqual(['en']);
       expect(result.theme).toEqual('system');
     });
     test('settings (empty) exist, should load settings from file system and merge with defaults', () => {
@@ -56,7 +56,7 @@ describe('Settings module test suite', () => {
       expectHomeDirectoryCreated();
       expect(fs.readFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'));
       expect(result.tabs).toEqual([]);
-      expect(result.enabledDictionaries).toEqual(['en-US']);
+      expect(result.enabledDictionaries).toEqual(['en']);
       expect(result.theme).toEqual('system');
       expect(result.trayEnabled).toEqual(false);
     });
@@ -70,7 +70,7 @@ describe('Settings module test suite', () => {
       expectHomeDirectoryCreated();
       expect(fs.readFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'));
       expect(result.tabs).toEqual([{id: '1'}]);
-      expect(result.enabledDictionaries).toEqual(['en-US']);
+      expect(result.enabledDictionaries).toEqual(['en']);
       expect(result.activeTab).toBe('1');
       expect(result.otherSetting).toBe(1337);
     });
@@ -83,6 +83,19 @@ describe('Settings module test suite', () => {
       // Then
       expect(result.tabs).toEqual([{id: '1', disabled: true}, {id: '2'}]);
       expect(result.activeTab).toBe('2');
+    });
+    test.each([
+      {enabledDictionaries: ['en-US', 'es'], expected: ['es', 'en']},
+      {enabledDictionaries: ['en-US', 'en', 'es'], expected: ['es', 'en']},
+      {enabledDictionaries: ['en-GB', 'en'], expected: ['en-GB', 'en']}
+    ])('settings with $enabledDictionaries dictionary, should migrate to $expected', ({enabledDictionaries, expected}) => {
+      // Given
+      fs.existsSync.mockImplementationOnce(() => true);
+      fs.readFileSync.mockImplementationOnce(() => JSON.stringify({enabledDictionaries}));
+      // When
+      const result = settings.loadSettings();
+      // Then
+      expect(result.enabledDictionaries).toEqual(expected);
     });
     test.each([
       {key: 'theme', value: '"light"', expected: 'light'},
@@ -110,7 +123,7 @@ describe('Settings module test suite', () => {
       expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
         '{\n  "tabs": [],\n' +
         '  "useNativeSpellChecker": false,\n' +
-        '  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
+        '  "enabledDictionaries": [\n    "en"\n  ],\n' +
         '  "theme": "system",\n  "trayEnabled": false,\n' +
         '  "closeButtonBehavior": "quit"\n' +
         '}');
@@ -124,7 +137,7 @@ describe('Settings module test suite', () => {
       expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
         '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n' +
         '  "useNativeSpellChecker": false,\n' +
-        '  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
+        '  "enabledDictionaries": [\n    "en"\n  ],\n' +
         '  "theme": "system",\n' +
         '  "trayEnabled": false,\n' +
         '  "closeButtonBehavior": "quit",\n' +
@@ -141,7 +154,7 @@ describe('Settings module test suite', () => {
       expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
         '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n' +
         '  "useNativeSpellChecker": false,\n' +
-        '  "enabledDictionaries": [\n    "en-US"\n  ],\n' +
+        '  "enabledDictionaries": [\n    "en"\n  ],\n' +
         '  "theme": "system",\n' +
         '  "trayEnabled": false,\n' +
         '  "closeButtonBehavior": "quit",\n' +

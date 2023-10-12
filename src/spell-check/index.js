@@ -30,7 +30,7 @@ const AVAILABLE_DICTIONARIES = {
   'en-GB': {
     name: 'English (GB)'
   },
-  'en-US': {
+  en: {
     name: 'English (US)'
   },
   es: {

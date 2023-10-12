@@ -25,7 +25,7 @@ const SETTINGS_FILE = 'settings.json';
 const DEFAULT_SETTINGS = {
   tabs: [],
   useNativeSpellChecker: false,
-  enabledDictionaries: ['en-US'],
+  enabledDictionaries: ['en'],
   theme: 'system',
   trayEnabled: false,
   closeButtonBehavior: CLOSE_BUTTON_BEHAVIORS.quit
@@ -62,6 +62,17 @@ const ensureDefaultValues = settings => {
   return {...settings, activeTab};
 };
 
+const migrate = settings => {
+  // en-us dictionary key is now en
+  if (settings.enabledDictionaries.includes('en-US')) {
+    settings.enabledDictionaries = settings.enabledDictionaries
+      .filter(dictionary => dictionary !== 'en-US')
+      .filter(dictionary => dictionary !== 'en')
+      .concat('en');
+  }
+  return settings;
+};
+
 const initAppDir = () => fs.mkdirSync(appDir, {recursive: true});
 
 const loadSettings = () => {
@@ -70,7 +81,7 @@ const loadSettings = () => {
   if (fs.existsSync(settingsPath)) {
     loadedSettings = JSON.parse(fs.readFileSync(settingsPath));
   }
-  return ensureDefaultValues(loadedSettings);
+  return migrate(ensureDefaultValues(loadedSettings));
 };
 
 const writeSettings = settings => {
