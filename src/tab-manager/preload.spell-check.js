@@ -16,10 +16,10 @@
 /* eslint-disable no-undef */
 const {ipcRenderer, webFrame} = require('electron');
 
-const spellCheckFunction = async (words, callback) => {
+const spellCheckFunction = (words, callback) => {
   // eslint-disable-next-line no-undef
-  const misspelled = await ipcRenderer.invoke(APP_EVENTS.dictionaryGetMisspelled, words);
-  callback(misspelled);
+  ipcRenderer.invoke(APP_EVENTS.dictionaryGetMisspelled, words)
+    .then(misspelled => callback(misspelled));
 };
 
 const initSpellChecker = () => new Promise(resolve => {
