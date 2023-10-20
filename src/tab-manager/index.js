@@ -105,9 +105,11 @@ const addTabs = ipcSender => tabsMetadata => {
 
     tab.webContents.on('context-menu', handleContextMenu(tab));
 
-    const registerIdInTab = () => tab.webContents.executeJavaScript(`window.tabId = '${id}';`);
+    const registerIdInTab = () => {
+      tab.webContents.executeJavaScript(`window.tabId = '${id}';`);
+    };
     tab.webContents.on('dom-ready', registerIdInTab);
-    registerIdInTab().then();
+    registerIdInTab();
 
     tabs[id.toString()] = tab;
   });
