@@ -26,7 +26,7 @@ const DEFAULT_SOURCES_OPTIONS = {
 
 const desktopCapturer = {
   // eslint-disable-next-line no-undef
-  getSources: opts => ipcRenderer.invoke(APP_EVENTS.desktopCapturerGetSources, opts)
+  getSources: async opts => ipcRenderer.invoke(APP_EVENTS.desktopCapturerGetSources, opts)
 };
 
 let currentRoot = null;
@@ -145,7 +145,9 @@ const NoSourcesFound = ({sources}) => sources !== null && sources.length === 0 &
 
 const Container = ({resolve, reject}) => {
   const [sources, setSources] = useState(null);
-  const updateSourcesFunction = async () => setSources(await desktopCapturer.getSources(DEFAULT_SOURCES_OPTIONS));
+  const updateSourcesFunction = () => {
+    desktopCapturer.getSources(DEFAULT_SOURCES_OPTIONS).then(setSources);
+  };
   useEffect(() => {
     setTimeout(updateSourcesFunction, sources ? 300 : 0);
   }, [sources]);
