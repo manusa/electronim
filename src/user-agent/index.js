@@ -14,7 +14,7 @@
    limitations under the License.
  */
 const axios = require('axios');
-const CHROMIUM_VERSIONS = 'https://omahaproxy.appspot.com/all.json';
+const CHROMIUM_VERSIONS = `https://versionhistory.googleapis.com/v1/chrome/platforms/linux/channels/stable/versions/all/releases?filter=endtime>${new Date().toISOString()}`;
 const FIREFOX_VERSIONS = 'https://product-details.mozilla.org/1.0/firefox_versions.json';
 
 const BROWSER_VERSIONS = {
@@ -28,12 +28,10 @@ const USER_AGENT_INTERCEPTOR_FILTER = {
 };
 
 const latestChromium = async () => {
-  const {data: tags} = await axios.get(CHROMIUM_VERSIONS);
-  const stableVersion = tags
-    .filter(version => version.os === 'linux')
-    .flatMap(version => version.versions)
-    .filter(version => version.channel === 'stable');
-  return stableVersion && stableVersion.length > 0 ? stableVersion[0].version : null;
+  const {data} = await axios.get(CHROMIUM_VERSIONS);
+  const stableVersion = data.releases
+    .flatMap(release => release.version);
+  return stableVersion && stableVersion.length > 0 ? stableVersion[0] : null;
 };
 
 const latestFirefox = async () => {
