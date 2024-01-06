@@ -25,10 +25,12 @@ describe('User Agent module test suite', () => {
   describe('initBrowserVersions', () => {
     test('valid responses, should return a valid version for all browsers,', async () => {
       // Given
-      axios.get.mockImplementationOnce(async () => ({data: [
-        {os: 'linux', versions: [{channel: 'other', version: '5uck5'}, {channel: 'stable', version: '1337'}]},
-        {os: 'win'}
-      ]}));
+      axios.get.mockImplementationOnce(async () => ({data: {
+        releases: [
+          {name: 'chrome/platforms/linux/channels/stable/versions/1337/releases/1704308709', version: '1337'},
+          {name: 'chrome/platforms/linux/channels/stable/versions/1336/releases/1704308708', version: '1336'}
+        ]
+      }}));
       axios.get.mockImplementation(async () => ({data: {
         FIREFOX_DEVEDITION: '313373',
         LATEST_FIREFOX_VERSION: 'ff.1337',
@@ -43,9 +45,11 @@ describe('User Agent module test suite', () => {
     });
     test('invalidResponse, should return null,', async () => {
       // Given
-      axios.get.mockImplementation(async () => ({data: [
-        {os: 'win'}, 'not Valid'
-      ]}));
+      axios.get.mockImplementation(async () => ({data: {
+        releases: [
+          {os: 'win'}, 'not Valid'
+        ]
+      }}));
       // When
       await userAgent.initBrowserVersions();
       // Then
