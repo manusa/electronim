@@ -33,7 +33,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
       - name: Install
         run: npm install
       - name: Pretest
@@ -62,7 +62,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
       - name: Install
         run: npm install
       - name: Build
@@ -83,7 +83,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
       - name: Install
         run: npm install
       - name: Install macOS only requirement (Electron Builder) # TODO: Move to prepare-electron-builder.js script
@@ -101,7 +101,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
       - name: Install
         run: npm install
       - name: Build
