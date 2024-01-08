@@ -224,7 +224,7 @@
     "dictionary-uk": "^2.1.1",
     "electron": "27.2.1",
     "htm": "3.1.1",
-    "markdown-it": "13.0.1",
+    "markdown-it": "14.0.0",
     "nodehun": "3.0.2",
     "preact": "10.18.0"
   }
