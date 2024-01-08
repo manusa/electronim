@@ -108,6 +108,8 @@ jobs:
         run: |
           node .\utils\prepare-electron-builder.js
           npm run build:win
+      - name: Prepare Chocolatey
+        run: node .\utils\prepare-chocolatey.js
       - name: Choco Script tests
         run: |
           powershell

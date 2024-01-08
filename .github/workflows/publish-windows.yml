@@ -43,6 +43,8 @@ jobs:
         run: node .\utils\upload-artifact.js electronim-win-x64.zip application/zip
       - name: Upload Portable exe
         run: node .\utils\upload-artifact.js electronim-win-x64.exe application/octet-stream
+      - name: Prepare Chocolatey
+        run: node .\utils\prepare-chocolatey.js
       - name: Chocolatey Push
         run: |
           powershell
