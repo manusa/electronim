@@ -187,7 +187,7 @@
     "@testing-library/dom": "9.3.3",
     "@testing-library/user-event": "14.5.2",
     "chrome-tabs": "5.4.0",
-    "css-loader": "6.8.1",
+    "css-loader": "6.9.0",
     "electron-builder": "24.9.1",
     "eslint": "8.56.0",
     "eslint-plugin-jest": "27.6.1",
