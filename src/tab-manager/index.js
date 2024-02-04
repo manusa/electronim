@@ -116,6 +116,22 @@ const addTabs = ipcSender => tabsMetadata => {
   ipcSender.send(APP_EVENTS.addTabs, tabsMetadata);
 };
 
+const sortTabs = tabIds => {
+  if (tabIds.length !== Object.keys(tabs).length) {
+    // Skip in case there are inconsistencies
+    // eslint-disable-next-line no-console
+    console.error(`Inconsistent tab state, skipping sort operation (${tabIds.length} !== ${Object.keys(tabs).length}).`);
+    return;
+  }
+  const oldTabs = {...tabs};
+  // Clean previous state
+  Object.keys(tabs).forEach(key => delete tabs[key]);
+  // Set the tabs with the correct ordering
+  for (const tabId of tabIds) {
+    tabs[tabId] = oldTabs[tabId];
+  }
+};
+
 const getTab = tabId => (tabId ? tabs[tabId.toString()] : null);
 
 const getActiveTab = () => activeTab;
@@ -166,5 +182,6 @@ const canNotify = tabId => {
 };
 
 module.exports = {
-  addTabs, getTab, getTabAt, getActiveTab, setActiveTab, getNextTab, getPreviousTab, canNotify, reload, removeAll
+  addTabs, sortTabs, getTab, getTabAt, getActiveTab, setActiveTab, getNextTab, getPreviousTab,
+  canNotify, reload, removeAll
 };

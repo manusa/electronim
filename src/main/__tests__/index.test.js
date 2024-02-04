@@ -398,6 +398,18 @@ describe('Main module test suite', () => {
         // Then
         expect(settingsModule.updateSettings).toHaveBeenCalledWith({tabs: [{id: '313373'}, {id: '1337'}]});
       });
+      test('Several tabs, order changed, should update tabManager order', () => {
+        // Given
+        mockSettings = {
+          tabs: [{id: '1337'}, {id: '313373'}]
+        };
+        jest.spyOn(tabManagerModule, 'sortTabs').mockImplementation();
+        main.init();
+        // When
+        mockIpc.listeners.tabReorder({}, {tabIds: ['313373', '1337']});
+        // Then
+        expect(tabManagerModule.sortTabs).toHaveBeenCalledWith(['313373', '1337']);
+      });
       test('Several tabs with hidden, order changed, should update settings keeping hidden tags', () => {
         // Given
         mockSettings = {
