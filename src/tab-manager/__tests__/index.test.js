@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+/* eslint-disable no-console */
 describe('Tab Manager module test suite', () => {
   let mockBrowserView;
   let userAgent;
@@ -236,6 +237,25 @@ describe('Tab Manager module test suite', () => {
         // Then
         expect(require('electron').shell.openExternal).toHaveBeenCalledWith('https://example.com');
       });
+    });
+  });
+  describe('sortTabs', () => {
+    test('Aborts in case of inconsistency', () => {
+      // Given
+      jest.spyOn(console, 'error').mockImplementationOnce(() => {});
+      // When
+      tabManager.sortTabs(['1', '2']);
+      // Then
+      expect(console.error).toHaveBeenCalledWith('Inconsistent tab state, skipping sort operation (2 !== 0).');
+    });
+    test('Sorts tabs with new order', () => {
+      // Given
+      tabManager.addTabs({send: jest.fn()})([{id: 'A1337', url: 'https://localhost'}, {id: 'B31337', url: 'https://example.com'}]);
+      // When
+      tabManager.sortTabs(['B31337', 'A1337']);
+      // Then
+      expect(tabManager.getTabAt(1)).toBe('B31337');
+      expect(tabManager.getTabAt(2)).toBe('A1337');
     });
   });
   describe('activeTab', () => {

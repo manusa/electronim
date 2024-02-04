@@ -128,6 +128,7 @@ const handleTabReorder = (_event, {tabIds: visibleTabIds}) => {
     ...visibleTabIds.map(tabId => currentTabMap[tabId]),
     ...hiddenTabIds.map(tabId => currentTabMap[tabId])
   ];
+  tabManager.sortTabs(visibleTabIds);
   updateSettings({tabs});
 };
 
