@@ -44,6 +44,7 @@ const Settings = ({initialState}) => {
     disableNotificationsGlobally: state.disableNotificationsGlobally,
     theme: state.theme,
     trayEnabled: state.trayEnabled,
+    startMinimized: state.startMinimized,
     closeButtonBehavior: state.closeButtonBehavior
   });
   const cancel = () => ipcRenderer.send(APP_EVENTS.closeDialog);
@@ -96,6 +97,7 @@ Promise.all([
       disableNotificationsGlobally: currentSettings.disableNotificationsGlobally,
       theme: currentSettings.theme,
       trayEnabled: currentSettings.trayEnabled,
+      startMinimized: currentSettings.startMinimized,
       closeButtonBehavior: currentSettings.closeButtonBehavior
     };
     render(html`<${Settings} initialState=${initialState} />`, settingsRoot());

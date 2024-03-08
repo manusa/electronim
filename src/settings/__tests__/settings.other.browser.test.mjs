@@ -112,6 +112,30 @@ describe('Settings (Other) in Browser test suite', () => {
       await waitFor(() => expect($traySwitch.checked).toBe(true));
     });
   });
+  describe('Toggle Start Minimized click', () => {
+    let $startMinimizedSwitch;
+    beforeEach(() => {
+      // In tests, start minimized is disabled by default
+      $startMinimizedSwitch = document.querySelector('.settings__start-minimized .switch input');
+    });
+    test('when start minimized enabled, should uncheck input', async () => {
+      // Given
+      fireEvent.click($startMinimizedSwitch);
+      await waitFor(() => expect($startMinimizedSwitch.checked).toBe(true));
+      // When
+      fireEvent.click($startMinimizedSwitch);
+      // Then
+      await waitFor(() => expect($startMinimizedSwitch.checked).toBe(false));
+    });
+    test('when start minimized disabled, should check input', async () => {
+      // Given
+      expect($startMinimizedSwitch.checked).toBe(false);
+      // When
+      fireEvent.click($startMinimizedSwitch);
+      // Then
+      await waitFor(() => expect($startMinimizedSwitch.checked).toBe(true));
+    });
+  });
   test('ElectronIM version is visible', async () => {
     const $electronimVersion = await findByTestId(document, 'settings-electronim-version');
     expect($electronimVersion.textContent).toBe('ElectronIM version 0.0.0');

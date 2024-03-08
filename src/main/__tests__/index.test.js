@@ -95,6 +95,46 @@ describe('Main module test suite', () => {
         }));
       });
     });
+    describe('startMinimized', () => {
+      test('Main window should always start not shown', () => {
+        // When
+        main.init();
+        // Then
+        expect(electron.BrowserWindow).toHaveBeenCalledWith(expect.objectContaining({
+          show: false, paintWhenInitiallyHidden: false
+        }));
+      });
+      describe('=true', () => {
+        beforeEach(() => {
+          mockSettings.startMinimized = true;
+          main.init();
+        });
+        test('should call showInactive', () => {
+          expect(mockBrowserWindow.showInactive).toHaveBeenCalledTimes(1);
+        });
+        test('should call minimize after showInactive', () => {
+          expect(mockBrowserWindow.minimize).toHaveBeenCalledAfter(mockBrowserWindow.showInactive);
+        });
+        test('should not call show', () => {
+          expect(mockBrowserWindow.show).not.toHaveBeenCalled();
+        });
+      });
+      describe('=false', () => {
+        beforeEach(() => {
+          mockSettings.startMinimized = false;
+          main.init();
+        });
+        test('should call show', () => {
+          expect(mockBrowserWindow.show).toHaveBeenCalledTimes(1);
+        });
+        test('should not call showInactive', () => {
+          expect(mockBrowserWindow.showInactive).not.toHaveBeenCalled();
+        });
+        test('should not call minimize', () => {
+          expect(mockBrowserWindow.minimize).not.toHaveBeenCalled();
+        });
+      });
+    });
     test('fixUserDataLocation, should set a location in lower-case (Electron <14 compatible)', () => {
       // Given
       electron.app.getPath.mockImplementation(() => 'ImMixed-Case/WithSome\\Separator$');
@@ -320,6 +360,7 @@ describe('Main module test suite', () => {
     });
     test('notificationClick, should restore window and activate tab', () => {
       // Given
+      mockSettings.startMinimized = true;
       mockBrowserWindow.restore = jest.fn();
       mockBrowserWindow.show = jest.fn();
       jest.spyOn(tabManagerModule, 'getTab').mockImplementation();
@@ -330,6 +371,7 @@ describe('Main module test suite', () => {
       expect(mockBrowserView.webContents.send).toHaveBeenCalledWith('activateTabInContainer', {tabId: 'validId'});
       expect(mockBrowserWindow.restore).toHaveBeenCalledTimes(1);
       expect(mockBrowserWindow.show).toHaveBeenCalledTimes(1);
+      expect(mockBrowserWindow.show).toHaveBeenCalledAfter(mockBrowserWindow.restore);
       expect(tabManagerModule.getTab).toHaveBeenCalledWith('validId');
     });
     test('handleReload', () => {

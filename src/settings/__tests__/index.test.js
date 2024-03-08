@@ -124,7 +124,9 @@ describe('Settings module test suite', () => {
         '{\n  "tabs": [],\n' +
         '  "useNativeSpellChecker": false,\n' +
         '  "enabledDictionaries": [\n    "en"\n  ],\n' +
-        '  "theme": "system",\n  "trayEnabled": false,\n' +
+        '  "theme": "system",\n' +
+        '  "trayEnabled": false,\n' +
+        '  "startMinimized": false,\n' +
         '  "closeButtonBehavior": "quit"\n' +
         '}');
     });
@@ -140,6 +142,7 @@ describe('Settings module test suite', () => {
         '  "enabledDictionaries": [\n    "en"\n  ],\n' +
         '  "theme": "system",\n' +
         '  "trayEnabled": false,\n' +
+        '  "startMinimized": false,\n' +
         '  "closeButtonBehavior": "quit",\n' +
         '  "activeTab": 1337,\n' +
         '  "otherSetting": "1337"\n' +
@@ -157,6 +160,7 @@ describe('Settings module test suite', () => {
         '  "enabledDictionaries": [\n    "en"\n  ],\n' +
         '  "theme": "system",\n' +
         '  "trayEnabled": false,\n' +
+        '  "startMinimized": false,\n' +
         '  "closeButtonBehavior": "quit",\n' +
         '  "activeTab": 1337\n}');
     });

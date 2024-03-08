@@ -96,7 +96,7 @@ const BackgroundSvg = () => html`
 const Tab = ({dispatch, numberOfTabs, idx, id, active, offsetX = 0, title, url, width, ...rest}) => {
   const tabClick = () => {
     if (active !== true) {
-      sendActivateTab(id);
+      sendActivateTab({id, restoreWindow: true});
       activateTab({dispatch})(null, {tabId: id});
     }
   };

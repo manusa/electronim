@@ -55,7 +55,7 @@ const resetMainWindow = () => {
   }
 };
 
-const activateTab = tabId => {
+const activateTab = ({tabId, restoreWindow = true}) => {
   const activeTab = tabManager.getTab(tabId);
   if (activeTab) {
     const {width, height} = mainWindow.getContentBounds();
@@ -64,7 +64,9 @@ const activateTab = tabId => {
     tabContainer.setBounds({x: 0, y: 0, width, height: TABS_CONTAINER_HEIGHT});
     activeTab.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
     tabManager.setActiveTab(tabId);
-    activeTab.webContents.focus();
+    if (restoreWindow) {
+      activeTab.webContents.focus();
+    }
   }
 };
 
@@ -99,7 +101,7 @@ const handleTabTraverse = getTabIdFunction => () => {
   }
   const tabId = getTabIdFunction();
   tabContainer.webContents.send(APP_EVENTS.activateTabInContainer, {tabId});
-  activateTab(tabId);
+  activateTab({tabId});
 };
 
 const handleTabSwitchToPosition = tabPosition => {
@@ -145,14 +147,16 @@ const initTabListener = () => {
       eventBus.emit(APP_EVENTS.settingsOpenDialog);
     }
   });
-  eventBus.on(APP_EVENTS.activateTab, (_event, data) => activateTab(data.id));
+  eventBus.on(APP_EVENTS.activateTab, (_event, data) => {
+    activateTab({tabId: data.id, restoreWindow: data.restoreWindow});
+  });
   eventBus.on(APP_EVENTS.canNotify, (event, tabId) => {
     event.returnValue = tabManager.canNotify(tabId);
   });
   eventBus.on(APP_EVENTS.notificationClick, (_event, {tabId}) => {
     tabContainer.webContents.send(APP_EVENTS.activateTabInContainer, {tabId});
     eventBus.emit(APP_EVENTS.restore);
-    activateTab(tabId);
+    activateTab({tabId});
   });
   eventBus.on(APP_EVENTS.reload, handleTabReload);
   eventBus.on(APP_EVENTS.tabReorder, handleTabReorder);
@@ -176,7 +180,7 @@ const appMenuClose = () => {
     return;
   }
   mainWindow.removeBrowserView(appMenu);
-  activateTab(tabManager.getActiveTab());
+  activateTab({tabId: tabManager.getActiveTab()});
 };
 
 const fullscreenToggle = () => {
@@ -188,7 +192,7 @@ const closeDialog = () => {
     return;
   }
   const dialogView = mainWindow.getBrowserView();
-  activateTab(tabManager.getActiveTab());
+  activateTab({tabId: tabManager.getActiveTab()});
   dialogView.webContents.destroy();
 };
 
@@ -253,13 +257,20 @@ const browserVersionsReady = () => {
 const init = () => {
   fixUserDataLocation();
   loadDictionaries();
-  const {width = 800, height = 600, theme} = loadSettings();
+  const {width = 800, height = 600, startMinimized, theme} = loadSettings();
   nativeTheme.themeSource = theme;
   mainWindow = new BrowserWindow({
     width, height, resizable: true, maximizable: true,
     icon: path.resolve(__dirname, '..', 'assets', getPlatform() === 'linux' ? 'icon.png' : 'icon.ico'),
+    show: false, paintWhenInitiallyHidden: false,
     webPreferences
   });
+  if (startMinimized) {
+    mainWindow.showInactive();
+    mainWindow.minimize();
+  } else {
+    mainWindow.show();
+  }
   mainWindow.removeMenu();
   ['resize', 'maximize']
     .forEach(event => mainWindow.on(event, handleMainWindowResize));

@@ -28,6 +28,7 @@ const DEFAULT_SETTINGS = {
   enabledDictionaries: ['en'],
   theme: 'system',
   trayEnabled: false,
+  startMinimized: false,
   closeButtonBehavior: CLOSE_BUTTON_BEHAVIORS.quit
 };
 

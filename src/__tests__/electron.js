@@ -32,6 +32,8 @@ const mockBrowserWindowInstance = () => {
     setBounds: jest.fn(),
     setBrowserView: jest.fn(),
     setFullScreen: jest.fn(),
+    show: jest.fn(),
+    showInactive: jest.fn(),
     webContents: {
       loadedUrl: '',
       browserWindowInstance: () => instance,

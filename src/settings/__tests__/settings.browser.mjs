@@ -29,7 +29,8 @@ export const ipcRenderer = () => {
       {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true}
     ],
     theme: 'dark',
-    trayEnabled: true
+    trayEnabled: true,
+    startMinimized: false
   };
   return {
     mockDictionariesAvailableNative,

@@ -17,8 +17,8 @@ import {Card, Checkbox, html} from '../components/index.mjs';
 import {
   dictionaries,
   dictionariesEnabled,
-  toggleUseNativeSpellChecker,
   toggleDictionary,
+  toggleProperty,
   useNativeSpellChecker, isPaneActive
 } from './settings.reducer.browser.mjs';
 import {SettingsOption} from './settings.common.browser.mjs';
@@ -42,7 +42,7 @@ export const SpellCheckPane = ({dispatch, state}) => {
           className='settings__use-native-spell-checker'
           label='Use Native Spell Checker'
           checked=${useNative}
-          onClick=${toggleUseNativeSpellChecker({dispatch})}
+          onClick=${toggleProperty({dispatch, property: 'useNativeSpellChecker'})}
       />
       <${Card.Divider} />
       <div class='settings__dictionaries'>${
