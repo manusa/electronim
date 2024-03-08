@@ -118,6 +118,17 @@ describe('Tab Manager Redirect module test suite', () => {
         });
       });
     });
+    describe('OpenAI OAuth', () => {
+      test('From Slack to OAuth, should return false', () => {
+        // Given
+        mockBrowserViewUrl = 'https://alberto.slack.com';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockBrowserView,
+          new URL('https://auth0.openai.com/u/login/identifier?state=1337'));
+        // Then
+        expect(result).toBe(false);
+      });
+    });
     describe('Red Hat OAuth', () => {
       test('From Slack to OAuth, should return false', () => {
         // Given
