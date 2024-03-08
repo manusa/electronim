@@ -21,12 +21,10 @@ export const ACTIONS = {
   REMOVE: 'REMOVE',
   SET_PROPERTY: 'SET_PROPERTY',
   SET_TAB_PROPERTY: 'SET_TAB_PROPERTY',
-  TOGGLE_USE_NATIVE_SPELL_CHECKER: 'TOGGLE_USE_NATIVE_SPELL_CHECKER',
   TOGGLE_DICTIONARY: 'TOGGLE_DICTIONARY',
-  TOGGLE_GLOBAL_NOTIFICATIONS: 'TOGGLE_GLOBAL_NOTIFICATIONS',
+  TOGGLE_PROPERTY: 'TOGGLE_PROPERTY',
   TOGGLE_TAB_EXPANDED: 'TOGGLE_TAB_EXPANDED',
   TOGGLE_TAB_PROPERTY: 'TOGGLE_TAB_PROPERTY',
-  TOGGLE_TRAY: 'TOGGLE_TRAY',
   UPDATE_NEW_TAB_VALUE: 'UPDATE_NEW_TAB_VALUE'
 };
 
@@ -101,11 +99,6 @@ export const reducer = (state, action) => {
       newState[action.payload.property] = action.payload.value;
       return newState;
     }
-    case ACTIONS.TOGGLE_USE_NATIVE_SPELL_CHECKER: {
-      return {...state,
-        useNativeSpellChecker: !state.useNativeSpellChecker
-      };
-    }
     case ACTIONS.TOGGLE_DICTIONARY: {
       const newState = {...state};
       if (dictionariesEnabled(newState).includes(action.payload)) {
@@ -114,6 +107,11 @@ export const reducer = (state, action) => {
       } else {
         newState.dictionaries.enabled = [...dictionariesEnabled(newState), action.payload];
       }
+      return newState;
+    }
+    case ACTIONS.TOGGLE_PROPERTY: {
+      const newState = {...state};
+      newState[action.payload.property] = !newState[action.payload.property];
       return newState;
     }
     case ACTIONS.TOGGLE_TAB_EXPANDED: {
@@ -135,16 +133,6 @@ export const reducer = (state, action) => {
         newState.tabs.push(newTab);
       });
       return newState;
-    }
-    case ACTIONS.TOGGLE_GLOBAL_NOTIFICATIONS: {
-      return {...state,
-        disableNotificationsGlobally: !state.disableNotificationsGlobally
-      };
-    }
-    case ACTIONS.TOGGLE_TRAY: {
-      return {...state,
-        trayEnabled: !state.trayEnabled
-      };
     }
     case ACTIONS.UPDATE_NEW_TAB_VALUE: {
       return {...state,
@@ -168,11 +156,7 @@ export const setProperty = ({dispatch}) =>
   ({property, value}) => dispatch({type: ACTIONS.SET_PROPERTY, payload: {property, value}});
 export const toggleDictionary = ({dispatch, languageKey}) =>
   () => dispatch({type: ACTIONS.TOGGLE_DICTIONARY, payload: languageKey});
-export const toggleNotifications = ({dispatch}) =>
-  () => dispatch({type: ACTIONS.TOGGLE_GLOBAL_NOTIFICATIONS});
+export const toggleProperty = ({dispatch, property}) =>
+  () => dispatch({type: ACTIONS.TOGGLE_PROPERTY, payload: {property}});
 export const toggleTabProperty = (dispatch, property, id) =>
   () => dispatch({type: ACTIONS.TOGGLE_TAB_PROPERTY, payload: {id, property}});
-export const toggleTray = ({dispatch}) =>
-  () => dispatch({type: ACTIONS.TOGGLE_TRAY});
-export const toggleUseNativeSpellChecker = ({dispatch}) =>
-  () => dispatch({type: ACTIONS.TOGGLE_USE_NATIVE_SPELL_CHECKER});

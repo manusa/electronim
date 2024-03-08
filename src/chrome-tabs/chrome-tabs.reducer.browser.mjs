@@ -15,7 +15,9 @@
  */
 /* eslint-disable no-undef */
 import {APP_EVENTS} from '../components/index.mjs';
-export const sendActivateTab = id => ipcRenderer.send(APP_EVENTS.activateTab, {id});
+export const sendActivateTab = ({id, restoreWindow = true}) => {
+  ipcRenderer.send(APP_EVENTS.activateTab, {id, restoreWindow});
+};
 const sendReorderTabs = tabs =>
   ipcRenderer.send(APP_EVENTS.tabReorder, {tabIds: tabs.map(({id}) => id)});
 
@@ -79,7 +81,7 @@ export const addTabs = ({dispatch}) => (_event, tabs) => {
   dispatch({type: ACTIONS.SET_TABS, payload: tabs});
   const activeTabMeta = tabs.find(({active}) => active === true);
   if (tabs.length > 0 && activeTabMeta) {
-    sendActivateTab(activeTabMeta.id);
+    sendActivateTab({id: activeTabMeta.id, restoreWindow: false});
   }
 };
 export const moveTab = ({dispatch}) => ({id, idx, offsetX}) =>

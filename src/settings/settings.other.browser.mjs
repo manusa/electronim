@@ -19,8 +19,7 @@ import {
   closeButtonBehavior,
   setProperty,
   theme,
-  toggleNotifications,
-  toggleTray
+  toggleProperty
 } from './settings.reducer.browser.mjs';
 import {SettingsOption, SettingsRow} from './settings.common.browser.mjs';
 
@@ -47,7 +46,7 @@ export const OtherPane = ({dispatch, state}) => {
           label='Disable notifications globally'
           icon=${state.disableNotificationsGlobally ? Icon.notificationsOff : Icon.notifications}
           checked=${state.disableNotificationsGlobally}
-          onClick=${toggleNotifications({dispatch})}
+          onClick=${toggleProperty({dispatch, property: 'disableNotificationsGlobally'})}
       />
       <${Card.Divider} />
       <${SettingsRow}>
@@ -65,7 +64,14 @@ export const OtherPane = ({dispatch, state}) => {
           label='Show ElectronIM in System Tray'
           icon=${Icon.inbox}
           checked=${state.trayEnabled}
-          onClick=${toggleTray({dispatch})}
+          onClick=${toggleProperty({dispatch, property: 'trayEnabled'})}
+      />
+      <${SettingsOption}
+          className='settings__start-minimized'
+          label='Start ElectronIM minimized'
+          icon=${Icon.minimize}
+          checked=${state.startMinimized}
+          onClick=${toggleProperty({dispatch, property: 'startMinimized'})}
       />
       <${Card.Divider} />
       <div data-testid='settings-electronim-version'>

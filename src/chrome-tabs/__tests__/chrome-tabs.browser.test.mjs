@@ -46,7 +46,7 @@ describe('ChromeTabs in Browser test suite', () => {
         {id: 13373, favicon: 'https://13373.png', url: 'https://13373.com'}
       ];
     });
-    test('addTabs, should set tabs', async () => {
+    test('addTabs, should set tabs without restoring the main window / activating any tab', async () => {
       // When
       mockIpcRenderer.events.addTabs({}, tabs);
       // Then
@@ -62,7 +62,7 @@ describe('ChromeTabs in Browser test suite', () => {
       expect($addedTabs[1].hasAttribute('active')).toBe(false);
       expect($addedTabs[2].querySelector('.chrome-tab-favicon').style.backgroundImage)
         .toBe('url(https://13373.png)');
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('activateTab', {id: 1337});
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('activateTab', {id: 1337, restoreWindow: false});
     });
     test('activateTabInContainer, should change active tab', async () => {
       // Given
@@ -136,7 +136,7 @@ describe('ChromeTabs in Browser test suite', () => {
       // When
       fireEvent.click($chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"]'));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenNthCalledWith(3, 'activateTab', {id: 313373});
+      expect(mockIpcRenderer.send).toHaveBeenNthCalledWith(3, 'activateTab', {id: 313373, restoreWindow: true});
     });
     test('click, on active tab, should do nothing', () => {
       // When
@@ -153,9 +153,9 @@ describe('ChromeTabs in Browser test suite', () => {
       // Then
       expect(event.preventDefault).toHaveBeenCalledTimes(1);
     });
-    test('dragStart, should activate tab and set initial drag values', () => {
+    test('dragStart, on inactive tab, should activate tab and set initial drag values', () => {
       // Given
-      const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"]');
+      const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"]');
       const event = new MouseEvent('dragstart', {
         clientX: 100, clientY: 0});
       Object.defineProperty(event, 'dataTransfer', {value: {
@@ -164,7 +164,7 @@ describe('ChromeTabs in Browser test suite', () => {
       // When
       fireEvent($tab, event);
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('activateTab', {id: 1337});
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('activateTab', {id: 313373, restoreWindow: true});
       expect(event.dataTransfer.setDragImage).toHaveBeenCalledTimes(1);
     });
     test('drag, same position, should keep positions moving current tab left', async () => {

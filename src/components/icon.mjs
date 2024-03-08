@@ -46,6 +46,7 @@ Icon.inbox = '\ue156';
 Icon.info = '\ue88e';
 Icon.lock = '\ue88d';
 Icon.lockOpen = '\ue898';
+Icon.minimize = '\ue931';
 Icon.more = '\ue619';
 Icon.moreVert = '\ue5d4';
 Icon.notifications = '\ue7f4';
