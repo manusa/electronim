@@ -188,6 +188,23 @@ describe('Main module test suite', () => {
         expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
       });
     });
+    describe('restore (required for windows when starting minimized)', () => {
+      let mockAppMenu;
+      beforeEach(() => {
+        mockAppMenu = {
+          setBounds: jest.fn()
+        };
+        jest.spyOn(appMenuModule, 'newAppMenu').mockImplementation(() => mockAppMenu);
+        main.init();
+      });
+      test('should set app-menu bounds', () => {
+        // When
+        mockBrowserWindow.listeners.restore({sender: mockBrowserWindow});
+        jest.runAllTimers();
+        // Then
+        expect(mockAppMenu.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
+      });
+    });
     describe('resize', () => {
       test('#78: should be run in separate setTimeout timer function to resize properly in Linux', () => {
         // When

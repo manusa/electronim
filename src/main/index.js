@@ -272,7 +272,7 @@ const init = () => {
     mainWindow.show();
   }
   mainWindow.removeMenu();
-  ['resize', 'maximize']
+  ['resize', 'maximize', 'restore']
     .forEach(event => mainWindow.on(event, handleMainWindowResize));
   mainWindow.on('close', handleWindowClose);
   initTabListener();
