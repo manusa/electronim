@@ -57,44 +57,38 @@ describe('User Agent module test suite', () => {
       expect(userAgent.BROWSER_VERSIONS.firefox).toBeNull();
     });
   });
-  describe('userAgentForView', () => {
+  describe('userAgentForWebContents', () => {
     test('default and chromium version not available, should remove non-standard tokens from user-agent header', () => {
       // Given
       userAgent.BROWSER_VERSIONS.chromium = null;
-      const browserView = {
-        webContents: {
-          userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36'
-        }
+      const webContents = {
+        userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36'
       };
       // When
-      const result = userAgent.userAgentForView(browserView);
+      const result = userAgent.userAgentForWebContents(webContents);
       // Then
       expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
     });
     test('default and chromium version available, should replace Chrome version in user-agent header', () => {
       // Given
       userAgent.BROWSER_VERSIONS.chromium = '1337.1337.1337';
-      const browserView = {
-        webContents: {
-          userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36'
-        }
+      const webContents = {
+        userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36'
       };
       // When
-      const result = userAgent.userAgentForView(browserView);
+      const result = userAgent.userAgentForWebContents(webContents);
       // Then
       expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/1337.1337.1337 Safari/537.36');
     });
     test('non-matching url provided and chromium version available, should replace Chrome version in user-agent header', () => {
       // Given
       userAgent.BROWSER_VERSIONS.chromium = '1337.1337.1337';
-      const browserView = {
-        webContents: {
-          userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36'
-        }
+      const webContents = {
+        userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/79.0.1337.79 Electron/0.0.99 Safari/537.36'
       };
       const nonMatchingUrl = 'https://some-url-com/google.com';
       // When
-      const result = userAgent.userAgentForView(browserView, nonMatchingUrl);
+      const result = userAgent.userAgentForWebContents(webContents, nonMatchingUrl);
       // Then
       expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/1337.1337.1337 Safari/537.36');
     });

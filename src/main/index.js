@@ -28,7 +28,7 @@ const {
 } = require('../spell-check');
 const tabManager = require('../tab-manager');
 const {initTray} = require('../tray');
-const {initBrowserVersions, userAgentForView} = require('../user-agent');
+const {initBrowserVersions, userAgentForWebContents} = require('../user-agent');
 
 const webPreferences = {
   contextIsolation: false,
@@ -248,7 +248,7 @@ const initGlobalListeners = () => {
 };
 
 const browserVersionsReady = () => {
-  app.userAgentFallback = userAgentForView(mainWindow);
+  app.userAgentFallback = userAgentForWebContents(mainWindow.webContents);
   tabContainer = newTabContainer();
   appMenu = newAppMenu();
   eventBus.emit(APP_EVENTS.trayInit);

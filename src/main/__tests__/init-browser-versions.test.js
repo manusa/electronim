@@ -27,7 +27,7 @@ describe('Main :: initBrowserVersions test suite', () => {
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
     userAgent = require('../../user-agent');
-    jest.spyOn(userAgent, 'userAgentForView').mockImplementation(() => 'UserAgent String');
+    jest.spyOn(userAgent, 'userAgentForWebContents').mockImplementation(() => 'UserAgent String');
   });
   describe('throws error', () => {
     let show;
