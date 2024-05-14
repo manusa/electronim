@@ -197,7 +197,7 @@
     "jest-extended": "4.0.2",
     "sass": "1.77.1",
     "sass-loader": "14.2.1",
-    "style-loader": "3.3.4",
+    "style-loader": "4.0.0",
     "val-loader": "5.0.1",
     "webpack": "5.89.0"
   },
