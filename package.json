@@ -198,7 +198,7 @@
     "sass": "1.77.1",
     "sass-loader": "14.2.1",
     "style-loader": "4.0.0",
-    "val-loader": "5.0.1",
+    "val-loader": "6.0.0",
     "webpack": "5.89.0"
   },
   "dependencies": {
