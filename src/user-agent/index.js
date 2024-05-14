@@ -75,7 +75,7 @@ const firefoxUserAgent = userAgent => firefoxVersion => {
   return userAgent;
 };
 
-const userAgentForView = browserViewOrWindow => defaultUserAgent(browserViewOrWindow.webContents.userAgent);
+const userAgentForWebContents = webContents => defaultUserAgent(webContents.userAgent);
 
 const addUserAgentInterceptor = session => {
   if (!session.userAgentInterceptor) {
@@ -96,6 +96,6 @@ const addUserAgentInterceptor = session => {
 module.exports = {
   BROWSER_VERSIONS,
   initBrowserVersions,
-  userAgentForView,
+  userAgentForWebContents,
   addUserAgentInterceptor
 };
