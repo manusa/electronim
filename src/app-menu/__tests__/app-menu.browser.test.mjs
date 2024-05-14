@@ -29,7 +29,7 @@ describe('App Menu in Browser test suite', () => {
     };
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
-  test('wrapper, click should close menu (BrowserView)', () => {
+  test('wrapper, click should close menu (WebContentsView)', () => {
     // When
     fireEvent.click(document.querySelector('.app-menu .wrapper'));
     // Then

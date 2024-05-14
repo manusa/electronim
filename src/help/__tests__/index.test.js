@@ -25,16 +25,16 @@ describe('Help module test suite', () => {
   describe('openHelpDialog', () => {
     let openHelp;
     beforeEach(() => {
-      openHelp = help.openHelpDialog(electron.browserWindowInstance);
+      openHelp = help.openHelpDialog(electron.baseWindowInstance);
     });
     describe('webPreferences', () => {
       test('is sandboxed', () => {
         // When
         openHelp();
         // Then
-        const BrowserView = electron.BrowserView;
-        expect(BrowserView).toHaveBeenCalledTimes(1);
-        expect(BrowserView).toHaveBeenCalledWith({
+        const WebContentsView = electron.WebContentsView;
+        expect(WebContentsView).toHaveBeenCalledTimes(1);
+        expect(WebContentsView).toHaveBeenCalledWith({
           webPreferences: expect.objectContaining({sandbox: true, nodeIntegration: false})
         });
       });
@@ -42,7 +42,7 @@ describe('Help module test suite', () => {
         // When
         openHelp();
         // Then
-        expect(electron.BrowserView).toHaveBeenCalledWith({
+        expect(electron.WebContentsView).toHaveBeenCalledWith({
           webPreferences: expect.objectContaining({nodeIntegration: false})
         });
       });
@@ -50,17 +50,17 @@ describe('Help module test suite', () => {
         // When
         openHelp();
         // Then
-        expect(electron.BrowserView).toHaveBeenCalledWith({
+        expect(electron.WebContentsView).toHaveBeenCalledWith({
           webPreferences: expect.objectContaining({contextIsolation: true})
         });
       });
     });
     test('hasWindowOpenHandler', () => {
       // Given
-      electron.browserViewInstance.webContents.getURL.mockReturnValue('file://help/index.html');
+      electron.webContentsViewInstance.webContents.getURL.mockReturnValue('file://help/index.html');
       openHelp();
       // When
-      electron.browserViewInstance.webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
+      electron.webContentsViewInstance.webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
       // Then
       expect(electron.shell.openExternal).toHaveBeenCalledWith('https://example.com');
     });
@@ -68,10 +68,10 @@ describe('Help module test suite', () => {
       // When
       openHelp();
       // Then
-      expect(electron.browserViewInstance.webContents.loadURL).toHaveBeenCalledTimes(1);
-      expect(electron.browserViewInstance.webContents.loadURL)
+      expect(electron.webContentsViewInstance.webContents.loadURL).toHaveBeenCalledTimes(1);
+      expect(electron.webContentsViewInstance.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/.+?\/index.html$/)); // NOSONAR
-      expect(electron.browserViewInstance.webContents.on).toHaveBeenCalledWith('will-navigate', expect.any(Function));
+      expect(electron.webContentsViewInstance.webContents.on).toHaveBeenCalledWith('will-navigate', expect.any(Function));
     });
   });
 });

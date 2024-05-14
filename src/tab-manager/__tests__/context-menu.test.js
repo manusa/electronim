@@ -40,8 +40,8 @@ describe('Tab Manager context-menu test suite', () => {
     }));
     jest.mock('../../spell-check');
     electron = require('electron');
-    electron.browserViewInstance.webContents.canGoBack = jest.fn(() => false);
-    listeners = electron.browserViewInstance.listeners;
+    electron.webContentsViewInstance.webContents.canGoBack = jest.fn(() => false);
+    listeners = electron.webContentsViewInstance.listeners;
     event = new Event('');
     params = {x: 13, y: 37};
     tabManager = require('../');
@@ -62,7 +62,7 @@ describe('Tab Manager context-menu test suite', () => {
     });
     describe('with native spellcheck', () => {
       beforeEach(() => {
-        electron.browserViewInstance.webContents.session.spellcheck = true;
+        electron.webContentsViewInstance.webContents.session.spellcheck = true;
       });
       test('Spelling suggestions, should open a Menu with all suggestions', async () => {
         // Given
@@ -122,7 +122,7 @@ describe('Tab Manager context-menu test suite', () => {
         }));
       });
       test('enabled when canGoBack returns true', async () => {
-        electron.browserViewInstance.webContents.canGoBack = jest.fn(() => true);
+        electron.webContentsViewInstance.webContents.canGoBack = jest.fn(() => true);
         await listeners['context-menu'](event, params);
         expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
           enabled: false,
@@ -133,20 +133,20 @@ describe('Tab Manager context-menu test suite', () => {
         // When
         electron.MenuItem.mock.calls.filter(c => c[0].label === 'Back')[0][0].click();
         // Then
-        expect(electron.browserViewInstance.webContents.goBack).toHaveBeenCalledTimes(1);
+        expect(electron.webContentsViewInstance.webContents.goBack).toHaveBeenCalledTimes(1);
       });
     });
     test('Reload click, should trigger reload', async () => {
       // When
       electron.MenuItem.mock.calls.filter(c => c[0].label === 'Reload')[0][0].click();
       // Then
-      expect(electron.browserViewInstance.webContents.reload).toHaveBeenCalledTimes(1);
+      expect(electron.webContentsViewInstance.webContents.reload).toHaveBeenCalledTimes(1);
     });
     test('DevTools click, should open devtools', async () => {
       // When
       electron.MenuItem.mock.calls.filter(c => c[0].label === 'DevTools')[0][0].click();
       // Then
-      expect(electron.browserViewInstance.webContents.openDevTools).toHaveBeenCalledTimes(1);
+      expect(electron.webContentsViewInstance.webContents.openDevTools).toHaveBeenCalledTimes(1);
     });
     describe('Clipboard related', () => {
       describe('Cut', () => {
@@ -162,7 +162,7 @@ describe('Tab Manager context-menu test suite', () => {
           // When
           electron.MenuItem.mock.calls.filter(c => c[0].label === 'Cut')[0][0].click();
           // Then
-          expect(electron.browserViewInstance.webContents.cut).toHaveBeenCalledTimes(1);
+          expect(electron.webContentsViewInstance.webContents.cut).toHaveBeenCalledTimes(1);
         });
       });
       describe('Copy', () => {
@@ -178,7 +178,7 @@ describe('Tab Manager context-menu test suite', () => {
           // When
           electron.MenuItem.mock.calls.filter(c => c[0].label === 'Copy')[0][0].click();
           // Then
-          expect(electron.browserViewInstance.webContents.copy).toHaveBeenCalledTimes(1);
+          expect(electron.webContentsViewInstance.webContents.copy).toHaveBeenCalledTimes(1);
         });
       });
       describe('Copy image', () => {
@@ -194,7 +194,7 @@ describe('Tab Manager context-menu test suite', () => {
           // When
           electron.MenuItem.mock.calls.filter(c => c[0].label === 'Copy image')[0][0].click();
           // Then
-          expect(electron.browserViewInstance.webContents.copyImageAt).toHaveBeenCalledTimes(1);
+          expect(electron.webContentsViewInstance.webContents.copyImageAt).toHaveBeenCalledTimes(1);
         });
       });
     });
@@ -211,7 +211,7 @@ describe('Tab Manager context-menu test suite', () => {
         // When
         electron.MenuItem.mock.calls.filter(c => c[0].label === 'Paste')[0][0].click();
         // Then
-        expect(electron.browserViewInstance.webContents.paste).toHaveBeenCalledTimes(1);
+        expect(electron.webContentsViewInstance.webContents.paste).toHaveBeenCalledTimes(1);
       });
     });
   });

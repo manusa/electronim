@@ -13,9 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {BrowserView} = require('electron');
+const {WebContentsView} = require('electron');
 const path = require('path');
-const {showDialog} = require('../browser-window');
+const {showDialog} = require('../base-window');
 const {handleRedirect, windowOpenHandler} = require('../tab-manager/redirect');
 
 const webPreferences = {
@@ -25,12 +25,12 @@ const webPreferences = {
   preload: path.resolve(__dirname, '..', '..', 'bundles', 'help.preload.js')
 };
 
-const openHelpDialog = browserWindow => () => {
-  const helpView = new BrowserView({webPreferences});
+const openHelpDialog = baseWindow => () => {
+  const helpView = new WebContentsView({webPreferences});
   helpView.webContents.loadURL(`file://${__dirname}/index.html`);
   helpView.webContents.on('will-navigate', handleRedirect(helpView));
   helpView.webContents.setWindowOpenHandler(windowOpenHandler(helpView));
-  showDialog(browserWindow, helpView);
+  showDialog(baseWindow, helpView);
 };
 
 module.exports = {openHelpDialog};

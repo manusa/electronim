@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {BrowserView, Menu, MenuItem, ipcMain: eventBus} = require('electron');
+const {WebContentsView, Menu, MenuItem, ipcMain: eventBus} = require('electron');
 const path = require('path');
 const {APP_EVENTS} = require('../constants');
 const {getLatestRelease} = require('./check-for-updates');
@@ -56,13 +56,12 @@ const handleContextMenu = viewOrWindow => (event, params) => {
 };
 
 /**
- * Creates a new BrowserView instance with the Chrome Tabs
- * @returns {Electron.CrossProcessExports.BrowserView}
+ * Creates a new WebContentsView instance with the Chrome Tabs
+ * @returns {Electron.CrossProcessExports.WebContentsView}
  */
 const newTabContainer = () => {
-  const tabContainer = new BrowserView({webPreferences});
+  const tabContainer = new WebContentsView({webPreferences});
   tabContainer.isTabContainer = true;
-  tabContainer.setAutoResize({width: false, horizontal: false, height: false, vertical: false});
   tabContainer.webContents.loadURL(`file://${__dirname}/index.html`,
     {extraHeaders: 'pragma: no-cache\nCache-control: no-cache'});
   tabContainer.webContents.on('context-menu', handleContextMenu(tabContainer));

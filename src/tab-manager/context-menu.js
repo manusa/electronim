@@ -77,7 +77,7 @@ const regularContextMenu = ({webContents, params}) => {
 };
 
 /**
- * @param {BrowserView|BrowserWindow} viewOrWindow
+ * @param {WebContentsView|BaseWindow} viewOrWindow
  * @returns {(function(*, *): Promise<void>)|*}
  */
 const handleContextMenu = viewOrWindow => async (_event, params) => {

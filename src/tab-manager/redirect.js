@@ -15,8 +15,8 @@
  */
 const {shell} = require('electron');
 
-const matchUrls = regexList => (browserViewUrl, url) =>
-  regexList.some(regex => browserViewUrl.href.match(regex) || url.href.match(regex));
+const matchUrls = regexList => (viewUrl, url) =>
+  regexList.some(regex => viewUrl.href.match(regex) || url.href.match(regex));
 
 const isOAuth = matchUrls([
   /^https:\/\/(.+\.)?github\.com\/login\/oauth.*/, // NOSONAR
@@ -42,18 +42,18 @@ const isOAuth = matchUrls([
   /^https:\/\/.+\.zoom\.us\/signin.*/ // NOSONAR
 ]);
 
-const isHandledInternally = (browserViewUrl, url) => [
+const isHandledInternally = (viewUrl, url) => [
   /^https:\/\/app\.slack\.com\/.*/, // NOSONAR
   /^https:\/\/files\.slack\.com\/.*/ // NOSONAR
 ].some(regex => url.href.match(regex));
 
-const isSameOrigin = (browserViewUrl, url) => url.origin === browserViewUrl.origin;
+const isSameOrigin = (viewUrl, url) => url.origin === viewUrl.origin;
 
-const shouldOpenInExternalBrowser = (browserView, url) => {
-  const browserViewUrl = new URL(browserView.webContents.getURL());
+const shouldOpenInExternalBrowser = (view, url) => {
+  const viewUrl = new URL(view.webContents.getURL());
   let ret = true;
   [isSameOrigin, isOAuth, isHandledInternally].forEach(f => {
-    if (ret && f(browserViewUrl, url)) {
+    if (ret && f(viewUrl, url)) {
       ret = false;
     }
   });
@@ -67,16 +67,16 @@ const openExternal = urlString => {
   shell.openExternal(urlString).then(() => {});
 };
 
-const handleRedirect = browserView => (e, urlString) => {
+const handleRedirect = view => (e, urlString) => {
   const url = new URL(urlString);
-  if (shouldOpenInExternalBrowser(browserView, url)) {
+  if (shouldOpenInExternalBrowser(view, url)) {
     e.preventDefault();
     openExternal(urlString);
   }
 };
 
-const windowOpenHandler = browserView => ({url}) => {
-  if (!shouldOpenInExternalBrowser(browserView, new URL(url))) {
+const windowOpenHandler = view => ({url}) => {
+  if (!shouldOpenInExternalBrowser(view, new URL(url))) {
     return {action: 'allow'};
   }
   openExternal(url);

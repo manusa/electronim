@@ -14,29 +14,15 @@
    limitations under the License.
  */
 
-const mockBrowserWindowInstance = () => {
+const mockWebContentsViewInstance = () => {
   const instance = {
     listeners: {},
-    addBrowserView: jest.fn(),
-    destroy: jest.fn(),
-    getContentBounds: jest.fn(() => ({})),
-    isFullScreen: jest.fn(),
-    loadURL: jest.fn(),
-    minimize: jest.fn(),
     on: jest.fn((eventName, func) => {
       instance.listeners[eventName] = func;
     }),
-    removeBrowserView: jest.fn(),
-    removeMenu: jest.fn(),
-    setAutoResize: jest.fn(),
     setBounds: jest.fn(),
-    setBrowserView: jest.fn(),
-    setFullScreen: jest.fn(),
-    show: jest.fn(),
-    showInactive: jest.fn(),
     webContents: {
       loadedUrl: '',
-      browserWindowInstance: () => instance,
       copy: jest.fn(),
       copyImageAt: jest.fn(),
       cut: jest.fn(),
@@ -61,9 +47,36 @@ const mockBrowserWindowInstance = () => {
   return instance;
 };
 
+const mockBaseWindowInstance = () => {
+  const instance = {
+    listeners: {},
+    destroy: jest.fn(),
+    getContentBounds: jest.fn(() => ({})),
+    isFullScreen: jest.fn(),
+    loadURL: jest.fn(),
+    minimize: jest.fn(),
+    on: jest.fn((eventName, func) => {
+      instance.listeners[eventName] = func;
+    }),
+    removeMenu: jest.fn(),
+    setBounds: jest.fn(),
+    setFullScreen: jest.fn(),
+    show: jest.fn(),
+    showInactive: jest.fn(),
+    contentView: {
+      addChildView: jest.fn(view => instance.contentView.children.push(view)),
+      removeChildView: jest.fn(view => {
+        instance.contentView.children = instance.contentView.children.filter(child => child !== view);
+      }),
+      children: []
+    }
+  };
+  return instance;
+};
+
 const mockElectronInstance = ({...overriddenProps} = {}) => {
-  const browserViewInstance = mockBrowserWindowInstance();
-  const browserWindowInstance = mockBrowserWindowInstance();
+  const webContentsViewInstance = mockWebContentsViewInstance();
+  const baseWindowInstance = mockBaseWindowInstance();
   const sessionInstance = {
     clearCache: jest.fn(),
     clearCodeCaches: jest.fn(),
@@ -76,10 +89,10 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     on: jest.fn()
   };
   const instance = {
-    BrowserView: jest.fn(() => browserViewInstance),
-    browserViewInstance,
-    BrowserWindow: jest.fn(() => browserWindowInstance),
-    browserWindowInstance,
+    WebContentsView: jest.fn(() => webContentsViewInstance),
+    webContentsViewInstance,
+    BaseWindow: jest.fn(() => baseWindowInstance),
+    baseWindowInstance,
     Menu: jest.fn(),
     MenuItem: jest.fn(),
     Notification: jest.fn(),
@@ -139,8 +152,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     },
     ...overriddenProps
   };
-  instance.BrowserWindow.fromWebContents = jest.fn(webContents => webContents.browserWindowInstance());
   return instance;
 };
 
-module.exports = {mockBrowserWindowInstance, mockElectronInstance};
+module.exports = {mockBaseWindowInstance, mockWebContentsViewInstance, mockElectronInstance};

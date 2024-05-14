@@ -14,7 +14,7 @@
    limitations under the License.
  */
 const path = require('path');
-const {BrowserView} = require('electron');
+const {WebContentsView} = require('electron');
 
 const webPreferences = {
   transparent: true,
@@ -25,13 +25,12 @@ const webPreferences = {
 };
 
 /**
- * Creates a new BrowserView instance with the App Menu
- * @returns {Electron.CrossProcessExports.BrowserView}
+ * Creates a new WebContentsView instance with the App Menu
+ * @returns {Electron.CrossProcessExports.WebContentsView}
  */
 const newAppMenu = () => {
-  const appMenu = new BrowserView({webPreferences});
+  const appMenu = new WebContentsView({webPreferences});
   appMenu.isAppMenu = true;
-  appMenu.setAutoResize({width: false, horizontal: false, height: false, vertical: false});
   appMenu.webContents.loadURL(`file://${__dirname}/index.html`);
   return appMenu;
 };
