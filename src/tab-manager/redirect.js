@@ -28,6 +28,7 @@ const isOAuth = matchUrls([
   /^https:\/\/account\.live\.com\/.*/, // NOSONAR
   /^https:\/\/login\.live\.com\/.*/, // NOSONAR
   /^https:\/\/login\.microsoftonline\.com\/.*/, // NOSONAR
+  /^https:\/\/auth\.openai\.com\/.*/, // NOSONAR
   /^https:\/\/auth0\.openai\.com\/.*/, // NOSONAR
   /^https:\/\/auth\.redhat\.com\/auth\/.*/, // NOSONAR
   /^https:\/\/sso\.secureserver\.net\/.*/, // NOSONAR
