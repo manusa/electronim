@@ -15,11 +15,12 @@
  */
 const path = require('path');
 const {
-  BrowserWindow, Notification, app, desktopCapturer, ipcMain: eventBus, nativeTheme
+  BaseWindow, Notification, app, desktopCapturer, ipcMain: eventBus, nativeTheme
 } = require('electron');
 const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS} = require('../constants');
 const {openAboutDialog} = require('../about');
 const {newAppMenu, isNotAppMenu} = require('../app-menu');
+const {findDialog} = require('../base-window');
 const {TABS_CONTAINER_HEIGHT, newTabContainer, isNotTabContainer} = require('../chrome-tabs');
 const {openHelpDialog} = require('../help');
 const {getPlatform, loadSettings, updateSettings, openSettingsDialog} = require('../settings');
@@ -48,10 +49,10 @@ const fixUserDataLocation = () => {
 };
 
 const resetMainWindow = () => {
-  const currentViews = mainWindow.getBrowserViews();
-  currentViews.filter(isNotTabContainer).forEach(bv => mainWindow.removeBrowserView(bv));
-  if (mainWindow.getBrowserViews().length === 0) {
-    mainWindow.setBrowserView(tabContainer);
+  const currentViews = mainWindow.contentView.children;
+  currentViews.filter(isNotTabContainer).forEach(view => mainWindow.contentView.removeChildView(view));
+  if (mainWindow.contentView.children.length === 0) {
+    mainWindow.contentView.addChildView(tabContainer);
   }
 };
 
@@ -60,7 +61,7 @@ const activateTab = ({tabId, restoreWindow = true}) => {
   if (activeTab) {
     const {width, height} = mainWindow.getContentBounds();
     resetMainWindow();
-    mainWindow.addBrowserView(activeTab);
+    mainWindow.contentView.addChildView(activeTab);
     tabContainer.setBounds({x: 0, y: 0, width, height: TABS_CONTAINER_HEIGHT});
     activeTab.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
     tabManager.setActiveTab(tabId);
@@ -76,12 +77,12 @@ const handleMainWindowResize = () => {
 
   setTimeout(() => {
     const {width: contentWidth, height: contentHeight} = mainWindow.getContentBounds();
-    if (appMenu && appMenu.setBounds) {
+    if (appMenu?.setBounds ?? false) {
       appMenu.setBounds({x: 0, y: 0, width: contentWidth, height: contentHeight});
     }
     let totalHeight = 0;
     const isLast = (idx, array) => idx === array.length - 1;
-    mainWindow.getBrowserViews().filter(isNotAppMenu).forEach((bv, idx, array) => {
+    mainWindow.contentView.children.filter(isNotAppMenu).forEach((bv, idx, array) => {
       const {x: currentX, y: currentY, height: currentHeight} = bv.getBounds();
       let newHeight = currentHeight;
       if (isLast(idx, array)) {
@@ -90,13 +91,17 @@ const handleMainWindowResize = () => {
       bv.setBounds({x: currentX, y: currentY, width: contentWidth, height: newHeight});
       totalHeight += currentHeight;
     });
+    const dialogView = findDialog(mainWindow);
+    if (dialogView) {
+      dialogView.setBounds({x: 0, y: 0, width: contentWidth, height: contentHeight});
+    }
   });
 };
 
 const handleTabReload = event => event.sender.reloadIgnoringCache();
 
 const handleTabTraverse = getTabIdFunction => () => {
-  if (mainWindow.getBrowserViews().length === 1) {
+  if (mainWindow.contentView.children.length === 1) {
     return;
   }
   const tabId = getTabIdFunction();
@@ -171,15 +176,15 @@ const initDesktopCapturerHandler = () => {
 
 const appMenuOpen = () => {
   const {width, height} = mainWindow.getContentBounds();
-  mainWindow.addBrowserView(appMenu);
+  mainWindow.contentView.addChildView(appMenu);
   appMenu.setBounds({x: 0, y: 0, width, height});
 };
 
 const appMenuClose = () => {
-  if (!mainWindow.getBrowserViews().find(bv => bv.isAppMenu)) {
+  if (!mainWindow.contentView.children.find(view => view.isAppMenu)) {
     return;
   }
-  mainWindow.removeBrowserView(appMenu);
+  mainWindow.contentView.removeChildView(appMenu);
   activateTab({tabId: tabManager.getActiveTab()});
 };
 
@@ -188,10 +193,11 @@ const fullscreenToggle = () => {
 };
 
 const closeDialog = () => {
-  if (mainWindow.getBrowserViews().length > 1) {
+  const dialogView = findDialog(mainWindow);
+  if (!dialogView) {
     return;
   }
-  const dialogView = mainWindow.getBrowserView();
+  mainWindow.contentView.removeChildView(dialogView);
   activateTab({tabId: tabManager.getActiveTab()});
   dialogView.webContents.destroy();
 };
@@ -214,17 +220,19 @@ const saveSettings = (_event, settings) => {
   updateSettings(settings);
   loadDictionaries();
   nativeTheme.themeSource = settings.theme;
-  const currentBrowserView = mainWindow.getBrowserView();
-  mainWindow.removeBrowserView(currentBrowserView);
+  closeDialog();
+  appMenuClose();
+  mainWindow.contentView.children.forEach(view => {
+    mainWindow.contentView.removeChildView(view);
+    view.webContents.destroy();
+  });
   tabManager.removeAll();
-  const viewsToDestroy = [currentBrowserView, tabContainer];
-  viewsToDestroy.forEach(view => view.webContents.destroy());
   tabContainer = newTabContainer();
   eventBus.emit(APP_EVENTS.trayInit);
 };
 
 const initGlobalListeners = () => {
-  eventBus.on(APP_EVENTS.aboutOpenDialog, openAboutDialog);
+  eventBus.on(APP_EVENTS.aboutOpenDialog, openAboutDialog(mainWindow));
   eventBus.on(APP_EVENTS.appMenuOpen, appMenuOpen);
   eventBus.on(APP_EVENTS.appMenuClose, appMenuClose);
   eventBus.on(APP_EVENTS.closeDialog, closeDialog);
@@ -248,9 +256,9 @@ const initGlobalListeners = () => {
 };
 
 const browserVersionsReady = () => {
-  app.userAgentFallback = userAgentForWebContents(mainWindow.webContents);
   tabContainer = newTabContainer();
   appMenu = newAppMenu();
+  app.userAgentFallback = userAgentForWebContents(appMenu.webContents);
   eventBus.emit(APP_EVENTS.trayInit);
 };
 
@@ -259,7 +267,7 @@ const init = () => {
   loadDictionaries();
   const {width = 800, height = 600, startMinimized, theme} = loadSettings();
   nativeTheme.themeSource = theme;
-  mainWindow = new BrowserWindow({
+  mainWindow = new BaseWindow({
     width, height, resizable: true, maximizable: true,
     icon: path.resolve(__dirname, '..', 'assets', getPlatform() === 'linux' ? 'icon.png' : 'icon.ico'),
     show: false, paintWhenInitiallyHidden: false,

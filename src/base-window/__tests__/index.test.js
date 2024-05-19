@@ -13,26 +13,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-describe('browser-window util module test suite', () => {
-  let browserWindow;
+describe('base-window util module test suite', () => {
+  let baseWindow;
   beforeEach(() => {
-    browserWindow = require('../');
+    baseWindow = require('../');
   });
   test('showDialog, should fill provided window with provided BrowserView', () => {
     // Given
-    const window = require('../../__tests__/electron').mockBrowserWindowInstance();
+    const window = require('../../__tests__/electron').mockBaseWindowInstance();
     window.getContentBounds = jest.fn(() => ({width: 13, height: 37}));
-    const dialog = require('../../__tests__/electron').mockBrowserWindowInstance();
+    const dialog = require('../../__tests__/electron').mockWebContentsViewInstance();
     // When
-    browserWindow.showDialog(window, dialog);
+    baseWindow.showDialog(window, dialog);
     // Then
-    expect(window.setBrowserView).toHaveBeenCalledWith(dialog);
-    expect(window.setBrowserView).toHaveBeenCalledBefore(dialog.setBounds);
+    expect(window.contentView.addChildView).toHaveBeenCalledWith(dialog);
+    expect(window.contentView.addChildView).toHaveBeenCalledBefore(dialog.setBounds);
     expect(dialog.setBounds).toHaveBeenCalledTimes(1);
     expect(dialog.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 13, height: 37});
-    expect(dialog.setAutoResize).toHaveBeenCalledTimes(1);
-    expect(dialog.setAutoResize)
-      .toHaveBeenCalledWith({width: false, horizontal: false, height: false, vertical: false});
     expect(dialog.webContents.focus).toHaveBeenCalledTimes(1);
   });
 });

@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {BrowserWindow, MenuItem, ipcMain} = require('electron');
+const {WebContentsView, MenuItem, ipcMain} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const {loadSettings} = require('../settings');
 
@@ -93,17 +93,16 @@ const getEnabledDictionaries = () => loadSettings().enabledDictionaries;
 
 const loadDictionaries = () => {
   if (fakeRendererWorker) {
-    fakeRendererWorker.destroy();
+    fakeRendererWorker.webContents.destroy();
   }
-  fakeRendererWorker = new BrowserWindow({
-    show: false,
+  fakeRendererWorker = new WebContentsView({
     webPreferences: {
       contextIsolation: false,
       nativeWindowOpen: true,
       nodeIntegration: true
     }
   });
-  fakeRendererWorker.loadURL(`file://${__dirname}/dictionary.renderer/index.html`);
+  fakeRendererWorker.webContents.loadURL(`file://${__dirname}/dictionary.renderer/index.html`);
   ipcMain.removeHandler(APP_EVENTS.dictionaryGetMisspelled);
   ipcMain.handle(APP_EVENTS.dictionaryGetMisspelled, handleGetMisspelled);
   // Uncomment to debug problems with dictionaries

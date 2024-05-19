@@ -14,25 +14,17 @@
    limitations under the License.
  */
 describe('Spell-check module test suite', () => {
-  let mockBrowserWindow;
-  let mockIpc;
+  let electron;
   let mockSettings;
   let spellCheck;
   beforeEach(() => {
     jest.resetModules();
-    mockBrowserWindow = require('../../__tests__').mockBrowserWindowInstance();
-    mockIpc = {
-      handle: jest.fn(),
-      removeHandler: jest.fn()
-    };
     mockSettings = {
       enabledDictionaries: []
     };
-    jest.mock('electron', () => ({
-      BrowserWindow: jest.fn(() => mockBrowserWindow),
-      ipcMain: mockIpc,
-      MenuItem: jest.fn(({label, click}) => ({label, click}))
-    }));
+    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
+    electron = require('electron');
+    electron.MenuItem = jest.fn(({label, click}) => ({label, click}));
     jest.mock('../../settings', () => ({
       loadSettings: jest.fn(() => mockSettings)
     }));
@@ -53,37 +45,37 @@ describe('Spell-check module test suite', () => {
       // When
       spellCheck.loadDictionaries();
       // Then
-      expect(mockBrowserWindow.destroy).toHaveBeenCalledTimes(1);
+      expect(electron.webContentsViewInstance.webContents.destroy).toHaveBeenCalledTimes(1);
     });
     test('should not destroy non-existing previous fakeRenderer', () => {
       // When
       spellCheck.loadDictionaries();
       // Then
-      expect(mockBrowserWindow.destroy).not.toHaveBeenCalled();
+      expect(electron.webContentsViewInstance.webContents.destroy).not.toHaveBeenCalled();
     });
     test('should remove and then add handler', () => {
       // When
       spellCheck.loadDictionaries();
       // Then
-      expect(mockIpc.handle).toHaveBeenCalledAfter(mockIpc.removeHandler);
+      expect(electron.ipcMain.handle).toHaveBeenCalledAfter(electron.ipcMain.removeHandler);
     });
     test('should remove dictionaryGetMisspelled handler', () => {
       // When
       spellCheck.loadDictionaries();
       // Then
-      expect(mockIpc.removeHandler).toHaveBeenCalledWith('dictionaryGetMisspelled');
+      expect(electron.ipcMain.removeHandler).toHaveBeenCalledWith('dictionaryGetMisspelled');
     });
     test('should handle dictionaryGetMisspelled', () => {
       // When
       spellCheck.loadDictionaries();
       // Then
-      expect(mockIpc.handle).toHaveBeenCalledWith('dictionaryGetMisspelled', expect.any(Function));
+      expect(electron.ipcMain.handle).toHaveBeenCalledWith('dictionaryGetMisspelled', expect.any(Function));
     });
     test('should load dictionary.renderer URL', () => {
       // When
       spellCheck.loadDictionaries();
       // Then
-      expect(mockBrowserWindow.loadURL)
+      expect(electron.webContentsViewInstance.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/\/dictionary.renderer\/index.html$/));
     });
   });
@@ -92,8 +84,7 @@ describe('Spell-check module test suite', () => {
     let webContents;
     beforeEach(() => {
       params = {};
-      webContents = {};
-      mockBrowserWindow.webContents = webContents;
+      webContents = electron.webContentsViewInstance.webContents;
       spellCheck.loadDictionaries();
     });
     describe('contextMenuHandler', () => {
@@ -109,7 +100,7 @@ describe('Spell-check module test suite', () => {
         });
         test('and no suggestions, should return empty array', async () => {
           // Given
-          mockBrowserWindow.webContents.executeJavaScript = jest.fn(async () => []);
+          webContents.executeJavaScript = jest.fn(async () => []);
           // When
           const result = await spellCheck.contextMenuHandler({}, params, webContents);
           // Then
@@ -117,7 +108,7 @@ describe('Spell-check module test suite', () => {
         });
         test('and suggestions, should return array of MenuItems', async () => {
           // Given
-          mockBrowserWindow.webContents.executeJavaScript = jest.fn(async () => ['the-suggestion']);
+          webContents.executeJavaScript = jest.fn(async () => ['the-suggestion']);
           // When
           const result = await spellCheck.contextMenuHandler({}, params, webContents);
           // Then

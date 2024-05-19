@@ -15,14 +15,14 @@
  */
 describe('Main :: Global Keyboard Shortcuts module test suite', () => {
   let electron;
-  let browserWindow;
+  let view;
   let inputEvent;
   beforeEach(() => {
     jest.resetModules();
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
-    browserWindow = require('../../__tests__').mockBrowserWindowInstance();
-    require('../').registerAppShortcuts({}, browserWindow.webContents);
+    view = require('../../__tests__').mockWebContentsViewInstance();
+    require('../').registerAppShortcuts({}, view.webContents);
     inputEvent = {
       preventDefault: jest.fn()
     };
@@ -35,38 +35,38 @@ describe('Main :: Global Keyboard Shortcuts module test suite', () => {
     {key: 'Tab', shift: true, control: true, appEvent: 'tabTraversePrevious'}
   ])('Key "$key" (shift: $shift, ctrl: $control) triggers "$appEvent" app event',
     ({key, control, shift, appEvent}) => {
-      browserWindow.listeners['before-input-event'](inputEvent, {key, control, shift});
+      view.listeners['before-input-event'](inputEvent, {key, control, shift});
       expect(electron.ipcMain.emit).toHaveBeenCalledWith(appEvent);
     });
   describe.each([1, 2, 3, 4, 5, 6, 7, 8, 9])('Key "%s"', key => {
     test('with ctrl, triggers "tabSwitchToPosition" app event', () => {
-      browserWindow.listeners['before-input-event'](inputEvent, {key, control: true});
+      view.listeners['before-input-event'](inputEvent, {key, control: true});
       expect(electron.ipcMain.emit).toHaveBeenCalledWith('tabSwitchToPosition', key);
     });
     test('with meta, triggers "tabSwitchToPosition" app event', () => {
-      browserWindow.listeners['before-input-event'](inputEvent, {key, meta: true});
+      view.listeners['before-input-event'](inputEvent, {key, meta: true});
       expect(electron.ipcMain.emit).toHaveBeenCalledWith('tabSwitchToPosition', key);
     });
     test('with no modifiers, does nothing', () => {
-      browserWindow.listeners['before-input-event'](inputEvent, {key});
+      view.listeners['before-input-event'](inputEvent, {key});
       expect(electron.ipcMain.emit).not.toHaveBeenCalled();
     });
   });
   test('ignores keyUp events', () => {
-    browserWindow.listeners['before-input-event'](inputEvent, {type: 'keyUp', key: 'Escape'});
+    view.listeners['before-input-event'](inputEvent, {type: 'keyUp', key: 'Escape'});
     expect(electron.ipcMain.emit).not.toHaveBeenCalled();
   });
   describe('preventDefault', () => {
     test('calls preventDefault if key is registered', () => {
-      browserWindow.listeners['before-input-event'](inputEvent, {key: 'F11'});
+      view.listeners['before-input-event'](inputEvent, {key: 'F11'});
       expect(inputEvent.preventDefault).toHaveBeenCalled();
     });
     test('doesn\'t call preventDefault if key is registered and preventDefault is disabled', () => {
-      browserWindow.listeners['before-input-event'](inputEvent, {key: 'Esc'});
+      view.listeners['before-input-event'](inputEvent, {key: 'Esc'});
       expect(inputEvent.preventDefault).not.toHaveBeenCalled();
     });
     test('doesn\'t call preventDefault if key is not registered', () => {
-      browserWindow.listeners['before-input-event'](inputEvent, {});
+      view.listeners['before-input-event'](inputEvent, {});
       expect(inputEvent.preventDefault).not.toHaveBeenCalled();
     });
   });

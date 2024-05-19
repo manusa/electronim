@@ -32,7 +32,7 @@ describe('Entrypoint test suite', () => {
     test('Adds quit event listener', () => expect(app.on).toHaveBeenCalledWith('quit', main.quit));
     test('Registers app keyboard shortcuts on every webContents created (web-contents-created)', () => {
       expect(app.on)
-        .toHaveBeenCalledWith('web-contents-created', require('../browser-window').registerAppShortcuts);
+        .toHaveBeenCalledWith('web-contents-created', require('../base-window').registerAppShortcuts);
     });
   });
 });

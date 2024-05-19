@@ -15,12 +15,14 @@
  */
 const {registerAppShortcuts} = require('./keyboard-shortcuts');
 
-const showDialog = (browserWindow, browserView) => {
-  browserWindow.setBrowserView(browserView);
-  const {width, height} = browserWindow.getContentBounds();
-  browserView.setBounds({x: 0, y: 0, width, height});
-  browserView.setAutoResize({width: false, horizontal: false, height: false, vertical: false});
-  browserView.webContents.focus();
+const findDialog = baseWindow => baseWindow.contentView.children.find(v => v.isDialog);
+
+const showDialog = (baseWindow, dialogView) => {
+  dialogView.isDialog = true;
+  baseWindow.contentView.addChildView(dialogView);
+  const {width, height} = baseWindow.getContentBounds();
+  dialogView.setBounds({x: 0, y: 0, width, height});
+  dialogView.webContents.focus();
 };
 
-module.exports = {registerAppShortcuts, showDialog};
+module.exports = {registerAppShortcuts, findDialog, showDialog};

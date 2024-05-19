@@ -19,7 +19,7 @@
 describe('Main :: Main window listeners test suite', () => {
   let electron;
   let main;
-  let browserWindow;
+  let baseWindow;
   beforeEach(() => {
     jest.resetModules();
     // Always mock settings unless we want to overwrite the real settings file !
@@ -27,10 +27,10 @@ describe('Main :: Main window listeners test suite', () => {
     require('../../settings').loadSettings.mockImplementation(() => ({}));
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance({
       // Return a **different** instance for each view
-      BrowserView: jest.fn(() => require('../../__tests__').mockBrowserWindowInstance())
+      BrowserView: jest.fn(() => require('../../__tests__').mockBaseWindowInstance())
     }));
     electron = require('electron');
-    browserWindow = electron.browserWindowInstance;
+    baseWindow = electron.baseWindowInstance;
     jest.spyOn(require('../../user-agent'), 'initBrowserVersions')
       .mockImplementation(() => Promise.resolve({}));
     main = require('../');
@@ -43,16 +43,16 @@ describe('Main :: Main window listeners test suite', () => {
     });
     test('always calls event.preventDefault', () => {
       // When
-      browserWindow.listeners.close(event);
+      baseWindow.listeners.close(event);
       // Then
       expect(event.preventDefault).toHaveBeenCalled();
     });
     test('with quit, should exit app', () => {
       // When
-      browserWindow.listeners.close(event);
+      baseWindow.listeners.close(event);
       // Then
       expect(electron.app.exit).toHaveBeenCalled();
-      expect(browserWindow.minimize).not.toHaveBeenCalled();
+      expect(baseWindow.minimize).not.toHaveBeenCalled();
     });
     test('with minimize, should minimize the window', () => {
       // Given
@@ -60,10 +60,10 @@ describe('Main :: Main window listeners test suite', () => {
         closeButtonBehavior: 'minimize'
       }));
       // When
-      browserWindow.listeners.close(event);
+      baseWindow.listeners.close(event);
       // Then
       expect(electron.app.exit).not.toHaveBeenCalled();
-      expect(browserWindow.minimize).toHaveBeenCalled();
+      expect(baseWindow.minimize).toHaveBeenCalled();
     });
   });
 });

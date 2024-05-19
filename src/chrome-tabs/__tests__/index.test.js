@@ -31,26 +31,26 @@ describe('Chrome Tabs Module module test suite', () => {
       // When
       chromeTabs.newTabContainer();
       // Then
-      const BrowserView = require('electron').BrowserView;
-      expect(BrowserView).toHaveBeenCalledTimes(1);
-      expect(BrowserView).toHaveBeenCalledWith({
+      const WebContentsView = require('electron').WebContentsView;
+      expect(WebContentsView).toHaveBeenCalledTimes(1);
+      expect(WebContentsView).toHaveBeenCalledWith({
         webPreferences: expect.objectContaining({sandbox: true, nodeIntegration: false})
       });
     });
     test('checks for updates', async () => {
       // Given
-      const {browserViewInstance} = require('electron');
+      const {webContentsViewInstance} = require('electron');
       let resolveSend;
       const isSent = new Promise(resolve => {
         resolveSend = resolve;
       });
-      browserViewInstance.webContents.send = jest.fn(() => resolveSend(true));
+      webContentsViewInstance.webContents.send = jest.fn(() => resolveSend(true));
       chromeTabs.newTabContainer();
       // When
       require('electron').ipcMain.listeners.tabsReady();
       // Then
       await expect(isSent).resolves.toBe(true);
-      expect(browserViewInstance.webContents.send).toHaveBeenCalledWith('electronimNewVersionAvailable', true);
+      expect(webContentsViewInstance.webContents.send).toHaveBeenCalledWith('electronimNewVersionAvailable', true);
     });
     test('sets interval to check for updates with unref', () => {
       // Given

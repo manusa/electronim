@@ -19,7 +19,7 @@
 describe('Main :: Global listeners test suite', () => {
   let electron;
   let main;
-  let browserWindow;
+  let baseWindow;
   let eventBus;
   beforeEach(() => {
     jest.resetModules();
@@ -29,12 +29,9 @@ describe('Main :: Global listeners test suite', () => {
       trayEnabled: true
     }));
     require('../../settings').openSettingsDialog = jest.requireActual('../../settings').openSettingsDialog;
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance({
-      // Return a **different** instance for each view
-      BrowserView: jest.fn(() => require('../../__tests__').mockBrowserWindowInstance())
-    }));
+    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
-    browserWindow = electron.browserWindowInstance;
+    baseWindow = electron.baseWindowInstance;
     eventBus = electron.ipcMain;
     jest.spyOn(require('../../user-agent'), 'initBrowserVersions')
       .mockImplementation(() => Promise.resolve({}));
@@ -45,29 +42,30 @@ describe('Main :: Global listeners test suite', () => {
     // When
     eventBus.listeners.appMenuOpen();
     // Then
-    expect(browserWindow.addBrowserView).toHaveBeenCalledWith(
+    expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(
       expect.objectContaining({isAppMenu: true})
     );
-    expect(browserWindow.addBrowserView.mock.calls[0][0].setBounds).toHaveBeenCalledWith(expect.objectContaining({
-      x: 0, y: 0
-    }));
+    expect(baseWindow.contentView.addChildView.mock.calls[0][0].setBounds)
+      .toHaveBeenCalledWith(expect.objectContaining({
+        x: 0, y: 0
+      }));
   });
   describe('appMenuClose', () => {
     test('with menu hidden, should return', () => {
       // Given
-      browserWindow.getBrowserViews = jest.fn(() => []);
+      baseWindow.contentView.children = [];
       // When
       eventBus.listeners.appMenuClose();
       // Then
-      expect(browserWindow.removeBrowserView).not.toHaveBeenCalled();
+      expect(baseWindow.contentView.removeChildView).not.toHaveBeenCalled();
     });
     test('with menu visible, should hide app-menu', () => {
       // Given
-      browserWindow.getBrowserViews = jest.fn(() => [{isAppMenu: true}]);
+      baseWindow.contentView.children = [{isAppMenu: true}];
       // When
       eventBus.listeners.appMenuClose();
       // Then
-      expect(browserWindow.removeBrowserView).toHaveBeenCalledWith(
+      expect(baseWindow.contentView.removeChildView).toHaveBeenCalledWith(
         expect.objectContaining({isAppMenu: true})
       );
     });
@@ -76,9 +74,9 @@ describe('Main :: Global listeners test suite', () => {
     describe('with dialog visible (<= 1 view)', () => {
       let dialog;
       beforeEach(() => {
-        dialog = new electron.BrowserView();
-        browserWindow.getBrowserViews = jest.fn(() => [dialog]);
-        browserWindow.getBrowserView = jest.fn(() => (dialog));
+        dialog = new electron.WebContentsView();
+        dialog.isDialog = true;
+        baseWindow.contentView.children = [dialog];
       });
       test('should destroy dialog', () => {
         // When
@@ -107,8 +105,8 @@ describe('Main :: Global listeners test suite', () => {
     });
     test('should return if no dialog is shown (>1 view)', () => {
       // Given
-      const view = new electron.BrowserView();
-      browserWindow.getBrowserViews = jest.fn(() => [view, view]);
+      const view = new electron.WebContentsView();
+      baseWindow.contentView.children = [view, view];
       // When
       eventBus.listeners.closeDialog();
       // Then
@@ -118,29 +116,29 @@ describe('Main :: Global listeners test suite', () => {
   describe('fullscreenToggle', () => {
     test('when not fullscreen, should enter fullscreen', () => {
       // Given
-      browserWindow.isFullScreen.mockReturnValue(false);
+      baseWindow.isFullScreen.mockReturnValue(false);
       // When
       eventBus.listeners.fullscreenToggle();
       // Then
-      expect(browserWindow.setFullScreen).toHaveBeenCalledWith(true);
+      expect(baseWindow.setFullScreen).toHaveBeenCalledWith(true);
     });
     test('when in fullscreen, should leave fullscreen', () => {
       // Given
-      browserWindow.isFullScreen.mockReturnValue(true);
+      baseWindow.isFullScreen.mockReturnValue(true);
       // When
       eventBus.listeners.fullscreenToggle();
       // Then
-      expect(browserWindow.setFullScreen).toHaveBeenCalledWith(false);
+      expect(baseWindow.setFullScreen).toHaveBeenCalledWith(false);
     });
   });
   test('helpOpenDialog, should open help dialog', () => {
     // When
-    eventBus.listeners.helpOpenDialog({sender: browserWindow.webContents});
+    eventBus.listeners.helpOpenDialog({sender: baseWindow.webContents});
     // Then
-    const browserView = electron.BrowserView.mock.results
+    const view = electron.WebContentsView.mock.results
       .map(r => r.value).filter(bv => bv.webContents.loadedUrl.endsWith('help/index.html'))[0];
-    expect(browserWindow.setBrowserView).toHaveBeenCalledWith(browserView);
-    expect(browserView.webContents.loadURL)
+    expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(view);
+    expect(view.webContents.loadURL)
       .toHaveBeenCalledWith(expect.stringMatching(/help\/index.html$/));
   });
   test('quit, should exit the application', () => {
@@ -153,18 +151,17 @@ describe('Main :: Global listeners test suite', () => {
     // When
     eventBus.listeners.settingsOpenDialog();
     // Then
-    const browserView = electron.BrowserView.mock.results
+    const view = electron.WebContentsView.mock.results
       .map(r => r.value).filter(bv => bv.webContents.loadedUrl.endsWith('settings/index.html'))[0];
-    expect(browserWindow.setBrowserView).toHaveBeenCalledWith(browserView);
-    expect(browserView.webContents.loadURL)
+    expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(view);
+    expect(view.webContents.loadURL)
       .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
   });
   describe('settingsSave', () => {
     let settings;
     beforeEach(() => {
-      settings = new electron.BrowserView();
-      browserWindow.getBrowserViews = jest.fn(() => [settings]);
-      browserWindow.getBrowserView = jest.fn(() => (settings));
+      settings = new electron.WebContentsView();
+      baseWindow.contentView.children = [settings];
     });
     test('should reload settings', () => {
       // Given
@@ -172,9 +169,15 @@ describe('Main :: Global listeners test suite', () => {
       // When
       eventBus.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
       // Then
-      expect(electron.browserWindowInstance.loadURL)
-        .toHaveBeenCalledWith(expect.stringMatching(/spell-check\/dictionary.renderer\/index.html$/));
       expect(settingsModule.updateSettings).toHaveBeenCalledTimes(1);
+    });
+    test('should reload fake dictionary renderer', () => {
+      // Given
+      // When
+      eventBus.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
+      // Then
+      expect(electron.webContentsViewInstance.webContents.loadURL)
+        .toHaveBeenCalledWith(expect.stringMatching(/spell-check\/dictionary.renderer\/index.html$/));
     });
     test('should reset all views', () => {
       // Given
@@ -183,8 +186,8 @@ describe('Main :: Global listeners test suite', () => {
       // When
       eventBus.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
       // Then
-      expect(browserWindow.removeBrowserView).toHaveBeenCalledTimes(1);
-      expect(browserWindow.removeBrowserView).toHaveBeenCalledWith(settings);
+      expect(baseWindow.contentView.removeChildView).toHaveBeenCalledTimes(1);
+      expect(baseWindow.contentView.removeChildView).toHaveBeenCalledWith(settings);
       expect(tabManagerModule.removeAll).toHaveBeenCalledTimes(1);
       expect(settings.webContents.destroy).toHaveBeenCalledTimes(1);
     });
@@ -205,7 +208,7 @@ describe('Main :: Global listeners test suite', () => {
       'tabTraverseNext', 'tabTraversePrevious'
     ])('%s, with dialog visible, should not traverse', event => {
       // Given
-      browserWindow.getBrowserViews = jest.fn(() => [new electron.BrowserView()]);
+      baseWindow.contentView.children = [new electron.WebContentsView()];
       main.init();
       // When
       eventBus.listeners[event]();
@@ -214,7 +217,7 @@ describe('Main :: Global listeners test suite', () => {
     });
     describe('with tabs visible, should traverse', () => {
       beforeEach(() => {
-        browserWindow.getBrowserViews = jest.fn(() => [new electron.BrowserView(), new electron.BrowserView()]);
+        baseWindow.getBrowserViews = jest.fn(() => [new electron.BrowserView(), new electron.BrowserView()]);
       });
       test('tabTraverseNext', () => {
         jest.spyOn(tabManagerModule, 'getNextTab').mockImplementation(() => 'nextTabId');

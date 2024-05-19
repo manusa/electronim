@@ -13,12 +13,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {BrowserView} = require('electron');
+const {WebContentsView} = require('electron');
 const fs = require('fs');
 const path = require('path');
 const HOME_DIR = require('os').homedir();
 const {CLOSE_BUTTON_BEHAVIORS} = require('../constants');
-const {showDialog} = require('../browser-window');
+const {showDialog} = require('../base-window');
 
 const APP_DIR = '.electronim';
 const SETTINGS_FILE = 'settings.json';
@@ -94,7 +94,7 @@ const updateSettings = settings =>
   writeSettings(ensureDefaultValues({...loadSettings(), ...settings}));
 
 const openSettingsDialog = mainWindow => () => {
-  const settingsView = new BrowserView({webPreferences});
+  const settingsView = new WebContentsView({webPreferences});
   settingsView.webContents.loadURL(`file://${__dirname}/index.html`);
   showDialog(mainWindow, settingsView);
 };
