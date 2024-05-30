@@ -19,6 +19,8 @@ const matchUrls = regexList => (viewUrl, url) =>
   regexList.some(regex => viewUrl.href.match(regex) || url.href.match(regex));
 
 const isOAuth = matchUrls([
+  /^https:\/\/chat.eclipse.org\/\?loginToken.*/, // NOSONAR
+  /^https:\/\/matrix.eclipse.org\/.+\/login\/sso\/.*/, // NOSONAR
   /^https:\/\/(.+\.)?github\.com\/login\/oauth.*/, // NOSONAR
   /^https:\/\/sso\.godaddy\.com\/.*/, // NOSONAR
   /^https:\/\/.+\.google\.com\/o\/oauth2\/.*/, // NOSONAR
