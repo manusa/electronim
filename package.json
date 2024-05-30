@@ -195,7 +195,7 @@
     "jest-environment-jsdom": "29.7.0",
     "jest-environment-node": "29.7.0",
     "jest-extended": "4.0.2",
-    "sass": "1.77.1",
+    "sass": "1.77.3",
     "sass-loader": "14.2.1",
     "style-loader": "4.0.0",
     "val-loader": "6.0.0",
