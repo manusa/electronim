@@ -19,8 +19,11 @@ const matchUrls = regexList => (viewUrl, url) =>
   regexList.some(regex => viewUrl.href.match(regex) || url.href.match(regex));
 
 const isOAuth = matchUrls([
+  // Generic Matrix protocol support https://www.matrix.org/
+  /^https:\/\/[^/]+\/(.+\/)?_matrix\/client\/v3\/login\/sso\/.*/, // NOSONAR
   /^https:\/\/chat.eclipse.org\/\?loginToken.*/, // NOSONAR
   /^https:\/\/matrix.eclipse.org\/.+\/login\/sso\/.*/, // NOSONAR
+  /^https:\/\/app\.gitter\.im\/\?loginToken.*/, // NOSONAR
   /^https:\/\/(.+\.)?github\.com\/login\/oauth.*/, // NOSONAR
   /^https:\/\/sso\.godaddy\.com\/.*/, // NOSONAR
   /^https:\/\/.+\.google\.com\/o\/oauth2\/.*/, // NOSONAR

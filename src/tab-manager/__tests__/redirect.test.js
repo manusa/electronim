@@ -57,7 +57,25 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://matrix.eclipse.org';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://chat.eclipse.org/?loginToken=syl_gLnNMaZoSqyWuCiPkuQr_1dWSvb'));
+        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://chat.eclipse.org/?loginToken=syl_13371337133713371337_1dWSvb'));
+        // Then
+        expect(result).toBe(false);
+      });
+    });
+    describe('Gitter Matrix', () => {
+      test('From app.gitter.im to matrix auth, should return false', () => {
+        // Given
+        mockViewUrl = 'https://app.gitter.im';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://gitter.ems.host/_matrix/client/v3/login/sso/redirect/oidc-github?redirectUrl=https%3A%2F%2Fapp.gitter.im%2F&org.matrix.msc3824.action=login'));
+        // Then
+        expect(result).toBe(false);
+      });
+      test('From gitter.ems.host to app.gitter.im, should return false', () => {
+        // Given
+        mockViewUrl = 'https://gitter.ems.host';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://app.gitter.im/?loginToken=syl_13371337133713371337_1F3jZn'));
         // Then
         expect(result).toBe(false);
       });
