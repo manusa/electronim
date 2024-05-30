@@ -36,6 +36,9 @@ const isOAuth = matchUrls([
   /^https:\/\/.+\.skype\.com\/Auth\/.*/, // NOSONAR
   /^https:\/\/.+\.twitter\.com\/login.*/, // NOSONAR
   /^https:\/\/.+\.twitter\.com\/logout.*/, // NOSONAR
+  /^https:\/\/twitter\.com\/x.*/, // NOSONAR
+  /^https:\/\/x\.com\/login.*/, // NOSONAR
+  /^https:\/\/x\.com\/logout.*/, // NOSONAR
   /^https:\/\/idbroker\.webex\.com\/idb\/oauth2\/.*/, // NOSONAR
   /^https:\/\/accounts\.zoho\.(eu|com)\/signin.*/, // NOSONAR
   /^https:\/\/.+\.zoom\.us\/profile.*/, // NOSONAR

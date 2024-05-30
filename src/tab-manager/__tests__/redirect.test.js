@@ -206,6 +206,32 @@ describe('Tab Manager Redirect module test suite', () => {
         expect(result).toBe(false);
       });
     });
+    describe('X login', () => {
+      test('From Twitter to X, should return false', () => {
+        // Given
+        mockViewUrl = 'https://twitter.com';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://x.com/login?hide_message=true&redirect_after_login=https%3A%2F%2Ftweetdeck.twitter.com%2F%3Fvia_twitter_login%3Dtrue'));
+        // Then
+        expect(result).toBe(false);
+      });
+      test('From X to Tweeter , should return false', () => {
+        // Given
+        mockViewUrl = 'https://x.com/login';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://twitter.com?via_twitter_login=true'));
+        // Then
+        expect(result).toBe(false);
+      });
+      test('From Tweeter to logout, should return false', () => {
+        // Given
+        mockViewUrl = 'https://twitter.com';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://x.com/logout'));
+        // Then
+        expect(result).toBe(false);
+      });
+    });
     describe('Zoho login', () => {
       test('From Zoho mail to login, should return false', () => {
         // Given
