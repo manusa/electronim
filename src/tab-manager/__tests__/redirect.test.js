@@ -44,6 +44,24 @@ describe('Tab Manager Redirect module test suite', () => {
       // Then
       expect(result).toBe(false);
     });
+    describe('Eclipse Chat OAuth', () => {
+      test('From chat.eclipse.org to matrix auth, should return false', () => {
+        // Given
+        mockViewUrl = 'https://chat.eclipse.org';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://matrix.eclipse.org/_matrix/client/v3/login/sso/redirect/oidc-oauth2_eclipse?redirectUrl=https%3A%2F%2Fchat.eclipse.org%2F&org.matrix.msc3824.action=login'));
+        // Then
+        expect(result).toBe(false);
+      });
+      test('From matrix.eclipse.org to chat.eclipse.org, should return false', () => {
+        // Given
+        mockViewUrl = 'https://matrix.eclipse.org';
+        // When
+        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://chat.eclipse.org/?loginToken=syl_gLnNMaZoSqyWuCiPkuQr_1dWSvb'));
+        // Then
+        expect(result).toBe(false);
+      });
+    });
     describe('Google OAuth', () => {
       test('From OAuth to Slack, should return false', () => {
         // Given
