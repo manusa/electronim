@@ -61,12 +61,14 @@ const isInVisibleArea = event =>
   event.clientX <= window.innerWidth && event.clientY <= window.innerHeight;
 
 const Favicon = ({favicon = ''}) => {
-  const faviconProps = {hidden: true};
+  let img = html``;
   if (favicon) {
-    faviconProps.style = `background-image: url("${favicon}");`;
-    delete faviconProps.hidden;
+    img = html`<img crossorigin="anonymous" src="${favicon}" alt="favicon" width="16px" height="16px"/>`;
   }
-  return html`<div class="chrome-tab-favicon" ...${faviconProps}></div>`;
+  return html`
+      <div class="chrome-tab-favicon">
+          ${img}
+      </div>`;
 };
 
 const NotificationIcon = ({disableNotifications = false}) => disableNotifications && html`
