@@ -32,7 +32,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '20.x'
       - name: Install
         run: npm install
       - name: Change Package version
@@ -62,7 +62,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '20.x'
+      - name: macOS requirements
+        run: |
+          brew install python-setuptools
       - name: Install
         run: npm install
       - name: Install macOS only requirement (Electron Builder) # TODO: Move to prepare-electron-builder.js script
