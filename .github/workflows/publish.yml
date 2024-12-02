@@ -47,7 +47,7 @@ jobs:
         run: ./utils/upload-artifact.js electronim-linux-x86_64.AppImage application/octet-stream
       - name: Publish Snap
         run: |
-          sudo apt-get install snapd
+          sudo apt update && sudo apt-get install snapd
           sudo chown root:root / # Snapcraft requires '/' to be root owned
           sudo snap install snapcraft --classic
           snapcraft push --release=stable ./dist/electronim-linux-amd64.snap

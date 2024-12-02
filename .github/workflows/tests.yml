@@ -63,6 +63,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+      - name: Install Snap
+        # Not needed for this job just to verify it can be installed for use in the publishing workflow
+        run: |
+          sudo apt update && sudo apt-get install snapd
+          sudo chown root:root / # Snapcraft requires '/' to be root owned
+          sudo snap install snapcraft --classic
       - name: Install
         run: npm install
       - name: Build
