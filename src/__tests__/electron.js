@@ -30,10 +30,12 @@ const mockWebContentsViewInstance = () => {
       executeJavaScript: jest.fn(async () => {}),
       focus: jest.fn(),
       getURL: jest.fn(),
-      goBack: jest.fn(),
       loadURL: jest.fn(url => {
         instance.webContents.loadedUrl = url;
       }),
+      navigationHistory: {
+        goBack: jest.fn()
+      },
       on: jest.fn((...args) => instance.on(...args)),
       openDevTools: jest.fn(),
       paste: jest.fn(),

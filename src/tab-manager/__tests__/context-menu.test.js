@@ -40,7 +40,7 @@ describe('Tab Manager context-menu test suite', () => {
     }));
     jest.mock('../../spell-check');
     electron = require('electron');
-    electron.webContentsViewInstance.webContents.canGoBack = jest.fn(() => false);
+    electron.webContentsViewInstance.webContents.navigationHistory.canGoBack = jest.fn(() => false);
     listeners = electron.webContentsViewInstance.listeners;
     event = new Event('');
     params = {x: 13, y: 37};
@@ -122,7 +122,7 @@ describe('Tab Manager context-menu test suite', () => {
         }));
       });
       test('enabled when canGoBack returns true', async () => {
-        electron.webContentsViewInstance.webContents.canGoBack = jest.fn(() => true);
+        electron.webContentsViewInstance.webContents.navigationHistory.canGoBack = jest.fn(() => true);
         await listeners['context-menu'](event, params);
         expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
           enabled: false,
@@ -133,7 +133,7 @@ describe('Tab Manager context-menu test suite', () => {
         // When
         electron.MenuItem.mock.calls.filter(c => c[0].label === 'Back')[0][0].click();
         // Then
-        expect(electron.webContentsViewInstance.webContents.goBack).toHaveBeenCalledTimes(1);
+        expect(electron.webContentsViewInstance.webContents.navigationHistory.goBack).toHaveBeenCalledTimes(1);
       });
     });
     test('Reload click, should trigger reload', async () => {
