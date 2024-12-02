@@ -20,8 +20,8 @@ const entries = ({webContents, params}) => {
   return [
     [{
       label: 'Back',
-      enabled: webContents.canGoBack(),
-      click: () => webContents.goBack()
+      enabled: webContents.navigationHistory.canGoBack(),
+      click: () => webContents.navigationHistory.goBack()
     }, {
       label: 'Reload',
       click: () => webContents.reload()
