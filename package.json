@@ -199,7 +199,7 @@
     "sass-loader": "14.2.1",
     "style-loader": "4.0.0",
     "val-loader": "6.0.0",
-    "webpack": "5.91.0"
+    "webpack": "5.96.1"
   },
   "dependencies": {
     "axios": "1.7.8",
@@ -226,6 +226,6 @@
     "htm": "3.1.1",
     "markdown-it": "14.1.0",
     "nodehun": "3.0.2",
-    "preact": "10.21.0"
+    "preact": "10.25.0"
   }
 }
