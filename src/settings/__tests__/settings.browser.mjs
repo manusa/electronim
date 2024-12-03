@@ -26,7 +26,8 @@ export const ipcRenderer = () => {
     disableNotificationsGlobally: false,
     tabs: [
       {id: '1', url: 'https://initial-tab.com', sandboxed: true},
-      {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true}
+      {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true},
+      {id: '3', url: 'https://initial-tab-3.com', openUrlsInApp: true}
     ],
     theme: 'dark',
     trayEnabled: true,

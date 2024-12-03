@@ -34,7 +34,7 @@ const ExpandButton = ({dispatch, id, expanded = false}) => {
 };
 
 const TabAdvancedSettings = (
-  {dispatch, id, sandboxed = false}
+  {dispatch, id, sandboxed = false, openUrlsInApp = false}
 ) => html`
   <div class='settings__tab-advanced'>
     <${SettingsOption}
@@ -44,6 +44,14 @@ const TabAdvancedSettings = (
       label='Sandbox'
       className='sandboxed-toggle'
       title='Use an isolated/sandboxed session for this tab'
+    />
+    <${SettingsOption}
+        onClick=${toggleTabProperty(dispatch, 'openUrlsInApp', id)}
+        checked=${openUrlsInApp}
+        icon=${Icon.preview}
+        label='Open URLs in app'
+        className='open-urls-in-app-toggle'
+        title='Open URLs within ElectronIM instead of opening them in the default system browser'
     />
   </div>
 `;

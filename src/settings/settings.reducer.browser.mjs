@@ -66,6 +66,7 @@ export const reducer = (state, action) => {
           id: newId(),
           disabled: false,
           sandboxed: false,
+          openUrlsInApp: false,
           disableNotifications: false,
           url: prependProtocol(state.newTabValue)
         }],

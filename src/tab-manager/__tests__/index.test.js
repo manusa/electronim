@@ -152,6 +152,18 @@ describe('Tab Manager module test suite', () => {
       expect(require('electron').WebContentsView).toHaveBeenCalledWith({
         webPreferences: expect.objectContaining({session: expect.anything()})});
     });
+    test('openUrlsInApp=true, should not set setWindowOpenHandler', () => {
+      // When
+      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', openUrlsInApp: true}]);
+      // Then
+      expect(mockView.webContents.setWindowOpenHandler).not.toHaveBeenCalled();
+    });
+    test('openUrlsInApp=true, should not set will-navigate event handler', () => {
+      // When
+      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', openUrlsInApp: true}]);
+      // Then
+      expect(mockView.listeners['will-navigate']).not.toBeDefined();
+    });
     test('Tab webContents should be configured and loaded', () => {
       // Given
       const mockIpcSender = {send: jest.fn()};

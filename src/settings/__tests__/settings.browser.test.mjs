@@ -16,7 +16,7 @@
 import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
 import {ipcRenderer} from './settings.browser.mjs';
-import {fireEvent, getByTestId, getByText, waitFor} from '@testing-library/dom';
+import {fireEvent, getAllByText, getByTestId, getByText, waitFor} from '@testing-library/dom';
 
 describe('Settings in Browser test suite', () => {
   let mockIpcRenderer;
@@ -62,7 +62,8 @@ describe('Settings in Browser test suite', () => {
           {
             tabs: [
               {id: '1', url: 'https://initial-tab.com', sandboxed: true},
-              {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true}
+              {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true},
+              {id: '3', url: 'https://initial-tab-3.com', openUrlsInApp: true}
             ],
             enabledDictionaries: ['en'],
             disableNotificationsGlobally: false,
@@ -116,7 +117,7 @@ describe('Settings in Browser test suite', () => {
       fireEvent.input($input, {target: {value: 'A'}});
       // Then
       await waitFor(() => expect($input.value).toBe('A'));
-      expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(2);
+      expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(3);
     });
     describe.each([
       'Enter',
@@ -128,7 +129,7 @@ describe('Settings in Browser test suite', () => {
         // When
         fireEvent.keyDown($input, {code});
         // Then
-        expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(2);
+        expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(3);
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
         expect($submitButton.hasAttribute('disabled')).toBe(false);
       });
@@ -138,10 +139,10 @@ describe('Settings in Browser test suite', () => {
         // When
         fireEvent.keyDown($input, {code});
         // Then
-        expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(2);
+        expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(3);
         await waitFor(() =>
           expect($input.parentElement.classList.contains('errored')).toBe(true));
-        expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input').length).toBe(2);
+        expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input').length).toBe(3);
         expect($input.value).toBe('invalid:1337:url');
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
         expect($submitButton.hasAttribute('disabled')).toBe(true);
@@ -153,9 +154,9 @@ describe('Settings in Browser test suite', () => {
         fireEvent.keyDown($input, {code});
         // Then
         await waitFor(() =>
-          expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(3));
+          expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(4));
         expect($input.classList.contains('is-success')).toBe(false);
-        expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input')[2].value)
+        expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input')[3].value)
           .toBe('https://info.cern.ch');
         expect($input.value).toBe('');
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
@@ -168,10 +169,10 @@ describe('Settings in Browser test suite', () => {
         fireEvent.keyDown($input, {code});
         // Then
         await waitFor(() =>
-          expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(3));
+          expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(4));
         await waitFor(() =>
           expect($input.classList.contains('is-success')).toBe(false));
-        expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input')[2].value)
+        expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input')[3].value)
           .toBe('http://info.cern.ch');
         expect($input.value).toBe('');
         expect($addTabButton.hasAttribute('disabled')).toBe(true);
@@ -206,8 +207,8 @@ describe('Settings in Browser test suite', () => {
       fireEvent.click($addTabButton);
       // Then
       await waitFor(() =>
-        expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(3));
-      expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input')[2].value)
+        expect($tabContainer.querySelectorAll('.settings__tab').length).toBe(4));
+      expect($tabContainer.querySelectorAll('.settings__tab .settings__tab-main input')[3].value)
         .toBe('https://info.cern.ch');
       expect($input.value).toBe('');
       expect($addTabButton.hasAttribute('disabled')).toBe(true);
@@ -256,7 +257,7 @@ describe('Settings in Browser test suite', () => {
     });
     test('Notification enabled icon click, should disable notification', async () => {
       // Given
-      const $notificationEnabledIcon = getByText(document.querySelector('.settings__tabs'), '\ue7f4');
+      const $notificationEnabledIcon = getAllByText(document.querySelector('.settings__tabs'), '\ue7f4')[0];
       // When
       fireEvent.click($notificationEnabledIcon);
       // Then
@@ -368,6 +369,54 @@ describe('Settings in Browser test suite', () => {
             // Then
             await waitFor(() => expect($settingsTab.textContent).not.toContain('\ue898'));
             expect($settingsTab.textContent).toContain('\ue88d');
+          });
+        });
+        describe('with openUrlsInApp=true', () => {
+          let $settingsTab;
+          let $toggleIcon;
+          let $openUrlsInAppEntry;
+          beforeEach(async () => {
+            $settingsTab = document.querySelector('.settings__tab[data-id="3"]');
+            $toggleIcon = $settingsTab.querySelector('.expand-button');
+            $openUrlsInAppEntry = $settingsTab.querySelector('.open-urls-in-app-toggle');
+            if ($toggleIcon.title.startsWith('Expand')) {
+              fireEvent.click($toggleIcon);
+              // eslint-disable-next-line jest/no-standalone-expect
+              await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
+            }
+          });
+          test('click on switch, should turn off', async () => {
+            // Given
+            const $switch = $openUrlsInAppEntry.querySelector('.material3.switch');
+            // When
+            fireEvent.click($switch);
+            // Then
+            await waitFor(() => expect($switch.classList.contains('switch--checked')).toBe(false));
+            expect($switch.classList).not.toContain('switch--checked');
+          });
+        });
+        describe('with openUrlsInApp=false', () => {
+          let $settingsTab;
+          let $toggleIcon;
+          let $openUrlsInAppEntry;
+          beforeEach(async () => {
+            $settingsTab = document.querySelector('.settings__tab[data-id="1"]');
+            $toggleIcon = $settingsTab.querySelector('.expand-button');
+            $openUrlsInAppEntry = $settingsTab.querySelector('.open-urls-in-app-toggle');
+            if ($toggleIcon.title.startsWith('Expand')) {
+              fireEvent.click($toggleIcon);
+              // eslint-disable-next-line jest/no-standalone-expect
+              await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
+            }
+          });
+          test('click on switch, should turn on', async () => {
+            // Given
+            const $switch = $openUrlsInAppEntry.querySelector('.material3.switch');
+            // When
+            fireEvent.click($switch);
+            // Then
+            await waitFor(() => expect($switch.classList.contains('switch--checked')).toBe(true));
+            expect($switch.classList).toContain('switch--checked');
           });
         });
       });

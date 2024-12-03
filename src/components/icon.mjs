@@ -51,6 +51,7 @@ Icon.more = '\ue619';
 Icon.moreVert = '\ue5d4';
 Icon.notifications = '\ue7f4';
 Icon.notificationsOff = '\ue7f6';
+Icon.preview = '\uf1c5';
 Icon.save = '\ue161';
 Icon.settings = '\ue8b8';
 Icon.spellcheck = '\ue8ce';

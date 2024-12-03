@@ -75,20 +75,24 @@ const openExternal = urlString => {
   shell.openExternal(urlString).then(() => {});
 };
 
-const handleRedirect = view => (e, urlString) => {
-  const url = new URL(urlString);
-  if (shouldOpenInExternalBrowser(view, url)) {
-    e.preventDefault();
-    openExternal(urlString);
-  }
+const handleRedirect = view => {
+  return (e, urlString) => {
+    const url = new URL(urlString);
+    if (shouldOpenInExternalBrowser(view, url)) {
+      e.preventDefault();
+      openExternal(urlString);
+    }
+  };
 };
 
-const windowOpenHandler = view => ({url}) => {
-  if (!shouldOpenInExternalBrowser(view, new URL(url))) {
-    return {action: 'allow'};
-  }
-  openExternal(url);
-  return {action: 'deny'};
+const windowOpenHandler = view => {
+  return ({url}) => {
+    if (!shouldOpenInExternalBrowser(view, new URL(url))) {
+      return {action: 'allow'};
+    }
+    openExternal(url);
+    return {action: 'deny'};
+  };
 };
 
 module.exports = {
