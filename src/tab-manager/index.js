@@ -68,7 +68,9 @@ const cleanUserAgent = view => {
 const addTabs = ipcSender => tabsMetadata => {
   const useNativeSpellChecker = getUseNativeSpellChecker();
   const enabledDictionaries = getEnabledDictionaries();
-  tabsMetadata.forEach(({id, url, sandboxed = false}) => {
+  tabsMetadata.forEach(({
+    id, url, sandboxed = false, openUrlsInApp = false
+  }) => {
     const tabPreferences = {...webPreferences};
     if (sandboxed) {
       tabPreferences.session = session.fromPartition(`persist:${id}`, {cache: true});
@@ -94,8 +96,10 @@ const addTabs = ipcSender => tabsMetadata => {
     cleanUserAgent(tab);
     tab.webContents.loadURL(url);
 
-    tab.webContents.on('will-navigate', handleRedirect(tab));
-    tab.webContents.setWindowOpenHandler(windowOpenHandler(tab));
+    if (!openUrlsInApp) {
+      tab.webContents.on('will-navigate', handleRedirect(tab));
+      tab.webContents.setWindowOpenHandler(windowOpenHandler(tab));
+    }
 
     const handlePageTitleUpdatedForCurrentTab = handlePageTitleUpdated(ipcSender, id);
     tab.webContents.on('page-title-updated', handlePageTitleUpdatedForCurrentTab);
