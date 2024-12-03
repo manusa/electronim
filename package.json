@@ -222,7 +222,7 @@
     "dictionary-sv": "^3.0.1",
     "dictionary-tr": "^1.3.3",
     "dictionary-uk": "^2.1.1",
-    "electron": "32.2.6",
+    "electron": "33.2.1",
     "htm": "3.1.1",
     "markdown-it": "14.1.0",
     "nodehun": "3.0.2",
