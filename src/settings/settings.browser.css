@@ -50,23 +50,22 @@
 }
 
 .settings__tab .settings__tab-advanced {
+    interpolate-size: allow-keywords;
     position: relative;
-    transform-origin: 0 0;
-    transform: scaleY(0);
-    max-height: 0;
+    height: 0;
     margin: 0;
     transition:
         margin-top 0.3s  ease-out,
-        transform 0.3s ease-out;
+        height 0.3s ease-out;
     overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 .settings__tab--expanded .settings__tab-advanced {
-    transform: scaleY(1);
-    max-height: 100%;
-    height: 100%; /* TODO: use calc-size() when bump chrome version */
+    height: fit-content;
     margin-top: var(--material3-card-spacing) ;
     overflow-y: clip;
+    overflow-x: visible;
 }
 
 .settings__tab .expand-button {
