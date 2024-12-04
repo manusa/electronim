@@ -56,9 +56,9 @@ body {
   align-items: center;
 }
 
-.tab-container .chrome-tabs .chrome-tab .chrome-tab-content img{
-  width: 16px;
-  height: 16px;
+.tab-container .chrome-tabs .chrome-tab .chrome-tab-content .chrome-tab-favicon-icon {
+  width: var(--chrome-tab-favicon-size);
+  height: var(--chrome-tab-favicon-size);
 }
 
 .tab-container .chrome-tabs .chrome-tab .chrome-tab-content::after {

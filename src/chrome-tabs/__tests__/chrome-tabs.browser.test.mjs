@@ -60,8 +60,8 @@ describe('ChromeTabs in Browser test suite', () => {
       expect($addedTabs[1].querySelector('.chrome-tab-title').innerHTML)
         .toBe('313373');
       expect($addedTabs[1].hasAttribute('active')).toBe(false);
-      expect($addedTabs[2].querySelector('.chrome-tab-favicon').style.backgroundImage)
-        .toBe('url(https://13373.png)');
+      expect($addedTabs[2].querySelector('.chrome-tab-favicon-icon').getAttribute('src'))
+        .toBe('https://13373.png');
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('activateTab', {id: 1337, restoreWindow: false});
     });
     test('activateTabInContainer, should change active tab', async () => {
@@ -95,11 +95,11 @@ describe('ChromeTabs in Browser test suite', () => {
       mockIpcRenderer.events.setTabFavicon({}, {id: 313373, favicon: 'https://f/replaced.png'});
       // Then
       await waitFor(() => expect(
-        $chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"] .chrome-tab-favicon').style.backgroundImage)
-        .toBe('url(https://f/replaced.png)'));
+        $chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"] .chrome-tab-favicon-icon').getAttribute('src'))
+        .toBe('https://f/replaced.png'));
       expect(
-        $chromeTabs.querySelector('.chrome-tab[data-tab-id="13373"] .chrome-tab-favicon').style.backgroundImage)
-        .toBe('url(https://13373.png)');
+        $chromeTabs.querySelector('.chrome-tab[data-tab-id="13373"] .chrome-tab-favicon-icon').getAttribute('src'))
+        .toBe('https://13373.png');
     });
     test('setTabTitle, should change title of specified tab', async () => {
       // Given

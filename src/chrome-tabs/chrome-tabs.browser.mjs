@@ -63,7 +63,9 @@ const isInVisibleArea = event =>
 const Favicon = ({favicon = ''}) => {
   let img = html``;
   if (favicon) {
-    img = html`<img crossorigin="anonymous" src="${favicon}" alt="" role="presentation"/>`;
+    img = html`
+      <img class="chrome-tab-favicon-icon" crossorigin="anonymous" src="${favicon}" alt="" role="presentation"/>
+    `;
   }
   return html`
       <div class="chrome-tab-favicon">
