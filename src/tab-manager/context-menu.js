@@ -89,7 +89,7 @@ const handleContextMenu = viewOrWindow => async (_event, params) => {
     menu = regularContextMenu({webContents, params});
   }
   const {x, y} = params;
-  menu.popup({x, y});
+  menu.popup({x: x + 1, y: y + 1});
 };
 
 module.exports = {handleContextMenu};
