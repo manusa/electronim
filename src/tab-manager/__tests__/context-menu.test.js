@@ -58,7 +58,7 @@ describe('Tab Manager context-menu test suite', () => {
       await listeners['context-menu'](event, params);
       // Then
       expect(electron.Menu).toHaveBeenCalledTimes(1);
-      expect(mockMenu.popup).toHaveBeenCalledWith({x: 13, y: 37});
+      expect(mockMenu.popup).toHaveBeenCalledWith({x: 14, y: 38});
     });
     describe('with native spellcheck', () => {
       beforeEach(() => {
@@ -97,9 +97,9 @@ describe('Tab Manager context-menu test suite', () => {
       params.editFlags = {};
       await listeners['context-menu'](event, params);
     });
-    test('should popup a menu at the specified location', async () => {
+    test('should popup a menu at the specified location (x+1, y+1)', async () => {
       expect(electron.Menu).toHaveBeenCalledTimes(1);
-      expect(mockMenu.popup).toHaveBeenCalledWith({x: 13, y: 37});
+      expect(mockMenu.popup).toHaveBeenCalledWith({x: 14, y: 38});
     });
     test.each(['Back', 'Reload', 'Cut', 'Copy', 'Copy image', 'Paste', 'DevTools'])(
       'adds MenuItem with label %s', async label => {
