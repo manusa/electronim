@@ -165,6 +165,9 @@ const initTabListener = () => {
   });
   eventBus.on(APP_EVENTS.reload, handleTabReload);
   eventBus.on(APP_EVENTS.tabReorder, handleTabReorder);
+  // findInPageOpenWindow is just a loopback from preload.keyboard-shortcuts to preload.find-in-page
+  eventBus.on(APP_EVENTS.findInPageOpenWindow,
+    event => event.sender.send(APP_EVENTS.findInPageOpenWindow));
   eventBus.on(APP_EVENTS.zoomIn, handleZoomIn);
   eventBus.on(APP_EVENTS.zoomOut, handleZoomOut);
   eventBus.on(APP_EVENTS.zoomReset, handleZoomReset);

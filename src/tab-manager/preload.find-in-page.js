@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Marc Nuri San Felix
+   Copyright 2024 Marc Nuri San Felix
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,11 +13,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-require('./preload.notification-shim');
-require('./preload.find-in-page').initFindInPage();
-require('./preload.mediadevices-shim');
-require('./preload.keyboard-shortcuts').initKeyboardShortcuts();
-require('./preload.spell-check').initSpellChecker()
-  // eslint-disable-next-line no-console
-  .catch(err => console.error('Error initializing spell check', err));
+/* eslint-disable no-undef */
+const {ipcRenderer} = require('electron');
 
+
+const openFindWindow = () => {
+};
+
+const initFindInPage = () => {
+  ipcRenderer.on(APP_EVENTS.findInPageOpenWindow, openFindWindow);
+};
+
+module.exports = {initFindInPage};

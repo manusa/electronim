@@ -19,12 +19,12 @@ const {waitFor} = require('@testing-library/dom');
 describe('Tab Manager Module preload test suite', () => {
   let mockElectron;
   beforeEach(() => {
-    mockElectron = {
-      webFrame: {setSpellCheckProvider: jest.fn()},
-      ipcRenderer: {invoke: async () => ({useNativeSpellChecker: false})}
-    };
     jest.resetModules();
-    jest.mock('electron', () => mockElectron);
+    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
+    mockElectron = require('electron');
+    // noinspection JSConstantReassignment,JSValidateTypes
+    mockElectron.webFrame = {setSpellCheckProvider: jest.fn()};
+    mockElectron.ipcRenderer.invoke = async () => ({useNativeSpellChecker: false});
     window.APP_EVENTS = require('../../constants').APP_EVENTS;
     window.ELECTRONIM_VERSION = '1.33.7';
     window.Notification = 'NOT A FUNCTION';
@@ -32,6 +32,7 @@ describe('Tab Manager Module preload test suite', () => {
   });
   describe('preload', () => {
     beforeEach(() => {
+      jest.spyOn(require('../preload.find-in-page'), 'initFindInPage');
       jest.spyOn(require('../preload.keyboard-shortcuts'), 'initKeyboardShortcuts');
       jest.spyOn(require('../preload.spell-check'), 'initSpellChecker');
     });
@@ -41,6 +42,7 @@ describe('Tab Manager Module preload test suite', () => {
       // Then
       expect(window.Notification).toEqual(expect.any(Function));
       expect(window.navigator.mediaDevices.getDisplayMedia).toEqual(expect.any(Function));
+      expect(require('../preload.find-in-page').initFindInPage).toHaveBeenCalledTimes(1);
       expect(require('../preload.keyboard-shortcuts').initKeyboardShortcuts).toHaveBeenCalledTimes(1);
       await waitFor(() => expect(mockElectron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
       expect(require('../preload.spell-check').initSpellChecker).toHaveBeenCalledTimes(1);

@@ -142,6 +142,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
       })
     },
     ipcRenderer: {
+      on: jest.fn(),
       send: jest.fn()
     },
     nativeTheme: {},
