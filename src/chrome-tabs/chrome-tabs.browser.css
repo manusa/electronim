@@ -52,6 +52,13 @@ body {
   /* https://github.com/vaadin/web-components/issues/4183 */
   /* Prevents https://bugs.chromium.org/p/chromium/issues/detail?id=1399431 */
   -webkit-mask-image: none;
+  display: flex;
+  align-items: center;
+}
+
+.tab-container .chrome-tabs .chrome-tab .chrome-tab-content .chrome-tab-favicon-icon {
+  width: var(--chrome-tab-favicon-size);
+  height: var(--chrome-tab-favicon-size);
 }
 
 .tab-container .chrome-tabs .chrome-tab .chrome-tab-content::after {
