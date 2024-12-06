@@ -34,6 +34,7 @@ const EVENTS = new Map();
 EVENTS.set(eventKey({key: 'Escape'}), eventAction(() => {
   eventBus.emit(APP_EVENTS.appMenuClose);
   eventBus.emit(APP_EVENTS.closeDialog);
+  eventBus.emit(APP_EVENTS.findInPageClose);
 }, {preventDefault: false}));
 
 EVENTS.set(eventKey({key: 'F11'}), eventAction(() => eventBus.emit(APP_EVENTS.fullscreenToggle)));
@@ -50,6 +51,12 @@ EVENTS.set(eventKey({key: 'Tab', control: true}), eventAction(() =>
 
 EVENTS.set(eventKey({key: 'Tab', shift: true, control: true}), eventAction(() =>
   eventBus.emit(APP_EVENTS.tabTraversePrevious)));
+
+const findInPageOpen = eventAction(() => eventBus.emit(APP_EVENTS.findInPageOpen));
+EVENTS.set(eventKey({key: 'f', meta: true}), findInPageOpen);
+EVENTS.set(eventKey({key: 'F', meta: true}), findInPageOpen);
+EVENTS.set(eventKey({key: 'f', control: true}), findInPageOpen);
+EVENTS.set(eventKey({key: 'F', control: true}), findInPageOpen);
 
 const registerAppShortcuts = (_, webContents) => {
   webContents.on('before-input-event', (event, {type, key, shift, control, alt, meta}) => {
