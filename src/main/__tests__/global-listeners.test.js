@@ -20,23 +20,43 @@ describe('Main :: Global listeners test suite', () => {
   let electron;
   let main;
   let baseWindow;
+  let webContentsViewInstances;
   let eventBus;
   beforeEach(() => {
     jest.resetModules();
+    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
+    electron = require('electron');
+    baseWindow = electron.baseWindowInstance;
+    webContentsViewInstances = [];
+    // Each view should be a separate instance
+    electron.WebContentsView = jest.fn(() => {
+      const view = require('../../__tests__').mockWebContentsViewInstance();
+      webContentsViewInstances.push(view);
+      return view;
+    });
+    eventBus = electron.ipcMain;
     // Always mock settings unless we want to overwrite the real settings file !
     jest.mock('../../settings');
     require('../../settings').loadSettings.mockImplementation(() => ({
       trayEnabled: true
     }));
     require('../../settings').openSettingsDialog = jest.requireActual('../../settings').openSettingsDialog;
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    electron = require('electron');
-    baseWindow = electron.baseWindowInstance;
-    eventBus = electron.ipcMain;
     jest.spyOn(require('../../user-agent'), 'initBrowserVersions')
       .mockImplementation(() => Promise.resolve({}));
     main = require('../');
     main.init();
+  });
+  test.each([
+    'aboutOpenDialog', 'appMenuOpen', 'appMenuClose', 'closeDialog',
+    'dictionaryGetAvailable', 'dictionaryGetAvailableNative', 'dictionaryGetEnabled',
+    'findInPage', 'findInPageOpen', 'findInPageClose',
+    'fullscreenToggle', 'helpOpenDialog', 'quit', 'restore',
+    'settingsLoad', 'settingsOpenDialog', 'settingsSave',
+    'tabSwitchToPosition', 'tabTraverseNext', 'tabTraversePrevious',
+    'trayInit'
+  ])('should register listener for %s', channel => {
+    // Then
+    expect(eventBus.listeners).toHaveProperty(channel);
   });
   test('appMenuOpen, should show and resize app-menu', () => {
     // When
@@ -44,6 +64,9 @@ describe('Main :: Global listeners test suite', () => {
     // Then
     expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(
       expect.objectContaining({isAppMenu: true})
+    );
+    expect(baseWindow.contentView.addChildView).not.toHaveBeenCalledWith(
+      expect.objectContaining({isFindInPage: true})
     );
     expect(baseWindow.contentView.addChildView.mock.calls[0][0].setBounds)
       .toHaveBeenCalledWith(expect.objectContaining({
@@ -151,8 +174,8 @@ describe('Main :: Global listeners test suite', () => {
     // When
     eventBus.listeners.settingsOpenDialog();
     // Then
-    const view = electron.WebContentsView.mock.results
-      .map(r => r.value).filter(bv => bv.webContents.loadedUrl.endsWith('settings/index.html'))[0];
+    const view = webContentsViewInstances
+      .filter(wcv => wcv.webContents.loadedUrl.endsWith('settings/index.html'))[0];
     expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(view);
     expect(view.webContents.loadURL)
       .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
@@ -172,11 +195,12 @@ describe('Main :: Global listeners test suite', () => {
       expect(settingsModule.updateSettings).toHaveBeenCalledTimes(1);
     });
     test('should reload fake dictionary renderer', () => {
-      // Given
       // When
       eventBus.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
       // Then
-      expect(electron.webContentsViewInstance.webContents.loadURL)
+      const view = webContentsViewInstances
+        .filter(wcv => wcv.webContents.loadedUrl.endsWith('spell-check/dictionary.renderer/index.html'))[0];
+      expect(view.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/spell-check\/dictionary.renderer\/index.html$/));
     });
     test('should reset all views', () => {

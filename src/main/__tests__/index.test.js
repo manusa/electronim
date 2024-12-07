@@ -16,7 +16,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-describe('Main module test suite', () => {
+describe('Main :: Index module test suite', () => {
   let mockNotification;
   let electron;
   let mockBaseWindow;
