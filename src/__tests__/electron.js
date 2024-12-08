@@ -28,8 +28,13 @@ const mockWebContentsViewInstance = () => {
       cut: jest.fn(),
       destroy: jest.fn(),
       executeJavaScript: jest.fn(async () => {}),
+      // https://www.electronjs.org/docs/latest/api/web-contents#contentsfindinpagetext-options
+      // contents.findInPage(text[, options])
+      findInPage: jest.fn(),
       focus: jest.fn(),
       getURL: jest.fn(),
+      // https://nodejs.org/api/events.html#emitterlistenerseventname
+      listeners: jest.fn(eventName => instance.listeners[eventName] || []),
       loadURL: jest.fn(url => {
         instance.webContents.loadedUrl = url;
       }),
@@ -40,9 +45,11 @@ const mockWebContentsViewInstance = () => {
       openDevTools: jest.fn(),
       paste: jest.fn(),
       reload: jest.fn(),
+      removeAllListeners: jest.fn(),
       send: jest.fn(),
       session: {},
       setWindowOpenHandler: jest.fn(),
+      stopFindInPage: jest.fn(),
       userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36'
     }
   };

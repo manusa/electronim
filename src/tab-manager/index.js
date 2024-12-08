@@ -175,6 +175,11 @@ const removeAll = () => {
 
 const reload = () => Object.values(tabs).forEach(view => view.webContents.reload());
 
+const stopFindInPage = () => Object.values(tabs).forEach(view => {
+  view.webContents.stopFindInPage('clearSelection');
+  view.webContents.removeAllListeners('found-in-page');
+});
+
 const canNotify = tabId => {
   const {tabs: tabsSettings, disableNotificationsGlobally} = loadSettings();
   const currentTab = tabsSettings.find(tab => tab.id === tabId);
@@ -186,5 +191,5 @@ const canNotify = tabId => {
 
 module.exports = {
   addTabs, sortTabs, getTab, getTabAt, getActiveTab, setActiveTab, getNextTab, getPreviousTab,
-  canNotify, reload, removeAll
+  canNotify, reload, removeAll, stopFindInPage
 };

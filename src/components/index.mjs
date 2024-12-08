@@ -14,7 +14,7 @@
    limitations under the License.
  */
 export {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION} from '../../bundles/constants.mjs';
-export {html, render, useLayoutEffect, useReducer, useState} from '../../bundles/preact.mjs';
+export {createRef, html, render, useLayoutEffect, useReducer, useState} from '../../bundles/preact.mjs';
 
 export {Card} from './card.mjs';
 export {Checkbox} from './checkbox.mjs';

@@ -22,6 +22,9 @@ const {openAboutDialog} = require('../about');
 const {newAppMenu, isNotAppMenu} = require('../app-menu');
 const {findDialog} = require('../base-window');
 const {TABS_CONTAINER_HEIGHT, newTabContainer, isNotTabContainer} = require('../chrome-tabs');
+const {
+  FIND_IN_PAGE_HEIGHT, FIND_IN_PAGE_WIDTH, isFindInPage, isNotFindInPage, findInPage, findInPageOpen, findInPageClose
+} = require('../find-in-page');
 const {openHelpDialog} = require('../help');
 const {getPlatform, loadSettings, updateSettings, openSettingsDialog} = require('../settings');
 const {
@@ -49,6 +52,7 @@ const fixUserDataLocation = () => {
 };
 
 const resetMainWindow = () => {
+  eventBus.emit(APP_EVENTS.findInPageClose);
   const currentViews = mainWindow.contentView.children;
   currentViews.filter(isNotTabContainer).forEach(view => mainWindow.contentView.removeChildView(view));
   if (mainWindow.contentView.children.length === 0) {
@@ -80,17 +84,25 @@ const handleMainWindowResize = () => {
     if (appMenu?.setBounds ?? false) {
       appMenu.setBounds({x: 0, y: 0, width: contentWidth, height: contentHeight});
     }
+    mainWindow.contentView.children.filter(isFindInPage).forEach(view => {
+      view.setBounds({
+        x: contentWidth - FIND_IN_PAGE_WIDTH, y: 0, width: FIND_IN_PAGE_WIDTH, height: FIND_IN_PAGE_HEIGHT
+      });
+    });
     let totalHeight = 0;
     const isLast = (idx, array) => idx === array.length - 1;
-    mainWindow.contentView.children.filter(isNotAppMenu).forEach((bv, idx, array) => {
-      const {x: currentX, y: currentY, height: currentHeight} = bv.getBounds();
-      let newHeight = currentHeight;
-      if (isLast(idx, array)) {
-        newHeight = contentHeight - totalHeight;
-      }
-      bv.setBounds({x: currentX, y: currentY, width: contentWidth, height: newHeight});
-      totalHeight += currentHeight;
-    });
+    mainWindow.contentView.children
+      .filter(isNotAppMenu)
+      .filter(isNotFindInPage)
+      .forEach((bv, idx, array) => {
+        const {x: currentX, y: currentY, height: currentHeight} = bv.getBounds();
+        let newHeight = currentHeight;
+        if (isLast(idx, array)) {
+          newHeight = contentHeight - totalHeight;
+        }
+        bv.setBounds({x: currentX, y: currentY, width: contentWidth, height: newHeight});
+        totalHeight += currentHeight;
+      });
     const dialogView = findDialog(mainWindow);
     if (dialogView) {
       dialogView.setBounds({x: 0, y: 0, width: contentWidth, height: contentHeight});
@@ -165,9 +177,6 @@ const initTabListener = () => {
   });
   eventBus.on(APP_EVENTS.reload, handleTabReload);
   eventBus.on(APP_EVENTS.tabReorder, handleTabReorder);
-  // findInPageOpenWindow is just a loopback from preload.keyboard-shortcuts to preload.find-in-page
-  eventBus.on(APP_EVENTS.findInPageOpenWindow,
-    event => event.sender.send(APP_EVENTS.findInPageOpenWindow));
   eventBus.on(APP_EVENTS.zoomIn, handleZoomIn);
   eventBus.on(APP_EVENTS.zoomOut, handleZoomOut);
   eventBus.on(APP_EVENTS.zoomReset, handleZoomReset);
@@ -225,6 +234,7 @@ const saveSettings = (_event, settings) => {
   nativeTheme.themeSource = settings.theme;
   closeDialog();
   appMenuClose();
+  findInPageClose();
   mainWindow.contentView.children.forEach(view => {
     mainWindow.contentView.removeChildView(view);
     view.webContents.destroy();
@@ -242,6 +252,9 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.dictionaryGetAvailable, getAvailableDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetAvailableNative, getAvailableNativeDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetEnabled, getEnabledDictionaries);
+  eventBus.on(APP_EVENTS.findInPage, findInPage(mainWindow));
+  eventBus.on(APP_EVENTS.findInPageOpen, findInPageOpen(mainWindow));
+  eventBus.on(APP_EVENTS.findInPageClose, findInPageClose(mainWindow));
   eventBus.on(APP_EVENTS.fullscreenToggle, fullscreenToggle);
   eventBus.on(APP_EVENTS.helpOpenDialog, openHelpDialog(mainWindow));
   eventBus.on(APP_EVENTS.quit, app.exit);

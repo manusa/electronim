@@ -14,14 +14,10 @@
    limitations under the License.
  */
 /* eslint-disable no-undef */
-const {ipcRenderer} = require('electron');
+const {contextBridge, ipcRenderer} = require('electron');
 
-
-const openFindWindow = () => {
-};
-
-const initFindInPage = () => {
-  ipcRenderer.on(APP_EVENTS.findInPageOpenWindow, openFindWindow);
-};
-
-module.exports = {initFindInPage};
+contextBridge.exposeInMainWorld('electron', {
+  close: () => ipcRenderer.send(APP_EVENTS.findInPageClose),
+  findInPage: args => ipcRenderer.send(APP_EVENTS.findInPage, args),
+  onFindInPage: func => ipcRenderer.on(APP_EVENTS.findInPageFound, func)
+});

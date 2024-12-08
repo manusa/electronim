@@ -16,7 +16,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-describe('Main module test suite', () => {
+describe('Main :: Index module test suite', () => {
   let mockNotification;
   let electron;
   let mockBaseWindow;
@@ -41,6 +41,8 @@ describe('Main module test suite', () => {
     }));
     electron = require('electron');
     mockBaseWindow = electron.baseWindowInstance;
+    // Each view should be a separate instance
+    electron.WebContentsView = jest.fn(() => require('../../__tests__').mockWebContentsViewInstance());
     mockIpc = electron.ipcMain;
     appMenuModule = require('../../app-menu');
     jest.spyOn(appMenuModule, 'newAppMenu');
@@ -247,6 +249,17 @@ describe('Main module test suite', () => {
           // Then
           expect(mockBaseWindow.setBounds).not.toHaveBeenCalled();
         });
+      });
+      test('find-in-page, should set specific dialog bounds', () => {
+        // Given
+        main.init();
+        mockIpc.listeners.findInPageOpen();
+        const findInPageDialog = mockBaseWindow.contentView.children.find(cv => cv.isFindInPage);
+        // When
+        mockBaseWindow.listeners.resize({sender: mockBaseWindow});
+        jest.runAllTimers();
+        // Then
+        expect(findInPageDialog.setBounds).toHaveBeenCalledWith({x: -390, y: 0, width: 400, height: 60});
       });
       test('single view, should set View to fit window', () => {
         // Given

@@ -13,8 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {h, render} from 'preact';
-export {h, render};
+import {h, render, createRef} from 'preact';
+export {h, render, createRef};
 export {useLayoutEffect, useReducer, useState} from 'preact/hooks';
 import htm from 'htm';
 export const html = htm.bind(h);

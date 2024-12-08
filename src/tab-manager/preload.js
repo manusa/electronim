@@ -14,7 +14,6 @@
    limitations under the License.
  */
 require('./preload.notification-shim');
-require('./preload.find-in-page').initFindInPage();
 require('./preload.mediadevices-shim');
 require('./preload.keyboard-shortcuts').initKeyboardShortcuts();
 require('./preload.spell-check').initSpellChecker()

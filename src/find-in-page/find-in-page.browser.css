@@ -1,0 +1,66 @@
+/*
+   Copyright 2024 Marc Nuri San Felix
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+@import '../styles/main.css';
+
+:root {
+  --font-size: 16px;
+  --results-font-size: 0.8rem;
+  --material3-icon-button-size: 1.2rem;
+  --material3-field-height: 2rem;
+}
+
+html.electronim,
+.electronim body {
+  background: transparent;
+  font-size: var(--font-size);
+  font-family: var(--md-sys-typescale-body-large-font);
+}
+
+.electronim .find-in-page .dialog {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.electronim .find-in-page .input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.electronim .find-in-page .results {
+  position: absolute;
+  right: 1rem;
+  pointer-events: none;
+  font-size: var(--results-font-size);
+  color: var(--color-gray);
+}
+
+.electronim .find-in-page .buttons {
+  display: flex;
+  align-items: center;
+}
+
+.electronim .find-in-page .buttons .material3.icon-button {
+  color: var(--color-gray);
+}

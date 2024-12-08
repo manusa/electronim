@@ -33,6 +33,7 @@ export const TextField = ({
   onInput,
   onKeyDown,
   value,
+  inputProps = {},
   hasError = false
   /* eslint-disable-next-line no-warning-comments */
   // TODO disabled state
@@ -64,6 +65,7 @@ export const TextField = ({
         class='text-field__input'
         onFocus=${onFocus} onBlur=${onBlur}
         value=${value} onInput=${onInput} onKeyDown=${onKeyDown}
+        ...${inputProps}
       />
     </div>
   `;

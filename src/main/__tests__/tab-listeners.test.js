@@ -160,15 +160,6 @@ describe('Main :: Tab listeners test suite', () => {
     expect(mockBaseWindow.show).toHaveBeenCalledAfter(mockBaseWindow.restore);
     expect(tabManagerModule.getTab).toHaveBeenCalledWith('validId');
   });
-  test('findInPageOpenWindow, should loopback to the view', () => {
-    // Given
-    const event = {sender: {send: jest.fn()}};
-    main.init();
-    // When
-    mockIpc.listeners.findInPageOpenWindow(event);
-    // Then
-    expect(event.sender.send).toHaveBeenCalledWith('findInPageOpenWindow');
-  });
   test('handleReload', () => {
     const event = {sender: {reloadIgnoringCache: jest.fn()}};
     main.init();

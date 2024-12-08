@@ -28,14 +28,19 @@ describe('Main :: Global Keyboard Shortcuts module test suite', () => {
     };
   });
   test.each([
-    {key: 'Escape', shift: false, control: false, appEvent: 'appMenuClose'},
-    {key: 'Escape', shift: false, control: false, appEvent: 'closeDialog'},
-    {key: 'F11', shift: false, control: false, appEvent: 'fullscreenToggle'},
-    {key: 'Tab', shift: false, control: true, appEvent: 'tabTraverseNext'},
-    {key: 'Tab', shift: true, control: true, appEvent: 'tabTraversePrevious'}
-  ])('Key "$key" (shift: $shift, ctrl: $control) triggers "$appEvent" app event',
-    ({key, control, shift, appEvent}) => {
-      view.listeners['before-input-event'](inputEvent, {key, control, shift});
+    {key: 'Escape', shift: false, control: false, meta: false, appEvent: 'appMenuClose'},
+    {key: 'Escape', shift: false, control: false, meta: false, appEvent: 'closeDialog'},
+    {key: 'Escape', shift: false, control: false, meta: false, appEvent: 'findInPageClose'},
+    {key: 'F11', shift: false, control: false, meta: false, appEvent: 'fullscreenToggle'},
+    {key: 'Tab', shift: false, control: true, meta: false, appEvent: 'tabTraverseNext'},
+    {key: 'Tab', shift: true, control: true, meta: false, appEvent: 'tabTraversePrevious'},
+    {key: 'f', shift: false, control: true, meta: false, appEvent: 'findInPageOpen'},
+    {key: 'F', shift: false, control: true, meta: false, appEvent: 'findInPageOpen'},
+    {key: 'f', shift: false, control: false, meta: true, appEvent: 'findInPageOpen'},
+    {key: 'F', shift: false, control: false, meta: true, appEvent: 'findInPageOpen'}
+  ])('Key "$key" (shift: $shift, ctrl: $control, meta: $meta) triggers "$appEvent" app event',
+    ({key, shift, control, meta, appEvent}) => {
+      view.listeners['before-input-event'](inputEvent, {key, control, shift, meta});
       expect(electron.ipcMain.emit).toHaveBeenCalledWith(appEvent);
     });
   describe.each([1, 2, 3, 4, 5, 6, 7, 8, 9])('Key "%s"', key => {
