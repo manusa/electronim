@@ -28,9 +28,7 @@ describe('Main :: Global Keyboard Shortcuts module test suite', () => {
     };
   });
   test.each([
-    {key: 'Escape', shift: false, control: false, meta: false, appEvent: 'appMenuClose'},
-    {key: 'Escape', shift: false, control: false, meta: false, appEvent: 'closeDialog'},
-    {key: 'Escape', shift: false, control: false, meta: false, appEvent: 'findInPageClose'},
+    {key: 'Escape', shift: false, control: false, meta: false, appEvent: 'escape'},
     {key: 'F11', shift: false, control: false, meta: false, appEvent: 'fullscreenToggle'},
     {key: 'Tab', shift: false, control: true, meta: false, appEvent: 'tabTraverseNext'},
     {key: 'Tab', shift: true, control: true, meta: false, appEvent: 'tabTraversePrevious'},

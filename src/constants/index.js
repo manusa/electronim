@@ -34,6 +34,7 @@ const APP_EVENTS = {
   canNotify: 'canNotify',
   closeDialog: 'closeDialog',
   desktopCapturerGetSources: 'desktopCapturerGetSources',
+  escape: 'escape',
   dictionaryGetAvailable: 'dictionaryGetAvailable',
   dictionaryGetAvailableNative: 'dictionaryGetAvailableNative',
   dictionaryGetEnabled: 'dictionaryGetEnabled',

@@ -31,11 +31,8 @@ const eventAction = (func, {preventDefault = true} = {}) => {
 
 const EVENTS = new Map();
 
-EVENTS.set(eventKey({key: 'Escape'}), eventAction(() => {
-  eventBus.emit(APP_EVENTS.appMenuClose);
-  eventBus.emit(APP_EVENTS.closeDialog);
-  eventBus.emit(APP_EVENTS.findInPageClose);
-}, {preventDefault: false}));
+EVENTS.set(eventKey({key: 'Escape'}),
+  eventAction(() => eventBus.emit(APP_EVENTS.escape), {preventDefault: false}));
 
 EVENTS.set(eventKey({key: 'F11'}), eventAction(() => eventBus.emit(APP_EVENTS.fullscreenToggle)));
 
