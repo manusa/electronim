@@ -20,7 +20,6 @@ describe('Find in Page :: main test suite', () => {
   let electron;
   let main;
   let baseWindow;
-  let webContentsViewInstances;
   let eventBus;
   beforeEach(() => {
     jest.resetModules();
@@ -29,11 +28,7 @@ describe('Find in Page :: main test suite', () => {
     baseWindow = electron.baseWindowInstance;
     webContentsViewInstances = [];
     // Each view should be a separate instance
-    electron.WebContentsView = jest.fn(() => {
-      const view = require('../../__tests__').mockWebContentsViewInstance();
-      webContentsViewInstances.push(view);
-      return view;
-    });
+    electron.WebContentsView = jest.fn(() => require('../../__tests__').mockWebContentsViewInstance());
     eventBus = electron.ipcMain;
     // Always mock settings unless we want to overwrite the real settings file !
     jest.mock('../../settings');
