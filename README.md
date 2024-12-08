@@ -47,7 +47,8 @@ electronim
 - ⌨ Keyboard [shortcuts](docs/Keyboard-shortcuts.md)
 - 🖥️ Screen sharing
 - 🌗 Light and Dark themes with system override
-- 🗕 System Tray 
+- 🗕 System Tray
+- 🔎 Find in page
 
 ## [Screenshot](docs/Screenshots.md)
 
