@@ -28,6 +28,7 @@ const PRELOAD_ENTRIES = [
   'about',
   'app-menu',
   'chrome-tabs',
+  'find-in-page',
   'help',
   'settings',
   'tab-manager'
