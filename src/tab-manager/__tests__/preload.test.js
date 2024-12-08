@@ -32,7 +32,6 @@ describe('Tab Manager Module preload test suite', () => {
   });
   describe('preload', () => {
     beforeEach(() => {
-      jest.spyOn(require('../preload.find-in-page'), 'initFindInPage');
       jest.spyOn(require('../preload.keyboard-shortcuts'), 'initKeyboardShortcuts');
       jest.spyOn(require('../preload.spell-check'), 'initSpellChecker');
     });
@@ -42,7 +41,6 @@ describe('Tab Manager Module preload test suite', () => {
       // Then
       expect(window.Notification).toEqual(expect.any(Function));
       expect(window.navigator.mediaDevices.getDisplayMedia).toEqual(expect.any(Function));
-      expect(require('../preload.find-in-page').initFindInPage).toHaveBeenCalledTimes(1);
       expect(require('../preload.keyboard-shortcuts').initKeyboardShortcuts).toHaveBeenCalledTimes(1);
       await waitFor(() => expect(mockElectron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
       expect(require('../preload.spell-check').initSpellChecker).toHaveBeenCalledTimes(1);
