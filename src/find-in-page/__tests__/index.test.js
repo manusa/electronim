@@ -26,7 +26,6 @@ describe('Find in Page :: main test suite', () => {
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
     baseWindow = electron.baseWindowInstance;
-    webContentsViewInstances = [];
     // Each view should be a separate instance
     electron.WebContentsView = jest.fn(() => require('../../__tests__').mockWebContentsViewInstance());
     eventBus = electron.ipcMain;
