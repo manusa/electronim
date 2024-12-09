@@ -252,6 +252,14 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.dictionaryGetAvailable, getAvailableDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetAvailableNative, getAvailableNativeDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetEnabled, getEnabledDictionaries);
+  eventBus.on(APP_EVENTS.escape, () => {
+    if (mainWindow.contentView.children.find(isFindInPage)) {
+      eventBus.emit(APP_EVENTS.findInPageClose);
+    } else {
+      eventBus.emit(APP_EVENTS.appMenuClose);
+      eventBus.emit(APP_EVENTS.closeDialog);
+    }
+  });
   eventBus.on(APP_EVENTS.findInPage, findInPage(mainWindow));
   eventBus.on(APP_EVENTS.findInPageOpen, findInPageOpen(mainWindow));
   eventBus.on(APP_EVENTS.findInPageClose, findInPageClose(mainWindow));

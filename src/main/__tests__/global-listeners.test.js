@@ -136,6 +136,45 @@ describe('Main :: Global listeners test suite', () => {
       expect(view.webContents.destroy).not.toHaveBeenCalled();
     });
   });
+  describe('escape', () => {
+    test('with dialog visible, should close dialog', () => {
+      // Given
+      const dialog = new electron.WebContentsView();
+      dialog.isDialog = true;
+      baseWindow.contentView.children = [dialog];
+      // When
+      eventBus.listeners.escape();
+      // Then
+      expect(dialog.webContents.destroy).toHaveBeenCalledTimes(1);
+    });
+    test('with app menu visible, should close app menu', () => {
+      // Given
+      eventBus.listeners.appMenuOpen();
+      // When
+      eventBus.listeners.escape();
+      // Then
+      expect(baseWindow.contentView.removeChildView).toHaveBeenCalledWith(
+        expect.objectContaining({isAppMenu: true})
+      );
+    });
+    test('with find-in-page visible, should close find-in-page dialog only', () => {
+      // Given
+      const dialog = new electron.WebContentsView();
+      dialog.isDialog = true;
+      eventBus.listeners.appMenuOpen();
+      const findInPageDialog = new electron.WebContentsView();
+      findInPageDialog.isFindInPage = true;
+      baseWindow.contentView.children = [dialog, findInPageDialog];
+      // When
+      eventBus.listeners.escape();
+      // Then
+      expect(dialog.webContents.destroy).not.toHaveBeenCalled();
+      expect(baseWindow.contentView.removeChildView).not.toHaveBeenCalledWith(
+        expect.objectContaining({isAppMenu: true})
+      );
+      expect(findInPageDialog.webContents.destroy).toHaveBeenCalledTimes(1);
+    });
+  });
   describe('fullscreenToggle', () => {
     test('when not fullscreen, should enter fullscreen', () => {
       // Given
