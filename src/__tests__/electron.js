@@ -87,10 +87,13 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
   const webContentsViewInstance = mockWebContentsViewInstance();
   const baseWindowInstance = mockBaseWindowInstance();
   const sessionInstance = {
+    availableSpellCheckerLanguages: [],
     clearCache: jest.fn(),
     clearCodeCaches: jest.fn(),
     clearHostResolverCache: jest.fn(),
     clearStorageData: jest.fn(),
+    setSpellCheckerEnabled: jest.fn(),
+    setSpellCheckerLanguages: jest.fn(),
     userAgentInterceptor: true
   };
   const trayInstance = {
