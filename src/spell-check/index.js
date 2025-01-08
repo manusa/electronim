@@ -87,13 +87,7 @@ const getAvailableNativeDictionaries = () =>
 const handleGetMisspelled = async (_event, words) =>
   fakeRendererWorker.webContents.executeJavaScript(`getMisspelled(${JSON.stringify(words)})`);
 
-const getUseNativeSpellChecker = () => {
-  // eslint-disable-next-line no-warning-comments
-  // TODO: always use native spellcheck until there's a fix for
-  // https://github.com/electron/electron/issues/44336
-  return true;
-  // return loadSettings().useNativeSpellChecker;
-};
+const getUseNativeSpellChecker = () => loadSettings().useNativeSpellChecker;
 
 const getEnabledDictionaries = () => loadSettings().enabledDictionaries;
 
