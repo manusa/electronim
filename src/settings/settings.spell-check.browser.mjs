@@ -44,10 +44,6 @@ export const SpellCheckPane = ({dispatch, state}) => {
           checked=${useNative}
           onClick=${toggleProperty({dispatch, property: 'useNativeSpellChecker'})}
       />
-      <div data-testid='settings-todo-native-spell-check' style=${{'font-size': '1.1rem', 'padding-left': '0.5rem'}}>
-        <p>NOTE: Currently, the Native Spell Checker is <strong>always</strong> used due to a bug in Electron:</p>
-        <p><a href='https://github.com/electron/electron/issues/44336'>electron/issues/44336</a></p>
-      </div>
       <${Card.Divider} />
       <div class='settings__dictionaries'>${
   Object.entries(dictionaries(state))
