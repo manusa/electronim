@@ -14,7 +14,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-/* eslint-disable no-console,no-useless-escape */
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');

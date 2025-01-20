@@ -28,7 +28,6 @@ const quit = () => {
     .filter(({sandboxed = false}) => sandboxed)
     .map(({id}) => session.fromPartition(`persist:${id}`));
   [...persistentSessions, session.defaultSession].forEach(s => {
-    // eslint-disable-next-line no-console
     clearCache(s).catch(console.error);
   });
 };

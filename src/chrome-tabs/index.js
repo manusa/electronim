@@ -33,7 +33,6 @@ const checkForUpdates = webContents => {
     .then(release => {
       webContents.send(APP_EVENTS.electronimNewVersionAvailable, !release.matchesCurrent);
     })
-    // eslint-disable-next-line no-console
     .catch(e => console.debug('Error checking for updates', e));
 };
 

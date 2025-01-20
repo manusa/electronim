@@ -17,6 +17,5 @@ require('./preload.notification-shim');
 require('./preload.mediadevices-shim');
 require('./preload.keyboard-shortcuts').initKeyboardShortcuts();
 require('./preload.spell-check').initSpellChecker()
-  // eslint-disable-next-line no-console
   .catch(err => console.error('Error initializing spell check', err));
 

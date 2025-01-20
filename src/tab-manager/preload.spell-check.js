@@ -17,7 +17,6 @@
 const {ipcRenderer, webFrame} = require('electron');
 
 const spellCheckFunction = (words, callback) => {
-  // eslint-disable-next-line no-undef
   ipcRenderer.invoke(APP_EVENTS.dictionaryGetMisspelled, words)
     .then(misspelled => callback(misspelled));
 };
