@@ -20,7 +20,7 @@
     "utils"
   ],
   "scripts": {
-    "pretest": "eslint --ext .mjs,.js --ignore-path .gitignore . && node webpack.js",
+    "pretest": "eslint -c eslint.config.mjs . && node webpack.js",
     "test": "jest --coverage",
     "prestart": "node webpack.js --no-lib",
     "start": "electron .",
@@ -189,8 +189,8 @@
     "chrome-tabs": "5.4.0",
     "css-loader": "7.1.2",
     "electron-builder": "25.1.8",
-    "eslint": "8.57.1",
-    "eslint-plugin-jest": "27.9.0",
+    "eslint": "9.18.0",
+    "eslint-plugin-jest": "28.11.0",
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
     "jest-environment-node": "29.7.0",

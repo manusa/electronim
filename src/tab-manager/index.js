@@ -122,7 +122,6 @@ const addTabs = ipcSender => tabsMetadata => {
 const sortTabs = tabIds => {
   if (tabIds.length !== Object.keys(tabs).length) {
     // Skip in case there are inconsistencies
-    // eslint-disable-next-line no-console
     console.error(`Inconsistent tab state, skipping sort operation (${tabIds.length} !== ${Object.keys(tabs).length}).`);
     return;
   }

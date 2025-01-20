@@ -223,7 +223,6 @@ describe('Settings in Browser test suite', () => {
         // Ensure Tab is always enabled
         if ($disableIcon.textContent === '\ue8f5') {
           fireEvent.click($disableIcon);
-          // eslint-disable-next-line jest/no-standalone-expect
           await waitFor(() => expect($disableIcon.textContent).toBe('\ue8f4'));
         }
       });
@@ -315,7 +314,6 @@ describe('Settings in Browser test suite', () => {
             $sandboxedEntry = $settingsTab.querySelector('.sandboxed-toggle');
             if ($toggleIcon.title.startsWith('Expand')) {
               fireEvent.click($toggleIcon);
-              // eslint-disable-next-line jest/no-standalone-expect
               await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
             }
           });
@@ -348,7 +346,6 @@ describe('Settings in Browser test suite', () => {
             $sandboxedEntry = $settingsTab.querySelector('.sandboxed-toggle');
             if ($toggleIcon.title.startsWith('Expand')) {
               fireEvent.click($toggleIcon);
-              // eslint-disable-next-line jest/no-standalone-expect
               await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
             }
           });
@@ -381,7 +378,6 @@ describe('Settings in Browser test suite', () => {
             $openUrlsInAppEntry = $settingsTab.querySelector('.open-urls-in-app-toggle');
             if ($toggleIcon.title.startsWith('Expand')) {
               fireEvent.click($toggleIcon);
-              // eslint-disable-next-line jest/no-standalone-expect
               await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
             }
           });
@@ -405,7 +401,6 @@ describe('Settings in Browser test suite', () => {
             $openUrlsInAppEntry = $settingsTab.querySelector('.open-urls-in-app-toggle');
             if ($toggleIcon.title.startsWith('Expand')) {
               fireEvent.click($toggleIcon);
-              // eslint-disable-next-line jest/no-standalone-expect
               await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
             }
           });

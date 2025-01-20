@@ -19,7 +19,6 @@ const {APP_EVENTS} = require('../constants');
 const eventKey = ({key, shift = false, control = false, alt = false, meta = false}) =>
   `${key}-${shift}-${control}-${alt}-${meta}`;
 
-// eslint-disable-next-line arrow-body-style
 const eventAction = (func, {preventDefault = true} = {}) => {
   return event => {
     func(event);

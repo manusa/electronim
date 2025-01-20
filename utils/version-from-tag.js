@@ -14,7 +14,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-/* eslint-disable no-console */
 
 const childProcess = require('child_process');
 const fs = require('fs');
