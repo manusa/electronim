@@ -76,7 +76,7 @@ jobs:
           ./utils/prepare-electron-builder.js
           npm run build:linux
       - name: CI Artifact for AppImage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: electronim-linux-x86_64.AppImage
           path: dist/electronim-linux-x86_64.AppImage
@@ -125,7 +125,7 @@ jobs:
           choco pack --version=$(node -p "require('./package').version") build-config/electronim.nuspec
           choco install electronim -dvy -s .
       - name: CI Artifact for exe
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: electronim-win-x64.exe
           path: dist/electronim-win-x64.exe
