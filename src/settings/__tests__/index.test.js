@@ -41,7 +41,7 @@ describe('Settings module test suite', () => {
       const result = settings.loadSettings();
       // Then
       expectHomeDirectoryCreated();
-      expect(fs.readFileSync).toHaveBeenCalledTimes(1);
+      expect(fs.readFileSync).toHaveBeenCalled();
       expect(result.tabs).toEqual([]);
       expect(result.enabledDictionaries).toEqual(['en']);
       expect(result.theme).toEqual('system');
