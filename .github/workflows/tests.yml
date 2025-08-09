@@ -20,7 +20,6 @@ on:
   pull_request:
 
 env:
-  SONAR_SCANNER_VERSION: 7.2.0.5079
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
@@ -40,15 +39,9 @@ jobs:
         run: npm run pretest
       - name: Test
         run: NODE_OPTIONS=--experimental-vm-modules npm test
-      - name: Download and install sonar-scanner
-        run: |
-          mkdir -p $HOME/.sonar \
-          && wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip -O sonar-scanner.zip \
-          && unzip sonar-scanner.zip -d $HOME/.sonar/ \
-          && rm sonar-scanner.zip
       - name: SonarCloud
         run: |
-          $HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux/bin/sonar-scanner
+          sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
