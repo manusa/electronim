@@ -184,7 +184,7 @@
     "verbose": true
   },
   "devDependencies": {
-    "@testing-library/dom": "10.4.0",
+    "@testing-library/dom": "10.4.1",
     "@testing-library/user-event": "14.6.1",
     "chrome-tabs": "5.4.0",
     "css-loader": "7.1.2",
