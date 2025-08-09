@@ -41,7 +41,7 @@ jobs:
         run: NODE_OPTIONS=--experimental-vm-modules npm test
       - name: SonarCloud
         run: |
-          sonar
+          ./node_modules/.bin/sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
