@@ -65,9 +65,7 @@ jobs:
       - name: Install
         run: npm install
       - name: Build
-        run: |
-          ./utils/prepare-electron-builder.js
-          npm run build:linux
+        run: npm run build:linux
       - name: CI Artifact for AppImage
         uses: actions/upload-artifact@v4
         with:
@@ -88,12 +86,10 @@ jobs:
           brew install python-setuptools
       - name: Install
         run: npm install
-      - name: Install macOS only requirement (Electron Builder) # TODO: Move to prepare-electron-builder.js script
+      - name: Install macOS only requirement (Electron Builder)
         run: npm install dmg-license
       - name: Build
-        run: |
-          ./utils/prepare-electron-builder.js
-          npm run build:mac
+        run:  npm run build:mac
   windows-build:
     name: Windows Build
     runs-on: windows-latest
@@ -107,9 +103,7 @@ jobs:
       - name: Install
         run: npm install
       - name: Build
-        run: |
-          node .\utils\prepare-electron-builder.js
-          npm run build:win
+        run: npm run build:win
       - name: Prepare Chocolatey
         run: node .\utils\prepare-chocolatey.js
       - name: Choco Script tests
