@@ -14,21 +14,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 const errorHandler = require('./error-handler');
 
-const electronToDevDependencies = () => {
+const electronToProdDependencies = () => {
   const packageJsonPath = path.join(__dirname, '..', 'package.json');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-  packageJson.devDependencies.electron = packageJson.dependencies.electron;
-  delete packageJson.dependencies.electron;
+  packageJson.dependencies.electron = packageJson.devDependencies.electron;
+  delete packageJson.devDependencies.electron;
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
 };
 
-const prepareElectronBuilder = () => {
-  electronToDevDependencies();
+const prepareNpmPackage = () => {
+  electronToProdDependencies();
 };
 
 process.on('unhandledRejection', errorHandler);
-prepareElectronBuilder();
+prepareNpmPackage();

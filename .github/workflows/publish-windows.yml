@@ -35,8 +35,6 @@ jobs:
         run: npm install
       - name: Change Package version
         run: node .\utils\version-from-tag.js
-      - name: Prepare Electron Builder
-        run: node .\utils\prepare-electron-builder.js
       - name: Build Windows
         run: npm run build:win
       - name: Upload zip

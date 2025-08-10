@@ -37,8 +37,6 @@ jobs:
         run: npm install
       - name: Change Package version
         run: ./utils/version-from-tag.js
-      - name: Prepare Electron Builder
-        run: ./utils/prepare-electron-builder.js
       - name: Build Linux
         run: npm run build:linux
       - name: Upload tar.gz
@@ -68,12 +66,10 @@ jobs:
           brew install python-setuptools
       - name: Install
         run: npm install
-      - name: Install macOS only requirement (Electron Builder) # TODO: Move to prepare-electron-builder.js script
+      - name: Install macOS only requirement (Electron Builder)
         run: npm install dmg-license
       - name: Change Package version
         run: ./utils/version-from-tag.js
-      - name: Prepare Electron Builder
-        run: ./utils/prepare-electron-builder.js
       - name: Build macOS
         run: npm run build:mac
       - name: Upload arm64-dmg

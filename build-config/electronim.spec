@@ -40,7 +40,6 @@ applications (or whatever you want) into a single browser (Electron) window.
 npm install
 #TODO automate or remove GITHUB_REF workaround
 GITHUB_REF=refs/tags/v%{version} node ./utils/version-from-tag.js
-node ./utils/prepare-electron-builder.js
 npm run build:linux
 
 # Remove bin files that might collision with local system binaries

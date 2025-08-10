@@ -33,6 +33,8 @@ jobs:
         run: npm install
       - name: Change Package version
         run: ./utils/version-from-tag.js
+      - name: Prepare NPM package
+        run: node ./utils/prepare-npm-package.js
       - name: Publish
         run: |
           export NPM_TOKEN=${{ secrets.NPM_TOKEN }}
