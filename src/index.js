@@ -14,6 +14,11 @@
    limitations under the License.
  */
 const {app} = require('electron');
+// Fix GTK 2/3 and GTK 4 conflict on Linux (Electron 36 issue)
+// This must be done before importing any other electron module
+if (process.platform === 'linux') {
+  app.commandLine.appendSwitch('gtk-version', '3');
+}
 const {registerAppShortcuts} = require('./base-window');
 const {init, quit} = require('./main');
 

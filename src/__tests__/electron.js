@@ -111,6 +111,9 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     Tray: jest.fn(() => trayInstance),
     trayInstance,
     app: {
+      commandLine: {
+        appendSwitch: jest.fn()
+      },
       getPath: jest.fn(),
       on: jest.fn(),
       exit: jest.fn(),
