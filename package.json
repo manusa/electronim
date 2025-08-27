@@ -203,7 +203,7 @@
     "sass-loader": "16.0.5",
     "style-loader": "4.0.0",
     "val-loader": "6.0.0",
-    "webpack": "5.101.0"
+    "webpack": "5.101.3"
   },
   "dependencies": {
     "axios": "1.11.0",
