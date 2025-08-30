@@ -16,6 +16,9 @@ npm install  # Install dependencies - takes ~55 seconds
 - `npm run pretest` - Run linting (ESLint) and build bundles (webpack) - takes ~2 seconds
 - `node webpack.js` - Build webpack bundles manually - takes ~2 seconds  
 - `node webpack.js --no-lib` - Build bundles without library files for development
+- `npm run build:linux` - Builds and bundles the application for Linux systems
+- `npm run build:mac` - Builds and bundles the application for MacOS systems
+- `npm run build:win` - Builds and bundles the application for Windows systems
 
 ### Testing  
 - `NODE_OPTIONS=--experimental-vm-modules npm test` - Run full test suite - takes ~13 seconds, runs 486 tests. NEVER CANCEL - Set timeout to 30+ minutes.
@@ -87,11 +90,19 @@ The project includes browser tests using JSDOM and Testing Library:
   - `spell-check/` - Spell checking functionality with multiple language support
 - `bundles/` - Generated webpack bundles (not committed)
 - `build-config/` - Platform-specific build configurations
+  - `chocolateyInstall.ps1` - [PowerShell](https://blog.marcnuri.com/tag/powershell) installation script for [Chocolatey](https://chocolatey.org/) (Windows)
+  - `chocolateyUninstall.ps1` - [PowerShell](https://blog.marcnuri.com/tag/powershell) installation script for [Chocolatey](https://chocolatey.org/) (Windows)
+  - `electronim.desktop` - Desktop entry configuration (Linux)
+  - `electronim.nuspec` - [Chocolatey](https://chocolatey.org/) Nuspec information file (should be updated whenever the README.md is updated) (Windows)
+  - `electronim.spec` - Spec file to build the [Fedora COPR package](https://copr.fedorainfracloud.org/coprs/manusa/electronim) (Linux)
+  - `entitlements.mac.plist` Contains the MacOS entitlements for the application (Mac)
+  - `VERIFICATION.txt` - [Chocolatey](https://chocolatey.org/) Moderation verification file (Windows)
 - `utils/` - Build and utility scripts
-- `docs/` - Documentation including setup guides and troubleshooting
+- `docs/` - Application documentation including setup guides and troubleshooting.
+  These files are also accessible from within the application (they are bundled too).
 
 ### Important Files
-- `package.json` - Dependencies and build scripts
+- `package.json` - Dependencies and build scripts. Contains the electron-build configuration too.
 - `webpack.js` - Webpack configuration and bundling logic
 - `eslint.config.mjs` - ESLint configuration
 - `src/index.js` - Electron main process entry point
@@ -103,6 +114,7 @@ The project includes browser tests using JSDOM and Testing Library:
 - Production dependencies: `npm install <package>` 
 - Development dependencies: `npm install -D <package>`
 - Always run `npm run pretest` after adding dependencies
+- Pin dependencies to the patch version (i.e. don't reference dependencies using ~ or ^)
 
 ### Working with Settings
 The settings system uses Preact components with Material Design 3 styling:
@@ -127,7 +139,7 @@ The settings system uses Preact components with Material Design 3 styling:
 - **Linting and bundling** (`npm run pretest`): ~2 seconds
 - **Test suite** (`npm test`): ~13 seconds (486 tests)
 - **Application startup**: ~3-5 seconds
-- **Platform builds**: 30-60 minutes (network dependent)
+- **Platform builds**: 10-20 minutes (network dependent)
 
 NEVER CANCEL long-running build operations. They may appear to hang but are downloading dependencies or compiling native modules.
 
