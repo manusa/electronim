@@ -55,6 +55,8 @@ const APP_EVENTS = {
   settingsLoad: 'settingsLoad',
   settingsOpenDialog: 'settingsOpenDialog',
   settingsSave: 'settingsSave',
+  settingsExport: 'settingsExport',
+  settingsImport: 'settingsImport',
   setTabFavicon: 'setTabFavicon',
   setTabTitle: 'setTabTitle',
   tabsReady: 'tabsReady',

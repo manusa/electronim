@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, html, Card, Icon, Select} from '../components/index.mjs';
+import {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, html, Button, Card, Icon, Select} from '../components/index.mjs';
 import {
   isPaneActive,
   closeButtonBehavior,
@@ -23,10 +23,25 @@ import {
 } from './settings.reducer.browser.mjs';
 import {SettingsOption, SettingsRow} from './settings.common.browser.mjs';
 
+const {ipcRenderer} = window;
+
 export const OtherPane = ({dispatch, state}) => {
   const dispatchSetProperty = setProperty({dispatch});
   const setTheme = e => dispatchSetProperty({property: 'theme', value: e.target.value});
   const setCloseButtonBehavior = e => dispatchSetProperty({property: 'closeButtonBehavior', value: e.target.value});
+  const settingsExport = () => ipcRenderer.invoke(APP_EVENTS.settingsExport);
+  const settingsImport = async () => {
+    try {
+      const result = await ipcRenderer.invoke(APP_EVENTS.settingsImport);
+      if (result.success && !result.canceled) {
+        // The main process will handle app reload, no need to do anything here
+      } else if (result.error) {
+        console.error('Import failed:', result.error);
+      }
+    } catch (error) {
+      console.error('Import failed:', error);
+    }
+  };
   return isPaneActive(state)(OtherPane.id) && html`
     <h2 class='title'>Other</h2>
     <${Card} className='settings__other'>
@@ -73,6 +88,31 @@ export const OtherPane = ({dispatch, state}) => {
           checked=${state.startMinimized}
           onClick=${toggleProperty({dispatch, property: 'startMinimized'})}
       />
+      <${Card.Divider} />
+      <${SettingsRow}>
+        <div class='settings__import-export'>
+          <div class='settings__import-export-section'>
+            <div class='settings__import-export-buttons'>
+              <${Button}
+                  className='settings__export'
+                  icon=${Icon.fileSave}
+                  title='Export settings to file'
+                  onClick=${settingsExport}
+              >
+                Export
+              </${Button}>
+              <${Button}
+                  className='settings__import'
+                  icon=${Icon.fileOpen}
+                  title='Import settings from file'
+                  onClick=${settingsImport}
+              >
+                Import
+              </${Button}>
+            </div>
+          </div>
+        </div>
+      </${SettingsRow}>
       <${Card.Divider} />
       <div data-testid='settings-electronim-version'>
         ElectronIM version ${ELECTRONIM_VERSION}

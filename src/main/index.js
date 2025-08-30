@@ -26,7 +26,7 @@ const {
   FIND_IN_PAGE_HEIGHT, FIND_IN_PAGE_WIDTH, isFindInPage, isNotFindInPage, findInPage, findInPageOpen, findInPageClose
 } = require('../find-in-page');
 const {openHelpDialog} = require('../help');
-const {getPlatform, loadSettings, updateSettings, openSettingsDialog} = require('../settings');
+const {getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSettings, importSettings} = require('../settings');
 const {
   getAvailableDictionaries, getAvailableNativeDictionaries, loadDictionaries, getEnabledDictionaries
 } = require('../spell-check');
@@ -228,10 +228,12 @@ const handleWindowClose = event => {
   return true;
 };
 
-const saveSettings = (_event, settings) => {
-  updateSettings(settings);
+const reloadApplication = settings => {
+  if (settings) {
+    updateSettings(settings);
+  }
   loadDictionaries();
-  nativeTheme.themeSource = settings.theme;
+  nativeTheme.themeSource = settings?.theme || loadSettings().theme;
   closeDialog();
   appMenuClose();
   findInPageClose();
@@ -242,6 +244,10 @@ const saveSettings = (_event, settings) => {
   tabManager.removeAll();
   tabContainer = newTabContainer();
   eventBus.emit(APP_EVENTS.trayInit);
+};
+
+const saveSettings = (_event, settings) => {
+  reloadApplication(settings);
 };
 
 const initGlobalListeners = () => {
@@ -273,6 +279,15 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.settingsLoad, loadSettings);
   eventBus.on(APP_EVENTS.settingsOpenDialog, openSettingsDialog(mainWindow));
   eventBus.on(APP_EVENTS.settingsSave, saveSettings);
+  eventBus.handle(APP_EVENTS.settingsExport, () => exportSettings(mainWindow));
+  eventBus.handle(APP_EVENTS.settingsImport, async () => {
+    const result = await importSettings(mainWindow);
+    if (result.success && result.shouldReload) {
+      // Trigger the same reload behavior as save
+      reloadApplication();
+    }
+    return result;
+  });
   eventBus.on(APP_EVENTS.tabSwitchToPosition, handleTabSwitchToPosition);
   eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(tabManager.getNextTab));
   eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(tabManager.getPreviousTab));

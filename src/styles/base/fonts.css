@@ -16,8 +16,9 @@
 @font-face {
   font-family: 'Material Symbols Outlined';
   font-style: normal;
-  font-weight: 400;
-  src: url('fonts/material-symbols-outlined-48pt.woff2') format('woff2');
+  font-weight: 100 700;
+  font-display: block;
+  src: url('fonts/material-symbols-outlined.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Roboto';
