@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, html, Card, Icon, IconButton, Select} from '../components/index.mjs';
+import {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, html, Button, Card, Icon, Select} from '../components/index.mjs';
 import {
   isPaneActive,
   closeButtonBehavior,
@@ -29,6 +29,8 @@ export const OtherPane = ({dispatch, state}) => {
   const dispatchSetProperty = setProperty({dispatch});
   const setTheme = e => dispatchSetProperty({property: 'theme', value: e.target.value});
   const setCloseButtonBehavior = e => dispatchSetProperty({property: 'closeButtonBehavior', value: e.target.value});
+  const settingsExport = () => ipcRenderer.invoke(APP_EVENTS.settingsExport);
+  const settingsImport = () => ipcRenderer.invoke(APP_EVENTS.settingsImport);
   return isPaneActive(state)(OtherPane.id) && html`
     <h2 class='title'>Other</h2>
     <${Card} className='settings__other'>
@@ -79,39 +81,23 @@ export const OtherPane = ({dispatch, state}) => {
       <${SettingsRow}>
         <div class='settings__import-export'>
           <div class='settings__import-export-section'>
-            <span class='settings__import-export-label'>Settings Management</span>
             <div class='settings__import-export-buttons'>
-              <${IconButton}
+              <${Button}
                   className='settings__export'
-                  icon=${Icon.downloadFile}
+                  icon=${Icon.fileSave}
                   title='Export settings to file'
-                  onClick=${async () => {
-    try {
-      const result = await ipcRenderer.invoke(APP_EVENTS.settingsExport);
-      if (result.success && !result.canceled) {
-        // Could show a success message here if needed
-      }
-    } catch (error) {
-      console.error('Export failed:', error);
-    }
-  }}
-              />
-              <${IconButton}
+                  onClick=${settingsExport}
+              >
+                Export
+              </${Button}>
+              <${Button}
                   className='settings__import'
-                  icon=${Icon.fileUpload}
+                  icon=${Icon.fileOpen}
                   title='Import settings from file'
-                  onClick=${async () => {
-    try {
-      const result = await ipcRenderer.invoke(APP_EVENTS.settingsImport);
-      if (result.success && !result.canceled) {
-        // Reload the page to reflect the new settings
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error('Import failed:', error);
-    }
-  }}
-              />
+                  onClick=${settingsImport}
+              >
+                Import
+              </${Button}>
             </div>
           </div>
         </div>

@@ -16,6 +16,7 @@
 export {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION} from '../../bundles/constants.mjs';
 export {createRef, html, render, useLayoutEffect, useReducer, useState} from '../../bundles/preact.mjs';
 
+export {Button} from './button.mjs';
 export {Card} from './card.mjs';
 export {Checkbox} from './checkbox.mjs';
 export {Icon} from './icon.mjs';
