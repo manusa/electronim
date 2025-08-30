@@ -122,6 +122,10 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     contextBridge: {
       exposeInMainWorld: jest.fn()
     },
+    dialog: {
+      showSaveDialog: jest.fn(async () => ({canceled: true})),
+      showOpenDialog: jest.fn(async () => ({canceled: true}))
+    },
     globalShortcut: {
       listeners: {},
       register: jest.fn((accelerator, callback) => {

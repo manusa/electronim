@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {WebContentsView} = require('electron');
+const {WebContentsView, dialog} = require('electron');
 const fs = require('fs');
 const path = require('path');
 const HOME_DIR = require('os').homedir();
@@ -93,10 +93,64 @@ const writeSettings = settings => {
 const updateSettings = settings =>
   writeSettings(ensureDefaultValues({...loadSettings(), ...settings}));
 
+const exportSettings = async mainWindow => {
+  try {
+    const settings = loadSettings();
+    const result = await dialog.showSaveDialog(mainWindow, {
+      title: 'Export ElectronIM Settings',
+      defaultPath: path.join(HOME_DIR, 'electronim-settings.json'),
+      filters: [
+        {name: 'JSON Files', extensions: ['json']},
+        {name: 'All Files', extensions: ['*']}
+      ]
+    });
+
+    if (!result.canceled && result.filePath) {
+      fs.writeFileSync(result.filePath, JSON.stringify(settings, null, 2));
+      return {success: true, filePath: result.filePath};
+    }
+    return {success: false, canceled: true};
+  } catch (error) {
+    return {success: false, error: error.message};
+  }
+};
+
+const importSettings = async mainWindow => {
+  try {
+    const result = await dialog.showOpenDialog(mainWindow, {
+      title: 'Import ElectronIM Settings',
+      defaultPath: HOME_DIR,
+      filters: [
+        {name: 'JSON Files', extensions: ['json']},
+        {name: 'All Files', extensions: ['*']}
+      ],
+      properties: ['openFile']
+    });
+
+    if (!result.canceled && result.filePaths.length > 0) {
+      const filePath = result.filePaths[0];
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const importedSettings = JSON.parse(fileContent);
+
+      // Validate that it looks like settings by checking for required fields
+      if (typeof importedSettings === 'object' && importedSettings !== null) {
+        // Merge with default settings to ensure all required fields exist
+        const validatedSettings = ensureDefaultValues(importedSettings);
+        updateSettings(validatedSettings);
+        return {success: true, filePath};
+      }
+      return {success: false, error: 'Invalid settings file format'};
+    }
+    return {success: false, canceled: true};
+  } catch (error) {
+    return {success: false, error: error.message};
+  }
+};
+
 const openSettingsDialog = mainWindow => () => {
   const settingsView = new WebContentsView({webPreferences});
   settingsView.webContents.loadURL(`file://${__dirname}/index.html`);
   showDialog(mainWindow, settingsView);
 };
 
-module.exports = {getPlatform, loadSettings, updateSettings, openSettingsDialog};
+module.exports = {getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSettings, importSettings};

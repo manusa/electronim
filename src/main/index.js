@@ -26,7 +26,7 @@ const {
   FIND_IN_PAGE_HEIGHT, FIND_IN_PAGE_WIDTH, isFindInPage, isNotFindInPage, findInPage, findInPageOpen, findInPageClose
 } = require('../find-in-page');
 const {openHelpDialog} = require('../help');
-const {getPlatform, loadSettings, updateSettings, openSettingsDialog} = require('../settings');
+const {getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSettings, importSettings} = require('../settings');
 const {
   getAvailableDictionaries, getAvailableNativeDictionaries, loadDictionaries, getEnabledDictionaries
 } = require('../spell-check');
@@ -273,6 +273,8 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.settingsLoad, loadSettings);
   eventBus.on(APP_EVENTS.settingsOpenDialog, openSettingsDialog(mainWindow));
   eventBus.on(APP_EVENTS.settingsSave, saveSettings);
+  eventBus.handle(APP_EVENTS.settingsExport, () => exportSettings(mainWindow));
+  eventBus.handle(APP_EVENTS.settingsImport, () => importSettings(mainWindow));
   eventBus.on(APP_EVENTS.tabSwitchToPosition, handleTabSwitchToPosition);
   eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(tabManager.getNextTab));
   eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(tabManager.getPreviousTab));

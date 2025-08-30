@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, html, Card, Icon, Select} from '../components/index.mjs';
+import {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, html, Card, Icon, IconButton, Select} from '../components/index.mjs';
 import {
   isPaneActive,
   closeButtonBehavior,
@@ -22,6 +22,8 @@ import {
   toggleProperty
 } from './settings.reducer.browser.mjs';
 import {SettingsOption, SettingsRow} from './settings.common.browser.mjs';
+
+const {ipcRenderer} = window;
 
 export const OtherPane = ({dispatch, state}) => {
   const dispatchSetProperty = setProperty({dispatch});
@@ -73,6 +75,47 @@ export const OtherPane = ({dispatch, state}) => {
           checked=${state.startMinimized}
           onClick=${toggleProperty({dispatch, property: 'startMinimized'})}
       />
+      <${Card.Divider} />
+      <${SettingsRow}>
+        <div class='settings__import-export'>
+          <div class='settings__import-export-section'>
+            <span class='settings__import-export-label'>Settings Management</span>
+            <div class='settings__import-export-buttons'>
+              <${IconButton}
+                  className='settings__export'
+                  icon=${Icon.downloadFile}
+                  title='Export settings to file'
+                  onClick=${async () => {
+    try {
+      const result = await ipcRenderer.invoke(APP_EVENTS.settingsExport);
+      if (result.success && !result.canceled) {
+        // Could show a success message here if needed
+      }
+    } catch (error) {
+      console.error('Export failed:', error);
+    }
+  }}
+              />
+              <${IconButton}
+                  className='settings__import'
+                  icon=${Icon.fileUpload}
+                  title='Import settings from file'
+                  onClick=${async () => {
+    try {
+      const result = await ipcRenderer.invoke(APP_EVENTS.settingsImport);
+      if (result.success && !result.canceled) {
+        // Reload the page to reflect the new settings
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Import failed:', error);
+    }
+  }}
+              />
+            </div>
+          </div>
+        </div>
+      </${SettingsRow}>
       <${Card.Divider} />
       <div data-testid='settings-electronim-version'>
         ElectronIM version ${ELECTRONIM_VERSION}
