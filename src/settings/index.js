@@ -117,6 +117,21 @@ const exportSettings = async mainWindow => {
 
 const importSettings = async mainWindow => {
   try {
+    // First, show confirmation dialog
+    const confirmResult = await dialog.showMessageBox(mainWindow, {
+      type: 'question',
+      buttons: ['Cancel', 'Import'],
+      defaultId: 1,
+      cancelId: 0,
+      title: 'Import Settings',
+      message: 'Import settings from file?',
+      detail: 'This will replace your current settings. Your existing configuration will be overwritten.'
+    });
+
+    if (confirmResult.response !== 1) {
+      return {success: false, canceled: true};
+    }
+
     const result = await dialog.showOpenDialog(mainWindow, {
       title: 'Import ElectronIM Settings',
       defaultPath: HOME_DIR,
@@ -137,7 +152,7 @@ const importSettings = async mainWindow => {
         // Merge with default settings to ensure all required fields exist
         const validatedSettings = ensureDefaultValues(importedSettings);
         updateSettings(validatedSettings);
-        return {success: true, filePath};
+        return {success: true, filePath, shouldReload: true};
       }
       return {success: false, error: 'Invalid settings file format'};
     }

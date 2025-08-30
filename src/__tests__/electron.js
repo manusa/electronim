@@ -124,7 +124,8 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     },
     dialog: {
       showSaveDialog: jest.fn(async () => ({canceled: true})),
-      showOpenDialog: jest.fn(async () => ({canceled: true}))
+      showOpenDialog: jest.fn(async () => ({canceled: true})),
+      showMessageBox: jest.fn(async () => ({response: 1}))
     },
     globalShortcut: {
       listeners: {},

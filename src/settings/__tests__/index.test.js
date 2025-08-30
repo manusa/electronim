@@ -228,9 +228,20 @@ describe('Settings module test suite', () => {
     beforeEach(() => {
       mainWindow = electron.baseWindowInstance;
       electron.dialog.showOpenDialog = jest.fn();
+      electron.dialog.showMessageBox = jest.fn();
     });
     test('canceled import, should return canceled result', async () => {
-      // Given
+      // Given - user cancels the confirmation dialog
+      electron.dialog.showMessageBox.mockImplementationOnce(() => ({response: 0})); // Cancel
+      // When
+      const result = await settings.importSettings(mainWindow);
+      // Then
+      expect(result).toEqual({success: false, canceled: true});
+      expect(electron.dialog.showOpenDialog).not.toHaveBeenCalled();
+    });
+    test('canceled file dialog, should return canceled result', async () => {
+      // Given - user confirms import but cancels file dialog
+      electron.dialog.showMessageBox.mockImplementationOnce(() => ({response: 1})); // Import
       electron.dialog.showOpenDialog.mockImplementationOnce(() => ({canceled: true}));
       // When
       const result = await settings.importSettings(mainWindow);
@@ -241,6 +252,7 @@ describe('Settings module test suite', () => {
       // Given
       const filePath = '/home/user/import-settings.json';
       const importedData = '{"tabs": [{"id": "imported"}], "theme": "light"}';
+      electron.dialog.showMessageBox.mockImplementationOnce(() => ({response: 1})); // Import
       electron.dialog.showOpenDialog.mockImplementationOnce(() => ({
         canceled: false,
         filePaths: [filePath]
@@ -250,7 +262,7 @@ describe('Settings module test suite', () => {
       // When
       const result = await settings.importSettings(mainWindow);
       // Then
-      expect(result).toEqual({success: true, filePath});
+      expect(result).toEqual({success: true, filePath, shouldReload: true});
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         path.join('$HOME', '.electronim', 'settings.json'),
         expect.stringContaining('"tabs"')

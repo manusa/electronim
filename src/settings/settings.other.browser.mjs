@@ -30,7 +30,18 @@ export const OtherPane = ({dispatch, state}) => {
   const setTheme = e => dispatchSetProperty({property: 'theme', value: e.target.value});
   const setCloseButtonBehavior = e => dispatchSetProperty({property: 'closeButtonBehavior', value: e.target.value});
   const settingsExport = () => ipcRenderer.invoke(APP_EVENTS.settingsExport);
-  const settingsImport = () => ipcRenderer.invoke(APP_EVENTS.settingsImport);
+  const settingsImport = async () => {
+    try {
+      const result = await ipcRenderer.invoke(APP_EVENTS.settingsImport);
+      if (result.success && !result.canceled) {
+        // The main process will handle app reload, no need to do anything here
+      } else if (result.error) {
+        console.error('Import failed:', result.error);
+      }
+    } catch (error) {
+      console.error('Import failed:', error);
+    }
+  };
   return isPaneActive(state)(OtherPane.id) && html`
     <h2 class='title'>Other</h2>
     <${Card} className='settings__other'>
