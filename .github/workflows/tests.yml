@@ -32,7 +32,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '22.x'
       - name: Install
         run: npm install
       - name: Pretest
@@ -55,7 +55,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '22.x'
       - name: Install Snap
         # Not needed for this job just to verify it can be installed for use in the publishing workflow
         run: |
@@ -80,7 +80,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '22.x'
       - name: macOS requirements
         run: |
           brew install python-setuptools
@@ -99,7 +99,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '22.x'
       - name: Install
         run: npm install
       - name: Build
