@@ -32,7 +32,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '24.x'
+          node-version: '22.x'
       - name: Install
         run: npm install
       - name: Change Package version
@@ -60,7 +60,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '24.x'
+          node-version: '22.x'
       - name: macOS requirements
         run: |
           brew install python-setuptools
