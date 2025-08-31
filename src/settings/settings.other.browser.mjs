@@ -91,26 +91,22 @@ export const OtherPane = ({dispatch, state}) => {
       <${Card.Divider} />
       <${SettingsRow}>
         <div class='settings__import-export'>
-          <div class='settings__import-export-section'>
-            <div class='settings__import-export-buttons'>
-              <${Button}
-                  className='settings__export'
-                  icon=${Icon.fileSave}
-                  title='Export settings to file'
-                  onClick=${settingsExport}
-              >
-                Export
-              </${Button}>
-              <${Button}
-                  className='settings__import'
-                  icon=${Icon.fileOpen}
-                  title='Import settings from file'
-                  onClick=${settingsImport}
-              >
-                Import
-              </${Button}>
-            </div>
-          </div>
+          <${Button}
+              className='settings__export'
+              icon=${Icon.fileSave}
+              title='Export settings to file'
+              onClick=${settingsExport}
+          >
+            Export
+          </${Button}>
+          <${Button}
+              className='settings__import'
+              icon=${Icon.fileOpen}
+              title='Import settings from file'
+              onClick=${settingsImport}
+          >
+            Import
+          </${Button}>
         </div>
       </${SettingsRow}>
       <${Card.Divider} />

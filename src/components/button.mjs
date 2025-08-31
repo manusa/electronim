@@ -22,7 +22,9 @@ import {html} from './index.mjs';
  * @param onClick callback function to be executed when the button is clicked.
  * @param disabled whether the button is disabled or not.
  * @param className additional classes to be added to the button.
+ * @param icon an optional icon to be rendered inside the button (leading).
  * @param children the content to be rendered inside the button.
+ * @param properties
  */
 export const Button = ({
   type = Button.types.outlined,

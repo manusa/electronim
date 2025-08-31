@@ -143,33 +143,8 @@
 }
 
 .settings__import-export {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
     width: 100%;
-}
-
-.settings__import-export-section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.settings__import-export-label {
-    font-family: var(--md-sys-typescale-body-medium-font);
-    font-size: var(--md-sys-typescale-body-medium-size);
-    font-weight: var(--md-sys-typescale-body-medium-weight);
-    line-height: var(--md-sys-typescale-body-medium-line-height);
-    color: var(--md-sys-color-on-surface);
-}
-
-.settings__import-export-buttons {
     display: flex;
     gap: 8px;
     align-items: center;
-}
-
-.settings__export,
-.settings__import {
-    color: var(--md-sys-color-primary);
 }
