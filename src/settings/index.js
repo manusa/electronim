@@ -165,7 +165,6 @@ const importSettings = mainWindow => async () => {
 const openSettingsDialog = mainWindow => () => {
   const settingsView = new WebContentsView({webPreferences});
   settingsView.webContents.loadURL(`file://${__dirname}/index.html`);
-  settingsView.webContents.openDevTools();
   showDialog(mainWindow, settingsView);
 };
 
