@@ -136,6 +136,22 @@ describe('Settings (Other) in Browser test suite', () => {
       await waitFor(() => expect($startMinimizedSwitch.checked).toBe(true));
     });
   });
+  describe('Settings Export/Import', () => {
+    let $exportButton;
+    let $importButton;
+    beforeEach(() => {
+      $exportButton = document.querySelector('.settings__export');
+      $importButton = document.querySelector('.settings__import');
+    });
+    test('Export button triggers settingsExport IPC call', async () => {
+      await user.click($exportButton);
+      expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('settingsExport');
+    });
+    test('Import button triggers settingsImport IPC call', async () => {
+      await user.click($importButton);
+      expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('settingsImport');
+    });
+  });
   test('ElectronIM version is visible', async () => {
     const $electronimVersion = await findByTestId(document, 'settings-electronim-version');
     expect($electronimVersion.textContent).toBe('ElectronIM version 0.0.0');
