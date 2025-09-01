@@ -136,7 +136,7 @@ describe('Settings (Other) in Browser test suite', () => {
       await waitFor(() => expect($startMinimizedSwitch.checked).toBe(true));
     });
   });
-  describe('Settings Export/Import', () => {
+  describe('Settings Export/Import and Directory', () => {
     let $exportButton;
     let $importButton;
     let $openFolderButton;

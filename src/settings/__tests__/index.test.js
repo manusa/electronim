@@ -325,7 +325,7 @@ describe('Settings module test suite', () => {
       // Given
       electron.shell.openPath.mockImplementationOnce(() => Promise.resolve());
       // When
-      const result = await settings.openElectronimFolder()();
+      const result = await settings.openElectronimFolder();
       // Then
       expect(result).toEqual({success: true, path: path.join('$HOME', '.electronim')});
       expect(electron.shell.openPath).toHaveBeenCalledWith(path.join('$HOME', '.electronim'));
@@ -335,7 +335,7 @@ describe('Settings module test suite', () => {
       const error = new Error('Unable to open path');
       electron.shell.openPath.mockImplementationOnce(() => Promise.reject(error));
       // When
-      const result = await settings.openElectronimFolder()();
+      const result = await settings.openElectronimFolder();
       // Then
       expect(result).toEqual({success: false, error: 'Unable to open path'});
     });

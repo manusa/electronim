@@ -275,7 +275,7 @@ const initGlobalListeners = () => {
   eventBus.on(APP_EVENTS.settingsSave, saveSettings);
   eventBus.handle(APP_EVENTS.settingsExport, exportSettings(mainWindow));
   eventBus.handle(APP_EVENTS.settingsImport, importSettings(mainWindow));
-  eventBus.handle(APP_EVENTS.settingsOpenFolder, openElectronimFolder());
+  eventBus.handle(APP_EVENTS.settingsOpenFolder, openElectronimFolder);
   eventBus.on(APP_EVENTS.tabSwitchToPosition, handleTabSwitchToPosition);
   eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(tabManager.getNextTab));
   eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(tabManager.getPreviousTab));

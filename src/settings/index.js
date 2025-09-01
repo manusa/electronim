@@ -162,7 +162,7 @@ const importSettings = mainWindow => async () => {
   }
 };
 
-const openElectronimFolder = () => async () => {
+const openElectronimFolder = async () => {
   try {
     await shell.openPath(appDir);
     return {success: true, path: appDir};
