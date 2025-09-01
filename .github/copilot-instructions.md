@@ -6,6 +6,11 @@ Always reference these instructions first and fallback to search or bash command
 
 ## Working Effectively
 
+### Requirements
+
+- **Node.js**: v22.x (LTS) - [Download](https://nodejs.org/en/download/)
+  Seems like newer Node.js versions (v24+) have some issues with Jest and native modules.
+
 ### Bootstrap and Setup
 Run these commands to set up the development environment:
 ```bash
