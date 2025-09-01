@@ -169,7 +169,8 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
       defaultSession: sessionInstance
     },
     shell: {
-      openExternal: jest.fn(async () => {})
+      openExternal: jest.fn(async () => {}),
+      openPath: jest.fn(async () => {})
     },
     ...overriddenProps
   };

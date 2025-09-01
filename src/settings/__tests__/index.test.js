@@ -317,6 +317,29 @@ describe('Settings module test suite', () => {
       });
     });
   });
+  describe('openElectronimFolder', () => {
+    beforeEach(() => {
+      electron.shell.openPath.mockClear();
+    });
+    test('successful open, should call shell.openPath with app directory', async () => {
+      // Given
+      electron.shell.openPath.mockImplementationOnce(() => Promise.resolve());
+      // When
+      const result = await settings.openElectronimFolder()();
+      // Then
+      expect(result).toEqual({success: true, path: path.join('$HOME', '.electronim')});
+      expect(electron.shell.openPath).toHaveBeenCalledWith(path.join('$HOME', '.electronim'));
+    });
+    test('failed open, should return error result', async () => {
+      // Given
+      const error = new Error('Unable to open path');
+      electron.shell.openPath.mockImplementationOnce(() => Promise.reject(error));
+      // When
+      const result = await settings.openElectronimFolder()();
+      // Then
+      expect(result).toEqual({success: false, error: 'Unable to open path'});
+    });
+  });
   const expectHomeDirectoryCreated = () => {
     expect(fs.mkdirSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim'), {recursive: true});
   };
