@@ -31,6 +31,7 @@ export const OtherPane = ({dispatch, state}) => {
   const setCloseButtonBehavior = e => dispatchSetProperty({property: 'closeButtonBehavior', value: e.target.value});
   const settingsExport = () => ipcRenderer.invoke(APP_EVENTS.settingsExport);
   const settingsImport = () => ipcRenderer.invoke(APP_EVENTS.settingsImport);
+  const settingsOpenFolder = () => ipcRenderer.invoke(APP_EVENTS.settingsOpenFolder);
   return isPaneActive(state)(OtherPane.id) && html`
     <h2 class='title'>Other</h2>
     <${Card} className='settings__other'>
@@ -95,6 +96,14 @@ export const OtherPane = ({dispatch, state}) => {
               onClick=${settingsImport}
           >
             Import
+          </${Button}>
+          <${Button}
+              className='settings__open-folder'
+              icon=${Icon.preview}
+              title='Open ElectronIM folder'
+              onClick=${settingsOpenFolder}
+          >
+            Open Folder
           </${Button}>
         </div>
       </${SettingsRow}>

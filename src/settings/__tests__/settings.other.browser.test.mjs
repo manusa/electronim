@@ -136,12 +136,14 @@ describe('Settings (Other) in Browser test suite', () => {
       await waitFor(() => expect($startMinimizedSwitch.checked).toBe(true));
     });
   });
-  describe('Settings Export/Import', () => {
+  describe('Settings Export/Import and Directory', () => {
     let $exportButton;
     let $importButton;
+    let $openFolderButton;
     beforeEach(() => {
       $exportButton = document.querySelector('.settings__export');
       $importButton = document.querySelector('.settings__import');
+      $openFolderButton = document.querySelector('.settings__open-folder');
     });
     test('Export button triggers settingsExport IPC call', async () => {
       await user.click($exportButton);
@@ -150,6 +152,10 @@ describe('Settings (Other) in Browser test suite', () => {
     test('Import button triggers settingsImport IPC call', async () => {
       await user.click($importButton);
       expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('settingsImport');
+    });
+    test('Open Folder button triggers settingsOpenFolder IPC call', async () => {
+      await user.click($openFolderButton);
+      expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('settingsOpenFolder');
     });
   });
   test('ElectronIM version is visible', async () => {

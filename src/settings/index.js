@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {WebContentsView, dialog, ipcMain: eventBus} = require('electron');
+const {WebContentsView, dialog, shell, ipcMain: eventBus} = require('electron');
 const fs = require('fs');
 const path = require('path');
 const HOME_DIR = require('os').homedir();
@@ -162,10 +162,21 @@ const importSettings = mainWindow => async () => {
   }
 };
 
+const openElectronimFolder = async () => {
+  try {
+    await shell.openPath(appDir);
+    return {success: true, path: appDir};
+  } catch (error) {
+    return {success: false, error: error.message};
+  }
+};
+
 const openSettingsDialog = mainWindow => () => {
   const settingsView = new WebContentsView({webPreferences});
   settingsView.webContents.loadURL(`file://${__dirname}/index.html`);
   showDialog(mainWindow, settingsView);
 };
 
-module.exports = {getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSettings, importSettings};
+module.exports = {
+  getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSettings, importSettings, openElectronimFolder
+};
