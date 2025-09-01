@@ -228,12 +228,10 @@ const handleWindowClose = event => {
   return true;
 };
 
-const reloadApplication = settings => {
-  if (settings) {
-    updateSettings(settings);
-  }
+const saveSettings = (_event, settings) => {
+  updateSettings(settings);
   loadDictionaries();
-  nativeTheme.themeSource = settings?.theme || loadSettings().theme;
+  nativeTheme.themeSource = settings.theme;
   closeDialog();
   appMenuClose();
   findInPageClose();
@@ -244,10 +242,6 @@ const reloadApplication = settings => {
   tabManager.removeAll();
   tabContainer = newTabContainer();
   eventBus.emit(APP_EVENTS.trayInit);
-};
-
-const saveSettings = (_event, settings) => {
-  reloadApplication(settings);
 };
 
 const initGlobalListeners = () => {
@@ -279,15 +273,8 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.settingsLoad, loadSettings);
   eventBus.on(APP_EVENTS.settingsOpenDialog, openSettingsDialog(mainWindow));
   eventBus.on(APP_EVENTS.settingsSave, saveSettings);
-  eventBus.handle(APP_EVENTS.settingsExport, () => exportSettings(mainWindow));
-  eventBus.handle(APP_EVENTS.settingsImport, async () => {
-    const result = await importSettings(mainWindow);
-    if (result.success && result.shouldReload) {
-      // Trigger the same reload behavior as save
-      reloadApplication();
-    }
-    return result;
-  });
+  eventBus.handle(APP_EVENTS.settingsExport, exportSettings(mainWindow));
+  eventBus.handle(APP_EVENTS.settingsImport, importSettings(mainWindow));
   eventBus.on(APP_EVENTS.tabSwitchToPosition, handleTabSwitchToPosition);
   eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(tabManager.getNextTab));
   eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(tabManager.getPreviousTab));

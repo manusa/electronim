@@ -13,11 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {WebContentsView, dialog} = require('electron');
+const {WebContentsView, dialog, ipcMain: eventBus} = require('electron');
 const fs = require('fs');
 const path = require('path');
 const HOME_DIR = require('os').homedir();
-const {CLOSE_BUTTON_BEHAVIORS} = require('../constants');
+const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS} = require('../constants');
 const {showDialog} = require('../base-window');
 
 const APP_DIR = '.electronim';
@@ -93,7 +93,7 @@ const writeSettings = settings => {
 const updateSettings = settings =>
   writeSettings(ensureDefaultValues({...loadSettings(), ...settings}));
 
-const exportSettings = async mainWindow => {
+const exportSettings = mainWindow => async () => {
   try {
     const settings = loadSettings();
     const result = await dialog.showSaveDialog(mainWindow, {
@@ -115,7 +115,7 @@ const exportSettings = async mainWindow => {
   }
 };
 
-const importSettings = async mainWindow => {
+const importSettings = mainWindow => async () => {
   try {
     // First, show confirmation dialog
     const confirmResult = await dialog.showMessageBox(mainWindow, {
@@ -151,7 +151,7 @@ const importSettings = async mainWindow => {
       if (typeof importedSettings === 'object' && importedSettings !== null) {
         // Merge with default settings to ensure all required fields exist
         const validatedSettings = ensureDefaultValues(importedSettings);
-        updateSettings(validatedSettings);
+        eventBus.emit(APP_EVENTS.settingsSave, null, validatedSettings);
         return {success: true, filePath, shouldReload: true};
       }
       return {success: false, error: 'Invalid settings file format'};

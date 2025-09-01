@@ -41,6 +41,8 @@ describe('Main :: Global listeners test suite', () => {
       trayEnabled: true
     }));
     require('../../settings').openSettingsDialog = jest.requireActual('../../settings').openSettingsDialog;
+    require('../../settings').exportSettings = jest.requireActual('../../settings').exportSettings;
+    require('../../settings').importSettings = jest.requireActual('../../settings').importSettings;
     jest.spyOn(require('../../user-agent'), 'initBrowserVersions')
       .mockImplementation(() => Promise.resolve({}));
     main = require('../');
@@ -51,7 +53,7 @@ describe('Main :: Global listeners test suite', () => {
     'dictionaryGetAvailable', 'dictionaryGetAvailableNative', 'dictionaryGetEnabled',
     'findInPage', 'findInPageOpen', 'findInPageClose',
     'fullscreenToggle', 'helpOpenDialog', 'quit', 'restore',
-    'settingsLoad', 'settingsOpenDialog', 'settingsSave',
+    'settingsLoad', 'settingsOpenDialog', 'settingsExport', 'settingsImport', 'settingsSave',
     'tabSwitchToPosition', 'tabTraverseNext', 'tabTraversePrevious',
     'trayInit'
   ])('should register listener for %s', channel => {
@@ -260,6 +262,24 @@ describe('Main :: Global listeners test suite', () => {
       // Then
       expect(electron.nativeTheme.themeSource).toEqual('light');
     });
+  });
+  test('settingsExport, should propagate call to settings.exportSettings', async () => {
+    // eslint-disable-next-line no-warning-comments
+    // TODO: We'll need a blackbox test
+    // When
+    const result = await eventBus.listeners.settingsExport(baseWindow);
+    // Then
+    expect(result).not.toBeUndefined();
+    expect(result).toEqual({success: false, canceled: true});
+  });
+  test('settingsImport, should propagate call to settings.importSettings', async () => {
+    // eslint-disable-next-line no-warning-comments
+    // TODO: We'll need a blackbox test
+    // When
+    const result = await eventBus.listeners.settingsImport(baseWindow);
+    // Then
+    expect(result).not.toBeUndefined();
+    expect(result).toEqual({success: false, canceled: true});
   });
   describe('handleTabTraverse', () => {
     let tabManagerModule;
