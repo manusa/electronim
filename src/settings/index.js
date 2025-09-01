@@ -13,11 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {WebContentsView} = require('electron');
+const {WebContentsView, dialog, ipcMain: eventBus} = require('electron');
 const fs = require('fs');
 const path = require('path');
 const HOME_DIR = require('os').homedir();
-const {CLOSE_BUTTON_BEHAVIORS} = require('../constants');
+const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS} = require('../constants');
 const {showDialog} = require('../base-window');
 
 const APP_DIR = '.electronim';
@@ -93,10 +93,80 @@ const writeSettings = settings => {
 const updateSettings = settings =>
   writeSettings(ensureDefaultValues({...loadSettings(), ...settings}));
 
+const exportSettings = mainWindow => async () => {
+  try {
+    const settings = loadSettings();
+    const result = await dialog.showSaveDialog(mainWindow, {
+      title: 'Export ElectronIM Settings',
+      defaultPath: path.join(HOME_DIR, 'electronim-settings.json'),
+      filters: [
+        {name: 'JSON Files', extensions: ['json']},
+        {name: 'All Files', extensions: ['*']}
+      ]
+    });
+
+    if (!result.canceled && result.filePath) {
+      fs.writeFileSync(result.filePath, JSON.stringify(settings, null, 2));
+      return {success: true, filePath: result.filePath};
+    }
+    return {success: false, canceled: true};
+  } catch (error) {
+    return {success: false, error: error.message};
+  }
+};
+
+const importSettings = mainWindow => async () => {
+  try {
+    // First, show confirmation dialog
+    const confirmResult = await dialog.showMessageBox(mainWindow, {
+      type: 'question',
+      buttons: ['Cancel', 'Import'],
+      defaultId: 1,
+      cancelId: 0,
+      title: 'Import Settings',
+      message: 'Import settings from file?',
+      detail: 'This will replace your current settings. Your existing configuration will be overwritten.'
+    });
+
+    if (confirmResult.response !== 1) {
+      return {success: false, canceled: true};
+    }
+
+    const result = await dialog.showOpenDialog(mainWindow, {
+      title: 'Import ElectronIM Settings',
+      defaultPath: HOME_DIR,
+      filters: [
+        {name: 'JSON Files', extensions: ['json']},
+        {name: 'All Files', extensions: ['*']}
+      ],
+      properties: ['openFile']
+    });
+
+    if (!result.canceled && result.filePaths.length > 0) {
+      const filePath = result.filePaths[0];
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const importedSettings = JSON.parse(fileContent);
+
+      // Validate that it looks like settings by checking for required fields
+      if (typeof importedSettings === 'object' && importedSettings !== null) {
+        // Merge with default settings to ensure all required fields exist
+        const validatedSettings = ensureDefaultValues(importedSettings);
+        eventBus.emit(APP_EVENTS.settingsSave, null, validatedSettings);
+        return {success: true, filePath, shouldReload: true};
+      }
+      return {success: false, error: 'Invalid settings file format'};
+    }
+    return {success: false, canceled: true};
+  } catch (error) {
+    return {success: false, error: error.message};
+  }
+};
+
 const openSettingsDialog = mainWindow => () => {
   const settingsView = new WebContentsView({webPreferences});
   settingsView.webContents.loadURL(`file://${__dirname}/index.html`);
+  settingsView.webContents.openDevTools();
   showDialog(mainWindow, settingsView);
 };
 
-module.exports = {getPlatform, loadSettings, updateSettings, openSettingsDialog};
+module.exports = {getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSettings, importSettings};

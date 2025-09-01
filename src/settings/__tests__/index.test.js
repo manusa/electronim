@@ -192,6 +192,131 @@ describe('Settings module test suite', () => {
         .toHaveBeenCalledWith(expect.stringMatching(/.+?\/index.html$/));
     });
   });
+  describe('exportSettings', () => {
+    let mainWindow;
+    beforeEach(() => {
+      mainWindow = electron.baseWindowInstance;
+      fs.writeFileSync.mockClear();
+    });
+    test('canceled export, should return canceled result', async () => {
+      // Given
+      electron.dialog.showSaveDialog.mockImplementationOnce(() => ({canceled: true}));
+      // When
+      const result = await settings.exportSettings(mainWindow)();
+      // Then
+      expect(result).toEqual({success: false, canceled: true});
+      expect(fs.writeFileSync).not.toHaveBeenCalled();
+    });
+    test('successful export, should write settings to file', async () => {
+      // Given
+      const filePath = '/home/user/my-settings.json';
+      fs.existsSync.mockImplementationOnce(() => true);
+      fs.readFileSync.mockImplementationOnce(() => '{"tabs": [{"id": "1"}], "theme": "dark"}');
+      electron.dialog.showSaveDialog.mockImplementationOnce(() => ({canceled: false, filePath}));
+      // When
+      const result = await settings.exportSettings(mainWindow)();
+      // Then
+      expect(result).toEqual({success: true, filePath});
+      expect(fs.writeFileSync).toHaveBeenCalledWith(filePath, expect.stringContaining('"tabs"'));
+      expect(fs.writeFileSync).toHaveBeenCalledWith(filePath, expect.stringContaining('"theme": "dark"'));
+    });
+  });
+  describe('importSettings', () => {
+    let mainWindow;
+    let eventBusOnSettingsSave;
+    beforeEach(() => {
+      mainWindow = electron.baseWindowInstance;
+      eventBusOnSettingsSave = jest.fn();
+      electron.ipcMain.on('settingsSave', eventBusOnSettingsSave);
+
+      fs.writeFileSync.mockClear();
+    });
+    test('canceled import prompt, should return canceled result', async () => {
+      // Given - user cancels the confirmation dialog
+      electron.dialog.showMessageBox.mockImplementationOnce(() => ({response: 0})); // Cancel
+      // When
+      const result = await settings.importSettings(mainWindow)();
+      // Then
+      expect(result).toEqual({success: false, canceled: true});
+      expect(electron.dialog.showOpenDialog).not.toHaveBeenCalled();
+    });
+    test('canceled file dialog, should return canceled result', async () => {
+      // Given - user confirms import but cancels file dialog
+      electron.dialog.showMessageBox.mockImplementationOnce(() => ({response: 1})); // Import
+      electron.dialog.showOpenDialog.mockImplementationOnce(() => ({canceled: true}));
+      // When
+      const result = await settings.importSettings(mainWindow)();
+      // Then
+      expect(result).toEqual({success: false, canceled: true});
+    });
+    test('empty JSON file, should return error result', async () => {
+      // Given
+      const filePath = '/home/user/import-settings.json';
+      electron.dialog.showMessageBox.mockImplementationOnce(() => ({response: 1})); // Import
+      electron.dialog.showOpenDialog.mockImplementationOnce(() => ({
+        canceled: false,
+        filePaths: [filePath]
+      }));
+      fs.readFileSync.mockImplementationOnce(() => '');
+      // When
+      const result = await settings.importSettings(mainWindow)();
+      // Then
+      expect(result).toEqual({success: false, error: 'Unexpected end of JSON input'});
+    });
+    test('invalid JSON file, should return error result', async () => {
+      // Given
+      const filePath = '/home/user/import-settings.json';
+      electron.dialog.showMessageBox.mockImplementationOnce(() => ({response: 1})); // Import
+      electron.dialog.showOpenDialog.mockImplementationOnce(() => ({
+        canceled: false,
+        filePaths: [filePath]
+      }));
+      fs.readFileSync.mockImplementationOnce(() => '{invalid json');
+      // When
+      const result = await settings.importSettings(mainWindow)();
+      // Then
+      expect(result).toEqual({success: false, error: expect.stringContaining('Expected property name or \'}\' in JSON at position 1')});
+    });
+    test('incompatible JSON file, should return error result', async () => {
+      // Given
+      const filePath = '/home/user/import-settings.json';
+      const importedData = '""';
+      electron.dialog.showMessageBox.mockImplementationOnce(() => ({response: 1})); // Import
+      electron.dialog.showOpenDialog.mockImplementationOnce(() => ({
+        canceled: false,
+        filePaths: [filePath]
+      }));
+      fs.readFileSync.mockImplementationOnce(() => importedData);
+      // When
+      const result = await settings.importSettings(mainWindow)();
+      // Then
+      expect(result).toEqual({success: false, error: 'Invalid settings file format'});
+    });
+    describe('successful import', () => {
+      beforeEach(async () => {
+        const filePath = '/home/user/import-settings.json';
+        const importedData = '{"tabs": [{"id": "imported"}], "theme": "light"}';
+        electron.dialog.showMessageBox.mockImplementationOnce(() => ({response: 1})); // Import
+        electron.dialog.showOpenDialog.mockImplementationOnce(() => ({
+          canceled: false,
+          filePaths: [filePath]
+        }));
+        fs.readFileSync.mockImplementationOnce(() => importedData);
+        fs.existsSync.mockImplementationOnce(() => false); // For updateSettings call
+        // When
+        await settings.importSettings(mainWindow)();
+      });
+      test('reads settings from provided directory', async () => {
+        expect(fs.readFileSync).toHaveBeenCalledWith('/home/user/import-settings.json', 'utf8');
+      });
+      test('emits settingsSaved event with provided settings', async () => {
+        expect(eventBusOnSettingsSave).toHaveBeenCalledWith(null, expect.objectContaining({
+          tabs: [{id: 'imported'}],
+          theme: 'light'
+        }));
+      });
+    });
+  });
   const expectHomeDirectoryCreated = () => {
     expect(fs.mkdirSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim'), {recursive: true});
   };

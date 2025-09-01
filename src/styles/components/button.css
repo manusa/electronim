@@ -1,0 +1,60 @@
+/*
+   Copyright 2025 Marc Nuri San Felix
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
+.electronim .material3.button,
+.electronim .material.button,
+.material.button {
+  background: none;
+  border: none;
+  border-radius: 9999px;
+  color: var(--md-sys-color-primary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--material3-field-height);
+  outline: none;
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+  user-select: none;
+  /*
+    Override vertical-align with shortest value "top". Vertical-align's
+    default "baseline" value causes buttons to be misaligned next to each
+    other if one button has an icon and the other does not.
+  */
+  vertical-align: top;
+
+  font-family: var(--md-ref-typeface-plain);
+  font-size: var(--md-sys-typescale-body-large-size);
+  font-weight: var(--md-ref-typeface-weight-medium);
+  padding: 0 1.5rem;
+}
+
+.electronim .material3.button.outlined {
+  border: var(--material3-text-field-outlined-border);
+  border-color: var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.electronim .material3.button.outlined:hover {
+  background-color: var(--md-sys-color-surface-variant);
+}
+
+.electronim .material3.button .icon {
+  font-size: 20px;
+  font-family: 'Material Symbols Outlined', sans-serif;
+}

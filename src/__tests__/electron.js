@@ -122,6 +122,11 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     contextBridge: {
       exposeInMainWorld: jest.fn()
     },
+    dialog: {
+      showSaveDialog: jest.fn(async () => ({canceled: true})),
+      showOpenDialog: jest.fn(async () => ({canceled: true})),
+      showMessageBox: jest.fn(async () => ({response: 1}))
+    },
     globalShortcut: {
       listeners: {},
       register: jest.fn((accelerator, callback) => {
@@ -141,10 +146,10 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
         }
         instance.ipcMain.listeners[eventName] = func;
       },
-      emit: jest.fn((channel, event) => {
+      emit: jest.fn((channel, ...event) => {
         const func = instance.ipcMain.listeners[channel];
         if (func) {
-          func(event);
+          func.call(null, ...event);
         }
       }),
       handle: jest.fn((eventName, func) => instance.ipcMain._listen(eventName, func)),

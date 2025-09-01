@@ -141,3 +141,10 @@
         column-count: 5;
     }
 }
+
+.settings__import-export {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
