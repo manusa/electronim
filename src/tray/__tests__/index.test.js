@@ -23,8 +23,8 @@ describe('Tray module test suite', () => {
   let tray;
   beforeEach(async () => {
     settings = require('../../settings');
-    settings.appDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'electronim-test-'));
-    settings.settingsPath = path.join(settings.appDir, 'settings.json');
+    settings.paths.appDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'electronim-test-'));
+    settings.paths.settingsPath = path.join(settings.paths.appDir, 'settings.json');
     jest.spyOn(settings, 'getPlatform');
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');

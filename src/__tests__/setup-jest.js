@@ -18,7 +18,7 @@ afterEach(async () => {
   const os = require('node:os');
   const fs = require('node:fs');
   const settings = require('../settings');
-  if (os.tmpdir && settings.appDir && settings.appDir.startsWith(os.tmpdir())) {
-    await fs.promises.rm(settings.appDir, {recursive: true, force: true});
+  if (os.tmpdir && settings?.paths?.appDir && settings.paths.appDir.startsWith(os.tmpdir())) {
+    await fs.promises.rm(settings.paths.appDir, {recursive: true, force: true});
   }
 });
