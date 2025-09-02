@@ -23,6 +23,7 @@ export const ipcRenderer = () => {
   };
   const mockDictionariesEnabled = ['en'];
   const mockCurrentSettings = {
+    useNativeSpellChecker: false,
     disableNotificationsGlobally: false,
     tabs: [
       {id: '1', url: 'https://initial-tab.com', sandboxed: true},
@@ -31,7 +32,8 @@ export const ipcRenderer = () => {
     ],
     theme: 'dark',
     trayEnabled: true,
-    startMinimized: false
+    startMinimized: false,
+    closeButtonBehavior: 'quit'
   };
   return {
     mockDictionariesAvailableNative,

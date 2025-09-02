@@ -127,7 +127,11 @@ describe('Settings module test suite', () => {
         '  "theme": "system",\n' +
         '  "trayEnabled": false,\n' +
         '  "startMinimized": false,\n' +
-        '  "closeButtonBehavior": "quit"\n' +
+        '  "closeButtonBehavior": "quit",\n' +
+        '  "keyboardShortcuts": {\n' +
+        '    "tabSwitchModifier": "",\n' +
+        '    "tabTraverseModifier": ""\n' +
+        '  }\n' +
         '}');
     });
     test('object and saved settings, should overwrite overlapping settings', () => {
@@ -144,6 +148,10 @@ describe('Settings module test suite', () => {
         '  "trayEnabled": false,\n' +
         '  "startMinimized": false,\n' +
         '  "closeButtonBehavior": "quit",\n' +
+        '  "keyboardShortcuts": {\n' +
+        '    "tabSwitchModifier": "",\n' +
+        '    "tabTraverseModifier": ""\n' +
+        '  },\n' +
         '  "activeTab": 1337,\n' +
         '  "otherSetting": "1337"\n' +
         '}');
@@ -162,7 +170,12 @@ describe('Settings module test suite', () => {
         '  "trayEnabled": false,\n' +
         '  "startMinimized": false,\n' +
         '  "closeButtonBehavior": "quit",\n' +
-        '  "activeTab": 1337\n}');
+        '  "keyboardShortcuts": {\n' +
+        '    "tabSwitchModifier": "",\n' +
+        '    "tabTraverseModifier": ""\n' +
+        '  },\n' +
+        '  "activeTab": 1337\n' +
+        '}');
     });
   });
   describe('openSettingsDialog', () => {
