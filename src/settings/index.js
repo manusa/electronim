@@ -41,8 +41,11 @@ const webPreferences = {
   partition: 'persist:electronim'
 };
 
-const appDir = path.join(HOME_DIR, APP_DIR);
-const settingsPath = path.join(appDir, SETTINGS_FILE);
+// Overrideable for tests
+// eslint-disable-next-line prefer-const
+let appDir = path.join(HOME_DIR, APP_DIR);
+// eslint-disable-next-line prefer-const
+let settingsPath = path.join(appDir, SETTINGS_FILE);
 
 /**
  * Wrapper function to retrieve the current system's platform.
@@ -178,5 +181,7 @@ const openSettingsDialog = mainWindow => () => {
 };
 
 module.exports = {
-  getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSettings, importSettings, openElectronimFolder
+  getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSettings, importSettings, openElectronimFolder,
+  // Visible for testing
+  appDir, settingsPath
 };

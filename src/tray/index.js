@@ -19,6 +19,12 @@ const path = require('path');
 const {getPlatform, loadSettings} = require('../settings');
 let tray;
 
+const images = {
+  linux: 'icon.png',
+  darwin: 'iconTemplate.png',
+  win32: 'icon.ico'
+};
+
 const initTray = () => {
   if (tray && tray.destroy) {
     tray.destroy();
@@ -26,10 +32,9 @@ const initTray = () => {
   }
   const {trayEnabled} = loadSettings();
   if (trayEnabled) {
-    tray = new Tray(path.resolve(__dirname, '..', 'assets', getPlatform() === 'linux' ? 'icon.png' : 'icon.ico'));
+    tray = new Tray(path.resolve(__dirname, '..', 'assets', images[getPlatform()] || images.win32));
     tray.on('click', () => eventBus.emit(APP_EVENTS.restore));
   }
 };
-
 
 module.exports = {initTray};

@@ -13,42 +13,70 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+const path = require('node:path');
+const os = require('node:os');
+const fs = require('node:fs');
+
 describe('Tray module test suite', () => {
-  let mockSettings;
+  let settings;
   let electron;
   let tray;
-  beforeEach(() => {
-    jest.spyOn(require('../../settings'), 'loadSettings').mockImplementation(() => mockSettings);
+  beforeEach(async () => {
+    settings = require('../../settings');
+    settings.appDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'electronim-test-'));
+    settings.settingsPath = path.join(settings.appDir, 'settings.json');
+    jest.spyOn(settings, 'getPlatform');
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
     tray = require('../');
   });
+  afterEach(async () => {
+    jest.resetModules();
+  });
   describe('initTray', () => {
-    test('does nothing if tray is disabled', () => {
-      // Given
-      mockSettings = {trayEnabled: false};
-      // When
-      tray.initTray();
-      // Then
-      expect(electron.Tray).toHaveBeenCalledTimes(0);
-    });
-    test('instantiates tray if tray is enabled', () => {
-      // Given
-      mockSettings = {trayEnabled: true};
-      // When
-      tray.initTray();
-      // Then
-      expect(electron.Tray).toHaveBeenCalledTimes(1);
-    });
-    test('destroy previous tray', () => {
-      // Given
-      mockSettings = {trayEnabled: true};
-      tray.initTray();
-      electron.trayInstance.destroy.mockClear(); // previous tests might have already created a tray instance
-      // When
-      tray.initTray();
-      // Then
-      expect(electron.trayInstance.destroy).toHaveBeenCalledTimes(1);
+    describe.each([
+      {platform: 'linux', expectedIcon: 'icon.png'},
+      {platform: 'darwin', expectedIcon: 'iconTemplate.png'},
+      {platform: 'win32', expectedIcon: 'icon.ico'},
+      {platform: 'other', expectedIcon: 'icon.ico'}
+    ])('in platform $platform', ({platform, expectedIcon}) => {
+      beforeEach(() => {
+        settings.getPlatform.mockImplementation(() => platform);
+      });
+      test('does nothing if tray is disabled', () => {
+        // Given
+        settings.updateSettings({trayEnabled: false});
+        // When
+        tray.initTray();
+        // Then
+        expect(electron.Tray).toHaveBeenCalledTimes(0);
+      });
+      test('instantiates tray if tray is enabled', () => {
+        // Given
+        settings.updateSettings({trayEnabled: true});
+        // When
+        tray.initTray();
+        // Then
+        expect(electron.Tray).toHaveBeenCalledTimes(1);
+      });
+      test('destroy previous tray', () => {
+        // Given
+        settings.updateSettings({trayEnabled: true});
+        tray.initTray();
+        electron.trayInstance.destroy.mockClear(); // previous tests might have already created a tray instance
+        // When
+        tray.initTray();
+        // Then
+        expect(electron.trayInstance.destroy).toHaveBeenCalledTimes(1);
+      });
+      test(`uses ${expectedIcon} icon`, () => {
+        // Given
+        settings.updateSettings({trayEnabled: true});
+        // When
+        tray.initTray();
+        // Then
+        expect(electron.Tray).toHaveBeenCalledWith(path.resolve(__dirname, '..', '..', 'assets', expectedIcon));
+      });
     });
   });
 });
