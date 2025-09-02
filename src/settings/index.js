@@ -41,8 +41,10 @@ const webPreferences = {
   partition: 'persist:electronim'
 };
 
-const appDir = path.join(HOME_DIR, APP_DIR);
-const settingsPath = path.join(appDir, SETTINGS_FILE);
+// Overrideable for tests
+const paths = {};
+paths.appDir = path.join(HOME_DIR, APP_DIR);
+paths.settingsPath = path.join(paths.appDir, SETTINGS_FILE);
 
 /**
  * Wrapper function to retrieve the current system's platform.
@@ -74,20 +76,20 @@ const migrate = settings => {
   return settings;
 };
 
-const initAppDir = () => fs.mkdirSync(appDir, {recursive: true});
+const initAppDir = () => fs.mkdirSync(paths.appDir, {recursive: true});
 
 const loadSettings = () => {
   initAppDir();
   let loadedSettings = {};
-  if (fs.existsSync(settingsPath)) {
-    loadedSettings = JSON.parse(fs.readFileSync(settingsPath));
+  if (fs.existsSync(paths.settingsPath)) {
+    loadedSettings = JSON.parse(fs.readFileSync(paths.settingsPath));
   }
   return migrate(ensureDefaultValues(loadedSettings));
 };
 
 const writeSettings = settings => {
   initAppDir();
-  fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+  fs.writeFileSync(paths.settingsPath, JSON.stringify(settings, null, 2));
 };
 
 const updateSettings = settings =>
@@ -164,8 +166,8 @@ const importSettings = mainWindow => async () => {
 
 const openElectronimFolder = async () => {
   try {
-    await shell.openPath(appDir);
-    return {success: true, path: appDir};
+    await shell.openPath(paths.appDir);
+    return {success: true, path: paths.appDir};
   } catch (error) {
     return {success: false, error: error.message};
   }
@@ -178,5 +180,7 @@ const openSettingsDialog = mainWindow => () => {
 };
 
 module.exports = {
-  getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSettings, importSettings, openElectronimFolder
+  getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSettings, importSettings, openElectronimFolder,
+  // Visible for testing
+  paths
 };

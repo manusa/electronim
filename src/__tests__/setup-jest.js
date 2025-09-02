@@ -13,6 +13,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-afterEach(() => {
+afterEach(async () => {
   jest.useRealTimers();
+  const os = require('node:os');
+  const fs = require('node:fs');
+  const settings = require('../settings');
+  if (os.tmpdir && settings?.paths?.appDir && settings.paths.appDir.startsWith(os.tmpdir())) {
+    await fs.promises.rm(settings.paths.appDir, {recursive: true, force: true});
+  }
 });
