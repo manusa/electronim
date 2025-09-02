@@ -21,6 +21,4 @@ afterEach(async () => {
   if (os.tmpdir && settings.appDir && settings.appDir.startsWith(os.tmpdir())) {
     await fs.promises.rm(settings.appDir, {recursive: true, force: true});
   }
-  await jest.isolateModulesAsync(async () => {
-  });
 });
