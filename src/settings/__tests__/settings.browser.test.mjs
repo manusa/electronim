@@ -65,11 +65,17 @@ describe('Settings in Browser test suite', () => {
               {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true},
               {id: '3', url: 'https://initial-tab-3.com', openUrlsInApp: true}
             ],
+            useNativeSpellChecker: false,
             enabledDictionaries: ['en'],
             disableNotificationsGlobally: false,
             theme: 'dark',
             trayEnabled: true,
-            startMinimized: false
+            startMinimized: false,
+            closeButtonBehavior: 'quit',
+            keyboardShortcuts: {
+              tabSwitchModifier: '',
+              tabTraverseModifier: ''
+            }
           });
       });
       test('Cancel should send close dialog event', () => {

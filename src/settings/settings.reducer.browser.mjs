@@ -35,6 +35,10 @@ export const isPaneActive = state => paneId => state.activePane === paneId;
 export const closeButtonBehavior = state => state.closeButtonBehavior;
 export const theme = state => state.theme;
 export const useNativeSpellChecker = state => state.useNativeSpellChecker;
+export const keyboardShortcuts = state => state.keyboardShortcuts || {
+  tabSwitchModifier: '',
+  tabTraverseModifier: ''
+};
 export const dictionariesEnabled = state => state.dictionaries.enabled;
 const dictionariesAvailableNative = state => state.dictionaries.availableNative;
 const dictionariesAvailable = state => state.dictionaries.available;

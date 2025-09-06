@@ -29,7 +29,11 @@ const DEFAULT_SETTINGS = {
   theme: 'system',
   trayEnabled: false,
   startMinimized: false,
-  closeButtonBehavior: CLOSE_BUTTON_BEHAVIORS.quit
+  closeButtonBehavior: CLOSE_BUTTON_BEHAVIORS.quit,
+  keyboardShortcuts: {
+    tabSwitchModifier: '',
+    tabTraverseModifier: ''
+  }
 };
 
 const webPreferences = {
