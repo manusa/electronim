@@ -71,13 +71,18 @@ const APP_EVENTS = {
   zoomReset: 'zoomReset'
 };
 
-const CLOSE_BUTTON_BEHAVIORS = {
+const CLOSE_BUTTON_BEHAVIORS = Object.freeze({
   minimize: 'minimize',
   quit: 'quit'
-};
+});
+
+const KEYBOARD_SHORTCUTS = Object.freeze({
+  tabSwitchModifier: 'Ctrl',
+  tabTraverseModifier: 'Ctrl'
+});
 
 const ELECTRONIM_VERSION = JSON.parse(fs.readFileSync(path.resolve(findRootDir(), 'package.json'), 'utf8')).version;
 
 module.exports = {
-  APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION
+  APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, KEYBOARD_SHORTCUTS
 };

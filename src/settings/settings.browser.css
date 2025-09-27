@@ -86,8 +86,10 @@
 
 .settings__row {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    height: var(--settings-row-height);
+    min-height: var(--settings-row-height);
+    gap: var(--default-spacing);
 }
 
 .settings .material3.select {

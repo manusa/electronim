@@ -72,10 +72,7 @@ describe('Settings in Browser test suite', () => {
             trayEnabled: true,
             startMinimized: false,
             closeButtonBehavior: 'quit',
-            keyboardShortcuts: {
-              tabSwitchModifier: '',
-              tabTraverseModifier: ''
-            }
+            keyboardShortcuts: {}
           });
       });
       test('Cancel should send close dialog event', () => {
@@ -151,6 +148,31 @@ describe('Settings in Browser test suite', () => {
           const title = document.querySelector('h2.title');
           expect(title).not.toBeNull();
           expect(title.textContent).toContain('Spell check');
+        });
+      });
+    });
+
+    describe('Keyboard', () => {
+      beforeEach(async () => {
+        const otherButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
+          .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Keyboard');
+        fireEvent.click(otherButton);
+        await waitFor(() => document.querySelector('h2.title'));
+      });
+
+      test('title contains icon', async () => {
+        await waitFor(() => {
+          const iconElement = document.querySelector('h2.title .material3.icon');
+          expect(iconElement).not.toBeNull();
+          expect(iconElement.textContent).toBe('\ue312');
+        });
+      });
+
+      test('title contains text', async () => {
+        await waitFor(() => {
+          const title = document.querySelector('h2.title');
+          expect(title).not.toBeNull();
+          expect(title.textContent).toContain('Keyboard Shortcuts');
         });
       });
     });

@@ -46,6 +46,7 @@ Icon.fileSave = '\uf17f';
 Icon.help = '\ue887';
 Icon.inbox = '\ue156';
 Icon.info = '\ue88e';
+Icon.keyboard = '\ue312';
 Icon.keyboardArrowDown = '\ue313';
 Icon.keyboardArrowUp = '\ue316';
 Icon.lock = '\ue88d';

@@ -129,8 +129,8 @@ describe('Settings module test suite', () => {
         '  "startMinimized": false,\n' +
         '  "closeButtonBehavior": "quit",\n' +
         '  "keyboardShortcuts": {\n' +
-        '    "tabSwitchModifier": "",\n' +
-        '    "tabTraverseModifier": ""\n' +
+        '    "tabSwitchModifier": "Ctrl",\n' +
+        '    "tabTraverseModifier": "Ctrl"\n' +
         '  }\n' +
         '}');
     });
@@ -149,8 +149,8 @@ describe('Settings module test suite', () => {
         '  "startMinimized": false,\n' +
         '  "closeButtonBehavior": "quit",\n' +
         '  "keyboardShortcuts": {\n' +
-        '    "tabSwitchModifier": "",\n' +
-        '    "tabTraverseModifier": ""\n' +
+        '    "tabSwitchModifier": "Ctrl",\n' +
+        '    "tabTraverseModifier": "Ctrl"\n' +
         '  },\n' +
         '  "activeTab": 1337,\n' +
         '  "otherSetting": "1337"\n' +
@@ -171,8 +171,8 @@ describe('Settings module test suite', () => {
         '  "startMinimized": false,\n' +
         '  "closeButtonBehavior": "quit",\n' +
         '  "keyboardShortcuts": {\n' +
-        '    "tabSwitchModifier": "",\n' +
-        '    "tabTraverseModifier": ""\n' +
+        '    "tabSwitchModifier": "Ctrl",\n' +
+        '    "tabTraverseModifier": "Ctrl"\n' +
         '  },\n' +
         '  "activeTab": 1337\n' +
         '}');

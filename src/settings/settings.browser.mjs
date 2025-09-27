@@ -63,7 +63,7 @@ const Settings = ({initialState}) => {
         active=${isPaneActive(state)(ServicesPane.id)} onClick=${() => onActivatePane(ServicesPane.id)} />
       <${NavigationRail.Button} label='Spell check' icon=${Icon.spellcheck}
         active=${isPaneActive(state)(SpellCheckPane.id)} onClick=${() => onActivatePane(SpellCheckPane.id)} />
-      <${NavigationRail.Button} label='Keyboard' icon=${Icon.settings}
+      <${NavigationRail.Button} label='Keyboard' icon=${Icon.keyboard}
         active=${isPaneActive(state)(KeyboardPane.id)} onClick=${() => onActivatePane(KeyboardPane.id)} />
       <${NavigationRail.Button} label='Other' icon=${Icon.more}
         active=${isPaneActive(state)(OtherPane.id)} onClick=${() => onActivatePane(OtherPane.id)} />
@@ -106,10 +106,7 @@ Promise.all([
       trayEnabled: currentSettings.trayEnabled,
       startMinimized: currentSettings.startMinimized,
       closeButtonBehavior: currentSettings.closeButtonBehavior,
-      keyboardShortcuts: currentSettings.keyboardShortcuts || {
-        tabSwitchModifier: '',
-        tabTraverseModifier: ''
-      }
+      keyboardShortcuts: currentSettings.keyboardShortcuts
     };
     render(html`<${Settings} initialState=${initialState} />`, settingsRoot());
   }
