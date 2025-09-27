@@ -98,6 +98,49 @@ describe('Settings in Browser test suite', () => {
       expect(items).toContainEqual({label, icon});
     });
   });
+  describe('Pane Titles', () => {
+    test('Services pane title should contain icon', () => {
+      // Services pane is shown by default
+      const title = document.querySelector('h2.title');
+      expect(title).not.toBeNull();
+      expect(title.textContent).toContain('Services');
+      const iconElement = title.querySelector('.material3.icon');
+      expect(iconElement).not.toBeNull();
+      expect(iconElement.textContent).toBe('\ue5c3');
+    });
+
+    test('Spell check pane title should contain icon', async () => {
+      // Click navigation rail button to show Spell check pane
+      const spellCheckButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
+        .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Spell check');
+      fireEvent.click(spellCheckButton);
+
+      await waitFor(() => {
+        const title = document.querySelector('h2.title');
+        expect(title).not.toBeNull();
+        expect(title.textContent).toContain('Spell check');
+        const iconElement = title.querySelector('.material3.icon');
+        expect(iconElement).not.toBeNull();
+        expect(iconElement.textContent).toBe('\ue8ce');
+      });
+    });
+
+    test('Other pane title should contain icon', async () => {
+      // Click navigation rail button to show Other pane
+      const otherButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
+        .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Other');
+      fireEvent.click(otherButton);
+
+      await waitFor(() => {
+        const title = document.querySelector('h2.title');
+        expect(title).not.toBeNull();
+        expect(title.textContent).toContain('Other');
+        const iconElement = title.querySelector('.material3.icon');
+        expect(iconElement).not.toBeNull();
+        expect(iconElement.textContent).toBe('\ue619');
+      });
+    });
+  });
   describe('New tab Input field', () => {
     let $tabContainer;
     let $input;
