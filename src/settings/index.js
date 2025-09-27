@@ -17,7 +17,7 @@ const {WebContentsView, dialog, shell, ipcMain: eventBus} = require('electron');
 const fs = require('fs');
 const path = require('path');
 const HOME_DIR = require('os').homedir();
-const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS} = require('../constants');
+const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, KEYBOARD_SHORTCUTS} = require('../constants');
 const {showDialog} = require('../base-window');
 
 const APP_DIR = '.electronim';
@@ -29,7 +29,11 @@ const DEFAULT_SETTINGS = {
   theme: 'system',
   trayEnabled: false,
   startMinimized: false,
-  closeButtonBehavior: CLOSE_BUTTON_BEHAVIORS.quit
+  closeButtonBehavior: CLOSE_BUTTON_BEHAVIORS.quit,
+  keyboardShortcuts: {
+    tabSwitchModifier: KEYBOARD_SHORTCUTS.tabSwitchModifier,
+    tabTraverseModifier: KEYBOARD_SHORTCUTS.tabTraverseModifier
+  }
 };
 
 const webPreferences = {
@@ -176,6 +180,8 @@ const openElectronimFolder = async () => {
 const openSettingsDialog = mainWindow => () => {
   const settingsView = new WebContentsView({webPreferences});
   settingsView.webContents.loadURL(`file://${__dirname}/index.html`);
+  // TODO: DON'T COMMIT!!!
+  settingsView.webContents.openDevTools();
   showDialog(mainWindow, settingsView);
 };
 
