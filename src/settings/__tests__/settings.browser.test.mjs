@@ -72,10 +72,7 @@ describe('Settings in Browser test suite', () => {
             trayEnabled: true,
             startMinimized: false,
             closeButtonBehavior: 'quit',
-            keyboardShortcuts: {
-              tabSwitchModifier: '',
-              tabTraverseModifier: ''
-            }
+            keyboardShortcuts: {}
           });
       });
       test('Cancel should send close dialog event', () => {

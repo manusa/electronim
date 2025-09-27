@@ -59,6 +59,6 @@ export const SettingsOption = ({
   </div>
 `;
 
-export const SettingsRow = ({children}) => html`
-  <div class='settings__row'>${children}</div>
+export const SettingsRow = ({children, ...properties}) => html`
+  <div class='settings__row' ...${properties}>${children}</div>
 `;

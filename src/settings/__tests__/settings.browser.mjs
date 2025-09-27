@@ -33,7 +33,8 @@ export const ipcRenderer = () => {
     theme: 'dark',
     trayEnabled: true,
     startMinimized: false,
-    closeButtonBehavior: 'quit'
+    closeButtonBehavior: 'quit',
+    keyboardShortcuts: {}
   };
   return {
     mockDictionariesAvailableNative,
