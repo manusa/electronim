@@ -17,7 +17,7 @@ const {WebContentsView, dialog, shell, ipcMain: eventBus} = require('electron');
 const fs = require('fs');
 const path = require('path');
 const HOME_DIR = require('os').homedir();
-const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS} = require('../constants');
+const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, KEYBOARD_SHORTCUTS} = require('../constants');
 const {showDialog} = require('../base-window');
 
 const APP_DIR = '.electronim';
@@ -31,8 +31,8 @@ const DEFAULT_SETTINGS = {
   startMinimized: false,
   closeButtonBehavior: CLOSE_BUTTON_BEHAVIORS.quit,
   keyboardShortcuts: {
-    tabSwitchModifier: '',
-    tabTraverseModifier: ''
+    tabSwitchModifier: KEYBOARD_SHORTCUTS.tabSwitchModifier,
+    tabTraverseModifier: KEYBOARD_SHORTCUTS.tabTraverseModifier
   }
 };
 
