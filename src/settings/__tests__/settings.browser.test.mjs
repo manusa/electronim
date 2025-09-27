@@ -99,45 +99,79 @@ describe('Settings in Browser test suite', () => {
     });
   });
   describe('Pane Titles', () => {
-    test('Services pane title should contain icon', () => {
-      // Services pane is shown by default
-      const title = document.querySelector('h2.title');
-      expect(title).not.toBeNull();
-      expect(title.textContent).toContain('Services');
-      const iconElement = title.querySelector('.material3.icon');
-      expect(iconElement).not.toBeNull();
-      expect(iconElement.textContent).toBe('\ue5c3');
-    });
-
-    test('Spell check pane title should contain icon', async () => {
-      // Click navigation rail button to show Spell check pane
-      const spellCheckButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
-        .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Spell check');
-      fireEvent.click(spellCheckButton);
-
-      await waitFor(() => {
+    describe('Services', () => {
+      test('title contains icon', () => {
+        // Services pane is shown by default
         const title = document.querySelector('h2.title');
         expect(title).not.toBeNull();
-        expect(title.textContent).toContain('Spell check');
         const iconElement = title.querySelector('.material3.icon');
         expect(iconElement).not.toBeNull();
-        expect(iconElement.textContent).toBe('\ue8ce');
+        expect(iconElement.textContent).toBe('\ue5c3');
+      });
+
+      test('title contains text', () => {
+        // Services pane is shown by default
+        const title = document.querySelector('h2.title');
+        expect(title).not.toBeNull();
+        expect(title.textContent).toContain('Services');
       });
     });
 
-    test('Other pane title should contain icon', async () => {
-      // Click navigation rail button to show Other pane
-      const otherButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
-        .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Other');
-      fireEvent.click(otherButton);
+    describe('Spell check', () => {
+      let spellCheckButton;
 
-      await waitFor(() => {
-        const title = document.querySelector('h2.title');
-        expect(title).not.toBeNull();
-        expect(title.textContent).toContain('Other');
-        const iconElement = title.querySelector('.material3.icon');
-        expect(iconElement).not.toBeNull();
-        expect(iconElement.textContent).toBe('\ue619');
+      beforeEach(async () => {
+        spellCheckButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
+          .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Spell check');
+        fireEvent.click(spellCheckButton);
+        await waitFor(() => document.querySelector('h2.title'));
+      });
+
+      test('title contains icon', async () => {
+        await waitFor(() => {
+          const title = document.querySelector('h2.title');
+          expect(title).not.toBeNull();
+          const iconElement = title.querySelector('.material3.icon');
+          expect(iconElement).not.toBeNull();
+          expect(iconElement.textContent).toBe('\ue8ce');
+        });
+      });
+
+      test('title contains text', async () => {
+        await waitFor(() => {
+          const title = document.querySelector('h2.title');
+          expect(title).not.toBeNull();
+          expect(title.textContent).toContain('Spell check');
+        });
+      });
+    });
+
+    describe('Other', () => {
+      let otherButton;
+
+      beforeEach(async () => {
+        otherButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
+          .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Other');
+        fireEvent.click(otherButton);
+        await waitFor(() => document.querySelector('h2.title'));
+      });
+
+      test('title contains icon', async () => {
+        await waitFor(() => {
+          const title = document.querySelector('h2.title');
+          expect(title).not.toBeNull();
+          const iconElement = title.querySelector('.material3.icon');
+          expect(iconElement).not.toBeNull();
+          expect(iconElement.textContent).toBe('\ue619');
+        });
+      });
+
+      test('title contains text', async () => {
+        await waitFor(() => {
+          const title = document.querySelector('h2.title');
+          expect(title).not.toBeNull();
+          expect(title.textContent).toContain('Other');
+        });
       });
     });
   });
