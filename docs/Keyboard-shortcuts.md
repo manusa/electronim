@@ -19,7 +19,7 @@ The tab navigation shortcuts (`Ctrl+Tab` and `Ctrl+[1-9]`) can be customized to 
 
 ### How to Customize
 
-1. Open ElectronIM settings (click the gear icon or use the menu)
+1. Open ElectronIM settings (open the menu and select " ⚙️ Settings")
 2. Go to the "Keyboard" section in the settings
 3. Modify the following fields:
    - **Tab Switch Modifier**: Changes the modifier for `Ctrl+[1-9]` shortcuts
@@ -38,4 +38,4 @@ The tab navigation shortcuts (`Ctrl+Tab` and `Ctrl+[1-9]`) can be customized to 
 - **Alt modifier**: Set both fields to "Alt" → `Alt+1` switches to tab 1, `Alt+Tab` cycles through tabs
 - **Mixed**: Tab Switch = "Alt", Tab Traverse = "Meta" → `Alt+1` for switching, `Meta+Tab` for cycling
 
-> **Note**: On Mac, Command key shortcuts (`Cmd+[1-9]`) will always work regardless of your custom settings.
+> **Note**: On Mac, Command key shortcuts (`Command+[1-9]`) will always work regardless of your custom settings (this will be changed in future versions).
