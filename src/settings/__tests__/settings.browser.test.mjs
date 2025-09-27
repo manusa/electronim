@@ -100,28 +100,33 @@ describe('Settings in Browser test suite', () => {
   });
   describe('Pane Titles', () => {
     describe('Services', () => {
-      test('title contains icon', () => {
-        // Services pane is shown by default
-        const title = document.querySelector('h2.title');
-        expect(title).not.toBeNull();
-        const iconElement = title.querySelector('.material3.icon');
-        expect(iconElement).not.toBeNull();
-        expect(iconElement.textContent).toBe('\ue5c3');
+      beforeEach(async () => {
+        const servicesButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
+          .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Services');
+        fireEvent.click(servicesButton);
+        await waitFor(() => document.querySelector('h2.title'));
       });
 
-      test('title contains text', () => {
-        // Services pane is shown by default
-        const title = document.querySelector('h2.title');
-        expect(title).not.toBeNull();
-        expect(title.textContent).toContain('Services');
+      test('title contains icon', async () => {
+        await waitFor(() => {
+          const iconElement = document.querySelector('h2.title .material3.icon');
+          expect(iconElement).not.toBeNull();
+          expect(iconElement.textContent).toBe('\ue5c3');
+        });
+      });
+
+      test('title contains text', async () => {
+        await waitFor(() => {
+          const title = document.querySelector('h2.title');
+          expect(title).not.toBeNull();
+          expect(title.textContent).toContain('Services');
+        });
       });
     });
 
     describe('Spell check', () => {
-      let spellCheckButton;
-
       beforeEach(async () => {
-        spellCheckButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
+        const spellCheckButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
           .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Spell check');
         fireEvent.click(spellCheckButton);
         await waitFor(() => document.querySelector('h2.title'));
@@ -129,9 +134,7 @@ describe('Settings in Browser test suite', () => {
 
       test('title contains icon', async () => {
         await waitFor(() => {
-          const title = document.querySelector('h2.title');
-          expect(title).not.toBeNull();
-          const iconElement = title.querySelector('.material3.icon');
+          const iconElement = document.querySelector('h2.title .material3.icon');
           expect(iconElement).not.toBeNull();
           expect(iconElement.textContent).toBe('\ue8ce');
         });
@@ -147,10 +150,8 @@ describe('Settings in Browser test suite', () => {
     });
 
     describe('Other', () => {
-      let otherButton;
-
       beforeEach(async () => {
-        otherButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
+        const otherButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
           .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Other');
         fireEvent.click(otherButton);
         await waitFor(() => document.querySelector('h2.title'));
@@ -158,9 +159,7 @@ describe('Settings in Browser test suite', () => {
 
       test('title contains icon', async () => {
         await waitFor(() => {
-          const title = document.querySelector('h2.title');
-          expect(title).not.toBeNull();
-          const iconElement = title.querySelector('.material3.icon');
+          const iconElement = document.querySelector('h2.title .material3.icon');
           expect(iconElement).not.toBeNull();
           expect(iconElement.textContent).toBe('\ue619');
         });
