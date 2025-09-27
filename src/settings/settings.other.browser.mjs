@@ -33,7 +33,7 @@ export const OtherPane = ({dispatch, state}) => {
   const settingsImport = () => ipcRenderer.invoke(APP_EVENTS.settingsImport);
   const settingsOpenFolder = () => ipcRenderer.invoke(APP_EVENTS.settingsOpenFolder);
   return isPaneActive(state)(OtherPane.id) && html`
-    <h2 class='title'>Other</h2>
+    <h2 class='title'><${Icon}>${Icon.more}</${Icon}>Other</h2>
     <${Card} className='settings__other'>
       <${SettingsRow}>
         <${Select}

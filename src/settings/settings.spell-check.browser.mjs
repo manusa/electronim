@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {Card, Checkbox, html} from '../components/index.mjs';
+import {Card, Checkbox, html, Icon} from '../components/index.mjs';
 import {
   dictionaries,
   dictionariesEnabled,
@@ -36,7 +36,7 @@ export const SpellCheckPane = ({dispatch, state}) => {
   const useNative = useNativeSpellChecker(state);
   const enabledDictionaries = dictionariesEnabled(state);
   return isPaneActive(state)(SpellCheckPane.id) && html`
-    <h2 class='title'>Spell check</h2>
+    <h2 class='title'><${Icon}>${Icon.spellcheck}</${Icon}>Spell check</h2>
     <${Card} className='settings__spell-check'>
       <${SettingsOption}
           className='settings__use-native-spell-checker'

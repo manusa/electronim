@@ -98,7 +98,7 @@ export const ServicesPane = ({dispatch, state}) => {
     }
   };
   return isPaneActive(state)(ServicesPane.id) && html`
-    <h2 class='title'>Services</h2>
+    <h2 class='title'><${Icon}>${Icon.apps}</${Icon}>Services</h2>
     <${Card} className='settings__services'>
       <div class='settings__new-tab'>
         <${TextField}

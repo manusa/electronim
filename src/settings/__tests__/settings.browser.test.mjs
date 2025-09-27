@@ -98,6 +98,82 @@ describe('Settings in Browser test suite', () => {
       expect(items).toContainEqual({label, icon});
     });
   });
+  describe('Pane Titles', () => {
+    describe('Services', () => {
+      beforeEach(async () => {
+        const servicesButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
+          .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Services');
+        fireEvent.click(servicesButton);
+        await waitFor(() => document.querySelector('h2.title'));
+      });
+
+      test('title contains icon', async () => {
+        await waitFor(() => {
+          const iconElement = document.querySelector('h2.title .material3.icon');
+          expect(iconElement).not.toBeNull();
+          expect(iconElement.textContent).toBe('\ue5c3');
+        });
+      });
+
+      test('title contains text', async () => {
+        await waitFor(() => {
+          const title = document.querySelector('h2.title');
+          expect(title).not.toBeNull();
+          expect(title.textContent).toContain('Services');
+        });
+      });
+    });
+
+    describe('Spell check', () => {
+      beforeEach(async () => {
+        const spellCheckButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
+          .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Spell check');
+        fireEvent.click(spellCheckButton);
+        await waitFor(() => document.querySelector('h2.title'));
+      });
+
+      test('title contains icon', async () => {
+        await waitFor(() => {
+          const iconElement = document.querySelector('h2.title .material3.icon');
+          expect(iconElement).not.toBeNull();
+          expect(iconElement.textContent).toBe('\ue8ce');
+        });
+      });
+
+      test('title contains text', async () => {
+        await waitFor(() => {
+          const title = document.querySelector('h2.title');
+          expect(title).not.toBeNull();
+          expect(title.textContent).toContain('Spell check');
+        });
+      });
+    });
+
+    describe('Other', () => {
+      beforeEach(async () => {
+        const otherButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
+          .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Other');
+        fireEvent.click(otherButton);
+        await waitFor(() => document.querySelector('h2.title'));
+      });
+
+      test('title contains icon', async () => {
+        await waitFor(() => {
+          const iconElement = document.querySelector('h2.title .material3.icon');
+          expect(iconElement).not.toBeNull();
+          expect(iconElement.textContent).toBe('\ue619');
+        });
+      });
+
+      test('title contains text', async () => {
+        await waitFor(() => {
+          const title = document.querySelector('h2.title');
+          expect(title).not.toBeNull();
+          expect(title.textContent).toContain('Other');
+        });
+      });
+    });
+  });
   describe('New tab Input field', () => {
     let $tabContainer;
     let $input;
