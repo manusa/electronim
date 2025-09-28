@@ -27,6 +27,9 @@
 
 .settings .title,
 .settings h2.title {
+    display: flex;
+    align-items: center;
+    gap: var(--default-spacing);
     font-family: var(--md-sys-typescale-title-large-font);
     font-size: var(--md-sys-typescale-title-large-size);
     font-weight: var(--md-sys-typescale-title-large-weight);
