@@ -38,6 +38,10 @@ describe('Main :: Global listeners test suite', () => {
     // Always mock settings unless we want to overwrite the real settings file !
     jest.mock('../../settings');
     require('../../settings').loadSettings.mockImplementation(() => ({
+      keyboardShortcuts: {
+        tabSwitchModifier: 'Alt',
+        tabTraverseModifier: 'Alt'
+      },
       trayEnabled: true
     }));
     require('../../settings').openSettingsDialog = jest.requireActual('../../settings').openSettingsDialog;
@@ -52,7 +56,7 @@ describe('Main :: Global listeners test suite', () => {
     'aboutOpenDialog', 'appMenuOpen', 'appMenuClose', 'closeDialog',
     'dictionaryGetAvailable', 'dictionaryGetAvailableNative', 'dictionaryGetEnabled',
     'findInPage', 'findInPageOpen', 'findInPageClose',
-    'fullscreenToggle', 'helpOpenDialog', 'quit', 'restore',
+    'fullscreenToggle', 'helpOpenDialog', 'keyboardEventsInit', 'quit', 'restore',
     'settingsLoad', 'settingsOpenDialog', 'settingsExport', 'settingsImport', 'settingsSave',
     'tabSwitchToPosition', 'tabTraverseNext', 'tabTraversePrevious',
     'trayInit'
@@ -204,6 +208,28 @@ describe('Main :: Global listeners test suite', () => {
     expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(view);
     expect(view.webContents.loadURL)
       .toHaveBeenCalledWith(expect.stringMatching(/help\/index.html$/));
+  });
+  describe('keyboardEventsInit, with customized settings, initializes keyboard listeners', () => {
+    let webContents;
+    beforeEach(() => {
+      webContents = new electron.WebContentsView();
+      require('../../base-window').registerAppShortcuts({}, webContents);
+    });
+    test('tabTraverseNext', () => {
+      jest.spyOn(eventBus.listeners, 'tabTraverseNext');
+      webContents.listeners['before-input-event']({preventDefault: jest.fn()}, {type: 'keyDown', key: 'Tab', alt: true});
+      expect(eventBus.listeners.tabTraverseNext).toHaveBeenCalledTimes(1);
+    });
+    test('tabTraverseNext', () => {
+      jest.spyOn(eventBus.listeners, 'tabTraversePrevious');
+      webContents.listeners['before-input-event']({preventDefault: jest.fn()}, {type: 'keyDown', key: 'Tab', alt: true, shift: true});
+      expect(eventBus.listeners.tabTraversePrevious).toHaveBeenCalledTimes(1);
+    });
+    test.each([1, 2, 3, 4, 5, 6, 7, 8, 9])('tabSwitchToPosition %i', key => {
+      jest.spyOn(eventBus.listeners, 'tabSwitchToPosition');
+      webContents.listeners['before-input-event']({preventDefault: jest.fn()}, {type: 'keyDown', key: `${key}`, alt: true});
+      expect(eventBus.listeners.tabSwitchToPosition).toHaveBeenCalledTimes(1);
+    });
   });
   test('quit, should exit the application', () => {
     // When
