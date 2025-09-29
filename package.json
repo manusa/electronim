@@ -124,14 +124,14 @@
       "icon": "icon_1024x1024.png",
       "target": [
         {
-          "target":"dmg",
+          "target": "dmg",
           "arch": [
             "x64",
             "arm64"
           ]
         },
         {
-          "target":"tar.gz",
+          "target": "tar.gz",
           "arch": [
             "x64",
             "arm64"
@@ -186,7 +186,7 @@
     "verbose": true
   },
   "devDependencies": {
-    "@sonar/scan": "4.3.0",
+    "@sonar/scan": "4.3.2",
     "@testing-library/dom": "10.4.1",
     "@testing-library/user-event": "14.6.1",
     "chrome-tabs": "5.4.0",
@@ -206,12 +206,12 @@
     "webpack": "5.101.3"
   },
   "dependencies": {
-    "axios": "1.11.0",
+    "axios": "1.12.0",
     "dictionary-ca": "2.6.0",
     "dictionary-ca-valencia": "2.6.0",
     "dictionary-de": "2.0.4",
-    "dictionary-en-gb": "2.4.0",
     "dictionary-en": "3.2.0",
+    "dictionary-en-gb": "2.4.0",
     "dictionary-es": "3.2.0",
     "dictionary-eu": "3.2.0",
     "dictionary-fr": "2.8.0",
