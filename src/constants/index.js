@@ -47,6 +47,7 @@ const APP_EVENTS = {
   findInPageOpen: 'findInPageOpen',
   fullscreenToggle: 'fullscreenToggle',
   helpOpenDialog: 'helpOpenDialog',
+  keyboardEventsInit: 'keyboardEventsInit',
   notificationClick: 'notificationClick',
   quit: 'quit',
   reload: 'reload',

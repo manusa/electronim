@@ -14,11 +14,26 @@
    limitations under the License.
  */
 const {ipcMain: eventBus} = require('electron');
-const {APP_EVENTS} = require('../constants');
-const {loadSettings} = require('../settings');
+const {APP_EVENTS, KEYBOARD_SHORTCUTS} = require('../constants');
 
 const eventKey = ({key, shift = false, control = false, alt = false, meta = false}) =>
   `${key}-${shift}-${control}-${alt}-${meta}`;
+
+const eventKeyForModifier = ({key, shift = false, modifier}) => {
+  switch (modifier.toLowerCase().trim()) {
+    case 'control':
+    case 'ctrl':
+      return eventKey({key, shift, control: true});
+    case 'alt':
+      return eventKey({key, shift, alt: true});
+    case 'meta':
+    case 'cmd':
+    case 'command':
+      return eventKey({key, shift, meta: true});
+    default:
+      throw new Error(`Unknown modifier: ${modifier}`);
+  }
+};
 
 const eventAction = (func, {preventDefault = true} = {}) => {
   return event => {
@@ -29,87 +44,72 @@ const eventAction = (func, {preventDefault = true} = {}) => {
   };
 };
 
-const getModifierForKey = modifierName => {
-  if (!modifierName || modifierName.trim() === '') {
-    return {control: true}; // Default to ctrl
-  }
+const EVENTS = new Map();
 
-  const modifier = modifierName.toLowerCase().trim();
-  switch (modifier) {
-    case 'alt':
-      return {alt: true};
-    case 'ctrl':
-    case 'control':
-      return {control: true};
-    case 'meta':
-    case 'command':
-      return {meta: true};
-    default:
-      return {control: true}; // Default fallback
-  }
-};
+const setKeyboardShortcutsListeners = settings => {
+  EVENTS.clear();
 
-const createKeyboardShortcutsEvents = settings => {
-  const events = new Map();
-  const keyboardShortcuts = settings.keyboardShortcuts || {
-    tabSwitchModifier: '',
-    tabTraverseModifier: ''
-  };
-
-  // Fixed shortcuts (not customizable)
-  events.set(eventKey({key: 'Escape'}),
+  EVENTS.set(eventKey({key: 'Escape'}),
     eventAction(() => eventBus.emit(APP_EVENTS.escape), {preventDefault: false}));
 
-  events.set(eventKey({key: 'F11'}), eventAction(() => eventBus.emit(APP_EVENTS.fullscreenToggle)));
+  EVENTS.set(eventKey({key: 'F11'}), eventAction(() => eventBus.emit(APP_EVENTS.fullscreenToggle)));
 
-  // Customizable tab switching shortcuts
-  const tabSwitchModifier = getModifierForKey(keyboardShortcuts.tabSwitchModifier);
+  const tabSwitchModifier = settings?.keyboardShortcuts?.tabSwitchModifier || KEYBOARD_SHORTCUTS.tabSwitchModifier;
   Array(9).fill(1).forEach((min, idx) => {
     const key = min + idx;
     const func = () => eventBus.emit(APP_EVENTS.tabSwitchToPosition, key);
-    events.set(eventKey({key, ...tabSwitchModifier}), eventAction(func));
-
-    // Always keep Meta (Command) for Mac compatibility
-    if (!tabSwitchModifier.meta) {
-      events.set(eventKey({key, meta: true}), eventAction(func));
-    }
+    EVENTS.set(eventKeyForModifier({key, modifier: tabSwitchModifier}), eventAction(func));
+    // eslint-disable-next-line no-warning-comments
+    // TODO: For legacy reasons cmd+1-9 needs to be supported when key is not set in macOS
+    EVENTS.set(eventKey({key, meta: true}), eventAction(func));
   });
 
-  // Customizable tab traversal shortcuts
-  const tabTraverseModifier = getModifierForKey(keyboardShortcuts.tabTraverseModifier);
-  events.set(eventKey({key: 'Tab', ...tabTraverseModifier}), eventAction(() =>
+  const tabTraverseModifier = settings?.keyboardShortcuts?.tabTraverseModifier ||
+    KEYBOARD_SHORTCUTS.tabTraverseModifier;
+  EVENTS.set(eventKeyForModifier({key: 'Tab', modifier: tabTraverseModifier}), eventAction(() =>
     eventBus.emit(APP_EVENTS.tabTraverseNext)));
 
-  events.set(eventKey({key: 'Tab', shift: true, ...tabTraverseModifier}), eventAction(() =>
+  EVENTS.set(eventKeyForModifier({key: 'Tab', shift: true, modifier: tabTraverseModifier}), eventAction(() =>
     eventBus.emit(APP_EVENTS.tabTraversePrevious)));
 
-  // Find in page shortcuts (not customizable)
   const findInPageOpen = eventAction(() => eventBus.emit(APP_EVENTS.findInPageOpen));
-  events.set(eventKey({key: 'f', meta: true}), findInPageOpen);
-  events.set(eventKey({key: 'F', meta: true}), findInPageOpen);
-  events.set(eventKey({key: 'f', control: true}), findInPageOpen);
-  events.set(eventKey({key: 'F', control: true}), findInPageOpen);
-
-  return events;
+  EVENTS.set(eventKey({key: 'f', meta: true}), findInPageOpen);
+  EVENTS.set(eventKey({key: 'F', meta: true}), findInPageOpen);
+  EVENTS.set(eventKey({key: 'f', control: true}), findInPageOpen);
+  EVENTS.set(eventKey({key: 'F', control: true}), findInPageOpen);
 };
 
+/**
+ * Initializes keyboard shortcuts EVENTS map from loaded settings.
+ *
+ * Should be run every time settings are changed and loaded.
+ */
+const initKeyboardEvents = () => {
+  const settings = require('../settings').loadSettings();
+  setKeyboardShortcutsListeners(settings);
+};
+
+/**
+ * Registers application-wide keyboard shortcuts.
+ *
+ * Designed to be used as a listener of the `web-contents-created` event of
+ * Electron's `app` module.
+ *
+ * @param {Event} _ The web-contents-created event (not used).
+ * @param {WebContents} webContents The WebContents where to register the shortcuts.
+ */
 const registerAppShortcuts = (_, webContents) => {
-  let events = createKeyboardShortcutsEvents(loadSettings());
-
-  // Reload shortcuts when settings change
-  eventBus.on(APP_EVENTS.settingsSave, () => {
-    events = createKeyboardShortcutsEvents(loadSettings());
-  });
-
   webContents.on('before-input-event', (event, {type, key, shift, control, alt, meta}) => {
     if (type === 'keyUp') {
       return;
     }
-    const func = events.get(eventKey({key, shift, control, alt, meta}));
+    const func = EVENTS.get(eventKey({key, shift, control, alt, meta}));
     if (func) {
       func(event);
     }
   });
 };
 
-module.exports = {registerAppShortcuts};
+// Always initialize the EVENTS map constant:
+setKeyboardShortcutsListeners();
+module.exports = {registerAppShortcuts, initKeyboardEvents};

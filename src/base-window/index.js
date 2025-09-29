@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {registerAppShortcuts} = require('./keyboard-shortcuts');
+const {registerAppShortcuts, initKeyboardEvents} = require('./keyboard-shortcuts');
 
 const findDialog = baseWindow => baseWindow.contentView.children.find(v => v.isDialog);
 
@@ -25,4 +25,4 @@ const showDialog = (baseWindow, dialogView) => {
   dialogView.webContents.focus();
 };
 
-module.exports = {registerAppShortcuts, findDialog, showDialog};
+module.exports = {registerAppShortcuts, initKeyboardEvents, findDialog, showDialog};

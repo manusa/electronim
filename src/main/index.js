@@ -20,7 +20,7 @@ const {
 const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS} = require('../constants');
 const {openAboutDialog} = require('../about');
 const {newAppMenu, isNotAppMenu} = require('../app-menu');
-const {findDialog} = require('../base-window');
+const {findDialog, initKeyboardEvents} = require('../base-window');
 const {TABS_CONTAINER_HEIGHT, newTabContainer, isNotTabContainer} = require('../chrome-tabs');
 const {
   FIND_IN_PAGE_HEIGHT, FIND_IN_PAGE_WIDTH, isFindInPage, isNotFindInPage, findInPage, findInPageOpen, findInPageClose
@@ -241,6 +241,7 @@ const saveSettings = (_event, settings) => {
   });
   tabManager.removeAll();
   tabContainer = newTabContainer();
+  eventBus.emit(APP_EVENTS.keyboardEventsInit);
   eventBus.emit(APP_EVENTS.trayInit);
 };
 
@@ -265,6 +266,7 @@ const initGlobalListeners = () => {
   eventBus.on(APP_EVENTS.findInPageClose, findInPageClose(mainWindow));
   eventBus.on(APP_EVENTS.fullscreenToggle, fullscreenToggle);
   eventBus.on(APP_EVENTS.helpOpenDialog, openHelpDialog(mainWindow));
+  eventBus.on(APP_EVENTS.keyboardEventsInit, initKeyboardEvents);
   eventBus.on(APP_EVENTS.quit, app.exit);
   eventBus.on(APP_EVENTS.restore, () => {
     mainWindow.restore();
@@ -286,6 +288,7 @@ const browserVersionsReady = () => {
   tabContainer = newTabContainer();
   appMenu = newAppMenu();
   app.userAgentFallback = userAgentForWebContents(appMenu.webContents);
+  eventBus.emit(APP_EVENTS.keyboardEventsInit);
   eventBus.emit(APP_EVENTS.trayInit);
 };
 
