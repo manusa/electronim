@@ -40,6 +40,9 @@ jobs:
       - name: Test
         run: NODE_OPTIONS=--experimental-vm-modules npm test
       - name: SonarCloud
+        # Only run SonarCloud scan if SONAR_TOKEN is available
+        # This prevents failures in fork PRs or when token is invalid
+        if: ${{ secrets.SONAR_TOKEN != '' }}
         run: |
           ./node_modules/.bin/sonar
         env:
