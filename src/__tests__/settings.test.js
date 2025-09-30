@@ -45,5 +45,21 @@ describe('Test Settings Utility test suite', () => {
       // Then - directory will be cleaned up automatically
       // We verify cleanup happened by checking the global array is empty after the test suite runs
     });
+
+    test('should survive jest.resetModules() - reproducing the original issue', async () => {
+      // Given
+      const initialLength = global.__testTempDirectories__.length;
+      const settings = await testSettings();
+      const tempDir = settings.paths.appDir;
+      expect(fs.existsSync(tempDir)).toBe(true);
+
+      // When - calling jest.resetModules() like some tests do
+      jest.resetModules();
+
+      // Then - the directory should still be tracked in global scope
+      expect(global.__testTempDirectories__.length).toBe(initialLength + 1);
+      expect(global.__testTempDirectories__[global.__testTempDirectories__.length - 1]).toBe(tempDir);
+      // The cleanup will happen in afterEach despite the module reset
+    });
   });
 });
