@@ -17,19 +17,12 @@ describe('Tab Manager module test suite', () => {
   let mockView;
   let userAgent;
   let tabManager;
-  let mockSettings;
-  beforeEach(() => {
+  let settings;
+  beforeEach(async () => {
     jest.resetModules();
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     mockView = require('electron').webContentsViewInstance;
-    mockSettings = {
-      tabs: [{id: '1337', disableNotifications: false}],
-      disableNotificationsGlobally: false
-    };
-    jest.mock('../../settings', () => ({
-      loadSettings: jest.fn(() => mockSettings),
-      updateSettings: jest.fn()
-    }));
+    settings = await require('../../__tests__').testSettings();
     userAgent = require('../../user-agent');
     tabManager = require('../');
   });
@@ -297,6 +290,10 @@ describe('Tab Manager module test suite', () => {
   describe('canNotify', () => {
     test('Global notifications enabled, Notifications for this tab enabled, should return true', () => {
       // Given
+      settings.updateSettings({
+        tabs: [{id: '1337', disableNotifications: false}],
+        disableNotificationsGlobally: false
+      });
       // When
       const result = tabManager.canNotify('1337');
       // Then
@@ -304,10 +301,10 @@ describe('Tab Manager module test suite', () => {
     });
     test('Global notifications disabled, Notifications for this tab enabled, should return false', () => {
       // Given
-      mockSettings = {
+      settings.updateSettings({
         tabs: [{id: '1337', disableNotifications: false}],
         disableNotificationsGlobally: true
-      };
+      });
       // When
       const result = tabManager.canNotify('1337');
       // Then
@@ -315,10 +312,10 @@ describe('Tab Manager module test suite', () => {
     });
     test('Global notifications enabled, Notifications for this tab disabled, should return false', () => {
       // Given
-      mockSettings = {
+      settings.updateSettings({
         tabs: [{id: '1337', disableNotifications: true}],
         disableNotificationsGlobally: false
-      };
+      });
       // When
       const result = tabManager.canNotify('1337');
       // Then
@@ -326,9 +323,11 @@ describe('Tab Manager module test suite', () => {
     });
     test('Notifications undefined in settings, should return true (Opt-out setting)', () => {
       // Given
-      mockSettings.loadSettings = {
-        tabs: [{id: '1337'}]
-      };
+      settings.updateSettings({
+        tabs: [{id: '1337'}],
+        // eslint-disable-next-line no-undefined
+        disableNotificationsGlobally: undefined
+      });
       // When
       const result = tabManager.canNotify('1337');
       // Then
