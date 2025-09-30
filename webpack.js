@@ -129,10 +129,6 @@ const libBundle = ({name, entries}) => webpack({
       {
         test: /\.(svg|eot|ttf|woff|woff2)$/,
         type: 'asset/resource'
-      },
-      {
-        test: /\.(scss)$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
       }
     ]
   }
