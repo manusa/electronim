@@ -2,19 +2,32 @@
 
 This section contains information to help you troubleshoot frequent issues when using ElectronIM.
 
-## Windows
-
-#### TBD
-
-## Linux
-
-#### TBD
-
 ## MacOS / OSX
 
-#### I downloaded the standalone application, and executed it, but it does not run because of unknown origin or developer. What should I do?
+### I installed the DMG file, but the application does not run because it says it's damaged and can't be opened. What should I do?
 
- > "ElectronIM" cannot be opened because the developer cannot be verified. macOS cannot verify that this app is free from malware [...]
+> "ElectronIM.app" is damaged and can't be opened. You should move it to the Trash.
+
+
+!["ElectronIM.app" is damaged and](screenshots/electronim-app-is-damaged.png)
+
+Since the application is not signed by a trusted developer (requires an [annual fee](https://developer.apple.com/support/compare-memberships/) to Apple), macOS may think that the application is damaged, and refuse to open it.
+
+If and only if you trust entirely the application and the source you downloaded it from, you can do this:
+
+ - Open a terminal window (Applications > Utilities > Terminal)
+ 
+ - Type the following command, and press enter:
+ 
+   ```bash
+   xattr -cr /Applications/ElectronIM.app
+   ```
+ 
+ - Now try to open the application again.
+
+### I downloaded the standalone application, and executed it, but it does not run because of unknown origin or developer. What should I do?
+
+> "ElectronIM" cannot be opened because the developer cannot be verified. macOS cannot verify that this app is free from malware [...]
 
 ![Error1](screenshots/troubleshooting-macos-security1.png)
 
