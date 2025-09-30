@@ -36,7 +36,6 @@ const testSettings = async () => {
   const settings = require('../settings');
   settings.paths.appDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'electronim-test-'));
   settings.paths.settingsPath = path.join(settings.paths.appDir, 'settings.json');
-  // Track the directory for cleanup in global scope
   global.__testTempDirectories__.push(settings.paths.appDir);
   return settings;
 };
