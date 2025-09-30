@@ -47,7 +47,7 @@ npm install  # Install dependencies - takes ~55 seconds
 ### Pre-commit Validation
 Always run these commands before committing changes:
 - `npm run pretest` - Validates linting and successful bundle creation
-- `NODE_OPTIONS=--experimental-vm-modules npm test` - Ensures all tests pass
+- `npm test` - Ensures all tests pass
 - `npm run test:e2e` - Validates application startup (optional, for major changes)
 - The CI build (.github/workflows/tests.yml) will fail if linting or tests fail
 
