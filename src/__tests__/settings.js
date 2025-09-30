@@ -14,6 +14,12 @@
    limitations under the License.
  */
 
+// Store temporary directories created during tests in global scope
+// to ensure cleanup even when jest.resetModules() clears the module cache
+if (!global.__testTempDirectories__) {
+  global.__testTempDirectories__ = [];
+}
+
 /**
  * Creates a test-isolated settings module with temporary directory overrides.
  *
@@ -30,6 +36,7 @@ const testSettings = async () => {
   const settings = require('../settings');
   settings.paths.appDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'electronim-test-'));
   settings.paths.settingsPath = path.join(settings.paths.appDir, 'settings.json');
+  global.__testTempDirectories__.push(settings.paths.appDir);
   return settings;
 };
 

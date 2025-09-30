@@ -15,10 +15,17 @@
  */
 afterEach(async () => {
   jest.useRealTimers();
-  const os = require('node:os');
   const fs = require('node:fs');
-  const settings = require('../settings');
-  if (os.tmpdir && settings?.paths?.appDir && settings.paths.appDir.startsWith(os.tmpdir())) {
-    await fs.promises.rm(settings.paths.appDir, {recursive: true, force: true});
+
+  // Clean up all tracked temporary directories
+  if (global.__testTempDirectories__) {
+    while (global.__testTempDirectories__.length > 0) {
+      const dir = global.__testTempDirectories__.pop();
+      try {
+        await fs.promises.rm(dir, {recursive: true, force: true});
+      } catch {
+        // Ignore errors if directory was already cleaned up
+      }
+    }
   }
 });
