@@ -25,8 +25,9 @@ npm install  # Install dependencies - takes ~55 seconds
 - `npm run build:mac` - Builds and bundles the application for MacOS systems
 - `npm run build:win` - Builds and bundles the application for Windows systems
 
-### Testing  
-- `NODE_OPTIONS=--experimental-vm-modules npm test` - Run full test suite - takes ~13 seconds, runs 486 tests. NEVER CANCEL - Set timeout to 30+ minutes.
+### Testing
+- `npm test` - Run full test suite - takes ~13 seconds, runs 486 tests. NEVER CANCEL - Set timeout to 30+ minutes.
+- `npm run test:e2e` - Run end-to-end tests to verify application startup - takes ~10-15 seconds
 - The project uses Jest with ECMAScript modules requiring the experimental VM modules flag for Node.js
 
 ### Running the Application
@@ -46,7 +47,8 @@ npm install  # Install dependencies - takes ~55 seconds
 ### Pre-commit Validation
 Always run these commands before committing changes:
 - `npm run pretest` - Validates linting and successful bundle creation
-- `NODE_OPTIONS=--experimental-vm-modules npm test` - Ensures all tests pass
+- `npm test` - Ensures all tests pass
+- `npm run test:e2e` - Validates application startup (optional, for major changes)
 - The CI build (.github/workflows/tests.yml) will fail if linting or tests fail
 
 ### Manual Testing Scenarios
@@ -75,6 +77,14 @@ After making code changes, manually validate by:
 The project includes browser tests using JSDOM and Testing Library:
 - Browser test files use `.browser.test.mjs` extension
 - Settings functionality can be tested at `src/settings/__tests__/settings.browser.test.mjs`
+
+### End-to-End Testing
+The project includes E2E tests to verify the complete Electron application stack:
+- **Startup E2E Tests** (`src/__tests__/e2e.startup.test.js`) - Tests actual Electron application startup by spawning the full process
+- E2E tests use `--no-sandbox`, `--disable-gpu`, `--remote-debugging-port=9222` flags for CI compatibility
+- Tests verify application starts without crashing, creates main window, and runs for several seconds
+- Window verification uses DevTools output analysis to confirm successful rendering
+- Process termination uses SIGKILL due to tray icon preventing graceful SIGTERM shutdown
 
 ## Technical Architecture
 

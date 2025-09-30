@@ -21,7 +21,8 @@
   ],
   "scripts": {
     "pretest": "eslint -c eslint.config.mjs . && node webpack.js",
-    "test": "jest --coverage",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test:e2e": "NODE_OPTIONS=--experimental-vm-modules jest --testMatch='**/?(*.)+(spec|test).e2e.?([mc])[jt]s?(x)' --verbose",
     "prestart": "node webpack.js --no-lib",
     "start": "electron .",
     "prepack": "node webpack.js",
@@ -189,6 +190,7 @@
     "@sonar/scan": "4.3.2",
     "@testing-library/dom": "10.4.1",
     "@testing-library/user-event": "14.6.1",
+    "chrome-remote-interface": "^0.33.3",
     "chrome-tabs": "5.4.0",
     "css-loader": "7.1.2",
     "electron": "36.8.1",
