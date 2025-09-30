@@ -153,7 +153,7 @@ The settings system uses Preact components with Material Design 3 styling:
 
 - **npm install**: ~55 seconds
 - **Linting and bundling** (`npm run pretest`): ~2 seconds
-- **Test suite** (`npm test`): ~13 seconds (486 tests)
+- **Test suite** (`npm test`): ~13 seconds (627 tests)
 - **Application startup**: ~3-5 seconds
 - **Platform builds**: 10-20 minutes (network dependent)
 
