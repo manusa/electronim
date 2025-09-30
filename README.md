@@ -34,7 +34,7 @@ electronim
 ## Features
 
 - ⚛ Multi-platform: ElectronIM is available for Linux 🐧, Mac 🍏 and Windows.
-- 🌍 Based on Chromium 138
+- 🌍 Based on Chromium 140
 - 🔔 Desktop notifications: ElectronIM will notify you using your native system notifications.
 - 🧐 Spellchecker: ElectronIM contains spellchecker dictionaries for many languages,
   if your language is not supported, just [file an issue](https://github.com/manusa/electronim/issues/new).
