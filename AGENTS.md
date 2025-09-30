@@ -26,7 +26,7 @@ npm install  # Install dependencies - takes ~55 seconds
 - `npm run build:win` - Builds and bundles the application for Windows systems
 
 ### Testing
-- `npm test` - Run full test suite - takes ~13 seconds, runs 486 tests. NEVER CANCEL - Set timeout to 30+ minutes.
+- `npm test` - Run full test suite - takes ~13 seconds, runs 627 tests. NEVER CANCEL - Set timeout to 30+ minutes.
 - `npm run test:e2e` - Run end-to-end tests to verify application startup - takes ~10-15 seconds
 - The project uses Jest with ECMAScript modules requiring the experimental VM modules flag for Node.js
 
@@ -49,7 +49,7 @@ Always run these commands before committing changes:
 - `npm run pretest` - Validates linting and successful bundle creation
 - `npm test` - Ensures all tests pass
 - `npm run test:e2e` - Validates application startup (optional, for major changes)
-- The CI build (.github/workflows/tests.yml) will fail if linting or tests fail
+- The CI build (`.github/workflows/tests.yml`) will fail if linting or tests fail
 
 ### Manual Testing Scenarios
 After making code changes, manually validate by:
@@ -80,11 +80,11 @@ The project includes browser tests using JSDOM and Testing Library:
 
 ### End-to-End Testing
 The project includes E2E tests to verify the complete Electron application stack:
-- **Startup E2E Tests** (`src/__tests__/e2e.startup.test.js`) - Tests actual Electron application startup by spawning the full process
 - E2E tests use `--no-sandbox`, `--disable-gpu`, `--remote-debugging-port=9222` flags for CI compatibility
 - Tests verify application starts without crashing, creates main window, and runs for several seconds
 - Window verification uses DevTools output analysis to confirm successful rendering
 - Process termination uses SIGKILL due to tray icon preventing graceful SIGTERM shutdown
+- **Startup E2E Tests** (`src/__tests__/startup.test.e2e.js`) - Tests actual Electron application startup by spawning the full process
 
 ## Technical Architecture
 
@@ -99,6 +99,7 @@ The project includes E2E tests to verify the complete Electron application stack
 - `src/` - Main source code
   - `main/` - Electron main process logic
   - `tab-manager/` - Core tab and messaging functionality
+  - `about/` - About dialog and information
   - `settings/` - Application settings and configuration UI
   - `chrome-tabs/` - Tab UI components based on Chrome tabs
   - `components/` - Reusable UI components (Material Design 3 style)
