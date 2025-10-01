@@ -99,11 +99,13 @@ The project includes E2E tests to verify the complete Electron application stack
 - `src/` - Main source code
   - `main/` - Electron main process logic
   - `tab-manager/` - Core tab and messaging functionality
-  - `about/` - About dialog and information
   - `settings/` - Application settings and configuration UI
+  - `about/` - About dialog and information
   - `chrome-tabs/` - Tab UI components based on Chrome tabs
   - `components/` - Reusable UI components (Material Design 3 style)
   - `spell-check/` - Spell checking functionality with multiple language support
+- `.github/` - GitHub configuration files
+  - `workflows/` - CI/CD workflows
 - `bundles/` - Generated webpack bundles (not committed)
 - `build-config/` - Platform-specific build configurations
   - `chocolateyInstall.ps1` - [PowerShell](https://blog.marcnuri.com/tag/powershell) installation script for [Chocolatey](https://chocolatey.org/) (Windows)
@@ -127,8 +129,8 @@ The project includes E2E tests to verify the complete Electron application stack
 ## Common Tasks
 
 ### Adding Dependencies
-- Production dependencies: `npm install <package>` 
-- Development dependencies: `npm install -D <package>`
+- Production dependencies: `npm install --save-exact <package>` 
+- Development dependencies: `npm install --save-exact -D <package>`
 - Always run `npm run pretest` after adding dependencies
 - Pin dependencies to the patch version (i.e. don't reference dependencies using ~ or ^)
 
@@ -144,9 +146,18 @@ The settings system uses Preact components with Material Design 3 styling:
 - Spell checking logic in `src/spell-check/`
 
 ### Testing Guidelines
-- Use JSDOM environment for browser component tests
-- Mock Electron IPC renderer for testing settings and dialogs  
-- Test files should follow existing patterns in `src/**/__tests__/`
+- Tests are always located in nested `__tests__` directories next to the code they test
+- Test files should follow existing patterns in `src/**/__tests__/`:
+  - Global `describe` block to define the test suite: component or behavior being tested
+  - Nested `describe` blocks for scenarios or behaviors being tested
+  - Use `beforeEach` and `afterEach` for setup and teardown of the test environment
+  - Use `test` blocks for individual test cases with descriptive names
+  - Test blocks should have a single assertion or behavior being tested (the `beforeEach` can be used to perform the `act`or `when` step if needed, then the `test` block can just have the `assert` step)
+  - Use `expect` assertions to validate outcomes
+- Use JSDOM environment for browser component tests. These are the tests that have the `.browser.test.mjs` extension:
+  - Use Testing Library for DOM interaction and assertions
+- Mocking should be prevented as much as possible to ensure real behavior is tested
+- The `src/__tests__/index.js` provides utilities to mock Electron APIs and test-prepared modules such as settings.
 - Always test both valid and invalid input scenarios
 
 ## Timing Expectations
@@ -192,25 +203,6 @@ ElectronIM supports:
 The application can aggregate services like WhatsApp Web, Telegram Web, Slack, and other web-based messaging platforms into a unified interface.
 
 ## Common Command Outputs
-
-### Repository Structure
-```
-├── .github/workflows/     # CI/CD workflows (tests.yml, publish.yml)
-├── build-config/         # Platform build configurations (.spec, .nuspec, etc.)
-├── bundles/             # Generated webpack bundles (gitignored)
-├── docs/                # Documentation and screenshots
-├── src/                 # Source code
-│   ├── main/           # Electron main process
-│   ├── tab-manager/    # Core messaging tab functionality  
-│   ├── settings/       # Settings UI and logic
-│   ├── chrome-tabs/    # Tab UI components
-│   ├── components/     # Reusable UI components (Material Design 3)
-│   └── spell-check/    # Multi-language spell checking
-├── utils/              # Build and utility scripts
-├── package.json        # Dependencies and scripts
-├── webpack.js          # Webpack bundling configuration
-└── eslint.config.mjs   # ESLint configuration
-```
 
 ### Sample npm install Output
 ```
