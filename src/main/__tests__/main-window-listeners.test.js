@@ -20,11 +20,10 @@ describe('Main :: Main window listeners test suite', () => {
   let electron;
   let main;
   let baseWindow;
-  beforeEach(() => {
+  let settings;
+  beforeEach(async () => {
     jest.resetModules();
-    // Always mock settings unless we want to overwrite the real settings file !
-    jest.mock('../../settings');
-    require('../../settings').loadSettings.mockImplementation(() => ({}));
+    settings = await require('../../__tests__').testSettings();
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance({
       // Return a **different** instance for each view
       BrowserView: jest.fn(() => require('../../__tests__').mockBaseWindowInstance())
@@ -56,9 +55,7 @@ describe('Main :: Main window listeners test suite', () => {
     });
     test('with minimize, should minimize the window', () => {
       // Given
-      require('../../settings').loadSettings.mockImplementation(() => ({
-        closeButtonBehavior: 'minimize'
-      }));
+      settings.updateSettings({closeButtonBehavior: 'minimize'});
       // When
       baseWindow.listeners.close(event);
       // Then
