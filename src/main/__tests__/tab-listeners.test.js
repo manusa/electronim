@@ -60,7 +60,7 @@ describe('Main :: Tab listeners test suite', () => {
       expect(mockView.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
     });
-    test('Previous saved tabs in loaded settings, should add tabs to manager and activate them as they are added', () => {
+    test('Previous saved tabs in loaded settings, should add tabs to manager and mark first enabled tab as active', () => {
       // Given
       const event = {sender: {send: jest.fn()}};
       settings.updateSettings({
