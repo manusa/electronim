@@ -18,24 +18,16 @@
  */
 describe('Main :: Tab listeners test suite', () => {
   let electron;
-  let settingsModule;
-  let mockSettings;
+  let settings;
   let mockBaseWindow;
   let main;
   let mockIpc;
   let mockView;
   let tabManagerModule;
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.resetModules();
-    mockSettings = {};
-    // Always mock settings unless we want to overwrite the real settings file !
-    jest.mock('../../settings');
-    settingsModule = require('../../settings');
-    settingsModule.loadSettings.mockImplementation(() => mockSettings);
-    settingsModule.openSettingsDialog = jest.requireActual('../../settings').openSettingsDialog;
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance({
-      // Notification: jest.fn(() => mockNotification),
-    }));
+    settings = await require('../../__tests__').testSettings();
+    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
     mockBaseWindow = electron.baseWindowInstance;
     mockIpc = electron.ipcMain;
@@ -58,7 +50,7 @@ describe('Main :: Tab listeners test suite', () => {
     });
     test('No tabs in settings, should open settings dialog', () => {
       // Given
-      settingsModule.loadSettings.mockImplementation(() => ({tabs: []}));
+      settings.updateSettings({tabs: []});
       main.init();
       // When
       mockIpc.listeners.tabsReady({});
@@ -68,20 +60,23 @@ describe('Main :: Tab listeners test suite', () => {
       expect(mockView.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
     });
-    test('Previous saved tabs in loaded settings, should add tabs to manager and activate them as they are added', () => {
+    test('Previous saved tabs in loaded settings, should add tabs to manager and mark first enabled tab as active', () => {
       // Given
       const event = {sender: {send: jest.fn()}};
-      settingsModule.loadSettings.mockImplementation(() => ({tabs: [
-        {id: '1337', otherInfo: 'A Tab'},
-        {id: 'disabled-1337', disabled: true, otherInfo: 'I should be ignored'}
-      ]}));
+      settings.updateSettings({
+        tabs: [
+          {id: '1337', otherInfo: 'A Tab'},
+          {id: 'disabled-1337', disabled: true, otherInfo: 'I should be ignored'}
+        ],
+        activeTab: 'non-existent'
+      });
       main.init();
       // When
       mockIpc.listeners.tabsReady(event);
       // Then
       expect(tabManagerModule.addTabs).toHaveBeenCalledWith(event.sender);
       expect(addTabsNested).toHaveBeenCalledTimes(1);
-      expect(addTabsNested).toHaveBeenCalledWith([{id: '1337', otherInfo: 'A Tab', active: false}]);
+      expect(addTabsNested).toHaveBeenCalledWith([{id: '1337', otherInfo: 'A Tab', active: true}]);
       expect(mockView.webContents.loadURL)
         .not.toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
     });
@@ -146,7 +141,7 @@ describe('Main :: Tab listeners test suite', () => {
   });
   test('notificationClick, should restore window and activate tab', () => {
     // Given
-    mockSettings.startMinimized = true;
+    settings.updateSettings({startMinimized: true});
     mockBaseWindow.restore = jest.fn();
     mockBaseWindow.show = jest.fn();
     jest.spyOn(tabManagerModule, 'getTab').mockImplementation();
@@ -217,20 +212,17 @@ describe('Main :: Tab listeners test suite', () => {
   describe('handleTabReorder', () => {
     test('Several tabs, order changed, should update settings', () => {
       // Given
-      mockSettings = {
-        tabs: [{id: '1337'}, {id: '313373'}]
-      };
+      settings.updateSettings({tabs: [{id: '1337'}, {id: '313373'}]});
       main.init();
       // When
       mockIpc.listeners.tabReorder({}, {tabIds: ['313373', '1337']});
       // Then
-      expect(settingsModule.updateSettings).toHaveBeenCalledWith({tabs: [{id: '313373'}, {id: '1337'}]});
+      const updatedSettings = settings.loadSettings();
+      expect(updatedSettings.tabs).toEqual([{id: '313373'}, {id: '1337'}]);
     });
     test('Several tabs, order changed, should update tabManager order', () => {
       // Given
-      mockSettings = {
-        tabs: [{id: '1337'}, {id: '313373'}]
-      };
+      settings.updateSettings({tabs: [{id: '1337'}, {id: '313373'}]});
       jest.spyOn(tabManagerModule, 'sortTabs').mockImplementation();
       main.init();
       // When
@@ -240,16 +232,17 @@ describe('Main :: Tab listeners test suite', () => {
     });
     test('Several tabs with hidden, order changed, should update settings keeping hidden tags', () => {
       // Given
-      mockSettings = {
-        tabs: [{id: '1337'}, {id: 'hidden'}, {id: '313373'}, {id: 'hidden-too'}]
-      };
+      settings.updateSettings({tabs: [
+        {id: '1337'}, {id: 'hidden'}, {id: '313373'}, {id: 'hidden-too'}
+      ]});
       main.init();
       // When
       mockIpc.listeners.tabReorder({}, {tabIds: ['313373', '1337']});
       // Then
-      expect(settingsModule.updateSettings).toHaveBeenCalledWith({tabs: [
+      const updatedSettings = settings.loadSettings();
+      expect(updatedSettings.tabs).toEqual([
         {id: '313373'}, {id: '1337'}, {id: 'hidden'}, {id: 'hidden-too'}
-      ]});
+      ]);
     });
   });
 });
