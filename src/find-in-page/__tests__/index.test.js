@@ -21,20 +21,15 @@ describe('Find in Page :: main test suite', () => {
   let main;
   let baseWindow;
   let eventBus;
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.resetModules();
+    await require('../../__tests__').testSettings();
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
     baseWindow = electron.baseWindowInstance;
     // Each view should be a separate instance
     electron.WebContentsView = jest.fn(() => require('../../__tests__').mockWebContentsViewInstance());
     eventBus = electron.ipcMain;
-    // Always mock settings unless we want to overwrite the real settings file !
-    jest.mock('../../settings');
-    require('../../settings').loadSettings.mockImplementation(() => ({
-      trayEnabled: true
-    }));
-    require('../../settings').openSettingsDialog = jest.requireActual('../../settings').openSettingsDialog;
     jest.spyOn(require('../../user-agent'), 'initBrowserVersions')
       .mockImplementation(() => Promise.resolve({}));
     main = require('../../main');
