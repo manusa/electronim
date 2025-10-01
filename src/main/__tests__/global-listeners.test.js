@@ -22,7 +22,8 @@ describe('Main :: Global listeners test suite', () => {
   let baseWindow;
   let webContentsViewInstances;
   let eventBus;
-  beforeEach(() => {
+  let settings;
+  beforeEach(async () => {
     jest.resetModules();
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
@@ -34,19 +35,15 @@ describe('Main :: Global listeners test suite', () => {
       webContentsViewInstances.push(view);
       return view;
     });
-    eventBus = electron.ipcMain;
-    // Always mock settings unless we want to overwrite the real settings file !
-    jest.mock('../../settings');
-    require('../../settings').loadSettings.mockImplementation(() => ({
+    settings = await require('../../__tests__').testSettings();
+    settings.updateSettings({
       keyboardShortcuts: {
         tabSwitchModifier: 'Alt',
         tabTraverseModifier: 'Alt'
       },
       trayEnabled: true
-    }));
-    require('../../settings').openSettingsDialog = jest.requireActual('../../settings').openSettingsDialog;
-    require('../../settings').exportSettings = jest.requireActual('../../settings').exportSettings;
-    require('../../settings').importSettings = jest.requireActual('../../settings').importSettings;
+    });
+    eventBus = electron.ipcMain;
     jest.spyOn(require('../../user-agent'), 'initBrowserVersions')
       .mockImplementation(() => Promise.resolve({}));
     main = require('../');
@@ -243,23 +240,23 @@ describe('Main :: Global listeners test suite', () => {
     // Then
     const view = webContentsViewInstances
       .filter(wcv => wcv.webContents.loadedUrl.endsWith('settings/index.html'))[0];
-    expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(view);
+    expect(view).toBeDefined();
+    expect(view.isDialog).toBe(true);
     expect(view.webContents.loadURL)
       .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
   });
   describe('settingsSave', () => {
-    let settings;
+    let settingsView;
     beforeEach(() => {
-      settings = new electron.WebContentsView();
-      baseWindow.contentView.children = [settings];
+      settingsView = new electron.WebContentsView();
+      baseWindow.contentView.children = [settingsView];
     });
     test('should reload settings', () => {
-      // Given
-      const settingsModule = require('../../settings');
       // When
       eventBus.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
       // Then
-      expect(settingsModule.updateSettings).toHaveBeenCalledTimes(1);
+      const loadedSettings = settings.loadSettings();
+      expect(loadedSettings.tabs).toEqual([{id: 1337}]);
     });
     test('should reload fake dictionary renderer', () => {
       // When
@@ -278,9 +275,9 @@ describe('Main :: Global listeners test suite', () => {
       eventBus.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
       // Then
       expect(baseWindow.contentView.removeChildView).toHaveBeenCalledTimes(1);
-      expect(baseWindow.contentView.removeChildView).toHaveBeenCalledWith(settings);
+      expect(baseWindow.contentView.removeChildView).toHaveBeenCalledWith(settingsView);
       expect(tabManagerModule.removeAll).toHaveBeenCalledTimes(1);
-      expect(settings.webContents.destroy).toHaveBeenCalledTimes(1);
+      expect(settingsView.webContents.destroy).toHaveBeenCalledTimes(1);
     });
     test('should set saved theme', () => {
       // When
