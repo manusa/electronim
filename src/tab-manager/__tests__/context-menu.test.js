@@ -169,11 +169,20 @@ describe('Tab Manager context-menu test suite', () => {
         });
       });
       describe('Copy', () => {
-        test('visible when canCopy', async () => {
+        test('visible when canCopy and no link', async () => {
           params.editFlags.canCopy = true;
           await listeners['context-menu'](event, params);
           expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
             visible: true,
+            label: 'Copy'
+          }));
+        });
+        test('not visible when canCopy but link is present', async () => {
+          params.editFlags.canCopy = true;
+          params.linkURL = 'https://example.com';
+          await listeners['context-menu'](event, params);
+          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+            visible: false,
             label: 'Copy'
           }));
         });

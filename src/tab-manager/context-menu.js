@@ -31,7 +31,7 @@ const entries = ({webContents, params}) => {
       click: () => webContents.cut()
     }, {
       label: 'Copy',
-      visible: params.editFlags.canCopy,
+      visible: params.editFlags.canCopy && !params.linkURL,
       click: () => webContents.copy()
     }, {
       label: 'Copy image',
