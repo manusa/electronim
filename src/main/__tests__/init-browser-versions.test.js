@@ -19,11 +19,10 @@
 describe('Main :: initBrowserVersions test suite', () => {
   let electron;
   let userAgent;
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.resetModules();
-    // Always mock settings unless we want to overwrite the real settings file !
-    jest.mock('../../settings');
-    require('../../settings').loadSettings.mockImplementation(() => ({trayEnabled: true}));
+    const settings = await require('../../__tests__').testSettings();
+    settings.updateSettings({trayEnabled: true});
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
     userAgent = require('../../user-agent');
