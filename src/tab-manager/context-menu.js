@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {Menu, MenuItem} = require('electron');
+const {Menu, MenuItem, clipboard} = require('electron');
 const {contextMenuHandler, contextMenuNativeHandler} = require('../spell-check');
 
 const entries = ({webContents, params}) => {
@@ -41,6 +41,14 @@ const entries = ({webContents, params}) => {
       label: 'Paste',
       visible: params.editFlags.canPaste,
       click: () => webContents.paste()
+    }], [{
+      label: 'Copy link address',
+      visible: !!params.linkURL,
+      click: () => clipboard.writeText(params.linkURL)
+    }, {
+      label: 'Copy link text',
+      visible: !!params.linkURL && !!params.linkText,
+      click: () => clipboard.writeText(params.linkText)
     }], [{
       label: 'DevTools',
       click: () => webContents.openDevTools()
