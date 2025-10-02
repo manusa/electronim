@@ -20,8 +20,9 @@ describe('Tab Manager context-menu test suite', () => {
   let mockMenu;
   let params;
   let tabManager;
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.resetModules();
+    await require('../../__tests__').testSettings();
     mockMenu = {
       entries: [],
       append: jest.fn(e => mockMenu.entries.push(e)),
@@ -33,13 +34,6 @@ describe('Tab Manager context-menu test suite', () => {
       clipboard: {
         writeText: jest.fn()
       }
-    }));
-    jest.mock('../../settings', () => ({
-      loadSettings: jest.fn(() => ({
-        tabs: [{id: '1337', disableNotifications: false}],
-        disableNotificationsGlobally: false
-      })),
-      updateSettings: jest.fn()
     }));
     jest.mock('../../spell-check');
     electron = require('electron');
