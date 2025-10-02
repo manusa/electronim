@@ -25,6 +25,34 @@ describe('Entrypoint test suite', () => {
     app = require('electron').app;
     main = require('../main');
   });
+  describe('GTK workaround', () => {
+    describe('on Linux platform', () => {
+      beforeEach(() => {
+        Object.defineProperty(process, 'platform', {
+          value: 'linux',
+          writable: false,
+          configurable: true
+        });
+        require('../');
+      });
+      test('applies GTK version 3 workaround', () => {
+        expect(app.commandLine.appendSwitch).toHaveBeenCalledWith('gtk-version', '3');
+      });
+    });
+    describe.each(['darwin', 'win32', 'freebsd'])('on %s platform', platform => {
+      beforeEach(() => {
+        Object.defineProperty(process, 'platform', {
+          value: platform,
+          writable: false,
+          configurable: true
+        });
+        require('../');
+      });
+      test('does not apply GTK workaround', () => {
+        expect(app.commandLine.appendSwitch).not.toHaveBeenCalledWith('gtk-version', '3');
+      });
+    });
+  });
   describe('App initialization', () => {
     beforeEach(() => require('../'));
     test('Sets app name', () => expect(app.name).toBe('ElectronIM'));
