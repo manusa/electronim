@@ -26,7 +26,7 @@ npm install  # Install dependencies - takes ~55 seconds
 - `npm run build:win` - Builds and bundles the application for Windows systems
 
 ### Testing
-- `npm test` - Run full test suite - takes ~13 seconds, runs 627 tests. NEVER CANCEL - Set timeout to 30+ minutes.
+- `npm test` - Run full test suite - takes ~13 seconds, runs 641 tests. NEVER CANCEL - Set timeout to 30+ minutes.
 - `npm run test:e2e` - Run end-to-end tests to verify application startup - takes ~10-15 seconds
 - The project uses Jest with ECMAScript modules requiring the experimental VM modules flag for Node.js
 
@@ -164,7 +164,7 @@ The settings system uses Preact components with Material Design 3 styling:
 
 - **npm install**: ~55 seconds
 - **Linting and bundling** (`npm run pretest`): ~2 seconds
-- **Test suite** (`npm test`): ~13 seconds (627 tests)
+- **Test suite** (`npm test`): ~13 seconds (641 tests)
 - **Application startup**: ~3-5 seconds
 - **Platform builds**: 10-20 minutes (network dependent)
 

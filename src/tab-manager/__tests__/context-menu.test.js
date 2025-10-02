@@ -247,7 +247,7 @@ describe('Tab Manager context-menu test suite', () => {
           params.linkURL = 'https://example.com';
           await listeners['context-menu'](event, params);
           // When
-          electron.MenuItem.mock.calls.filter(c => c[0].label === 'Copy link address')[0][0].click();
+          electron.MenuItem.mock.calls.find(c => c[0].label === 'Copy link address')[0].click();
           // Then
           expect(electron.clipboard.writeText).toHaveBeenCalledWith('https://example.com');
         });
@@ -283,7 +283,7 @@ describe('Tab Manager context-menu test suite', () => {
           params.linkText = 'Example Link';
           await listeners['context-menu'](event, params);
           // When
-          electron.MenuItem.mock.calls.filter(c => c[0].label === 'Copy link text')[0][0].click();
+          electron.MenuItem.mock.calls.find(c => c[0].label === 'Copy link text')[0].click();
           // Then
           expect(electron.clipboard.writeText).toHaveBeenCalledWith('Example Link');
         });
