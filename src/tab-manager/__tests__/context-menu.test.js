@@ -29,7 +29,10 @@ describe('Tab Manager context-menu test suite', () => {
     };
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance({
       Menu: jest.fn(() => mockMenu),
-      MenuItem: jest.fn(def => def)
+      MenuItem: jest.fn(def => def),
+      clipboard: {
+        writeText: jest.fn()
+      }
     }));
     jest.mock('../../settings', () => ({
       loadSettings: jest.fn(() => ({
@@ -101,7 +104,7 @@ describe('Tab Manager context-menu test suite', () => {
       expect(electron.Menu).toHaveBeenCalledTimes(1);
       expect(mockMenu.popup).toHaveBeenCalledWith({x: 14, y: 38});
     });
-    test.each(['Back', 'Reload', 'Cut', 'Copy', 'Copy image', 'Paste', 'DevTools'])(
+    test.each(['Back', 'Reload', 'Cut', 'Copy', 'Copy image', 'Paste', 'Copy link address', 'Copy link text', 'DevTools'])(
       'adds MenuItem with label %s', async label => {
         expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label}));
       });
@@ -166,11 +169,20 @@ describe('Tab Manager context-menu test suite', () => {
         });
       });
       describe('Copy', () => {
-        test('visible when canCopy', async () => {
+        test('visible when canCopy and no link', async () => {
           params.editFlags.canCopy = true;
           await listeners['context-menu'](event, params);
           expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
             visible: true,
+            label: 'Copy'
+          }));
+        });
+        test('not visible when canCopy but link is present', async () => {
+          params.editFlags.canCopy = true;
+          params.linkURL = 'https://example.com';
+          await listeners['context-menu'](event, params);
+          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+            visible: false,
             label: 'Copy'
           }));
         });
@@ -212,6 +224,69 @@ describe('Tab Manager context-menu test suite', () => {
         electron.MenuItem.mock.calls.filter(c => c[0].label === 'Paste')[0][0].click();
         // Then
         expect(electron.webContentsViewInstance.webContents.paste).toHaveBeenCalledTimes(1);
+      });
+    });
+    describe('Link context menu', () => {
+      describe('Copy link address', () => {
+        test('visible when linkURL is present', async () => {
+          params.linkURL = 'https://example.com';
+          await listeners['context-menu'](event, params);
+          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+            visible: true,
+            label: 'Copy link address'
+          }));
+        });
+        test('not visible when linkURL is not present', async () => {
+          await listeners['context-menu'](event, params);
+          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+            visible: false,
+            label: 'Copy link address'
+          }));
+        });
+        test('click, should copy link URL to clipboard', async () => {
+          params.linkURL = 'https://example.com';
+          await listeners['context-menu'](event, params);
+          // When
+          electron.MenuItem.mock.calls.filter(c => c[0].label === 'Copy link address')[0][0].click();
+          // Then
+          expect(electron.clipboard.writeText).toHaveBeenCalledWith('https://example.com');
+        });
+      });
+      describe('Copy link text', () => {
+        test('visible when linkURL and linkText are present', async () => {
+          params.linkURL = 'https://example.com';
+          params.linkText = 'Example Link';
+          await listeners['context-menu'](event, params);
+          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+            visible: true,
+            label: 'Copy link text'
+          }));
+        });
+        test('not visible when linkURL is not present', async () => {
+          params.linkText = 'Example Link';
+          await listeners['context-menu'](event, params);
+          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+            visible: false,
+            label: 'Copy link text'
+          }));
+        });
+        test('not visible when linkText is not present', async () => {
+          params.linkURL = 'https://example.com';
+          await listeners['context-menu'](event, params);
+          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+            visible: false,
+            label: 'Copy link text'
+          }));
+        });
+        test('click, should copy link text to clipboard', async () => {
+          params.linkURL = 'https://example.com';
+          params.linkText = 'Example Link';
+          await listeners['context-menu'](event, params);
+          // When
+          electron.MenuItem.mock.calls.filter(c => c[0].label === 'Copy link text')[0][0].click();
+          // Then
+          expect(electron.clipboard.writeText).toHaveBeenCalledWith('Example Link');
+        });
       });
     });
   });
