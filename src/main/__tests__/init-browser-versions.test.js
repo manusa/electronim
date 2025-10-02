@@ -18,12 +18,11 @@
  */
 describe('Main :: initBrowserVersions test suite', () => {
   let electron;
+  let settings;
   let userAgent;
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.resetModules();
-    // Always mock settings unless we want to overwrite the real settings file !
-    jest.mock('../../settings');
-    require('../../settings').loadSettings.mockImplementation(() => ({trayEnabled: true}));
+    settings = await require('../../__tests__').testSettings();
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
     userAgent = require('../../user-agent');
@@ -32,6 +31,7 @@ describe('Main :: initBrowserVersions test suite', () => {
   describe('throws error', () => {
     let show;
     beforeEach(() => {
+      settings.updateSettings({trayEnabled: true});
       jest.spyOn(userAgent, 'initBrowserVersions')
         .mockImplementation(() => ({then: () => ({catch: func => func.call()})}));
       show = jest.fn();
@@ -52,6 +52,7 @@ describe('Main :: initBrowserVersions test suite', () => {
   });
   describe('successful', () => {
     beforeEach(() => {
+      settings.updateSettings({trayEnabled: true});
       jest.spyOn(userAgent, 'initBrowserVersions')
         .mockImplementation(() => ({then: func => {
           func.call();
