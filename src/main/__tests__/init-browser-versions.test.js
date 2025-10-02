@@ -18,11 +18,11 @@
  */
 describe('Main :: initBrowserVersions test suite', () => {
   let electron;
-  let settings;
   let userAgent;
   beforeEach(async () => {
     jest.resetModules();
-    settings = await require('../../__tests__').testSettings();
+    const settings = await require('../../__tests__').testSettings();
+    settings.updateSettings({trayEnabled: true});
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
     userAgent = require('../../user-agent');
@@ -31,7 +31,6 @@ describe('Main :: initBrowserVersions test suite', () => {
   describe('throws error', () => {
     let show;
     beforeEach(() => {
-      settings.updateSettings({trayEnabled: true});
       jest.spyOn(userAgent, 'initBrowserVersions')
         .mockImplementation(() => ({then: () => ({catch: func => func.call()})}));
       show = jest.fn();
@@ -52,7 +51,6 @@ describe('Main :: initBrowserVersions test suite', () => {
   });
   describe('successful', () => {
     beforeEach(() => {
-      settings.updateSettings({trayEnabled: true});
       jest.spyOn(userAgent, 'initBrowserVersions')
         .mockImplementation(() => ({then: func => {
           func.call();
