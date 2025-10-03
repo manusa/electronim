@@ -21,10 +21,9 @@ describe('Main :: initBrowserVersions test suite', () => {
   let userAgent;
   beforeEach(async () => {
     jest.resetModules();
+    electron = require('../../__tests__').testElectron();
     const settings = await require('../../__tests__').testSettings();
     settings.updateSettings({trayEnabled: true});
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    electron = require('electron');
     userAgent = require('../../user-agent');
     jest.spyOn(userAgent, 'userAgentForWebContents').mockImplementation(() => 'UserAgent String');
   });
