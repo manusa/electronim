@@ -15,24 +15,19 @@
  */
 describe('Spell-check module test suite', () => {
   let electron;
-  let mockSettings;
+  let settings;
   let spellCheck;
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.resetModules();
-    mockSettings = {
-      enabledDictionaries: []
-    };
+    settings = await require('../../__tests__').testSettings();
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
     electron.MenuItem = jest.fn(({label, click}) => ({label, click}));
-    jest.mock('../../settings', () => ({
-      loadSettings: jest.fn(() => mockSettings)
-    }));
     spellCheck = require('../');
   });
   test('getEnabledDictionaries, should return persisted enabled dictionaries', () => {
     // Given
-    mockSettings.enabledDictionaries = ['13-37'];
+    settings.updateSettings({enabledDictionaries: ['13-37']});
     // When
     const result = spellCheck.getEnabledDictionaries();
     // Then
