@@ -18,11 +18,10 @@ describe('Entrypoint test suite', () => {
   let main;
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('electron', () => require('../__tests__').mockElectronInstance());
+    app = require('../__tests__').testElectron().app;
     jest.mock('../main', () => ({
       init: jest.fn()
     }));
-    app = require('electron').app;
     main = require('../main');
   });
   describe('GTK workaround', () => {
