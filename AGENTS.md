@@ -26,13 +26,14 @@ npm install  # Install dependencies - takes ~55 seconds
 - `npm run build:win` - Builds and bundles the application for Windows systems
 
 ### Testing
-- `npm test` - Run full test suite - takes ~13 seconds, runs 641 tests. NEVER CANCEL - Set timeout to 30+ minutes.
+- `npm test` - Run full test suite - takes ~13 seconds, runs 656 tests. NEVER CANCEL - Set timeout to 30+ minutes.
 - `npm run test:e2e` - Run end-to-end tests to verify application startup - takes ~10-15 seconds
 - The project uses Jest with ECMAScript modules requiring the experimental VM modules flag for Node.js
 
 ### Running the Application
 - `npm run prestart && npm start` - Build and run the Electron application locally
-- In CI/headless environments: `DISPLAY=:99 ./node_modules/.bin/electron . --no-sandbox` 
+- `npm start -- --settings-path /path/to/settings.json` - Run with a custom settings file location (useful for testing or multiple profiles)
+- In CI/headless environments: `DISPLAY=:99 ./node_modules/.bin/electron . --no-sandbox`
 - The application requires X11 display and may need sandbox disabled in CI environments
 - **Global NPX usage**: `npx electronim` - Installs and runs the latest published version from npm registry
 
@@ -85,6 +86,7 @@ The project includes E2E tests to verify the complete Electron application stack
 - Window verification uses DevTools output analysis to confirm successful rendering
 - Process termination uses SIGKILL due to tray icon preventing graceful SIGTERM shutdown
 - **Startup E2E Tests** (`src/__tests__/startup.test.e2e.js`) - Tests actual Electron application startup by spawning the full process
+- **Settings Dialog E2E Tests** (`src/__tests__/settings-dialog.test.e2e.js`) - Tests that settings dialog appears when app starts with empty settings using `--settings-path` argument
 
 ## Technical Architecture
 
@@ -100,6 +102,7 @@ The project includes E2E tests to verify the complete Electron application stack
   - `main/` - Electron main process logic
   - `tab-manager/` - Core tab and messaging functionality
   - `settings/` - Application settings and configuration UI
+  - `cli/` - Command-line argument parsing and validation
   - `about/` - About dialog and information
   - `chrome-tabs/` - Tab UI components based on Chrome tabs
   - `components/` - Reusable UI components (Material Design 3 style)
@@ -139,6 +142,8 @@ The settings system uses Preact components with Material Design 3 styling:
 - Settings UI is at `src/settings/`
 - Browser tests cover URL validation and settings persistence
 - Settings include service tabs, spell check languages, and other configuration
+- Custom settings path can be specified via `--settings-path` command-line argument for testing or multi-profile support
+- The `setSettingsPath()` function in `src/settings/index.js` allows programmatic override of the default settings location
 
 ### Spell Check System
 - Supports 20+ languages using dictionary packages

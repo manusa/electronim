@@ -34,9 +34,9 @@ const testSettings = async () => {
   const os = require('node:os');
   const fs = require('node:fs');
   const settings = require('../settings');
-  settings.paths.appDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'electronim-test-'));
-  settings.paths.settingsPath = path.join(settings.paths.appDir, 'settings.json');
-  global.__testTempDirectories__.push(settings.paths.appDir);
+  const tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'electronim-test-'));
+  settings.setSettingsPath(path.join(tempDir, 'settings.json'));
+  global.__testTempDirectories__.push(tempDir);
   return settings;
 };
 
