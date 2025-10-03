@@ -14,9 +14,9 @@
    limitations under the License.
  */
 const {WebContentsView, dialog, shell, ipcMain: eventBus} = require('electron');
-const fs = require('fs');
-const path = require('path');
-const HOME_DIR = require('os').homedir();
+const fs = require('node:fs');
+const path = require('node:path');
+const HOME_DIR = require('node:os').homedir();
 const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, KEYBOARD_SHORTCUTS} = require('../constants');
 const {showDialog} = require('../base-window');
 
