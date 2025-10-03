@@ -356,4 +356,39 @@ describe('Settings module test suite', () => {
   const expectHomeDirectoryCreated = () => {
     expect(fs.mkdirSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim'), {recursive: true});
   };
+  describe('setSettingsPath', () => {
+    test('should resolve relative paths to absolute', () => {
+      // Given
+      const relativePath = './my-settings.json';
+      jest.spyOn(path, 'resolve').mockReturnValueOnce('/resolved/my-settings.json');
+      // When
+      settings.setSettingsPath(relativePath);
+      // Then
+      expect(path.resolve).toHaveBeenCalledWith(relativePath);
+    });
+    test('loadSettings should use custom path when set', () => {
+      // Given
+      const customPath = '/custom/settings.json';
+      settings.setSettingsPath(customPath);
+      fs.existsSync.mockImplementationOnce(() => true);
+      fs.readFileSync.mockImplementationOnce(() => '{"tabs": [{"id": "custom"}], "theme": "dark"}');
+      // When
+      const result = settings.loadSettings();
+      // Then
+      expect(fs.mkdirSync).toHaveBeenCalledWith('/custom', {recursive: true});
+      expect(fs.readFileSync).toHaveBeenCalledWith(customPath);
+      expect(result.tabs).toEqual([{id: 'custom'}]);
+      expect(result.theme).toBe('dark');
+    });
+    test('updateSettings should write to custom path when set', () => {
+      // Given
+      const customPath = '/custom/settings.json';
+      settings.setSettingsPath(customPath);
+      fs.existsSync.mockImplementationOnce(() => false);
+      // When
+      settings.updateSettings({tabs: [{id: 'test'}]});
+      // Then
+      expect(fs.writeFileSync).toHaveBeenCalledWith(customPath, expect.any(String));
+    });
+  });
 });

@@ -51,6 +51,19 @@ paths.appDir = path.join(HOME_DIR, APP_DIR);
 paths.settingsPath = path.join(paths.appDir, SETTINGS_FILE);
 
 /**
+ * Sets a custom settings file path.
+ * This allows users to specify a different location for their settings file,
+ * enabling multiple profiles or custom configurations.
+ *
+ * @param {string} customPath - The absolute or relative path to the settings file
+ */
+const setSettingsPath = customPath => {
+  const resolvedPath = path.resolve(customPath);
+  paths.settingsPath = resolvedPath;
+  paths.appDir = path.dirname(resolvedPath);
+};
+
+/**
  * Wrapper function to retrieve the current system's platform.
  *
  * @returns {NodeJS.Platform} the OS platform.
@@ -185,6 +198,5 @@ const openSettingsDialog = mainWindow => () => {
 
 module.exports = {
   getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSettings, importSettings, openElectronimFolder,
-  // Visible for testing
-  paths
+  setSettingsPath
 };

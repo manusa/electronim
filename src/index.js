@@ -20,7 +20,16 @@ if (process.platform === 'linux') {
   app.commandLine.appendSwitch('gtk-version', '3');
 }
 const {registerAppShortcuts} = require('./base-window');
+const {parseSettingsPath} = require('./cli');
 const {init, quit} = require('./main');
+const {setSettingsPath} = require('./settings');
+
+// Parse command line arguments for custom settings path
+const args = process.argv.slice(process.defaultApp ? 2 : 1);
+const customSettingsPath = parseSettingsPath(args);
+if (customSettingsPath) {
+  setSettingsPath(customSettingsPath);
+}
 
 app.name = 'ElectronIM';
 
