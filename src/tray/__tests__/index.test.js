@@ -16,14 +16,13 @@
 const path = require('node:path');
 
 describe('Tray module test suite', () => {
-  let settings;
   let electron;
+  let settings;
   let tray;
   beforeEach(async () => {
+    electron = require('../../__tests__').testElectron();
     settings = await require('../../__tests__').testSettings();
     jest.spyOn(settings, 'getPlatform');
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    electron = require('electron');
     tray = require('../');
   });
   afterEach(async () => {

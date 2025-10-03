@@ -177,4 +177,10 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
   return instance;
 };
 
-module.exports = {mockBaseWindowInstance, mockWebContentsViewInstance, mockElectronInstance};
+const testElectron = () => {
+  const mockInstance = mockElectronInstance();
+  jest.mock('electron', () => mockInstance);
+  return require('electron');
+};
+
+module.exports = {mockBaseWindowInstance, mockWebContentsViewInstance, mockElectronInstance, testElectron};
