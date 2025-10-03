@@ -18,8 +18,7 @@ describe('About module test suite', () => {
   let about;
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    electron = require('electron');
+    electron = require('../../__tests__').testElectron();
     about = require('../');
   });
   describe('openAboutDialog', () => {
