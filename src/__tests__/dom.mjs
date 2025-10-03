@@ -14,9 +14,9 @@
    limitations under the License.
  */
 
-import {fileURLToPath} from 'url';
-import {dirname, resolve} from 'path';
-import {readFileSync} from 'fs';
+import {fileURLToPath} from 'node:url';
+import {dirname, resolve} from 'node:path';
+import {readFileSync} from 'node:fs';
 
 const parser = new DOMParser();
 
