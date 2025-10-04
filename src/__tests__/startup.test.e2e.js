@@ -19,26 +19,15 @@
 
 const path = require('node:path');
 const {spawn} = require('node:child_process');
-const CDP = require('chrome-remote-interface');
+const {devTools, getFreePort} = require('./');
 
 describe('E2E :: Application startup test suite', () => {
   let electronProcess;
   let appPath;
   let electronPath;
-  let devToolsClient;
+  let devtoolsPort;
   const STARTUP_TIMEOUT = 15000;
-  const DEVTOOLS_PORT = 9222;
 
-  const closeDevTools = async () => {
-    if (!devToolsClient?.client) {
-      return;
-    }
-    try {
-      await devToolsClient.client.close();
-    } catch {
-      // Ignore close errors
-    }
-  };
   const killElectron = async () => {
     if (!electronProcess || electronProcess.killed) {
       return;
@@ -56,37 +45,7 @@ describe('E2E :: Application startup test suite', () => {
     });
   };
 
-  const connectToDevTools = async (timeout = 10000) => {
-    const startTime = Date.now();
-
-    while (Date.now() - startTime < timeout) {
-      try {
-        // eslint-disable-next-line new-cap
-        const targets = await CDP.List({port: DEVTOOLS_PORT});
-        const mainTarget = targets.find(target =>
-          target.type === 'page' &&
-          (target.url.includes('chrome-tabs') || target.title === 'ElectronIM tabs')
-        );
-
-        if (mainTarget) {
-          // eslint-disable-next-line new-cap
-          const client = await CDP({target: mainTarget, port: DEVTOOLS_PORT});
-          const {Runtime, DOM, Page} = client;
-          await Runtime.enable();
-          await DOM.enable();
-          await Page.enable();
-          return {client, Runtime, DOM, Page};
-        }
-      } catch {
-        // DevTools not ready yet, wait and retry
-      }
-      await new Promise(resolve => setTimeout(resolve, 500));
-    }
-
-    throw new Error('Failed to connect to DevTools after timeout');
-  };
-
-  beforeAll(() => {
+  beforeAll(async () => {
     // Set environment for testing
     process.env.NODE_ENV = 'test';
     process.env.DISPLAY = process.env.DISPLAY || ':99';
@@ -95,12 +54,15 @@ describe('E2E :: Application startup test suite', () => {
 
     appPath = path.join(__dirname, '..', 'index.js');
     electronPath = require('electron');
+    devtoolsPort = await getFreePort();
   });
 
   describe('with valid environment', () => {
+    let devToolsClient;
     let spawnResult;
 
     beforeAll(async () => {
+      devToolsClient = devTools({port: devtoolsPort});
       spawnResult = await new Promise((resolve, reject) => {
         const timeout = setTimeout(() => {
           reject(new Error(`Application startup timed out after ${STARTUP_TIMEOUT}ms`));
@@ -112,7 +74,7 @@ describe('E2E :: Application startup test suite', () => {
           '--disable-gpu',
           '--disable-dev-shm-usage',
           '--disable-web-security',
-          `--remote-debugging-port=${DEVTOOLS_PORT}`
+          `--remote-debugging-port=${devtoolsPort}`
         ], {
           stdio: ['pipe', 'pipe', 'pipe'],
           env: {...process.env}
@@ -127,31 +89,19 @@ describe('E2E :: Application startup test suite', () => {
         });
 
         electronProcess.stderr.on('data', data => {
-          const output = data.toString();
-          stderrData += output;
+          stderrData += data.toString();
 
           // Look for indicators that the main window was created
-          if (output.includes('listening on ws://') && !appStarted) {
+          if (stderrData.includes('listening on ws://') && !appStarted) {
             appStarted = true;
             clearTimeout(timeout);
-
-            // Give a moment for window to fully initialize, then connect to DevTools
-            setTimeout(async () => {
-              try {
-                // Connect to Chrome DevTools Protocol
-                devToolsClient = await connectToDevTools();
-
-                resolve({
-                  stdout: stdoutData,
-                  stderr: stderrData,
-                  pid: electronProcess.pid,
-                  windowDetected: true,
-                  devToolsConnected: true
-                });
-              } catch (error) {
-                reject(new Error(`DevTools connection or DOM verification failed: ${error.message}`));
-              }
-            }, 2000);
+            resolve({
+              stdout: stdoutData,
+              stderr: stderrData,
+              pid: electronProcess.pid,
+              windowDetected: true,
+              devToolsConnected: true
+            });
           }
         });
 
@@ -165,16 +115,17 @@ describe('E2E :: Application startup test suite', () => {
           reject(new Error(`Electron application exited with code ${code}. stderr: ${stderrData}`));
         });
       });
+      await devToolsClient.connect();
     }, STARTUP_TIMEOUT + 5000);
 
-    afterAll(async () => Promise.all([closeDevTools(), killElectron()]));
+    afterAll(async () => Promise.all([devToolsClient.close(), killElectron()]));
 
     test('starts the application', () => {
       expect(spawnResult.pid).toBeDefined();
     });
 
     test('creates main window with DevTools indicators', () => {
-      expect(spawnResult.stderr).toContain('DevTools listening on ws://');
+      expect(spawnResult.stderr).toMatch(/(DevTools|Debugger) listening on ws:\/\//);
     });
 
     test('captures stdout output', () => {
@@ -198,27 +149,36 @@ describe('E2E :: Application startup test suite', () => {
       expect(spawnResult.devToolsConnected).toBeTruthy();
     });
 
-
-    test('verifies tab container element exists', async () => {
-      const {DOM} = devToolsClient;
-      const {root} = await DOM.getDocument();
-      const {nodeId} = await DOM.querySelector({nodeId: root.nodeId, selector: '.tab-container'});
-      expect(nodeId).toBeGreaterThan(0);
-    });
-
-    test('verifies HTML has electronim class', async () => {
-      const {DOM} = devToolsClient;
-      const {root} = await DOM.getDocument();
-      const {nodeId} = await DOM.querySelector({nodeId: root.nodeId, selector: 'html.electronim'});
-      expect(nodeId).toBeGreaterThan(0);
-    });
-
-    test('can execute JavaScript in the renderer process', async () => {
-      const {Runtime} = devToolsClient;
-      const result = await Runtime.evaluate({
-        expression: 'document.title'
+    describe('tab-container', () => {
+      let DOM;
+      let Runtime;
+      beforeAll(async () => {
+        const target = await devToolsClient.target(t =>
+          t.type === 'page' &&
+          (t.url.includes('chrome-tabs') || t.title === 'ElectronIM tabs')
+        );
+        DOM = target.DOM;
+        Runtime = target.Runtime;
       });
-      expect(result.result.value).toContain('ElectronIM');
+
+      test('verifies tab container element exists', async () => {
+        const {root} = await DOM.getDocument();
+        const {nodeId} = await DOM.querySelector({nodeId: root.nodeId, selector: '.tab-container'});
+        expect(nodeId).toBeGreaterThan(0);
+      });
+
+      test('verifies HTML has electronim class', async () => {
+        const {root} = await DOM.getDocument();
+        const {nodeId} = await DOM.querySelector({nodeId: root.nodeId, selector: 'html.electronim'});
+        expect(nodeId).toBeGreaterThan(0);
+      });
+
+      test('can execute JavaScript in the renderer process', async () => {
+        const result = await Runtime.evaluate({
+          expression: 'document.title'
+        });
+        expect(result.result.value).toContain('ElectronIM');
+      });
     });
   });
 });
