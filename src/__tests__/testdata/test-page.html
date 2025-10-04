@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElectronIM Test Page</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 2.5em;
+    }
+    .status {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .test-data {
+      font-family: 'Courier New', monospace;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #counter {
+      font-size: 3em;
+      font-weight: bold;
+      text-align: center;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="test-heading">ElectronIM E2E Test Page</h1>
+
+    <div class="status">
+      <p><strong>Status:</strong> <span id="status">Loaded Successfully</span></p>
+      <p><strong>Timestamp:</strong> <span id="timestamp"></span></p>
+      <p><strong>User Agent:</strong></p>
+      <div class="test-data" id="user-agent"></div>
+    </div>
+
+    <div id="counter">0</div>
+
+    <div style="text-align: center;">
+      <button id="increment-btn">Increment Counter</button>
+      <button id="reset-btn">Reset Counter</button>
+    </div>
+
+    <div class="status" style="margin-top: 20px;">
+      <p><strong>Interactive Test:</strong></p>
+      <input type="text" id="test-input" placeholder="Type something here..." style="width: 100%; padding: 10px; font-size: 16px; border-radius: 4px; border: none;">
+      <p id="input-echo" style="margin-top: 10px; font-style: italic;"></p>
+    </div>
+  </div>
+
+  <script>
+    // Initialize timestamp
+    document.getElementById('timestamp').textContent = new Date().toISOString();
+    document.getElementById('user-agent').textContent = navigator.userAgent;
+
+    // Counter functionality
+    let counter = 0;
+    const counterElement = document.getElementById('counter');
+    const incrementBtn = document.getElementById('increment-btn');
+    const resetBtn = document.getElementById('reset-btn');
+
+    incrementBtn.addEventListener('click', () => {
+      counter++;
+      counterElement.textContent = counter;
+    });
+
+    resetBtn.addEventListener('click', () => {
+      counter = 0;
+      counterElement.textContent = counter;
+    });
+
+    // Input echo functionality
+    const testInput = document.getElementById('test-input');
+    const inputEcho = document.getElementById('input-echo');
+
+    testInput.addEventListener('input', (e) => {
+      inputEcho.textContent = e.target.value ? `You typed: ${e.target.value}` : '';
+    });
+
+    // Add a marker for test validation
+    window.electronimTestPageLoaded = true;
+    window.electronimTestData = {
+      version: '1.0.0',
+      loaded: true,
+      timestamp: Date.now()
+    };
+
+    console.log('ElectronIM test page loaded successfully');
+  </script>
+</body>
+</html>
