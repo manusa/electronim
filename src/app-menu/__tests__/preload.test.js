@@ -17,8 +17,7 @@ describe('App Menu Module preload test suite', () => {
   let electron;
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    electron = require('electron');
+    electron = require('../../__tests__').testElectron();
   });
   describe('preload (just for coverage and sanity, see bundle tests)', () => {
     beforeEach(() => {
