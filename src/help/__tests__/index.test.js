@@ -18,8 +18,7 @@ describe('Help module test suite', () => {
   let help;
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    electron = require('electron');
+    electron = require('../../__tests__').testElectron();
     help = require('../');
   });
   describe('openHelpDialog', () => {
