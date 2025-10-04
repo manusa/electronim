@@ -23,9 +23,8 @@ describe('Find in Page :: main test suite', () => {
   let eventBus;
   beforeEach(async () => {
     jest.resetModules();
+    electron = require('../../__tests__').testElectron();
     await require('../../__tests__').testSettings();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    electron = require('electron');
     baseWindow = electron.baseWindowInstance;
     // Each view should be a separate instance
     electron.WebContentsView = jest.fn(() => require('../../__tests__').mockWebContentsViewInstance());
