@@ -29,10 +29,7 @@ describe('E2E :: Application startup test suite', () => {
     beforeAll(async () => {
       electron = await spawnElectron();
       mainWindow = await electron.waitForWindow(
-        ({url, title}) =>
-          url.includes('chrome-tabs') || title === 'ElectronIM tabs',
-        STARTUP_TIMEOUT
-      );
+        ({url, title}) => url.includes('chrome-tabs') || title === 'ElectronIM tabs');
     }, STARTUP_TIMEOUT);
 
     afterAll(async () => {

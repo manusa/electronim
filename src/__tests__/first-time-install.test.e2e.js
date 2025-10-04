@@ -49,10 +49,7 @@ describe('E2E :: First-time install test suite', () => {
     beforeAll(async () => {
       electron = await spawnElectron({extraArgs: ['--settings-path', emptySettingsPath]});
       // Wait for settings dialog to appear (it should appear automatically when no tabs are configured)
-      settingsWindow = await electron.waitForWindow(
-        ({url}) => url.includes('settings/index.html'),
-        STARTUP_TIMEOUT
-      );
+      settingsWindow = await electron.waitForWindow(({url}) => url.includes('settings/index.html'));
     }, STARTUP_TIMEOUT);
 
     afterAll(async () => {
