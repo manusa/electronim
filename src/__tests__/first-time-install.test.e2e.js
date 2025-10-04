@@ -17,7 +17,7 @@
   limitations under the License.
 */
 
-const {devTools, getFreePort, spawnElectron} = require('./');
+const {spawnElectron} = require('./');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
@@ -25,13 +25,10 @@ const os = require('node:os');
 const STARTUP_TIMEOUT = 15000;
 
 describe('E2E :: First-time install test suite', () => {
-  let devtoolsPort;
   let tempDir;
   let emptySettingsPath;
 
   beforeAll(async () => {
-    devtoolsPort = await getFreePort();
-
     // Create temporary directory and empty settings file to simulate first-time install
     tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'electronim-test-'));
     emptySettingsPath = path.join(tempDir, 'settings.json');
@@ -46,120 +43,67 @@ describe('E2E :: First-time install test suite', () => {
   });
 
   describe('on first launch with no configured services', () => {
-    let devToolsClient;
     let electron;
+    let settingsWindow;
 
     beforeAll(async () => {
-      devToolsClient = devTools({port: devtoolsPort});
-      electron = spawnElectron({devtoolsPort, extraArgs: ['--settings-path', emptySettingsPath]});
-      await electron.waitForDebugger(STARTUP_TIMEOUT);
-      await devToolsClient.connect();
+      electron = await spawnElectron({extraArgs: ['--settings-path', emptySettingsPath]});
+      // Wait for settings dialog to appear (it should appear automatically when no tabs are configured)
+      settingsWindow = await electron.waitForWindow(
+        ({url}) => url.includes('settings/index.html'),
+        STARTUP_TIMEOUT
+      );
     }, STARTUP_TIMEOUT);
 
-    afterAll(async () => Promise.all([devToolsClient.close(), electron.kill()]));
+    afterAll(async () => {
+      await electron.kill();
+    }, STARTUP_TIMEOUT);
 
     test('starts the application', () => {
-      expect(electron.process.pid).toBeDefined();
-    });
-
-    test('creates main window with DevTools indicators', () => {
-      expect(electron.stderr).toMatch(/(DevTools|Debugger) listening on ws:\/\//);
+      expect(electron.app).toBeDefined();
     });
 
     describe('settings-dialog', () => {
-      let DOM;
-      let Runtime;
-      beforeAll(async () => {
-        // Wait for settings dialog to appear (it should appear automatically when no tabs are configured)
-        const targetInfo = await devToolsClient.target(t =>
-          t.type === 'page' &&
-          t.url.includes('settings/index.html')
-        );
-        DOM = targetInfo.DOM;
-        Runtime = targetInfo.Runtime;
-      }, STARTUP_TIMEOUT);
-
       test('verifies settings dialog is displayed', async () => {
-        const {root} = await DOM.getDocument();
-        const {nodeId} = await DOM.querySelector({nodeId: root.nodeId, selector: '.settings'});
-        expect(nodeId).toBeGreaterThan(0);
+        const settings = settingsWindow.locator('.settings');
+        await expect(settings).toBeVisible();
       });
 
       test('verifies settings dialog has services pane', async () => {
-        const {root} = await DOM.getDocument();
-        const {nodeId} = await DOM.querySelector({nodeId: root.nodeId, selector: '.settings__services'});
-        expect(nodeId).toBeGreaterThan(0);
+        const servicesPane = settingsWindow.locator('.settings__services');
+        await expect(servicesPane).toBeVisible();
       });
 
       test('can execute JavaScript in the settings dialog', async () => {
-        const result = await Runtime.evaluate({
-          expression: 'document.title'
-        });
-        expect(result.result.value).toContain('Settings');
+        const title = await settingsWindow.evaluate(() => document.title);
+        expect(title).toContain('Settings');
       });
 
       test('can add a new service by typing URL and clicking add button', async () => {
         // Get the input field for new service URL
-        const {root} = await DOM.getDocument();
-        const {nodeId: inputNodeId} = await DOM.querySelector({
-          nodeId: root.nodeId,
-          selector: '.settings__new-tab input'
-        });
-        expect(inputNodeId).toBeGreaterThan(0);
+        const input = settingsWindow.locator('.settings__new-tab input');
+        await expect(input).toBeVisible();
 
-        // Type the URL by setting attributes and triggering input event
-        await DOM.setAttributeValue({nodeId: inputNodeId, name: 'value', value: 'https://web.whatsapp.com'});
+        // Type the URL
+        await input.fill('https://web.whatsapp.com');
 
-        // Trigger the input event using Runtime
-        await Runtime.evaluate({
-          expression: `
-            const input = document.querySelector('.settings__new-tab input');
-            input.value = 'https://web.whatsapp.com';
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-          `
-        });
+        // Get the add button and verify it's enabled
+        const addButton = settingsWindow.locator('.settings__new-tab .material3.icon-button');
+        await expect(addButton).toBeEnabled();
 
-        // Wait for validation to complete
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Get the add button node and click it
-        const {nodeId: addButtonNodeId} = await DOM.querySelector({
-          nodeId: root.nodeId,
-          selector: '.settings__new-tab .material3.icon-button'
-        });
-        expect(addButtonNodeId).toBeGreaterThan(0);
-
-        // Verify button is not disabled
-        const {attributes} = await DOM.getAttributes({nodeId: addButtonNodeId});
-        expect(attributes.includes('disabled')).toBe(false);
-
-        // Click the add button using DOM API
-        await Runtime.evaluate({
-          expression: 'document.querySelector(\'.settings__new-tab .material3.icon-button\').click()'
-        });
-
-        // Wait for the tab to be added to the DOM
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Click the add button
+        await addButton.click();
 
         // Verify the service was added to the list
-        const tabCount = await Runtime.evaluate({
-          expression: 'document.querySelectorAll(\'.settings__tabs .settings__tab\').length'
-        });
-        expect(tabCount.result.value).toBe(1);
+        const tabs = settingsWindow.locator('.settings__tabs .settings__tab');
+        await expect(tabs).toHaveCount(1);
 
-        const firstTabUrl = await Runtime.evaluate({
-          expression: `
-            const tabInput = document.querySelector('.settings__tabs .settings__tab .settings__tab-main input');
-            tabInput ? tabInput.value : null;
-          `
-        });
-        expect(firstTabUrl.result.value).toBe('https://web.whatsapp.com');
+        // Verify the first tab has the correct URL
+        const firstTabInput = settingsWindow.locator('.settings__tabs .settings__tab .settings__tab-main input');
+        await expect(firstTabInput).toHaveValue('https://web.whatsapp.com');
 
         // Verify the input field is cleared
-        const inputCleared = await Runtime.evaluate({
-          expression: 'document.querySelector(\'.settings__new-tab input\').value'
-        });
-        expect(inputCleared.result.value).toBe('');
+        await expect(input).toHaveValue('');
       });
     });
   });

@@ -13,24 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const net = require('node:net');
-
-const getFreePort = () => new Promise((resolve, reject) => {
-  const server = net.createServer();
-  server.listen(0, () => {
-    const port = server.address().port;
-    server.close(() => resolve(port));
-  });
-  server.on('error', reject);
-});
-
 module.exports = {
-  devTools: require('./dev-tools').devTools,
-  getFreePort,
   mockBaseWindowInstance: require('./electron.js').mockBaseWindowInstance,
   mockWebContentsViewInstance: require('./electron.js').mockWebContentsViewInstance,
   mockElectronInstance: require('./electron.js').mockElectronInstance,
-  spawnElectron: require('./electron.js').spawnElectron,
+  spawnElectron: require('./playwright.js').spawnElectron,
   testElectron: require('./electron.js').testElectron,
   testSettings: require('./settings.js').testSettings
 };
