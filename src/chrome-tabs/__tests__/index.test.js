@@ -17,13 +17,14 @@
    limitations under the License.
  */
 describe('Chrome Tabs Module module test suite', () => {
+  let electron;
   let chromeTabs;
   beforeEach(() => {
     jest.resetModules();
+    electron = require('../../__tests__').testElectron();
     jest.mock('../check-for-updates', () => ({
       getLatestRelease: () => Promise.resolve({})
     }));
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     chromeTabs = require('../');
   });
   describe('newTabContainer', () => {
@@ -31,7 +32,7 @@ describe('Chrome Tabs Module module test suite', () => {
       // When
       chromeTabs.newTabContainer();
       // Then
-      const WebContentsView = require('electron').WebContentsView;
+      const WebContentsView = electron.WebContentsView;
       expect(WebContentsView).toHaveBeenCalledTimes(1);
       expect(WebContentsView).toHaveBeenCalledWith({
         webPreferences: expect.objectContaining({sandbox: true, nodeIntegration: false})
@@ -39,7 +40,7 @@ describe('Chrome Tabs Module module test suite', () => {
     });
     test('checks for updates', async () => {
       // Given
-      const {webContentsViewInstance} = require('electron');
+      const {webContentsViewInstance} = electron;
       let resolveSend;
       const isSent = new Promise(resolve => {
         resolveSend = resolve;
@@ -47,7 +48,7 @@ describe('Chrome Tabs Module module test suite', () => {
       webContentsViewInstance.webContents.send = jest.fn(() => resolveSend(true));
       chromeTabs.newTabContainer();
       // When
-      require('electron').ipcMain.listeners.tabsReady();
+      electron.ipcMain.listeners.tabsReady();
       // Then
       await expect(isSent).resolves.toBe(true);
       expect(webContentsViewInstance.webContents.send).toHaveBeenCalledWith('electronimNewVersionAvailable', true);

@@ -16,9 +16,7 @@
 describe('Chrome Tabs Module preload test suite', () => {
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('electron', () => ({
-      ipcRenderer: {send: jest.fn()}
-    }));
+    require('../../__tests__').testElectron();
   });
   describe('preload (just for coverage and sanity, see bundle tests)', () => {
     beforeEach(() => {
