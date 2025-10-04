@@ -97,7 +97,7 @@ const BackgroundSvg = () => html`
     </svg>
 `;
 
-const Tab = ({dispatch, numberOfTabs, idx, id, active, offsetX = 0, title, url, width, ...rest}) => {
+const Tab = ({dispatch, numberOfTabs, idx, id, active, offsetX = 0, title, url, customName, width, ...rest}) => {
   const tabClick = () => {
     if (active !== true) {
       sendActivateTab({id, restoreWindow: true});
@@ -119,6 +119,7 @@ const Tab = ({dispatch, numberOfTabs, idx, id, active, offsetX = 0, title, url, 
       offsetX: currentOffsetX
     });
   };
+  const displayTitle = customName || title || url;
   const props = {
     'data-tab-id': id,
     draggable: true,
@@ -146,7 +147,7 @@ const Tab = ({dispatch, numberOfTabs, idx, id, active, offsetX = 0, title, url, 
       <div class="chrome-tab-content">
         <${Favicon} ...${rest}/>
         <div class="chrome-tab-title" title=${url}>
-          ${title ? title : url}
+          ${displayTitle}
         </div>
         <${NotificationIcon} ...${rest}/>
       </div>
