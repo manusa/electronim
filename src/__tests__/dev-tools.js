@@ -19,7 +19,10 @@ const {List: listTargets} = chromeRemoteInterface;
 const sleep = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms));
 
 const devTools = ({port, timeout = 10000}) => {
-  const instance = {port};
+  const instance = {
+    port,
+    connected: false
+  };
   instance.close = async () => {
     if (!instance.client) {
       return;
@@ -36,6 +39,7 @@ const devTools = ({port, timeout = 10000}) => {
       try {
         const targets = await listTargets({port}, null);
         if (targets.length > 0) {
+          instance.connected = true;
           return;
         }
       } catch {

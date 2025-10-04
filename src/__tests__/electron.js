@@ -191,4 +191,72 @@ const testElectron = () => {
   return require('electron');
 };
 
-module.exports = {mockBaseWindowInstance, mockWebContentsViewInstance, mockElectronInstance, testElectron};
+const spawnElectron = ({devtoolsPort}) => {
+  const {spawn} = require('node:child_process');
+  const path = require('node:path');
+  const electronPath = require('electron');
+  const appPath = path.join(__dirname, '..', 'index.js');
+  const sleep = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms));
+  const instance = {
+    started: false,
+    exited: false,
+    error: null,
+    process: spawn(electronPath, [
+      appPath,
+      '--no-sandbox',
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--disable-web-security',
+      `--remote-debugging-port=${devtoolsPort}`
+    ], {
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: {...process.env}
+    }),
+    stdout: '',
+    stderr: ''
+  };
+  instance.process.stdout.on('data', data => {
+    instance.stdout += data.toString();
+  });
+  instance.process.stderr.on('data', data => {
+    instance.stderr += data.toString();
+  });
+  instance.process.on('error', error => {
+    instance.error = error;
+  });
+  instance.process.on('exit', () => {
+    instance.exited = true;
+  });
+  instance.waitForDebugger = async (timeout = 5000) => {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeout) {
+      if (instance.stderr.includes('listening on ws://')) {
+        instance.started = true;
+        return;
+      }
+      await sleep();
+    }
+    throw new Error(`Application startup timed out after ${timeout}ms`);
+  };
+  instance.kill = async () => {
+    if (instance.exited) {
+      return;
+    }
+    // eslint-disable-next-line no-warning-comments
+    // TODO: SIGTERM doesn't work when tray icon is enabled, using SIGKILL directly
+    // This is because the tray prevents graceful shutdown. Consider adding a test-specific
+    // flag to disable tray in E2E tests for proper graceful shutdown testing.
+    instance.process.kill('SIGKILL');
+
+    // Wait for process to exit
+    await new Promise((resolve, reject) => {
+      instance.process.once('exit', resolve);
+      setTimeout(() => reject(new Error('Process exit timeout')), 1000);
+    });
+  };
+  return instance;
+};
+
+module.exports = {
+  mockBaseWindowInstance, mockWebContentsViewInstance, mockElectronInstance, spawnElectron, testElectron
+};
