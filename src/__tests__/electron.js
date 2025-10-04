@@ -59,8 +59,9 @@ const mockWebContentsViewInstance = () => {
 const mockBaseWindowInstance = () => {
   const instance = {
     listeners: {},
+    bounds: {x: 0, y: 0, width: 0, height: 0},
+    contentBounds: {x: 0, y: 0, width: 0, height: 0},
     destroy: jest.fn(),
-    getContentBounds: jest.fn(() => ({})),
     isFullScreen: jest.fn(),
     loadURL: jest.fn(),
     minimize: jest.fn(),
@@ -68,7 +69,14 @@ const mockBaseWindowInstance = () => {
       instance.listeners[eventName] = func;
     }),
     removeMenu: jest.fn(),
-    setBounds: jest.fn(),
+    getBounds: jest.fn(() => instance.bounds),
+    setBounds: jest.fn(bounds => {
+      instance.bounds = {...instance.bounds, ...bounds};
+    }),
+    getContentBounds: jest.fn(() => instance.contentBounds),
+    setContentBounds: jest.fn(contentBounds => {
+      instance.contentBounds = {...instance.contentBounds, ...contentBounds};
+    }),
     setFullScreen: jest.fn(),
     show: jest.fn(),
     showInactive: jest.fn(),

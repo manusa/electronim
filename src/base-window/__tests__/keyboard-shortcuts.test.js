@@ -19,9 +19,8 @@ describe('Main :: Global Keyboard Shortcuts module test suite', () => {
   let inputEvent;
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    electron = require('electron');
-    view = require('../../__tests__').mockWebContentsViewInstance();
+    electron = require('../../__tests__').testElectron();
+    view = new electron.WebContentsView({});
     require('../').registerAppShortcuts({}, view.webContents);
     inputEvent = {
       preventDefault: jest.fn()

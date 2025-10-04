@@ -14,15 +14,18 @@
    limitations under the License.
  */
 describe('base-window util module test suite', () => {
+  let electron;
   let baseWindow;
   beforeEach(() => {
+    jest.resetModules();
+    electron = require('../../__tests__/electron').testElectron();
     baseWindow = require('../');
   });
   test('showDialog, should fill provided window with provided BrowserView', () => {
     // Given
-    const window = require('../../__tests__/electron').mockBaseWindowInstance();
-    window.getContentBounds = jest.fn(() => ({width: 13, height: 37}));
-    const dialog = require('../../__tests__/electron').mockWebContentsViewInstance();
+    const window = new electron.BaseWindow({});
+    window.setContentBounds({width: 13, height: 37});
+    const dialog = new electron.WebContentsView({});
     // When
     baseWindow.showDialog(window, dialog);
     // Then
