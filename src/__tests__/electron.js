@@ -191,7 +191,12 @@ const testElectron = () => {
   return require('electron');
 };
 
-const spawnElectron = ({devtoolsPort}) => {
+const spawnElectron = ({devtoolsPort, extraArgs = []}) => {
+  // Set environment for testing
+  process.env.NODE_ENV = 'test';
+  process.env.DISPLAY = process.env.DISPLAY || ':99';
+  process.env.ELECTRON_IS_DEV = '0';
+  process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
   const {spawn} = require('node:child_process');
   const path = require('node:path');
   const electronPath = require('electron');
@@ -207,7 +212,8 @@ const spawnElectron = ({devtoolsPort}) => {
       '--disable-gpu',
       '--disable-dev-shm-usage',
       '--disable-web-security',
-      `--remote-debugging-port=${devtoolsPort}`
+      `--remote-debugging-port=${devtoolsPort}`,
+      ...extraArgs
     ], {
       stdio: ['pipe', 'pipe', 'pipe'],
       env: {...process.env}

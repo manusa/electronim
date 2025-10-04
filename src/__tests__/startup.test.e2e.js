@@ -25,12 +25,6 @@ describe('E2E :: Application startup test suite', () => {
   let devtoolsPort;
 
   beforeAll(async () => {
-    // Set environment for testing
-    process.env.NODE_ENV = 'test';
-    process.env.DISPLAY = process.env.DISPLAY || ':99';
-    process.env.ELECTRON_IS_DEV = '0';
-    process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
-
     devtoolsPort = await getFreePort();
   });
 
