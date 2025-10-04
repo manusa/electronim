@@ -34,9 +34,18 @@ const ExpandButton = ({dispatch, id, expanded = false}) => {
 };
 
 const TabAdvancedSettings = (
-  {dispatch, id, sandboxed = false, openUrlsInApp = false}
+  {dispatch, id, sandboxed = false, openUrlsInApp = false, customName = ''}
 ) => html`
   <div class='settings__tab-advanced'>
+    <${TextField}
+      label='Custom tab name'
+      placeholder='Leave empty to use page title'
+      value=${customName}
+      onInput=${({target: {value}}) => setTabProperty({dispatch, property: 'customName', value, id})}
+      inputProps=${{
+    'data-testid': 'custom-name-input'
+  }}
+    />
     <${SettingsOption}
       onClick=${toggleTabProperty(dispatch, 'sandboxed', id)}
       checked=${sandboxed}
