@@ -187,10 +187,10 @@
     "verbose": true
   },
   "devDependencies": {
+    "@playwright/test": "1.55.1",
     "@sonar/scan": "4.3.2",
     "@testing-library/dom": "10.4.1",
     "@testing-library/user-event": "14.6.1",
-    "chrome-remote-interface": "0.33.3",
     "chrome-tabs": "5.4.0",
     "css-loader": "7.1.2",
     "electron": "38.2.0",
@@ -202,6 +202,7 @@
     "jest-environment-node": "30.2.0",
     "jest-extended": "6.0.0",
     "node-abi": "4.14.0",
+    "playwright": "1.55.1",
     "style-loader": "4.0.0",
     "val-loader": "6.0.0",
     "webpack": "5.102.0"
