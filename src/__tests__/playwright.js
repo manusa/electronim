@@ -13,9 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const spawnElectron = async ({extraArgs = []} = {}) => {
+const spawnElectron = async ({extraArgs = [], settings} = {}) => {
   const {_electron: electron} = require('playwright');
   const path = require('node:path');
+  const fs = require('node:fs');
+  const os = require('node:os');
   // Add playwright global expectations
   // Extend Jest's expect with Playwright matchers
   const {expect: playwrightExpect} = require('@playwright/test');
@@ -26,8 +28,19 @@ const spawnElectron = async ({extraArgs = []} = {}) => {
   process.env.ELECTRON_IS_DEV = '0';
   process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 
+  // Set up temporary settings file if settings object is provided
+  let tempDir;
+  let settingsPath;
+  if (settings) {
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'electronim-test-'));
+    settingsPath = path.join(tempDir, 'settings.json');
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+    extraArgs = [...extraArgs, '--settings-path', settingsPath];
+  }
+
   const appPath = path.join(__dirname, '..', 'index.js');
   const instance = {
+    tempDir,
     app: await electron.launch({
       args: [
         appPath,
@@ -40,21 +53,21 @@ const spawnElectron = async ({extraArgs = []} = {}) => {
       env: {...process.env}
     }),
     kill: async () => {
-      if (!instance.app) {
-        return;
+      // Clean up temporary settings directory if it was created
+      if (instance.tempDir && fs.existsSync(instance.tempDir)) {
+        fs.rmSync(tempDir, {recursive: true});
       }
-      // eslint-disable-next-line no-warning-comments
-      // TODO: electronApp.close() doesn't work when tray icon is enabled, using SIGKILL directly
-      // This is because the tray prevents graceful shutdown. Consider adding a test-specific
-      // flag to disable tray in E2E tests for proper graceful shutdown testing.
-      // await electronApp.close();
-      try {
-        const pid = instance.app.process()?.pid;
-        if (pid) {
-          process.kill(pid, 'SIGKILL');
+      if (instance.app?.process()?.pid) {
+        try {
+          // eslint-disable-next-line no-warning-comments
+          // TODO: electronApp.close() doesn't work when tray icon is enabled, using SIGKILL directly
+          // This is because the tray prevents graceful shutdown. Consider adding a test-specific
+          // flag to disable tray in E2E tests for proper graceful shutdown testing.
+          // await electronApp.close();
+          process.kill(instance.app?.process()?.pid, 'SIGKILL');
+        } catch {
+          // Process already dead
         }
-      } catch {
-        // Process already dead
       }
     },
     waitForWindow: async (filterFn, timeout = 10000) => {

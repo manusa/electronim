@@ -18,36 +18,16 @@
 */
 
 const {spawnElectron} = require('./');
-const fs = require('node:fs');
-const path = require('node:path');
-const os = require('node:os');
 
 const STARTUP_TIMEOUT = 15000;
 
 describe('E2E :: First-time install test suite', () => {
-  let tempDir;
-  let emptySettingsPath;
-
-  beforeAll(async () => {
-    // Create temporary directory and empty settings file to simulate first-time install
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'electronim-test-'));
-    emptySettingsPath = path.join(tempDir, 'settings.json');
-    fs.writeFileSync(emptySettingsPath, JSON.stringify({tabs: []}));
-  });
-
-  afterAll(() => {
-    // Clean up temporary directory
-    if (fs.existsSync(tempDir)) {
-      fs.rmSync(tempDir, {recursive: true});
-    }
-  });
-
   describe('on first launch with no configured services', () => {
     let electron;
     let settingsWindow;
 
     beforeAll(async () => {
-      electron = await spawnElectron({extraArgs: ['--settings-path', emptySettingsPath]});
+      electron = await spawnElectron({settings: {tabs: []}});
       // Wait for settings dialog to appear (it should appear automatically when no tabs are configured)
       settingsWindow = await electron.waitForWindow(({url}) => url.includes('settings/index.html'));
     }, STARTUP_TIMEOUT);

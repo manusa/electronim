@@ -16,9 +16,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-const fs = require('node:fs');
-const path = require('node:path');
-const os = require('node:os');
 const {spawnElectron, createTestServer} = require('./');
 
 const STARTUP_TIMEOUT = 30000;
@@ -28,40 +25,29 @@ describe('E2E :: Application startup test suite', () => {
     let electron;
     let mainWindow;
     let testServer;
-    let tempDir;
-    let settingsPath;
 
     beforeAll(async () => {
       // Start HTTP server with test page
       testServer = await createTestServer();
 
-      // Create temporary directory and settings file
-      tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'electronim-test-'));
-      settingsPath = path.join(tempDir, 'settings.json');
-
-      // Create settings with test server URL
-      const settings = {
-        tabs: [
-          {
-            id: 'test-tab-1',
-            url: testServer.url,
-            name: 'Test Tab'
-          }
-        ]
-      };
-      fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
-
       // Start Electron with test settings
-      electron = await spawnElectron({extraArgs: ['--settings-path', settingsPath]});
+      electron = await spawnElectron({
+        settings: {
+          tabs: [
+            {
+              id: 'test-tab-1',
+              url: testServer.url,
+              name: 'Test Tab'
+            }
+          ]
+        }
+      });
       mainWindow = await electron.waitForWindow(
         ({url, title}) => url.includes('chrome-tabs') || title === 'ElectronIM tabs');
     }, STARTUP_TIMEOUT);
 
     afterAll(async () => {
       await Promise.all([electron.kill(), testServer.close()]);
-      if (fs.existsSync(tempDir)) {
-        fs.rmSync(tempDir, {recursive: true});
-      }
     }, STARTUP_TIMEOUT);
 
     test('starts the application', () => {
