@@ -16,7 +16,7 @@
 import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
 import {ipcRenderer} from './settings.browser.mjs';
-import {fireEvent, getAllByText, getByTestId, getByText, waitFor} from '@testing-library/dom';
+import {findByTestId, fireEvent, getAllByText, getByTestId, getByText, waitFor} from '@testing-library/dom';
 
 describe('Settings in Browser test suite', () => {
   let mockIpcRenderer;
@@ -518,7 +518,7 @@ describe('Settings in Browser test suite', () => {
             expect($switch.classList).toContain('switch--checked');
           });
         });
-        describe('custom name', () => {
+        describe('with custom name', () => {
           let $settingsTab;
           let $toggleIcon;
           let $customNameInput;
@@ -529,7 +529,8 @@ describe('Settings in Browser test suite', () => {
               fireEvent.click($toggleIcon);
               await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
             }
-            $customNameInput = getByTestId($settingsTab, 'custom-name-input');
+            $customNameInput = (await findByTestId($settingsTab, 'settings-services-custom-tab-name'))
+              .querySelector('input');
           });
           test('custom name input should be visible when expanded', () => {
             expect($customNameInput).not.toBeNull();
@@ -544,13 +545,13 @@ describe('Settings in Browser test suite', () => {
             // Given
             const $submitButton = document.querySelector('.settings__submit');
             // When
-            fireEvent.input($customNameInput, {target: {value: 'Custom WhatsApp'}});
-            await waitFor(() => expect($customNameInput.value).toBe('Custom WhatsApp'));
+            fireEvent.input($customNameInput, {target: {value: 'Custom Name for Alex'}});
+            await waitFor(() => expect($customNameInput.value).toBe('Custom Name for Alex'));
             fireEvent.click($submitButton);
             // Then
             await waitFor(() => expect(mockIpcRenderer.send).toHaveBeenCalled());
             const savedData = mockIpcRenderer.send.mock.calls[0][1];
-            expect(savedData.tabs[0].customName).toBe('Custom WhatsApp');
+            expect(savedData.tabs[0].customName).toBe('Custom Name for Alex');
           });
         });
       });

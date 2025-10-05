@@ -14,7 +14,7 @@
    limitations under the License.
  */
 import {html, Card, Icon, IconButton, TextField} from '../components/index.mjs';
-import {SettingsOption} from './settings.common.browser.mjs';
+import {SettingsOption, SettingsRow} from './settings.common.browser.mjs';
 import {ACTIONS, addTab, isPaneActive, setTabProperty, toggleTabProperty} from './settings.reducer.browser.mjs';
 
 const disabledIcon = disabled => (disabled === true ? Icon.visibilityOff : Icon.visibility);
@@ -37,15 +37,14 @@ const TabAdvancedSettings = (
   {dispatch, id, sandboxed = false, openUrlsInApp = false, customName = ''}
 ) => html`
   <div class='settings__tab-advanced'>
-    <${TextField}
-      label='Custom tab name'
-      placeholder='Leave empty to use page title'
-      value=${customName}
-      onInput=${({target: {value}}) => setTabProperty({dispatch, property: 'customName', value, id})}
-      inputProps=${{
-    'data-testid': 'custom-name-input'
-  }}
-    />
+    <${SettingsRow} data-testid='settings-services-custom-tab-name'>
+      <${TextField}
+        label='Custom tab name'
+        placeholder='Leave empty to use page title'
+        value=${customName}
+        onInput=${({target: {value}}) => setTabProperty({dispatch, property: 'customName', value, id})}
+      />
+    </${SettingsRow}>
     <${SettingsOption}
       onClick=${toggleTabProperty(dispatch, 'sandboxed', id)}
       checked=${sandboxed}
