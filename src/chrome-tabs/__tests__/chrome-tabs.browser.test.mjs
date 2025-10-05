@@ -114,6 +114,38 @@ describe('ChromeTabs in Browser test suite', () => {
         $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"] .chrome-tab-title').innerHTML)
         .toBe('https://1337.com');
     });
+    test('addTabs with customName, should display customName instead of title', async () => {
+      // Given
+      const tabsWithCustomName = [
+        {id: 1, customName: 'My Custom Tab', title: 'Original Title', url: 'https://test.com'},
+        {id: 2, title: 'Normal Tab', url: 'https://normal.com'}
+      ];
+      // When
+      mockIpcRenderer.events.addTabs({}, tabsWithCustomName);
+      // Then
+      await waitFor(() =>
+        expect($chromeTabs.querySelectorAll('.chrome-tab').length).toBe(2));
+      expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-title').innerHTML)
+        .toBe('My Custom Tab');
+      expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="2"] .chrome-tab-title').innerHTML)
+        .toBe('Normal Tab');
+    });
+    test('setTabTitle with existing customName, should not change displayed name', async () => {
+      // Given
+      const tabsWithCustomName = [
+        {id: 1, customName: 'My Custom Tab', title: 'Original Title', url: 'https://test.com'}
+      ];
+      mockIpcRenderer.events.addTabs({}, tabsWithCustomName);
+      await waitFor(() =>
+        expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-title').innerHTML)
+          .toBe('My Custom Tab'));
+      // When
+      mockIpcRenderer.events.setTabTitle({}, {id: 1, title: 'New Page Title'});
+      // Then
+      await waitFor(() =>
+        expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-title').innerHTML)
+          .toBe('My Custom Tab'));
+    });
   });
   describe('Tab events', () => {
     let tabs;

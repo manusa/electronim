@@ -16,7 +16,7 @@
 import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
 import {ipcRenderer} from './settings.browser.mjs';
-import {fireEvent, getAllByText, getByTestId, getByText, waitFor} from '@testing-library/dom';
+import {findByTestId, fireEvent, getAllByText, getByTestId, getByText, waitFor} from '@testing-library/dom';
 
 describe('Settings in Browser test suite', () => {
   let mockIpcRenderer;
@@ -516,6 +516,42 @@ describe('Settings in Browser test suite', () => {
             // Then
             await waitFor(() => expect($switch.classList.contains('switch--checked')).toBe(true));
             expect($switch.classList).toContain('switch--checked');
+          });
+        });
+        describe('with custom name', () => {
+          let $settingsTab;
+          let $toggleIcon;
+          let $customNameInput;
+          beforeEach(async () => {
+            $settingsTab = document.querySelector('.settings__tab[data-id="1"]');
+            $toggleIcon = $settingsTab.querySelector('.expand-button');
+            if ($toggleIcon.title.startsWith('Expand')) {
+              fireEvent.click($toggleIcon);
+              await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
+            }
+            $customNameInput = (await findByTestId($settingsTab, 'settings-services-custom-tab-name'))
+              .querySelector('input');
+          });
+          test('custom name input should be visible when expanded', () => {
+            expect($customNameInput).not.toBeNull();
+          });
+          test('custom name input should accept text', async () => {
+            // When
+            fireEvent.input($customNameInput, {target: {value: 'My Custom Tab Name'}});
+            // Then
+            await waitFor(() => expect($customNameInput.value).toBe('My Custom Tab Name'));
+          });
+          test('custom name should be saved with tab settings', async () => {
+            // Given
+            const $submitButton = document.querySelector('.settings__submit');
+            // When
+            fireEvent.input($customNameInput, {target: {value: 'Custom Name for Alex'}});
+            await waitFor(() => expect($customNameInput.value).toBe('Custom Name for Alex'));
+            fireEvent.click($submitButton);
+            // Then
+            await waitFor(() => expect(mockIpcRenderer.send).toHaveBeenCalled());
+            const savedData = mockIpcRenderer.send.mock.calls[0][1];
+            expect(savedData.tabs[0].customName).toBe('Custom Name for Alex');
           });
         });
       });
