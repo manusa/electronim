@@ -22,21 +22,57 @@ const path = require('node:path');
  * @param {Object} options - Server configuration options
  * @param {number} options.port - Port to listen on (default: 0 for random port)
  * @param {string} options.htmlFile - Path to HTML file to serve (default: testdata/test-page.html)
+ * @param {Function} options.handler - Custom request handler function(req, res)
+ * @param {Object} options.routes - Map of URL paths to response configurations
+ *   - routes[path].status - HTTP status code (default: 200)
+ *   - routes[path].contentType - Content-Type header (default: 'application/json')
+ *   - routes[path].body - Response body (string or object, objects are JSON.stringified)
  * @returns {Promise<{server: http.Server, port: number, url: string, close: Function}>}
  */
-const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html'} = {}) => {
-  const htmlPath = path.join(__dirname, htmlFile);
-  const htmlContent = fs.readFileSync(htmlPath, 'utf-8');
+const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html', handler, routes} = {}) => {
+  let htmlContent;
+  if (htmlFile && !handler && !routes) {
+    const htmlPath = path.join(__dirname, htmlFile);
+    htmlContent = fs.readFileSync(htmlPath, 'utf-8');
+  }
 
   const server = http.createServer((req, res) => {
     // Log requests for debugging
     console.log(`[Test Server] ${req.method} ${req.url}`);
 
-    // Serve the HTML file for all requests
+    // Use custom handler if provided
+    if (handler) {
+      handler(req, res);
+      return;
+    }
+
+    // Use routes if provided
+    if (routes && routes[req.url]) {
+      const route = routes[req.url];
+      const status = route.status || 200;
+      const contentType = route.contentType || 'application/json';
+      const body = typeof route.body === 'object' ? JSON.stringify(route.body) : route.body;
+
+      res.writeHead(status, {
+        'Content-Type': contentType,
+        'Content-Length': Buffer.byteLength(body),
+        'Cache-Control': 'no-cache',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      });
+      res.end(body);
+      return;
+    }
+
+    // Default: serve HTML file
     res.writeHead(200, {
       'Content-Type': 'text/html',
       'Content-Length': Buffer.byteLength(htmlContent),
-      'Cache-Control': 'no-cache'
+      'Cache-Control': 'no-cache',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type'
     });
     res.end(htmlContent);
   });

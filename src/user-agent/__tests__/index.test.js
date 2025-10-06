@@ -13,29 +13,53 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+const {createTestServer} = require('../../__tests__/http-server');
+
 describe('User Agent module test suite', () => {
-  let axios;
   let userAgent;
+  let server;
+
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('axios');
-    axios = require('axios');
     userAgent = require('../index');
+    // Reset browser versions before each test
+    userAgent.BROWSER_VERSIONS.chromium = null;
+    userAgent.BROWSER_VERSIONS.firefox = null;
+    userAgent.BROWSER_VERSIONS.firefoxESR = null;
+  });
+
+  afterEach(async () => {
+    if (server) {
+      await server.close();
+      server = null;
+    }
   });
   describe('initBrowserVersions', () => {
-    test('valid responses, should return a valid version for all browsers,', async () => {
+    test('valid responses, should return a valid version for all browsers', async () => {
       // Given
-      axios.get.mockImplementationOnce(async () => ({data: {
-        releases: [
-          {name: 'chrome/platforms/linux/channels/stable/versions/1337/releases/1704308709', version: '1337'},
-          {name: 'chrome/platforms/linux/channels/stable/versions/1336/releases/1704308708', version: '1336'}
-        ]
-      }}));
-      axios.get.mockImplementation(async () => ({data: {
-        FIREFOX_DEVEDITION: '313373',
-        LATEST_FIREFOX_VERSION: 'ff.1337',
-        FIREFOX_ESR: 'ff.1337.esr'
-      }}));
+      server = await createTestServer({
+        routes: {
+          '/chromium': {
+            body: {
+              releases: [
+                {name: 'chrome/platforms/linux/channels/stable/versions/1337/releases/1704308709', version: '1337'},
+                {name: 'chrome/platforms/linux/channels/stable/versions/1336/releases/1704308708', version: '1336'}
+              ]
+            }
+          },
+          '/firefox': {
+            body: {
+              FIREFOX_DEVEDITION: '313373',
+              LATEST_FIREFOX_VERSION: 'ff.1337',
+              FIREFOX_ESR: 'ff.1337.esr'
+            }
+          }
+        }
+      });
+      userAgent.setUrls({
+        chromiumVersionsUrl: `${server.url}/chromium`,
+        firefoxVersionsUrl: `${server.url}/firefox`
+      });
       // When
       await userAgent.initBrowserVersions();
       // Then
@@ -43,13 +67,26 @@ describe('User Agent module test suite', () => {
       expect(userAgent.BROWSER_VERSIONS.firefox).toBe('ff.1337');
       expect(userAgent.BROWSER_VERSIONS.firefoxESR).toBe('ff.1337.esr');
     });
-    test('invalidResponse, should return null,', async () => {
+    test('invalid response, should return null', async () => {
       // Given
-      axios.get.mockImplementation(async () => ({data: {
-        releases: [
-          {os: 'win'}, 'not Valid'
-        ]
-      }}));
+      server = await createTestServer({
+        routes: {
+          '/chromium': {
+            body: {
+              releases: [
+                {os: 'win'}, 'not Valid'
+              ]
+            }
+          },
+          '/firefox': {
+            body: {}
+          }
+        }
+      });
+      userAgent.setUrls({
+        chromiumVersionsUrl: `${server.url}/chromium`,
+        firefoxVersionsUrl: `${server.url}/firefox`
+      });
       // When
       await userAgent.initBrowserVersions();
       // Then
