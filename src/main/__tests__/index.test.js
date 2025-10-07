@@ -26,11 +26,15 @@ describe('Main :: Index module test suite', () => {
   let mockSettings;
   let appMenuModule;
   let settingsModule;
+  let testUserAgent;
+  let userAgentModule;
   let main;
-  beforeEach(() => {
+  let pendingInitPromises;
+
+  beforeEach(async () => {
     jest.resetModules();
-    jest.useFakeTimers({doNotFake: ['setInterval']});
-    mockNotification = jest.fn();
+    jest.useFakeTimers({doNotFake: ['setInterval', 'Promise']});
+    mockNotification = {show: jest.fn()};
     mockDesktopCapturer = {};
     mockNativeTheme = {};
     mockSettings = {};
@@ -50,16 +54,26 @@ describe('Main :: Index module test suite', () => {
     jest.spyOn(settingsModule, 'getPlatform').mockImplementation(() => 'linux');
     jest.spyOn(settingsModule, 'loadSettings').mockImplementation(() => mockSettings);
     jest.spyOn(settingsModule, 'updateSettings').mockImplementation();
-    jest.spyOn(require('../../user-agent'), 'initBrowserVersions').mockImplementation(() => ({
-      then: func => {
-        func.call();
-        return {catch: () => {}};
-      }
-    }));
+    testUserAgent = require('../../__tests__').testUserAgent;
+    await testUserAgent();
+    userAgentModule = require('../../user-agent');
+    pendingInitPromises = [];
+    // Spy on initBrowserVersions to track promises
+    const originalInit = userAgentModule.initBrowserVersions;
+    jest.spyOn(userAgentModule, 'initBrowserVersions').mockImplementation(function(...args) {
+      const promise = originalInit.apply(this, args);
+      pendingInitPromises.push(promise.catch(() => {})); // Catch to prevent unhandled rejection
+      return promise;
+    });
     main = require('../');
   });
-  afterEach(() => {
+  afterEach(async () => {
     jest.useRealTimers();
+    // Wait for any pending init promises to settle
+    if (pendingInitPromises.length > 0) {
+      await Promise.allSettled(pendingInitPromises);
+      pendingInitPromises = [];
+    }
   });
   describe('init - environment preparation', () => {
     describe('theme', () => {
@@ -188,11 +202,13 @@ describe('Main :: Index module test suite', () => {
     });
     describe('restore (required for windows when starting minimized)', () => {
       let mockAppMenu;
-      beforeEach(() => {
+      beforeEach(async () => {
         mockAppMenu = new electron.WebContentsView();
         mockAppMenu.isAppMenu = true;
         jest.spyOn(appMenuModule, 'newAppMenu').mockImplementation(() => mockAppMenu);
         main.init();
+        // Wait for async initialization to complete
+        await Promise.all(pendingInitPromises);
       });
       test('should set app-menu bounds', () => {
         // When
@@ -227,11 +243,13 @@ describe('Main :: Index module test suite', () => {
       });
       describe('app-menu', () => {
         let mockAppMenu;
-        beforeEach(() => {
+        beforeEach(async () => {
           mockAppMenu = new electron.WebContentsView();
           mockAppMenu.isAppMenu = true;
           jest.spyOn(appMenuModule, 'newAppMenu').mockImplementation(() => mockAppMenu);
           main.init();
+          // Wait for async initialization to complete
+          await Promise.all(pendingInitPromises);
         });
         test('should set app-menu bounds', () => {
           // When
