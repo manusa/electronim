@@ -17,7 +17,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
   let mockIpcRenderer;
   let browserKeyboardShortcuts;
   beforeEach(() => {
-    global.APP_EVENTS = require('../../constants').APP_EVENTS;
+    globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
     mockIpcRenderer = {
       send: jest.fn()
     };
@@ -29,20 +29,20 @@ describe('Browser Keyboard Shortcuts test suite', () => {
   });
   test('initKeyboardShortcuts should add window event listeners', () => {
     // Given
-    jest.spyOn(window, 'addEventListener');
+    jest.spyOn(globalThis, 'addEventListener');
     // When
     browserKeyboardShortcuts.initKeyboardShortcuts();
     // Then
-    expect(window.addEventListener).toHaveBeenCalledTimes(2);
-    expect(window.addEventListener).toHaveBeenCalledWith('keyup', expect.any(Function));
-    expect(window.addEventListener).toHaveBeenCalledWith('load', expect.any(Function));
+    expect(globalThis.addEventListener).toHaveBeenCalledTimes(2);
+    expect(globalThis.addEventListener).toHaveBeenCalledWith('keyup', expect.any(Function));
+    expect(globalThis.addEventListener).toHaveBeenCalledWith('load', expect.any(Function));
   });
   describe('Events with NO key modifier', () => {
     test('F5, should send reload app event', () => {
       // Given
       browserKeyboardShortcuts.initKeyboardShortcuts();
       // When
-      window.dispatchEvent(new KeyboardEvent('keyup', {key: 'F5'}));
+      globalThis.dispatchEvent(new KeyboardEvent('keyup', {key: 'F5'}));
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('reload');
@@ -53,7 +53,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       // Given
       browserKeyboardShortcuts.initKeyboardShortcuts();
       // When
-      window.dispatchEvent(new KeyboardEvent('keyup', {key: 'NONEXISTENT', ctrlKey: true}));
+      globalThis.dispatchEvent(new KeyboardEvent('keyup', {key: 'NONEXISTENT', ctrlKey: true}));
       // Then
       expect(mockIpcRenderer.send).not.toHaveBeenCalled();
     });
@@ -63,7 +63,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       // Given
       browserKeyboardShortcuts.initKeyboardShortcuts();
       // When
-      window.dispatchEvent(new KeyboardEvent('keyup', {key: 'R', metaKey: true}));
+      globalThis.dispatchEvent(new KeyboardEvent('keyup', {key: 'R', metaKey: true}));
       // Then
       expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('reload');
@@ -73,7 +73,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
     test('ctrl+scrollUp, should send zoomIn event', () => {
       // Given
       browserKeyboardShortcuts.initKeyboardShortcuts();
-      window.dispatchEvent(new Event('load'));
+      globalThis.dispatchEvent(new Event('load'));
       // When
       document.dispatchEvent(new WheelEvent('wheel', {ctrlKey: true, deltaY: -100}));
       // Then
@@ -83,7 +83,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
     test('cmd+scrollUp, should send zoomIn event', () => {
       // Given
       browserKeyboardShortcuts.initKeyboardShortcuts();
-      window.dispatchEvent(new Event('load'));
+      globalThis.dispatchEvent(new Event('load'));
       // When
       document.dispatchEvent(new WheelEvent('wheel', {metaKey: true, deltaY: -100}));
       // Then
@@ -93,7 +93,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
     test('scrollUp, should not send events', () => {
       // Given
       browserKeyboardShortcuts.initKeyboardShortcuts();
-      window.dispatchEvent(new Event('load'));
+      globalThis.dispatchEvent(new Event('load'));
       // When
       document.dispatchEvent(new WheelEvent('wheel', {deltaY: -100}));
       // Then
@@ -102,7 +102,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
     test('ctrl+scrollDown, should send zoomOut event', () => {
       // Given
       browserKeyboardShortcuts.initKeyboardShortcuts();
-      window.dispatchEvent(new Event('load'));
+      globalThis.dispatchEvent(new Event('load'));
       // When
       document.dispatchEvent(new WheelEvent('wheel', {ctrlKey: true, deltaY: 100}));
       // Then
@@ -112,7 +112,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
     test('cmd+scrollDown, should send zoomOut event', () => {
       // Given
       browserKeyboardShortcuts.initKeyboardShortcuts();
-      window.dispatchEvent(new Event('load'));
+      globalThis.dispatchEvent(new Event('load'));
       // When
       document.dispatchEvent(new WheelEvent('wheel', {metaKey: true, deltaY: 100}));
       // Then
@@ -122,7 +122,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
     test('scrollDown, should not send events', () => {
       // Given
       browserKeyboardShortcuts.initKeyboardShortcuts();
-      window.dispatchEvent(new Event('load'));
+      globalThis.dispatchEvent(new Event('load'));
       // When
       document.dispatchEvent(new WheelEvent('wheel', {deltaY: 100}));
       // Then
