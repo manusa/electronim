@@ -24,21 +24,24 @@ describe('Main :: Tab listeners test suite', () => {
   let mockIpc;
   let mockView;
   let tabManagerModule;
+
+  const initAndWait = () => {
+    const trayInitPromise = new Promise(resolve => {
+      mockIpc.listeners.trayInit = resolve;
+    });
+    main.init();
+    return trayInitPromise;
+  };
+
   beforeEach(async () => {
     jest.resetModules();
+    electron = require('../../__tests__').testElectron();
+    await require('../../__tests__').testUserAgent();
     settings = await require('../../__tests__').testSettings();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    electron = require('electron');
     mockBaseWindow = electron.baseWindowInstance;
     mockIpc = electron.ipcMain;
     mockView = electron.webContentsViewInstance;
     tabManagerModule = require('../../tab-manager');
-    jest.spyOn(require('../../user-agent'), 'initBrowserVersions').mockImplementation(() => ({
-      then: func => {
-        func.call();
-        return {catch: () => {}};
-      }
-    }));
     main = require('../');
   });
   describe('tabsReady', () => {
@@ -93,19 +96,19 @@ describe('Main :: Tab listeners test suite', () => {
       mockBaseWindow.addBrowserView = jest.fn();
       tabManagerModule.getTab = jest.fn(id => (id === 'validId' ? activeTab : null));
     });
-    test('no active tab, should do nothing', () => {
+    test('no active tab, should do nothing', async () => {
       // Given
-      main.init();
+      await initAndWait();
       // When
       mockIpc.listeners.activateTab({}, {id: 'not here'});
       // Then
       expect(mockBaseWindow.setBrowserView).not.toHaveBeenCalled();
       expect(mockBaseWindow.addBrowserView).not.toHaveBeenCalled();
     });
-    test('active tab, should resize tab and set it as the main window browser view', () => {
+    test('active tab, should resize tab and set it as the main window browser view', async () => {
       // Given
       mockBaseWindow.getContentBounds = jest.fn(() => ({width: 13, height: 83}));
-      main.init();
+      await initAndWait();
       // When
       mockIpc.listeners.activateTab({}, {id: 'validId'});
       // Then
@@ -115,10 +118,10 @@ describe('Main :: Tab listeners test suite', () => {
       expect(mockBaseWindow.contentView.addChildView).toHaveBeenCalledWith(activeTab);
       expect(activeTab.webContents.focus).toHaveBeenCalledTimes(1);
     });
-    test('#23, setBounds should be called AFTER adding view to BaseWindow', () => {
+    test('#23, setBounds should be called AFTER adding view to BaseWindow', async () => {
       // Given
       mockBaseWindow.getContentBounds = jest.fn(() => ({width: 13, height: 83}));
-      main.init();
+      await initAndWait();
       // When
       mockIpc.listeners.activateTab({}, {id: 'validId'});
       // Then
@@ -139,13 +142,13 @@ describe('Main :: Tab listeners test suite', () => {
     expect(tabManagerModule.canNotify).toHaveBeenCalledWith('validId');
     expect(mockIpcMainEvent.returnValue).toBe('yepe');
   });
-  test('notificationClick, should restore window and activate tab', () => {
+  test('notificationClick, should restore window and activate tab', async () => {
     // Given
     settings.updateSettings({startMinimized: true});
     mockBaseWindow.restore = jest.fn();
     mockBaseWindow.show = jest.fn();
     jest.spyOn(tabManagerModule, 'getTab').mockImplementation();
-    main.init();
+    await initAndWait();
     // When
     mockIpc.listeners.notificationClick({}, {tabId: 'validId'});
     // Then
