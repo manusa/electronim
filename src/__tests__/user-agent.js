@@ -16,8 +16,8 @@
 
 // Store test servers in global scope to ensure cleanup
 // even when jest.resetModules() clears the module cache
-if (!global.__testHttpServers__) {
-  global.__testHttpServers__ = [];
+if (!globalThis.__testHttpServers__) {
+  globalThis.__testHttpServers__ = [];
 }
 
 const DEFAULT_CHROMIUM_RESPONSE = {
@@ -79,7 +79,7 @@ const testUserAgent = async ({
     firefoxVersionsUrl: `${server.url}/firefox`
   });
 
-  global.__testHttpServers__.push(server);
+  globalThis.__testHttpServers__.push(server);
 
   return userAgent;
 };

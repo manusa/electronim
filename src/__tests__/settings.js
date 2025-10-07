@@ -16,8 +16,8 @@
 
 // Store temporary directories created during tests in global scope
 // to ensure cleanup even when jest.resetModules() clears the module cache
-if (!global.__testTempDirectories__) {
-  global.__testTempDirectories__ = [];
+if (!globalThis.__testTempDirectories__) {
+  globalThis.__testTempDirectories__ = [];
 }
 
 /**
@@ -36,7 +36,7 @@ const testSettings = async () => {
   const settings = require('../settings');
   const tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'electronim-test-'));
   settings.setSettingsPath(path.join(tempDir, 'settings.json'));
-  global.__testTempDirectories__.push(tempDir);
+  globalThis.__testTempDirectories__.push(tempDir);
   return settings;
 };
 

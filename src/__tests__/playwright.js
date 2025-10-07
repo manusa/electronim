@@ -21,7 +21,7 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
   // Add playwright global expectations
   // Extend Jest's expect with Playwright matchers
   const {expect: playwrightExpect} = require('@playwright/test');
-  global.expect = Object.assign(global.expect, playwrightExpect);
+  globalThis.expect = Object.assign(globalThis.expect, playwrightExpect);
   // Set environment for testing
   process.env.NODE_ENV = 'test';
   process.env.DISPLAY = process.env.DISPLAY || ':99';

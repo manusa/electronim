@@ -18,9 +18,9 @@ afterEach(async () => {
   const fs = require('node:fs');
 
   // Clean up all tracked temporary directories
-  if (global.__testTempDirectories__) {
-    while (global.__testTempDirectories__.length > 0) {
-      const dir = global.__testTempDirectories__.pop();
+  if (globalThis.__testTempDirectories__) {
+    while (globalThis.__testTempDirectories__.length > 0) {
+      const dir = globalThis.__testTempDirectories__.pop();
       try {
         await fs.promises.rm(dir, {recursive: true, force: true});
       } catch {
@@ -30,9 +30,9 @@ afterEach(async () => {
   }
 
   // Close all tracked HTTP test servers
-  if (global.__testHttpServers__) {
-    while (global.__testHttpServers__.length > 0) {
-      const server = global.__testHttpServers__.pop();
+  if (globalThis.__testHttpServers__) {
+    while (globalThis.__testHttpServers__.length > 0) {
+      const server = globalThis.__testHttpServers__.pop();
       try {
         await server.close();
       } catch {
