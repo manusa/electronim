@@ -18,7 +18,7 @@ describe('Help Module preload test suite', () => {
   beforeEach(() => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
-    window.APP_EVENTS = require('../../constants').APP_EVENTS;
+    globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
   });
   describe('preload (just for coverage and sanity, see bundle tests)', () => {
     beforeEach(() => {

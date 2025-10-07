@@ -20,12 +20,12 @@ describe('Chrome Tabs Module preload test suite', () => {
   });
   describe('preload (just for coverage and sanity, see bundle tests)', () => {
     beforeEach(() => {
-      window.APP_EVENTS = {};
-      window.ELECTRONIM_VERSION = '1.33.7';
+      globalThis.APP_EVENTS = {};
+      globalThis.ELECTRONIM_VERSION = '1.33.7';
       require('../preload');
     });
     test('adds required libraries', () => {
-      expect(window.ipcRenderer.send).toBeDefined();
+      expect(globalThis.ipcRenderer.send).toBeDefined();
     });
   });
   describe('preload.bundle', () => {
@@ -33,7 +33,7 @@ describe('Chrome Tabs Module preload test suite', () => {
       require('../../../bundles/chrome-tabs.preload');
     });
     test('adds required variables', async () => {
-      expect(window.ipcRenderer.send).toBeDefined();
+      expect(globalThis.ipcRenderer.send).toBeDefined();
     });
   });
 });

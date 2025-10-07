@@ -25,7 +25,7 @@ describe('Browser Notification Shim test suite', () => {
       }
     }));
     electron = require('electron');
-    window.APP_EVENTS = require('../../constants').APP_EVENTS;
+    globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
     NativeNotification = jest.fn();
     NativeNotification.maxActions = jest.fn();
     NativeNotification.permission = jest.fn();
@@ -35,7 +35,7 @@ describe('Browser Notification Shim test suite', () => {
       image: 'Image', renotify: 'Renotify', requireInteraction: 'RequireInteraction', silent: 'Silent',
       timestamp: 'Timestamp', title: 'Title', vibrate: 'Vibrate', close: jest.fn()
     };
-    window.Notification = NativeNotification;
+    globalThis.Notification = NativeNotification;
   });
   describe('Notifications are enabled for the current tab', () => {
     test('Native Notification should be shimmed and used as delegate', () => {
@@ -47,7 +47,7 @@ describe('Browser Notification Shim test suite', () => {
       Notification.permission();
       Notification.requestPermission();
       // Then
-      expect(window.Notification).not.toBe(NativeNotification);
+      expect(globalThis.Notification).not.toBe(NativeNotification);
       expect(NativeNotification).toHaveBeenCalledTimes(1);
       expect(NativeNotification.maxActions).toHaveBeenCalledTimes(1);
       expect(NativeNotification.permission).toHaveBeenCalledTimes(1);

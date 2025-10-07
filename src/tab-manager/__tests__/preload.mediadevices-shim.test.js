@@ -20,7 +20,7 @@ describe('Browser mediaDevices shim test suite', () => {
   let electron;
   let preact;
   beforeAll(() => {
-    Object.defineProperty(window.navigator, 'mediaDevices', {
+    Object.defineProperty(globalThis.navigator, 'mediaDevices', {
       value: {
       }
     });
@@ -30,7 +30,7 @@ describe('Browser mediaDevices shim test suite', () => {
     mockThumbnail = {
       toDataURL: jest.fn()
     };
-    global.APP_EVENTS = {
+    globalThis.APP_EVENTS = {
       desktopCapturerGetSources: 'desktopCapturerGetSources'
     };
     jest.mock('electron', () => ({
@@ -42,7 +42,7 @@ describe('Browser mediaDevices shim test suite', () => {
       }
     }));
     electron = require('electron');
-    window.navigator.mediaDevices.getUserMedia = jest.fn(um => um.video.mandatory.chromeMediaSourceId);
+    globalThis.navigator.mediaDevices.getUserMedia = jest.fn(um => um.video.mandatory.chromeMediaSourceId);
     document.body.innerHTML = '';
     jest.isolateModules(() => {
       preact = require('preact');
@@ -53,7 +53,7 @@ describe('Browser mediaDevices shim test suite', () => {
   describe('ui', () => {
     test('mediaDevices.getDisplayMedia, should render overlay immediately', async () => {
       // When
-      window.navigator.mediaDevices.getDisplayMedia();
+      globalThis.navigator.mediaDevices.getDisplayMedia();
       // Then
       expect(preact.render).toHaveBeenCalledTimes(1);
       const $sources = document.querySelector('.electron-desktop-capturer-root');
@@ -65,7 +65,7 @@ describe('Browser mediaDevices shim test suite', () => {
       // Given
       electron.ipcRenderer.invoke = jest.fn(() => []);
       // When
-      window.navigator.mediaDevices.getDisplayMedia();
+      globalThis.navigator.mediaDevices.getDisplayMedia();
       // Then
       expect(preact.render).toHaveBeenCalledTimes(1);
       expect(await screen.findByText('No sources found')).not.toBeNull();
@@ -73,7 +73,7 @@ describe('Browser mediaDevices shim test suite', () => {
     });
     test('mediaDevices.getDisplayMedia, should render media selector when sources are loaded', async () => {
       // When
-      window.navigator.mediaDevices.getDisplayMedia();
+      globalThis.navigator.mediaDevices.getDisplayMedia();
       // Then
       expect(preact.render).toHaveBeenCalledTimes(1);
       await waitFor(() =>
@@ -86,14 +86,14 @@ describe('Browser mediaDevices shim test suite', () => {
   describe('events', () => {
     test('select stream, should remove selector and resolve promise', async () => {
       // Given
-      const promise = window.navigator.mediaDevices.getDisplayMedia();
+      const promise = globalThis.navigator.mediaDevices.getDisplayMedia();
       const $source = await screen.findByText('Other Window');
       // When
       fireEvent.click($source);
       // Then
       await waitFor(() =>
         expect(document.querySelector('.electron-desktop-capturer-root__sources')).toBeNull());
-      expect(window.navigator.mediaDevices.getUserMedia).toHaveBeenCalledWith(
+      expect(globalThis.navigator.mediaDevices.getUserMedia).toHaveBeenCalledWith(
         {audio: false, video: {mandatory: {
           chromeMediaSource: 'desktop', chromeMediaSourceId: '313373'}}
         });
@@ -102,7 +102,7 @@ describe('Browser mediaDevices shim test suite', () => {
     });
     test('click on sources, should cancel: remove selector and do nothing', async () => {
       // Given
-      const promise = window.navigator.mediaDevices.getDisplayMedia();
+      const promise = globalThis.navigator.mediaDevices.getDisplayMedia();
       await waitFor(() =>
         expect(document.querySelector('.electron-desktop-capturer-root__sources')).not.toBeNull());
       // When
@@ -110,13 +110,13 @@ describe('Browser mediaDevices shim test suite', () => {
       // Then
       await waitFor(() =>
         expect(document.querySelector('.electron-desktop-capturer-root__sources')).toBeNull());
-      expect(window.navigator.mediaDevices.getUserMedia).not.toHaveBeenCalled();
+      expect(globalThis.navigator.mediaDevices.getUserMedia).not.toHaveBeenCalled();
       expect(preact.render).toHaveBeenCalledTimes(2);
       await expect(promise).rejects.toEqual(new Error('Screen share aborted by user'));
     });
     test('click on overlay, should cancel: remove selector and do nothing', async () => {
       // Given
-      const promise = window.navigator.mediaDevices.getDisplayMedia();
+      const promise = globalThis.navigator.mediaDevices.getDisplayMedia();
       await waitFor(() =>
         expect(document.querySelector('.electron-desktop-capturer-root__sources')).not.toBeNull());
       // When
@@ -124,7 +124,7 @@ describe('Browser mediaDevices shim test suite', () => {
       // Then
       await waitFor(() =>
         expect(document.querySelector('.electron-desktop-capturer-root__sources')).toBeNull());
-      expect(window.navigator.mediaDevices.getUserMedia).not.toHaveBeenCalled();
+      expect(globalThis.navigator.mediaDevices.getUserMedia).not.toHaveBeenCalled();
       expect(preact.render).toHaveBeenCalledTimes(2);
       await expect(promise).rejects.toEqual(new Error('Screen share aborted by user'));
     });

@@ -25,7 +25,7 @@ describe('Settings Module preload test suite', () => {
       require('../preload');
     });
     test('adds required variables', () => {
-      expect(window.ipcRenderer).toEqual('the-ipc-renderer');
+      expect(globalThis.ipcRenderer).toEqual('the-ipc-renderer');
     });
   });
   describe('preload.bundle', () => {
@@ -33,7 +33,7 @@ describe('Settings Module preload test suite', () => {
       require('../../../bundles/settings.preload');
     });
     test('adds required variables', () => {
-      expect(window.ipcRenderer).toEqual('the-ipc-renderer');
+      expect(globalThis.ipcRenderer).toEqual('the-ipc-renderer');
     });
   });
 });

@@ -24,10 +24,10 @@ describe('Tab Manager Module preload test suite', () => {
     // noinspection JSConstantReassignment,JSValidateTypes
     mockElectron.webFrame = {setSpellCheckProvider: jest.fn()};
     mockElectron.ipcRenderer.invoke = async () => ({useNativeSpellChecker: false});
-    window.APP_EVENTS = require('../../constants').APP_EVENTS;
-    window.ELECTRONIM_VERSION = '1.33.7';
-    window.Notification = 'NOT A FUNCTION';
-    window.navigator.mediaDevices = {getDisplayMedia: 'NOT A FUNCTION'};
+    globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
+    globalThis.ELECTRONIM_VERSION = '1.33.7';
+    globalThis.Notification = 'NOT A FUNCTION';
+    globalThis.navigator.mediaDevices = {getDisplayMedia: 'NOT A FUNCTION'};
   });
   describe('preload', () => {
     beforeEach(() => {
@@ -38,8 +38,8 @@ describe('Tab Manager Module preload test suite', () => {
       // When
       require('../preload');
       // Then
-      expect(window.Notification).toEqual(expect.any(Function));
-      expect(window.navigator.mediaDevices.getDisplayMedia).toEqual(expect.any(Function));
+      expect(globalThis.Notification).toEqual(expect.any(Function));
+      expect(globalThis.navigator.mediaDevices.getDisplayMedia).toEqual(expect.any(Function));
       expect(require('../preload.keyboard-shortcuts').initKeyboardShortcuts).toHaveBeenCalledTimes(1);
       await waitFor(() => expect(mockElectron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
       expect(require('../preload.spell-check').initSpellChecker).toHaveBeenCalledTimes(1);
@@ -61,18 +61,18 @@ describe('Tab Manager Module preload test suite', () => {
   });
   describe('preload.bundle', () => {
     beforeEach(() => {
-      window.addEventListener = jest.fn();
+      globalThis.addEventListener = jest.fn();
     });
     test('adds required libraries', async () => {
       // When
       require('../../../bundles/tab-manager.preload');
       // Then
-      expect(window.Notification).toEqual(expect.any(Function));
-      expect(window.navigator.mediaDevices.getDisplayMedia).toEqual(expect.any(Function));
+      expect(globalThis.Notification).toEqual(expect.any(Function));
+      expect(globalThis.navigator.mediaDevices.getDisplayMedia).toEqual(expect.any(Function));
       await waitFor(() => expect(mockElectron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
-      expect(window.addEventListener).toHaveBeenCalledTimes(2);
-      expect(window.addEventListener).toHaveBeenCalledWith('keyup', expect.any(Function));
-      expect(window.addEventListener).toHaveBeenCalledWith('load', expect.any(Function));
+      expect(globalThis.addEventListener).toHaveBeenCalledTimes(2);
+      expect(globalThis.addEventListener).toHaveBeenCalledWith('keyup', expect.any(Function));
+      expect(globalThis.addEventListener).toHaveBeenCalledWith('load', expect.any(Function));
     });
   });
 });
