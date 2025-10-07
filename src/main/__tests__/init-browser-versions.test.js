@@ -20,14 +20,13 @@
 describe('Main :: initBrowserVersions test suite', () => {
   let electron;
   let testUserAgent;
-  let trayInitPromise;
 
   const waitForTrayInit = async initFn => {
-    trayInitPromise = new Promise(resolve => {
+    const trayInitPromise = new Promise(resolve => {
       electron.ipcMain.listeners.trayInit = resolve;
     });
     initFn();
-    await trayInitPromise;
+    return trayInitPromise;
   };
 
   beforeEach(async () => {

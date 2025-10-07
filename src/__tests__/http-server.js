@@ -37,9 +37,6 @@ const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html',
   }
 
   const server = http.createServer((req, res) => {
-    // Log requests for debugging
-    console.log(`[Test Server] ${req.method} ${req.url}`);
-
     // Use custom handler if provided
     if (handler) {
       handler(req, res);
@@ -91,18 +88,13 @@ const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html',
   const actualPort = server.address().port;
   const url = `http://localhost:${actualPort}`;
 
-  console.log(`[Test Server] Started on ${url}`);
-
   return {
     server,
     port: actualPort,
     url,
     close: async () => {
       return new Promise(resolve => {
-        server.close(() => {
-          console.log('[Test Server] Closed');
-          resolve();
-        });
+        server.close(resolve);
       });
     }
   };
