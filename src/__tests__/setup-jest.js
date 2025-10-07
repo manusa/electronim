@@ -28,4 +28,16 @@ afterEach(async () => {
       }
     }
   }
+
+  // Close all tracked HTTP test servers
+  if (global.__testHttpServers__) {
+    while (global.__testHttpServers__.length > 0) {
+      const server = global.__testHttpServers__.pop();
+      try {
+        await server.close();
+      } catch {
+        // Ignore errors if server was already closed
+      }
+    }
+  }
 });

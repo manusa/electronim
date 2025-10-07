@@ -16,57 +16,69 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
 describe('Main :: initBrowserVersions test suite', () => {
   let electron;
-  let userAgent;
+  let testUserAgent;
+
+  const waitForTrayInit = async initFn => {
+    const trayInitPromise = new Promise(resolve => {
+      electron.ipcMain.listeners.trayInit = resolve;
+    });
+    initFn();
+    return trayInitPromise;
+  };
+
   beforeEach(async () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
+    testUserAgent = require('../../__tests__').testUserAgent;
     const settings = await require('../../__tests__').testSettings();
     settings.updateSettings({trayEnabled: true});
-    userAgent = require('../../user-agent');
-    jest.spyOn(userAgent, 'userAgentForWebContents').mockImplementation(() => 'UserAgent String');
   });
-  describe('throws error', () => {
+
+  describe('network error', () => {
     let show;
-    beforeEach(() => {
-      jest.spyOn(userAgent, 'initBrowserVersions')
-        .mockImplementation(() => ({then: () => ({catch: func => func.call()})}));
+    beforeEach(async () => {
+      await testUserAgent({
+        chromiumStatus: 500,
+        chromiumResponse: 'Internal Server Error',
+        firefoxStatus: 500,
+        firefoxResponse: 'Internal Server Error'
+      });
       show = jest.fn();
       electron.Notification.mockImplementation(() => ({show}));
     });
-    test('sets default user agent', () => {
+    test('sets default user agent', async () => {
       // When
-      require('../').init();
+      await waitForTrayInit(() => require('../').init());
       // Then
-      expect(electron.app.userAgentFallback).toBe('UserAgent String');
+      expect(electron.app.userAgentFallback).toContain('Mozilla');
     });
-    test('shows notification', () => {
+    test('shows notification', async () => {
       // When
-      require('../').init();
+      await waitForTrayInit(() => require('../').init());
       // Then
+      expect(electron.Notification).toHaveBeenCalledWith({
+        title: 'ElectronIM: No network available', urgency: 'critical'
+      });
       expect(show).toHaveBeenCalledTimes(1);
     });
   });
+
   describe('successful', () => {
-    beforeEach(() => {
-      jest.spyOn(userAgent, 'initBrowserVersions')
-        .mockImplementation(() => ({then: func => {
-          func.call();
-          return {catch: () => {}};
-        }}));
+    beforeEach(async () => {
+      await testUserAgent();
     });
-    test('sets default user agent', () => {
+    test('sets default user agent', async () => {
       // When
-      require('../').init();
+      await waitForTrayInit(() => require('../').init());
       // Then
-      expect(electron.app.userAgentFallback).toBe('UserAgent String');
+      expect(electron.app.userAgentFallback).toContain('Mozilla');
     });
-    test('initializes tray', () => {
-      // Given
-      electron.ipcMain.emit = event => electron.ipcMain.listeners[event]();
+    test('initializes tray', async () => {
       // When
-      require('../').init();
+      await waitForTrayInit(() => require('../').init());
       // Then
       expect(electron.Tray).toHaveBeenCalledTimes(1);
     });

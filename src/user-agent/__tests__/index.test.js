@@ -13,52 +13,26 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {createTestServer} = require('../../__tests__/http-server');
+const {testUserAgent} = require('../../__tests__');
 
 describe('User Agent module test suite', () => {
   let userAgent;
-  let server;
 
-  beforeEach(() => {
-    jest.resetModules();
-    userAgent = require('../index');
-    // Reset browser versions before each test
-    userAgent.BROWSER_VERSIONS.chromium = null;
-    userAgent.BROWSER_VERSIONS.firefox = null;
-    userAgent.BROWSER_VERSIONS.firefoxESR = null;
-  });
-
-  afterEach(async () => {
-    if (server) {
-      await server.close();
-      server = null;
-    }
-  });
   describe('initBrowserVersions', () => {
     test('valid responses, should return a valid version for all browsers', async () => {
       // Given
-      server = await createTestServer({
-        routes: {
-          '/chromium': {
-            body: {
-              releases: [
-                {name: 'chrome/platforms/linux/channels/stable/versions/1337/releases/1704308709', version: '1337'},
-                {name: 'chrome/platforms/linux/channels/stable/versions/1336/releases/1704308708', version: '1336'}
-              ]
-            }
-          },
-          '/firefox': {
-            body: {
-              FIREFOX_DEVEDITION: '313373',
-              LATEST_FIREFOX_VERSION: 'ff.1337',
-              FIREFOX_ESR: 'ff.1337.esr'
-            }
-          }
+      userAgent = await testUserAgent({
+        chromiumResponse: {
+          releases: [
+            {name: 'chrome/platforms/linux/channels/stable/versions/1337/releases/1704308709', version: '1337'},
+            {name: 'chrome/platforms/linux/channels/stable/versions/1336/releases/1704308708', version: '1336'}
+          ]
+        },
+        firefoxResponse: {
+          FIREFOX_DEVEDITION: '313373',
+          LATEST_FIREFOX_VERSION: 'ff.1337',
+          FIREFOX_ESR: 'ff.1337.esr'
         }
-      });
-      userAgent.setUrls({
-        chromiumVersionsUrl: `${server.url}/chromium`,
-        firefoxVersionsUrl: `${server.url}/firefox`
       });
       // When
       await userAgent.initBrowserVersions();
@@ -69,23 +43,13 @@ describe('User Agent module test suite', () => {
     });
     test('invalid response, should return null', async () => {
       // Given
-      server = await createTestServer({
-        routes: {
-          '/chromium': {
-            body: {
-              releases: [
-                {os: 'win'}, 'not Valid'
-              ]
-            }
-          },
-          '/firefox': {
-            body: {}
-          }
-        }
-      });
-      userAgent.setUrls({
-        chromiumVersionsUrl: `${server.url}/chromium`,
-        firefoxVersionsUrl: `${server.url}/firefox`
+      userAgent = await testUserAgent({
+        chromiumResponse: {
+          releases: [
+            {os: 'win'}, 'not Valid'
+          ]
+        },
+        firefoxResponse: {}
       });
       // When
       await userAgent.initBrowserVersions();
@@ -95,6 +59,9 @@ describe('User Agent module test suite', () => {
     });
   });
   describe('userAgentForWebContents', () => {
+    beforeEach(async () => {
+      userAgent = await testUserAgent();
+    });
     test('default and chromium version not available, should remove non-standard tokens from user-agent header', () => {
       // Given
       userAgent.BROWSER_VERSIONS.chromium = null;

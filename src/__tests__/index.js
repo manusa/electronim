@@ -20,5 +20,6 @@ module.exports = {
   spawnElectron: require('./playwright.js').spawnElectron,
   testElectron: require('./electron.js').testElectron,
   testSettings: require('./settings.js').testSettings,
+  testUserAgent: require('./user-agent.js').testUserAgent,
   createTestServer: require('./http-server.js').createTestServer
 };
