@@ -23,15 +23,12 @@ describe('Main :: Main window listeners test suite', () => {
   let settings;
   beforeEach(async () => {
     jest.resetModules();
-    settings = await require('../../__tests__').testSettings();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance({
-      // Return a **different** instance for each view
-      BrowserView: jest.fn(() => require('../../__tests__').mockBaseWindowInstance())
-    }));
-    electron = require('electron');
+    electron = require('../../__tests__').testElectron();
+    electron.BrowserView = jest.fn(() => require('../../__tests__').mockBaseWindowInstance());
+    electron.Notification.mockImplementation(() => ({show: jest.fn()}));
     baseWindow = electron.baseWindowInstance;
-    jest.spyOn(require('../../user-agent'), 'initBrowserVersions')
-      .mockImplementation(() => Promise.resolve({}));
+    settings = await require('../../__tests__').testSettings();
+    await require('../../__tests__').testUserAgent();
     main = require('../');
     main.init();
   });
