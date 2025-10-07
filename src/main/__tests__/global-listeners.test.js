@@ -25,8 +25,8 @@ describe('Main :: Global listeners test suite', () => {
   let settings;
   beforeEach(async () => {
     jest.resetModules();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    electron = require('electron');
+    electron = require('../../__tests__').testElectron();
+    await require('../../__tests__').testUserAgent();
     baseWindow = electron.baseWindowInstance;
     webContentsViewInstances = [];
     // Each view should be a separate instance
@@ -44,10 +44,12 @@ describe('Main :: Global listeners test suite', () => {
       trayEnabled: true
     });
     eventBus = electron.ipcMain;
-    jest.spyOn(require('../../user-agent'), 'initBrowserVersions')
-      .mockImplementation(() => Promise.resolve({}));
+    const trayInitPromise = new Promise(resolve => {
+      electron.ipcMain.listeners.trayInit = resolve;
+    });
     main = require('../');
     main.init();
+    await trayInitPromise;
   });
   test.each([
     'aboutOpenDialog', 'appMenuOpen', 'appMenuClose', 'closeDialog',
