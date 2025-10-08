@@ -115,7 +115,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     baseWindowInstance,
     Menu: jest.fn(),
     MenuItem: jest.fn(),
-    Notification: jest.fn(),
+    Notification: jest.fn(() => ({show: jest.fn()})),
     Tray: jest.fn(() => trayInstance),
     trayInstance,
     app: {
