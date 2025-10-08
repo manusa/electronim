@@ -20,7 +20,7 @@ import {getByTestId, fireEvent} from '@testing-library/dom';
 describe('App Menu in Browser test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
-    window.electron = {
+    globalThis.electron = {
       aboutOpenDialog: jest.fn(),
       close: jest.fn(),
       helpOpenDialog: jest.fn(),
@@ -33,7 +33,7 @@ describe('App Menu in Browser test suite', () => {
     // When
     fireEvent.click(document.querySelector('.app-menu .wrapper'));
     // Then
-    expect(window.electron.close).toHaveBeenCalledTimes(1);
+    expect(globalThis.electron.close).toHaveBeenCalledTimes(1);
   });
   describe.each([
     {testId: 'about', icon: '\ue88e', label: 'About', expectedFunction: 'aboutOpenDialog'},
@@ -57,7 +57,7 @@ describe('App Menu in Browser test suite', () => {
       // When
       fireEvent.click(entry);
       // Then
-      expect(window.electron[expectedFunction]).toHaveBeenCalledTimes(1);
+      expect(globalThis.electron[expectedFunction]).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -15,7 +15,7 @@
  */
 import {html, render, Icon, Menu} from '../components/index.mjs';
 
-const {aboutOpenDialog, close, helpOpenDialog, quit, settingsOpenDialog} = window.electron;
+const {aboutOpenDialog, close, helpOpenDialog, quit, settingsOpenDialog} = globalThis.electron;
 
 const getAppMenu = () => document.querySelector('.app-menu');
 

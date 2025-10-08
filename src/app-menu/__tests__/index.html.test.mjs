@@ -19,7 +19,7 @@ import {loadDOM} from '../../__tests__/index.mjs';
 describe('App Menu index.html test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
-    window.electron = {
+    globalThis.electron = {
       close: jest.fn(),
       helpOpenDialog: jest.fn(),
       settingsOpenDialog: jest.fn()
