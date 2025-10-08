@@ -20,7 +20,7 @@ import {fireEvent} from '@testing-library/dom';
 describe('About in Browser test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
-    window.electron = {
+    globalThis.electron = {
       close: jest.fn(),
       versions: {electron: '1.33.7', chrome: '1337', node: '42', v8: '13.37'}
     };
@@ -30,7 +30,7 @@ describe('About in Browser test suite', () => {
     // When
     fireEvent.click(document.querySelector('.top-app-bar .leading-navigation-icon'));
     // Then
-    expect(window.electron.close).toHaveBeenCalledTimes(1);
+    expect(globalThis.electron.close).toHaveBeenCalledTimes(1);
   });
   test.each([
     {label: 'Electron', expectedVersion: '1.33.7'},
