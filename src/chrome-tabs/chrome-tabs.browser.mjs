@@ -22,7 +22,7 @@ import {
   sendActivateTab
 } from './chrome-tabs.reducer.browser.mjs';
 
-const shouldUseDarkColors = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+const shouldUseDarkColors = () => globalThis?.matchMedia?.('(prefers-color-scheme: dark)').matches;
 const getTabContainer = () => document.querySelector('.tab-container');
 const getChromeTabs = () => getTabContainer().querySelector('.chrome-tabs');
 
@@ -58,7 +58,7 @@ const tabStyle = (width, idx, offsetX) =>
 
 const isInVisibleArea = event =>
   event.clientX > 0 && event.clientY > 0 &&
-  event.clientX <= window.innerWidth && event.clientY <= window.innerHeight;
+  event.clientX <= globalThis.innerWidth && event.clientY <= globalThis.innerHeight;
 
 const Favicon = ({favicon = ''}) => {
   let img = html``;
@@ -159,8 +159,8 @@ const ChromeTabs = ({dispatch, state: {tabs}}) => {
   const [width, setWidth] = useState(calculateTabWidth(tabs.length));
   const applyWidth = () => setWidth(calculateTabWidth(tabs.length));
   useLayoutEffect(() => {
-    window.addEventListener('resize', applyWidth);
-    return () => window.removeEventListener('resize', applyWidth);
+    globalThis.addEventListener('resize', applyWidth);
+    return () => globalThis.removeEventListener('resize', applyWidth);
   });
   return html`
     <div

@@ -19,8 +19,8 @@ import {loadDOM} from '../../__tests__/index.mjs';
 describe('Chrome Tabs index.html test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
-    window.APP_EVENTS = (await import('../../constants')).APP_EVENTS;
-    window.ipcRenderer = {
+    globalThis.APP_EVENTS = (await import('../../constants')).APP_EVENTS;
+    globalThis.ipcRenderer = {
       on: jest.fn(),
       send: jest.fn()
     };
