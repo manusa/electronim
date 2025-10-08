@@ -28,7 +28,7 @@ describe('ChromeTabs in Browser test suite', () => {
       send: jest.fn()
     };
     await import('../../../bundles/chrome-tabs.preload');
-    window.ipcRenderer = mockIpcRenderer;
+    globalThis.ipcRenderer = mockIpcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
     $chromeTabs = await waitFor(() => document.querySelector('.chrome-tabs'));
   });
@@ -39,7 +39,7 @@ describe('ChromeTabs in Browser test suite', () => {
     let tabs;
     beforeEach(() => {
       Object.defineProperty($chromeTabs, 'clientWidth', {value: 100});
-      window.dispatchEvent(new CustomEvent('resize'));
+      globalThis.dispatchEvent(new CustomEvent('resize'));
       tabs = [
         {id: 1337, active: true, url: 'https://1337.com'},
         {id: 313373, title: '313373', url: 'https://313373.com'},
@@ -156,7 +156,7 @@ describe('ChromeTabs in Browser test suite', () => {
         {id: 13373, favicon: 'https://13373.png', url: 'https://13373.com'}
       ];
       Object.defineProperty($chromeTabs, 'clientWidth', {value: 100});
-      window.dispatchEvent(new CustomEvent('resize'));
+      globalThis.dispatchEvent(new CustomEvent('resize'));
       mockIpcRenderer.events.addTabs({}, tabs);
       await waitFor(() => {
         if ($chromeTabs.querySelectorAll('.chrome-tab').length !== 3) {
