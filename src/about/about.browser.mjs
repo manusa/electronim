@@ -15,7 +15,7 @@
  */
 import {ELECTRONIM_VERSION, html, render, Card, Icon, Logo, TopAppBar} from '../components/index.mjs';
 
-const {close, versions} = window.electron;
+const {close, versions} = globalThis.electron;
 
 const TWITTER_LINK = 'https://twitter.com/share?url=https://github.com/manusa/electronim&text=I%27m%20using%20ElectronIM%20as%20my%20communications%20center%20and%20I%20love%20it%2C%20you%20should%20try%20it%20out%20too%21';
 
