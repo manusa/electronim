@@ -40,6 +40,7 @@ const mockWebContentsViewInstance = () => {
         instance.webContents.loadedUrl = url;
       }),
       navigationHistory: {
+        canGoBack: jest.fn(() => false),
         goBack: jest.fn()
       },
       on: jest.fn((...args) => instance.on(...args)),
@@ -116,8 +117,15 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     WebContentsView: jest.fn(() => webContentsViewInstance),
     webContentsViewInstance,
     BaseWindow,
-    Menu: jest.fn(),
-    MenuItem: jest.fn(),
+    Menu: jest.fn(() => {
+      const menuInstance = {
+        entries: [],
+        append: jest.fn(e => menuInstance.entries.push(e)),
+        popup: jest.fn()
+      };
+      return menuInstance;
+    }),
+    MenuItem: jest.fn(def => def),
     Notification: jest.fn(() => ({show: jest.fn()})),
     Tray: jest.fn(() => {
       const tray = new events.EventEmitter();
@@ -132,6 +140,9 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
       on: jest.fn(),
       exit: jest.fn(),
       setPath: jest.fn()
+    },
+    clipboard: {
+      writeText: jest.fn()
     },
     contextBridge: {
       exposeInMainWorld: jest.fn()
