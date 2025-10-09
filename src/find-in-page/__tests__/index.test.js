@@ -39,13 +39,13 @@ describe('Find in Page :: main test suite', () => {
       // Given
       baseWindow.contentView.children = [{isFindInPage: true}];
       // When
-      eventBus.listeners.findInPageOpen();
+      eventBus.emit('findInPageOpen');
       // Then
       expect(baseWindow.contentView.addChildView).not.toHaveBeenCalled();
     });
     test('should show find-in-page', () => {
       // When
-      eventBus.listeners.findInPageOpen();
+      eventBus.emit('findInPageOpen');
       // Then
       expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(
         expect.objectContaining({isFindInPage: true})
@@ -56,7 +56,7 @@ describe('Find in Page :: main test suite', () => {
     });
     test('should resize find-in-page', () => {
       // When
-      eventBus.listeners.findInPageOpen();
+      eventBus.emit('findInPageOpen');
       // Then
       expect(baseWindow.contentView.addChildView.mock.calls[0][0].setBounds)
         .toHaveBeenCalledWith(expect.objectContaining({
@@ -70,7 +70,7 @@ describe('Find in Page :: main test suite', () => {
       const tabManager = require('../../tab-manager');
       tabManager.addTabs({send: jest.fn()})([{id: 'A'}]);
       // When
-      eventBus.listeners.findInPageClose();
+      eventBus.emit('findInPageClose');
       // Then
       expect(tabManager.getTab('A').webContents.stopFindInPage).toHaveBeenCalledTimes(1);
     });
@@ -79,7 +79,7 @@ describe('Find in Page :: main test suite', () => {
       const tabManager = require('../../tab-manager');
       tabManager.addTabs({send: jest.fn()})([{id: 'A'}]);
       // When
-      eventBus.listeners.findInPageClose();
+      eventBus.emit('findInPageClose');
       // Then
       expect(tabManager.getTab('A').webContents.removeAllListeners).toHaveBeenCalledWith('found-in-page');
     });
@@ -88,7 +88,7 @@ describe('Find in Page :: main test suite', () => {
       const childView = new electron.WebContentsView();
       baseWindow.contentView.children = [childView];
       // When
-      eventBus.listeners.findInPageClose();
+      eventBus.emit('findInPageClose');
       // Then
       expect(childView.webContents.stopFindInPage).toHaveBeenCalledWith('clearSelection');
     });
@@ -97,7 +97,7 @@ describe('Find in Page :: main test suite', () => {
       const childView = new electron.WebContentsView();
       baseWindow.contentView.children = [childView];
       // When
-      eventBus.listeners.findInPageClose();
+      eventBus.emit('findInPageClose');
       // Then
       expect(childView.webContents.removeAllListeners).toHaveBeenCalledWith('found-in-page');
     });
@@ -107,7 +107,7 @@ describe('Find in Page :: main test suite', () => {
       findInPageDialog.isFindInPage = true;
       baseWindow.contentView.children = [findInPageDialog];
       // When
-      eventBus.listeners.findInPageClose();
+      eventBus.emit('findInPageClose');
       // Then
       expect(baseWindow.contentView.removeChildView).toHaveBeenCalledWith(findInPageDialog);
       expect(findInPageDialog.webContents.destroy).toHaveBeenCalledTimes(1);
@@ -119,7 +119,7 @@ describe('Find in Page :: main test suite', () => {
       const childView = new electron.WebContentsView();
       baseWindow.contentView.children = [childView, findInPageDialog];
       // When
-      eventBus.listeners.findInPageClose();
+      eventBus.emit('findInPageClose');
       // Then
       expect(childView.webContents.focus).toHaveBeenCalledTimes(1);
     });
@@ -133,13 +133,13 @@ describe('Find in Page :: main test suite', () => {
     });
     test('should return if no text provided', () => {
       // When
-      eventBus.listeners.findInPage({}, {});
+      eventBus.emit('findInPage', {}, {});
       // Then
       expect(findInPageDialog.webContents.send).not.toHaveBeenCalled();
     });
     test('should return if no page/webContents available to search in', () => {
       // When
-      eventBus.listeners.findInPage({}, {text: 'test'});
+      eventBus.emit('findInPage', {}, {text: 'test'});
       // Then
       expect(findInPageDialog.webContents.send).not.toHaveBeenCalled();
     });
@@ -152,13 +152,13 @@ describe('Find in Page :: main test suite', () => {
       });
       test('should register found-in-page listener', () => {
         // When
-        eventBus.listeners.findInPage({}, {text: 'test'});
+        eventBus.emit('findInPage', {}, {text: 'test'});
         // Then
         expect(dialog.webContents.on).toHaveBeenCalledWith('found-in-page', expect.any(Function));
       });
       test('found-in-page listener should send event to find-in-page dialog', () => {
         // When
-        eventBus.listeners.findInPage({}, {text: 'test'});
+        eventBus.emit('findInPage', {}, {text: 'test'});
         dialog.listeners['found-in-page']({}, {activeMatchOrdinal: 13, matches: 37});
         // Then
         expect(findInPageDialog.webContents.send).toHaveBeenCalledWith('findInPageFound', {
@@ -167,7 +167,7 @@ describe('Find in Page :: main test suite', () => {
       });
       test('should call findInPage on webContents', () => {
         // When
-        eventBus.listeners.findInPage({}, {text: 'test'});
+        eventBus.emit('findInPage', {}, {text: 'test'});
         // Then
         expect(dialog.webContents.findInPage).toHaveBeenCalledWith('test', {forward: true});
       });
@@ -182,13 +182,13 @@ describe('Find in Page :: main test suite', () => {
       });
       test('should register found-in-page listener', () => {
         // When
-        eventBus.listeners.findInPage({}, {text: 'test'});
+        eventBus.emit('findInPage', {}, {text: 'test'});
         // Then
         expect(tab.webContents.on).toHaveBeenCalledWith('found-in-page', expect.any(Function));
       });
       test('found-in-page listener should send event to find-in-page dialog', () => {
         // When
-        eventBus.listeners.findInPage({}, {text: 'test'});
+        eventBus.emit('findInPage', {}, {text: 'test'});
         tab.listeners['found-in-page']({}, {activeMatchOrdinal: 13, matches: 37});
         // Then
         expect(findInPageDialog.webContents.send).toHaveBeenCalledWith('findInPageFound', {
@@ -197,7 +197,7 @@ describe('Find in Page :: main test suite', () => {
       });
       test('should call findInPage on webContents', () => {
         // When
-        eventBus.listeners.findInPage({}, {text: 'test'});
+        eventBus.emit('findInPage', {}, {text: 'test'});
         // Then
         expect(tab.webContents.findInPage).toHaveBeenCalledWith('test', {forward: true});
       });

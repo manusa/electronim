@@ -22,9 +22,7 @@ describe('Main :: initBrowserVersions test suite', () => {
   let testUserAgent;
 
   const waitForTrayInit = async initFn => {
-    const trayInitPromise = new Promise(resolve => {
-      electron.ipcMain.listeners.trayInit = resolve;
-    });
+    const trayInitPromise = new Promise(resolve => electron.ipcMain.on('trayInit', resolve));
     initFn();
     return trayInitPromise;
   };

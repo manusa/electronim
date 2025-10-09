@@ -107,6 +107,11 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
   });
   BaseWindow.windows = [];
   BaseWindow.getAllWindows = jest.fn(() => BaseWindow.windows);
+  const ipcMain = new events.EventEmitter();
+  ipcMain.emit = jest.fn(ipcMain.emit);
+  ipcMain.handle = jest.fn((channel, func) => ipcMain.on(channel, func));
+  ipcMain.removeHandler = jest.fn(ipcMain.removeAllListeners);
+  ipcMain.send = (channel, ...args) => ipcMain.rawListeners(channel)[0](...args);
   const instance = {
     WebContentsView: jest.fn(() => webContentsViewInstance),
     webContentsViewInstance,
@@ -145,32 +150,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
         instance.globalShortcut.listeners[accelerator] = callback;
       })
     },
-    ipcMain: {
-      listeners: {},
-      _listen: (eventName, func) => {
-        if (instance.ipcMain.listeners[eventName]) {
-          const oldFunc = instance.ipcMain.listeners[eventName];
-          const newFunc = func;
-          func = (event, args) => {
-            oldFunc(event, args);
-            newFunc(event, args);
-          };
-        }
-        instance.ipcMain.listeners[eventName] = func;
-      },
-      emit: jest.fn((channel, ...event) => {
-        const func = instance.ipcMain.listeners[channel];
-        if (func) {
-          func.call(null, ...event);
-        }
-      }),
-      handle: jest.fn((eventName, func) => instance.ipcMain._listen(eventName, func)),
-      on: jest.fn((eventName, func) => instance.ipcMain._listen(eventName, func)),
-      once: jest.fn((eventName, func) => instance.ipcMain._listen(eventName, func)),
-      removeHandler: jest.fn(eventName => {
-        delete instance.ipcMain.listeners[eventName];
-      })
-    },
+    ipcMain,
     ipcRenderer: {
       on: jest.fn(),
       send: jest.fn()

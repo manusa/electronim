@@ -59,11 +59,11 @@ describe('Main :: Global listeners test suite', () => {
     'trayInit'
   ])('should register listener for %s', channel => {
     // Then
-    expect(eventBus.listeners).toHaveProperty(channel);
+    expect(eventBus.eventNames()).toContain(channel);
   });
   test('appMenuOpen, should show and resize app-menu', () => {
     // When
-    eventBus.listeners.appMenuOpen();
+    eventBus.send('appMenuOpen');
     // Then
     expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(
       expect.objectContaining({isAppMenu: true})
@@ -81,7 +81,7 @@ describe('Main :: Global listeners test suite', () => {
       // Given
       baseWindow.contentView.children = [];
       // When
-      eventBus.listeners.appMenuClose();
+      eventBus.send('appMenuClose');
       // Then
       expect(baseWindow.contentView.removeChildView).not.toHaveBeenCalled();
     });
@@ -89,7 +89,7 @@ describe('Main :: Global listeners test suite', () => {
       // Given
       baseWindow.contentView.children = [{isAppMenu: true}];
       // When
-      eventBus.listeners.appMenuClose();
+      eventBus.send('appMenuClose');
       // Then
       expect(baseWindow.contentView.removeChildView).toHaveBeenCalledWith(
         expect.objectContaining({isAppMenu: true})
@@ -106,7 +106,7 @@ describe('Main :: Global listeners test suite', () => {
       });
       test('should destroy dialog', () => {
         // When
-        eventBus.listeners.closeDialog();
+        eventBus.send('closeDialog');
         // Then
         expect(dialog.webContents.destroy).toHaveBeenCalledTimes(1);
       });
@@ -115,7 +115,7 @@ describe('Main :: Global listeners test suite', () => {
         const tabManagerModule = require('../../tab-manager');
         jest.spyOn(tabManagerModule, 'getActiveTab').mockImplementation();
         // When
-        eventBus.listeners.closeDialog();
+        eventBus.send('closeDialog');
         // Then
         expect(tabManagerModule.getActiveTab).toHaveBeenCalledTimes(1);
       });
@@ -124,7 +124,7 @@ describe('Main :: Global listeners test suite', () => {
         const settingsModule = require('../../settings');
         jest.spyOn(settingsModule, 'updateSettings').mockImplementation();
         // When
-        eventBus.listeners.closeDialog();
+        eventBus.send('closeDialog');
         // Then
         expect(settingsModule.updateSettings).not.toHaveBeenCalled();
       });
@@ -134,7 +134,7 @@ describe('Main :: Global listeners test suite', () => {
       const view = new electron.WebContentsView();
       baseWindow.contentView.children = [view, view];
       // When
-      eventBus.listeners.closeDialog();
+      eventBus.send('closeDialog');
       // Then
       expect(view.webContents.destroy).not.toHaveBeenCalled();
     });
@@ -146,15 +146,15 @@ describe('Main :: Global listeners test suite', () => {
       dialog.isDialog = true;
       baseWindow.contentView.children = [dialog];
       // When
-      eventBus.listeners.escape();
+      eventBus.send('escape');
       // Then
       expect(dialog.webContents.destroy).toHaveBeenCalledTimes(1);
     });
     test('with app menu visible, should close app menu', () => {
       // Given
-      eventBus.listeners.appMenuOpen();
+      eventBus.send('appMenuOpen');
       // When
-      eventBus.listeners.escape();
+      eventBus.send('escape');
       // Then
       expect(baseWindow.contentView.removeChildView).toHaveBeenCalledWith(
         expect.objectContaining({isAppMenu: true})
@@ -164,12 +164,12 @@ describe('Main :: Global listeners test suite', () => {
       // Given
       const dialog = new electron.WebContentsView();
       dialog.isDialog = true;
-      eventBus.listeners.appMenuOpen();
+      eventBus.send('appMenuOpen');
       const findInPageDialog = new electron.WebContentsView();
       findInPageDialog.isFindInPage = true;
       baseWindow.contentView.children = [dialog, findInPageDialog];
       // When
-      eventBus.listeners.escape();
+      eventBus.send('escape');
       // Then
       expect(dialog.webContents.destroy).not.toHaveBeenCalled();
       expect(baseWindow.contentView.removeChildView).not.toHaveBeenCalledWith(
@@ -183,7 +183,7 @@ describe('Main :: Global listeners test suite', () => {
       // Given
       baseWindow.isFullScreen.mockReturnValue(false);
       // When
-      eventBus.listeners.fullscreenToggle();
+      eventBus.send('fullscreenToggle');
       // Then
       expect(baseWindow.setFullScreen).toHaveBeenCalledWith(true);
     });
@@ -191,14 +191,14 @@ describe('Main :: Global listeners test suite', () => {
       // Given
       baseWindow.isFullScreen.mockReturnValue(true);
       // When
-      eventBus.listeners.fullscreenToggle();
+      eventBus.send('fullscreenToggle');
       // Then
       expect(baseWindow.setFullScreen).toHaveBeenCalledWith(false);
     });
   });
   test('helpOpenDialog, should open help dialog', () => {
     // When
-    eventBus.listeners.helpOpenDialog({sender: baseWindow.webContents});
+    eventBus.send('helpOpenDialog', {sender: baseWindow.webContents});
     // Then
     const view = electron.WebContentsView.mock.results
       .map(r => r.value).filter(bv => bv.webContents.loadedUrl.endsWith('help/index.html'))[0];
@@ -213,30 +213,33 @@ describe('Main :: Global listeners test suite', () => {
       require('../../base-window').registerAppShortcuts({}, webContents);
     });
     test('tabTraverseNext', () => {
-      jest.spyOn(eventBus.listeners, 'tabTraverseNext');
+      const tabTraverseNext = jest.fn();
+      eventBus.once('tabTraverseNext', tabTraverseNext);
       webContents.listeners['before-input-event']({preventDefault: jest.fn()}, {type: 'keyDown', key: 'Tab', alt: true});
-      expect(eventBus.listeners.tabTraverseNext).toHaveBeenCalledTimes(1);
+      expect(tabTraverseNext).toHaveBeenCalledTimes(1);
     });
-    test('tabTraverseNext', () => {
-      jest.spyOn(eventBus.listeners, 'tabTraversePrevious');
+    test('tabTraversePrevious', () => {
+      const tabTraversePrevious = jest.fn();
+      eventBus.once('tabTraversePrevious', tabTraversePrevious);
       webContents.listeners['before-input-event']({preventDefault: jest.fn()}, {type: 'keyDown', key: 'Tab', alt: true, shift: true});
-      expect(eventBus.listeners.tabTraversePrevious).toHaveBeenCalledTimes(1);
+      expect(tabTraversePrevious).toHaveBeenCalledTimes(1);
     });
     test.each([1, 2, 3, 4, 5, 6, 7, 8, 9])('tabSwitchToPosition %i', key => {
-      jest.spyOn(eventBus.listeners, 'tabSwitchToPosition');
+      const tabSwitchToPosition = jest.fn();
+      eventBus.once('tabSwitchToPosition', tabSwitchToPosition);
       webContents.listeners['before-input-event']({preventDefault: jest.fn()}, {type: 'keyDown', key: `${key}`, alt: true});
-      expect(eventBus.listeners.tabSwitchToPosition).toHaveBeenCalledTimes(1);
+      expect(tabSwitchToPosition).toHaveBeenCalledTimes(1);
     });
   });
   test('quit, should exit the application', () => {
     // When
-    eventBus.listeners.quit();
+    eventBus.send('quit');
     // Then
     expect(electron.app.exit).toHaveBeenCalledTimes(1);
   });
   test('settingsOpenDialog, should open settings dialog', () => {
     // When
-    eventBus.listeners.settingsOpenDialog();
+    eventBus.send('settingsOpenDialog');
     // Then
     const view = webContentsViewInstances
       .filter(wcv => wcv.webContents.loadedUrl.endsWith('settings/index.html'))[0];
@@ -253,14 +256,14 @@ describe('Main :: Global listeners test suite', () => {
     });
     test('should reload settings', () => {
       // When
-      eventBus.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
+      eventBus.send('settingsSave', {}, {tabs: [{id: 1337}], enabledDictionaries: []});
       // Then
       const loadedSettings = settings.loadSettings();
       expect(loadedSettings.tabs).toEqual([{id: 1337}]);
     });
     test('should reload fake dictionary renderer', () => {
       // When
-      eventBus.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
+      eventBus.send('settingsSave', {}, {tabs: [{id: 1337}], enabledDictionaries: []});
       // Then
       const view = webContentsViewInstances
         .filter(wcv => wcv.webContents.loadedUrl.endsWith('spell-check/dictionary.renderer/index.html'))[0];
@@ -272,7 +275,7 @@ describe('Main :: Global listeners test suite', () => {
       const tabManagerModule = require('../../tab-manager');
       jest.spyOn(tabManagerModule, 'removeAll').mockImplementation();
       // When
-      eventBus.listeners.settingsSave({}, {tabs: [{id: 1337}], enabledDictionaries: []});
+      eventBus.send('settingsSave', {}, {tabs: [{id: 1337}], enabledDictionaries: []});
       // Then
       expect(baseWindow.contentView.removeChildView).toHaveBeenCalledTimes(1);
       expect(baseWindow.contentView.removeChildView).toHaveBeenCalledWith(settingsView);
@@ -281,7 +284,7 @@ describe('Main :: Global listeners test suite', () => {
     });
     test('should set saved theme', () => {
       // When
-      eventBus.listeners.settingsSave({}, {theme: 'light'});
+      eventBus.send('settingsSave', {}, {theme: 'light'});
       // Then
       expect(electron.nativeTheme.themeSource).toEqual('light');
     });
@@ -290,7 +293,7 @@ describe('Main :: Global listeners test suite', () => {
     // eslint-disable-next-line no-warning-comments
     // TODO: We'll need a blackbox test
     // When
-    const result = await eventBus.listeners.settingsExport(baseWindow);
+    const result = await eventBus.send('settingsExport', baseWindow);
     // Then
     expect(result).not.toBeUndefined();
     expect(result).toEqual({success: false, canceled: true});
@@ -299,7 +302,7 @@ describe('Main :: Global listeners test suite', () => {
     // eslint-disable-next-line no-warning-comments
     // TODO: We'll need a blackbox test
     // When
-    const result = await eventBus.listeners.settingsImport(baseWindow);
+    const result = await eventBus.send('settingsImport', baseWindow);
     // Then
     expect(result).not.toBeUndefined();
     expect(result).toEqual({success: false, canceled: true});
@@ -316,7 +319,7 @@ describe('Main :: Global listeners test suite', () => {
       // Given
       baseWindow.contentView.children = [new electron.WebContentsView()];
       // When
-      eventBus.listeners[event]();
+      eventBus.send(event);
       // Then
       expect(tabManagerModule.getTab).not.toHaveBeenCalled();
     });
@@ -328,7 +331,7 @@ describe('Main :: Global listeners test suite', () => {
         jest.spyOn(tabManagerModule, 'getNextTab').mockImplementation(() => 'nextTabId');
         main.init();
         // When
-        eventBus.listeners.tabTraverseNext();
+        eventBus.emit('tabTraverseNext');
         // Then
         expect(tabManagerModule.getTab).toHaveBeenCalledWith('nextTabId');
       });
@@ -336,7 +339,7 @@ describe('Main :: Global listeners test suite', () => {
         jest.spyOn(tabManagerModule, 'getPreviousTab').mockImplementation(() => 'previousTabId');
         main.init();
         // When
-        eventBus.listeners.tabTraversePrevious();
+        eventBus.emit('tabTraversePrevious');
         // Then
         expect(tabManagerModule.getTab).toHaveBeenCalledWith('previousTabId');
       });
@@ -344,7 +347,7 @@ describe('Main :: Global listeners test suite', () => {
         jest.spyOn(tabManagerModule, 'getTabAt').mockImplementation(() => 'tabAtPosition');
         main.init();
         // When
-        eventBus.listeners.tabSwitchToPosition();
+        eventBus.send('tabSwitchToPosition');
         // Then
         expect(tabManagerModule.getTab).toHaveBeenCalledWith('tabAtPosition');
       });

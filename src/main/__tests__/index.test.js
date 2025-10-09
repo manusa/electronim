@@ -241,7 +241,7 @@ describe('Main :: Index module test suite', () => {
       });
       test('find-in-page, should set specific dialog bounds', () => {
         // Given
-        electron.ipcMain.listeners.findInPageOpen();
+        electron.ipcMain.emit('findInPageOpen');
         const findInPageDialog = baseWindow.contentView.children.find(cv => cv.isFindInPage);
         // When
         baseWindow.listeners('resize')[0]({sender: baseWindow});

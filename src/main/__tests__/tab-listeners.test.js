@@ -25,9 +25,7 @@ describe('Main :: Tab listeners test suite', () => {
   let tabManagerModule;
 
   const waitForTrayInit = async initFn => {
-    const trayInitPromise = new Promise(resolve => {
-      mockIpc.listeners.trayInit = resolve;
-    });
+    const trayInitPromise = new Promise(resolve => electron.ipcMain.on('trayInit', resolve));
     initFn();
     return trayInitPromise;
   };
@@ -54,7 +52,7 @@ describe('Main :: Tab listeners test suite', () => {
       settings.updateSettings({tabs: []});
       main.init();
       // When
-      mockIpc.listeners.tabsReady({});
+      mockIpc.send('tabsReady', {});
       // Then
       expect(tabManagerModule.addTabs).not.toHaveBeenCalled();
       expect(addTabsNested).not.toHaveBeenCalled();
@@ -73,7 +71,7 @@ describe('Main :: Tab listeners test suite', () => {
       });
       main.init();
       // When
-      mockIpc.listeners.tabsReady(event);
+      mockIpc.send('tabsReady', event);
       // Then
       expect(tabManagerModule.addTabs).toHaveBeenCalledWith(event.sender);
       expect(addTabsNested).toHaveBeenCalledTimes(1);
@@ -95,7 +93,7 @@ describe('Main :: Tab listeners test suite', () => {
       // Given
       await waitForTrayInit(() => main.init());
       // When
-      mockIpc.listeners.activateTab({}, {id: 'not here'});
+      mockIpc.emit('activateTab', {}, {id: 'not here'});
       // Then
       expect(electron.BaseWindow.getAllWindows()[0].getContentBounds).not.toHaveBeenCalled();
     });
@@ -105,7 +103,7 @@ describe('Main :: Tab listeners test suite', () => {
       const baseWindow = electron.BaseWindow.getAllWindows()[0];
       baseWindow.getContentBounds = jest.fn(() => ({width: 13, height: 83}));
       // When
-      mockIpc.listeners.activateTab({}, {id: 'validId'});
+      mockIpc.emit('activateTab', {}, {id: 'validId'});
       // Then
       expect(activeTab.setBounds).toHaveBeenCalledWith({x: 0, y: 46, width: 13, height: 37});
       expect(baseWindow.contentView.addChildView)
@@ -119,7 +117,7 @@ describe('Main :: Tab listeners test suite', () => {
       const baseWindow = electron.BaseWindow.getAllWindows()[0];
       baseWindow.getContentBounds = jest.fn(() => ({width: 13, height: 83}));
       // When
-      mockIpc.listeners.activateTab({}, {id: 'validId'});
+      mockIpc.emit('activateTab', {}, {id: 'validId'});
       // Then
       expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(mockView.setBounds);
       expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(mockView.setBounds);
@@ -133,7 +131,7 @@ describe('Main :: Tab listeners test suite', () => {
     tabManagerModule.canNotify = jest.fn(() => 'yepe');
     main.init();
     // When
-    mockIpc.listeners.canNotify(mockIpcMainEvent, 'validId');
+    mockIpc.send('canNotify', mockIpcMainEvent, 'validId');
     // Then
     expect(tabManagerModule.canNotify).toHaveBeenCalledWith('validId');
     expect(mockIpcMainEvent.returnValue).toBe('yepe');
@@ -147,7 +145,7 @@ describe('Main :: Tab listeners test suite', () => {
     baseWindow.restore = jest.fn();
     baseWindow.show = jest.fn();
     // When
-    mockIpc.listeners.notificationClick({}, {tabId: 'validId'});
+    mockIpc.send('notificationClick', {}, {tabId: 'validId'});
     // Then
     expect(mockView.webContents.send).toHaveBeenCalledWith('activateTabInContainer', {tabId: 'validId'});
     expect(baseWindow.restore).toHaveBeenCalledTimes(1);
@@ -159,7 +157,7 @@ describe('Main :: Tab listeners test suite', () => {
     const event = {sender: {reloadIgnoringCache: jest.fn()}};
     main.init();
     // When
-    mockIpc.listeners.reload(event);
+    mockIpc.send('reload', event);
     // Then
     expect(event.sender.reloadIgnoringCache).toHaveBeenCalledTimes(1);
   });
@@ -170,7 +168,7 @@ describe('Main :: Tab listeners test suite', () => {
     }};
     main.init();
     // When
-    mockIpc.listeners.zoomIn(event);
+    mockIpc.send('zoomIn', event);
     // Then
     expect(event.sender.setZoomFactor).toHaveBeenCalledTimes(1);
     expect(event.sender.setZoomFactor).toHaveBeenCalledWith(0.1);
@@ -183,7 +181,7 @@ describe('Main :: Tab listeners test suite', () => {
       }};
       main.init();
       // When
-      mockIpc.listeners.zoomOut(event);
+      mockIpc.send('zoomOut', event);
       // Then
       expect(event.sender.setZoomFactor).toHaveBeenCalledTimes(1);
       expect(event.sender.setZoomFactor).toHaveBeenCalledWith(0.100001);
@@ -195,7 +193,7 @@ describe('Main :: Tab listeners test suite', () => {
       }};
       main.init();
       // When
-      mockIpc.listeners.zoomOut(event);
+      mockIpc.send('zoomOut', event);
       // Then
       expect(event.sender.setZoomFactor).not.toHaveBeenCalled();
     });
@@ -204,7 +202,7 @@ describe('Main :: Tab listeners test suite', () => {
     const event = {sender: {setZoomFactor: jest.fn()}};
     main.init();
     // When
-    mockIpc.listeners.zoomReset(event);
+    mockIpc.send('zoomReset', event);
     // Then
     expect(event.sender.setZoomFactor).toHaveBeenCalledTimes(1);
     expect(event.sender.setZoomFactor).toHaveBeenCalledWith(1);
@@ -215,7 +213,7 @@ describe('Main :: Tab listeners test suite', () => {
       settings.updateSettings({tabs: [{id: '1337'}, {id: '313373'}]});
       main.init();
       // When
-      mockIpc.listeners.tabReorder({}, {tabIds: ['313373', '1337']});
+      mockIpc.send('tabReorder', {}, {tabIds: ['313373', '1337']});
       // Then
       const updatedSettings = settings.loadSettings();
       expect(updatedSettings.tabs).toEqual([{id: '313373'}, {id: '1337'}]);
@@ -226,7 +224,7 @@ describe('Main :: Tab listeners test suite', () => {
       jest.spyOn(tabManagerModule, 'sortTabs').mockImplementation();
       main.init();
       // When
-      mockIpc.listeners.tabReorder({}, {tabIds: ['313373', '1337']});
+      mockIpc.send('tabReorder', {}, {tabIds: ['313373', '1337']});
       // Then
       expect(tabManagerModule.sortTabs).toHaveBeenCalledWith(['313373', '1337']);
     });
@@ -237,7 +235,7 @@ describe('Main :: Tab listeners test suite', () => {
       ]});
       main.init();
       // When
-      mockIpc.listeners.tabReorder({}, {tabIds: ['313373', '1337']});
+      mockIpc.send('tabReorder', {}, {tabIds: ['313373', '1337']});
       // Then
       expect(settings.loadSettings().tabs).toEqual([
         {id: '313373'}, {id: '1337'}, {id: 'hidden'}, {id: 'hidden-too'}
