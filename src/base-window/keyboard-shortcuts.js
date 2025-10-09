@@ -55,14 +55,14 @@ const setKeyboardShortcutsListeners = settings => {
   EVENTS.set(eventKey({key: 'F11'}), eventAction(() => eventBus.emit(APP_EVENTS.fullscreenToggle)));
 
   const tabSwitchModifier = settings?.keyboardShortcuts?.tabSwitchModifier || KEYBOARD_SHORTCUTS.tabSwitchModifier;
-  Array(9).fill(1).forEach((min, idx) => {
-    const key = min + idx;
-    const func = () => eventBus.emit(APP_EVENTS.tabSwitchToPosition, key);
+  for (let i = 1; i <= 9; i++) {
+    const key = `${i}`;
+    const func = () => eventBus.emit(APP_EVENTS.tabSwitchToPosition, i);
     EVENTS.set(eventKeyForModifier({key, modifier: tabSwitchModifier}), eventAction(func));
     // eslint-disable-next-line no-warning-comments
     // TODO: For legacy reasons cmd+1-9 needs to be supported when key is not set in macOS
     EVENTS.set(eventKey({key, meta: true}), eventAction(func));
-  });
+  }
 
   const tabTraverseModifier = settings?.keyboardShortcuts?.tabTraverseModifier ||
     KEYBOARD_SHORTCUTS.tabTraverseModifier;
