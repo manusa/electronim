@@ -18,19 +18,17 @@
  */
 describe('Main :: Main window listeners test suite', () => {
   let electron;
-  let main;
   let baseWindow;
   let settings;
   beforeEach(async () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
-    electron.BrowserView = jest.fn(() => require('../../__tests__').mockBaseWindowInstance());
-    electron.Notification.mockImplementation(() => ({show: jest.fn()}));
     baseWindow = electron.baseWindowInstance;
     settings = await require('../../__tests__').testSettings();
     await require('../../__tests__').testUserAgent();
-    main = require('../');
-    main.init();
+    const trayInitPromise = new Promise(resolve => electron.ipcMain.on('trayInit', resolve));
+    require('../').init();
+    await trayInitPromise;
   });
   describe('close', () => {
     let event;
