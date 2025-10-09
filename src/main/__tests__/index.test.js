@@ -19,21 +19,19 @@
 describe('Main :: Index module test suite', () => {
   let mockNotification;
   let electron;
+  let settings;
   let mockBaseWindow;
   let mockDesktopCapturer;
   let mockIpc;
   let mockNativeTheme;
-  let mockSettings;
   let appMenuModule;
-  let settingsModule;
   let main;
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.resetModules();
     jest.useFakeTimers({doNotFake: ['setInterval']});
     mockNotification = jest.fn();
     mockDesktopCapturer = {};
     mockNativeTheme = {};
-    mockSettings = {};
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance({
       Notification: jest.fn(() => mockNotification),
       desktopCapturer: mockDesktopCapturer,
@@ -44,12 +42,10 @@ describe('Main :: Index module test suite', () => {
     // Each view should be a separate instance
     electron.WebContentsView = jest.fn(() => require('../../__tests__').mockWebContentsViewInstance());
     mockIpc = electron.ipcMain;
+    settings = await require('../../__tests__').testSettings();
+    jest.spyOn(settings, 'getPlatform').mockImplementation(() => 'linux');
     appMenuModule = require('../../app-menu');
     jest.spyOn(appMenuModule, 'newAppMenu');
-    settingsModule = require('../../settings');
-    jest.spyOn(settingsModule, 'getPlatform').mockImplementation(() => 'linux');
-    jest.spyOn(settingsModule, 'loadSettings').mockImplementation(() => mockSettings);
-    jest.spyOn(settingsModule, 'updateSettings').mockImplementation();
     jest.spyOn(require('../../user-agent'), 'initBrowserVersions').mockImplementation(() => ({
       then: func => {
         func.call();
@@ -65,7 +61,7 @@ describe('Main :: Index module test suite', () => {
     describe('theme', () => {
       test.each(['dark', 'light', 'system'])('uses theme from saved settings (%s)', theme => {
         // Given
-        mockSettings.theme = theme;
+        settings.updateSettings({theme});
         // When
         main.init();
         jest.runAllTimers();
@@ -84,7 +80,7 @@ describe('Main :: Index module test suite', () => {
       });
       test('in windows, uses icon.ico', () => {
         // Given
-        settingsModule.getPlatform.mockImplementation(() => 'win32');
+        settings.getPlatform.mockImplementation(() => 'win32');
         // When
         main.init();
         // Then
@@ -104,7 +100,7 @@ describe('Main :: Index module test suite', () => {
       });
       describe('=true', () => {
         beforeEach(() => {
-          mockSettings.startMinimized = true;
+          settings.updateSettings({startMinimized: true});
           main.init();
         });
         test('should call showInactive', () => {
@@ -119,7 +115,7 @@ describe('Main :: Index module test suite', () => {
       });
       describe('=false', () => {
         beforeEach(() => {
-          mockSettings.startMinimized = false;
+          settings.updateSettings({startMinimized: false});
           main.init();
         });
         test('should call show', () => {
@@ -183,7 +179,7 @@ describe('Main :: Index module test suite', () => {
         mockBaseWindow.listeners.maximize({sender: mockBaseWindow});
         jest.runAllTimers();
         // Then
-        expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
+        expect(settings.loadSettings()).toEqual(expect.objectContaining({width: 13, height: 37}));
       });
     });
     describe('restore (required for windows when starting minimized)', () => {
@@ -223,7 +219,7 @@ describe('Main :: Index module test suite', () => {
         mockBaseWindow.listeners.resize({sender: mockBaseWindow});
         jest.runAllTimers();
         // Then
-        expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
+        expect(settings.loadSettings()).toEqual(expect.objectContaining({width: 13, height: 37}));
       });
       describe('app-menu', () => {
         let mockAppMenu;
@@ -289,7 +285,7 @@ describe('Main :: Index module test suite', () => {
         mockBaseWindow.listeners.resize({sender: mockBaseWindow});
         jest.runAllTimers();
         // Then
-        expect(settingsModule.updateSettings).toHaveBeenCalledWith({width: 13, height: 37});
+        expect(settings.loadSettings()).toEqual(expect.objectContaining({width: 13, height: 37}));
         expect(topBar.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 1});
         expect(content.setBounds).toHaveBeenCalledWith({x: 1337, y: 1337, width: 10, height: 33});
       });
