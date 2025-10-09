@@ -37,13 +37,13 @@ describe('Main :: Main window listeners test suite', () => {
     });
     test('always calls event.preventDefault', () => {
       // When
-      baseWindow.listeners.close(event);
+      baseWindow.listeners('close')[0](event);
       // Then
       expect(event.preventDefault).toHaveBeenCalled();
     });
     test('with quit, should exit app', () => {
       // When
-      baseWindow.listeners.close(event);
+      baseWindow.listeners('close')[0](event);
       // Then
       expect(electron.app.exit).toHaveBeenCalled();
       expect(baseWindow.minimize).not.toHaveBeenCalled();
@@ -52,7 +52,7 @@ describe('Main :: Main window listeners test suite', () => {
       // Given
       settings.updateSettings({closeButtonBehavior: 'minimize'});
       // When
-      baseWindow.listeners.close(event);
+      baseWindow.listeners('close')[0](event);
       // Then
       expect(electron.app.exit).not.toHaveBeenCalled();
       expect(baseWindow.minimize).toHaveBeenCalled();

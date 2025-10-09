@@ -57,38 +57,34 @@ const mockWebContentsViewInstance = () => {
   return instance;
 };
 
-const mockBaseWindowInstance = () => {
-  const instance = {
-    listeners: {},
-    bounds: {x: 0, y: 0, width: 0, height: 0},
-    contentBounds: {x: 0, y: 0, width: 0, height: 0},
-    destroy: jest.fn(),
-    isFullScreen: jest.fn(),
-    loadURL: jest.fn(),
-    minimize: jest.fn(),
-    on: jest.fn((eventName, func) => {
-      instance.listeners[eventName] = func;
+const newBaseWindowInstance = () => {
+  const instance = new events.EventEmitter();
+  instance.bounds = {x: 0, y: 0, width: 0, height: 0};
+  instance.contentBounds = {x: 0, y: 0, width: 0, height: 0};
+  instance.contentView = {
+    addChildView: jest.fn(view => instance.contentView.children.push(view)),
+    removeChildView: jest.fn(view => {
+      instance.contentView.children = instance.contentView.children.filter(child => child !== view);
     }),
-    removeMenu: jest.fn(),
-    getBounds: jest.fn(() => instance.bounds),
-    setBounds: jest.fn(bounds => {
-      instance.bounds = {...instance.bounds, ...bounds};
-    }),
-    getContentBounds: jest.fn(() => instance.contentBounds),
-    setContentBounds: jest.fn(contentBounds => {
-      instance.contentBounds = {...instance.contentBounds, ...contentBounds};
-    }),
-    setFullScreen: jest.fn(),
-    show: jest.fn(),
-    showInactive: jest.fn(),
-    contentView: {
-      addChildView: jest.fn(view => instance.contentView.children.push(view)),
-      removeChildView: jest.fn(view => {
-        instance.contentView.children = instance.contentView.children.filter(child => child !== view);
-      }),
-      children: []
-    }
+    children: []
   };
+  instance.destroy = jest.fn();
+  instance.getBounds = jest.fn(() => instance.bounds);
+  instance.getContentBounds = jest.fn(() => instance.contentBounds);
+  instance.isFullScreen = jest.fn();
+  instance.loadURL = jest.fn();
+  instance.minimize = jest.fn();
+  instance.on = jest.fn(instance.on);
+  instance.removeMenu = jest.fn();
+  instance.setBounds = jest.fn(bounds => {
+    instance.bounds = {...instance.bounds, ...bounds};
+  });
+  instance.setContentBounds = jest.fn(contentBounds => {
+    instance.contentBounds = {...instance.contentBounds, ...contentBounds};
+  });
+  instance.setFullScreen = jest.fn();
+  instance.show = jest.fn();
+  instance.showInactive = jest.fn();
   return instance;
 };
 
@@ -105,7 +101,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     userAgentInterceptor: true
   };
   const BaseWindow = jest.fn(() => {
-    const baseWindow = mockBaseWindowInstance();
+    const baseWindow = newBaseWindowInstance();
     BaseWindow.windows.push(baseWindow);
     return baseWindow;
   });

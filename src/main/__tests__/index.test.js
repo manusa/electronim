@@ -164,14 +164,14 @@ describe('Main :: Index module test suite', () => {
         });
         views.push(singleView);
         // When
-        baseWindow.listeners.maximize({sender: baseWindow});
+        baseWindow.listeners('maximize')[0]({sender: baseWindow});
         await setBoundsPromise;
         // Then
         expect(singleView.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
       });
       test('should store new size in configuration file', () => {
         // When
-        baseWindow.listeners.maximize({sender: baseWindow});
+        baseWindow.listeners('maximize')[0]({sender: baseWindow});
         // Then
         expect(settings.loadSettings()).toEqual(expect.objectContaining({width: 13, height: 37}));
       });
@@ -186,7 +186,7 @@ describe('Main :: Index module test suite', () => {
           mockAppMenu.setBounds = jest.fn(resolve);
         });
         // When
-        baseWindow.listeners.restore({sender: baseWindow});
+        baseWindow.listeners('restore')[0]({sender: baseWindow});
         await setBoundsPromise;
         // Then
         expect(mockAppMenu.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
@@ -195,14 +195,14 @@ describe('Main :: Index module test suite', () => {
     describe('resize', () => {
       test('#78: should be run in separate setTimeout timer function to resize properly in Linux (no timers)', () => {
         // When
-        baseWindow.listeners.resize({sender: baseWindow});
+        baseWindow.listeners('resize')[0]({sender: baseWindow});
         // Then
         expect(setTimeout).toHaveBeenCalledTimes(1);
         expect(baseWindow.getContentBounds).not.toHaveBeenCalled();
       });
       test('#78: should be run in separate setTimeout timer function to resize properly in Linux (timers)', async () => {
         // When
-        baseWindow.listeners.resize({sender: baseWindow});
+        baseWindow.listeners('resize')[0]({sender: baseWindow});
         await baseWindowGetContentBounds;
         // Then
         expect(setTimeout).toHaveBeenCalledTimes(1);
@@ -210,7 +210,7 @@ describe('Main :: Index module test suite', () => {
       });
       test('should store new size in configuration file', () => {
         // When
-        baseWindow.listeners.resize({sender: baseWindow});
+        baseWindow.listeners('resize')[0]({sender: baseWindow});
         // Then
         expect(settings.loadSettings()).toEqual(expect.objectContaining({width: 13, height: 37}));
       });
@@ -225,7 +225,7 @@ describe('Main :: Index module test suite', () => {
             mockAppMenu.setBounds = jest.fn(resolve);
           });
           // When
-          baseWindow.listeners.resize({sender: baseWindow});
+          baseWindow.listeners('resize')[0]({sender: baseWindow});
           await setBoundsPromise;
           // Then
           expect(mockAppMenu.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
@@ -234,7 +234,7 @@ describe('Main :: Index module test suite', () => {
           // Given
           mockAppMenu.setBounds = null;
           // When
-          baseWindow.listeners.resize({sender: baseWindow});
+          baseWindow.listeners('resize')[0]({sender: baseWindow});
           // Then
           expect(baseWindow.setBounds).not.toHaveBeenCalled();
         });
@@ -244,7 +244,7 @@ describe('Main :: Index module test suite', () => {
         electron.ipcMain.listeners.findInPageOpen();
         const findInPageDialog = baseWindow.contentView.children.find(cv => cv.isFindInPage);
         // When
-        baseWindow.listeners.resize({sender: baseWindow});
+        baseWindow.listeners('resize')[0]({sender: baseWindow});
         // Then
         expect(findInPageDialog.setBounds).toHaveBeenCalledWith({x: -390, y: 0, width: 400, height: 60});
       });
@@ -258,7 +258,7 @@ describe('Main :: Index module test suite', () => {
         });
         views.push(singleView);
         // When
-        baseWindow.listeners.resize({sender: baseWindow});
+        baseWindow.listeners('resize')[0]({sender: baseWindow});
         await setBoundsPromise;
         // Then
         expect(singleView.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
@@ -277,7 +277,7 @@ describe('Main :: Index module test suite', () => {
         });
         views.push(topBar, content);
         // When
-        baseWindow.listeners.resize({sender: baseWindow});
+        baseWindow.listeners('resize')[0]({sender: baseWindow});
         await setBoundsPromise;
         // Then
         expect(settings.loadSettings()).toEqual(expect.objectContaining({width: 13, height: 37}));
