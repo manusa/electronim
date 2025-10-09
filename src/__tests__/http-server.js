@@ -95,6 +95,7 @@ const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html',
     close: async () => {
       return new Promise(resolve => {
         server.close(resolve);
+        setImmediate(() => server.emit('close'));
       });
     }
   };

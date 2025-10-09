@@ -242,8 +242,7 @@ describe('Main :: Tab listeners test suite', () => {
       // When
       mockIpc.listeners.tabReorder({}, {tabIds: ['313373', '1337']});
       // Then
-      const updatedSettings = settings.loadSettings();
-      expect(updatedSettings.tabs).toEqual([
+      expect(settings.loadSettings().tabs).toEqual([
         {id: '313373'}, {id: '1337'}, {id: 'hidden'}, {id: 'hidden-too'}
       ]);
     });
