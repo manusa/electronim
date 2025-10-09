@@ -44,9 +44,7 @@ describe('Main :: Global listeners test suite', () => {
       trayEnabled: true
     });
     eventBus = electron.ipcMain;
-    const trayInitPromise = new Promise(resolve => {
-      electron.ipcMain.listeners.trayInit = resolve;
-    });
+    const trayInitPromise = new Promise(resolve => electron.ipcMain.on('trayInit', resolve));
     main = require('../');
     main.init();
     await trayInitPromise;

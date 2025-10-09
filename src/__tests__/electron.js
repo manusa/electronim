@@ -130,6 +130,9 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     contextBridge: {
       exposeInMainWorld: jest.fn()
     },
+    desktopCapturer: {
+      getSources: jest.fn(async () => [])
+    },
     dialog: {
       showSaveDialog: jest.fn(async () => ({canceled: true})),
       showOpenDialog: jest.fn(async () => ({canceled: true})),
