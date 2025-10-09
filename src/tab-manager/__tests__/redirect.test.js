@@ -15,13 +15,13 @@
  */
 describe('Tab Manager Redirect module test suite', () => {
   let redirect;
-  let mockView;
+  let webContentsView;
   let mockViewUrl;
   beforeEach(() => {
     mockViewUrl = 'http://localhost';
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    mockView = require('electron').webContentsViewInstance;
-    mockView.webContents.getURL.mockImplementation(() => mockViewUrl);
+    const electron = require('../../__tests__').testElectron();
+    webContentsView = new electron.WebContentsView();
+    webContentsView.webContents.getURL.mockImplementation(() => mockViewUrl);
     redirect = require('../redirect');
   });
   describe('shouldOpenInExternalBrowser', () => {
@@ -30,7 +30,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://aitana.slack.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://www.external.url.com'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://www.external.url.com'));
         // Then
         expect(result).toBe(true);
       });
@@ -40,7 +40,7 @@ describe('Tab Manager Redirect module test suite', () => {
       'https://files.slack.com/files-pri/ID123/download/image.png?origin_team=ID456'
     ])('URLs handled internally -isHandledInternally- (%s) , should return false', url => {
       // When
-      const result = redirect.shouldOpenInExternalBrowser(mockView, new URL(url));
+      const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL(url));
       // Then
       expect(result).toBe(false);
     });
@@ -49,7 +49,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://chat.eclipse.org';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://matrix.eclipse.org/_matrix/client/v3/login/sso/redirect/oidc-oauth2_eclipse?redirectUrl=https%3A%2F%2Fchat.eclipse.org%2F&org.matrix.msc3824.action=login'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://matrix.eclipse.org/_matrix/client/v3/login/sso/redirect/oidc-oauth2_eclipse?redirectUrl=https%3A%2F%2Fchat.eclipse.org%2F&org.matrix.msc3824.action=login'));
         // Then
         expect(result).toBe(false);
       });
@@ -57,7 +57,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://matrix.eclipse.org';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://chat.eclipse.org/?loginToken=syl_13371337133713371337_1dWSvb'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://chat.eclipse.org/?loginToken=syl_13371337133713371337_1dWSvb'));
         // Then
         expect(result).toBe(false);
       });
@@ -67,7 +67,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://app.gitter.im';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://gitter.ems.host/_matrix/client/v3/login/sso/redirect/oidc-github?redirectUrl=https%3A%2F%2Fapp.gitter.im%2F&org.matrix.msc3824.action=login'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://gitter.ems.host/_matrix/client/v3/login/sso/redirect/oidc-github?redirectUrl=https%3A%2F%2Fapp.gitter.im%2F&org.matrix.msc3824.action=login'));
         // Then
         expect(result).toBe(false);
       });
@@ -75,7 +75,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://gitter.ems.host';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://app.gitter.im/?loginToken=syl_13371337133713371337_1F3jZn'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://app.gitter.im/?loginToken=syl_13371337133713371337_1F3jZn'));
         // Then
         expect(result).toBe(false);
       });
@@ -85,7 +85,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://acc.google.com/signin/oauth/?redirect=https://slack.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://aitana.slack.com'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://aitana.slack.com'));
         // Then
         expect(result).toBe(false);
       });
@@ -93,7 +93,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://aitana.slack.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://accounts.google.com/o/oauth2/auth'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://accounts.google.com/o/oauth2/auth'));
         // Then
         expect(result).toBe(false);
       });
@@ -103,7 +103,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://github.com/login/oauth';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://aitana.slack.com'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://aitana.slack.com'));
         // Then
         expect(result).toBe(false);
       });
@@ -111,7 +111,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://aitana.slack.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://github.com/login/oauth'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://github.com/login/oauth'));
         // Then
         expect(result).toBe(false);
       });
@@ -122,7 +122,7 @@ describe('Tab Manager Redirect module test suite', () => {
           // Given
           mockViewUrl = 'https://sso.godaddy.com/';
           // When
-          const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://a-and-a.slack.com'));
+          const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://a-and-a.slack.com'));
           // Then
           expect(result).toBe(false);
         });
@@ -130,7 +130,7 @@ describe('Tab Manager Redirect module test suite', () => {
           // Given
           mockViewUrl = 'https://a-and-a.slack.com';
           // When
-          const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://sso.godaddy.com'));
+          const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://sso.godaddy.com'));
           // Then
           expect(result).toBe(false);
         });
@@ -140,7 +140,7 @@ describe('Tab Manager Redirect module test suite', () => {
           // Given
           mockViewUrl = 'https://sso.secureserver.net/';
           // When
-          const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://julia.slack.com'));
+          const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://julia.slack.com'));
           // Then
           expect(result).toBe(false);
         });
@@ -148,7 +148,7 @@ describe('Tab Manager Redirect module test suite', () => {
           // Given
           mockViewUrl = 'https://julia.slack.com';
           // When
-          const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://sso.secureserver.net/'));
+          const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://sso.secureserver.net/'));
           // Then
           expect(result).toBe(false);
         });
@@ -159,7 +159,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://alberto.slack.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView,
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView,
           new URL(`https://${subdomain}.openai.com/u/login/identifier?state=1337`));
         // Then
         expect(result).toBe(false);
@@ -170,7 +170,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://alex.slack.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView,
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView,
           new URL('https://auth.redhat.com/auth/realms/EmployeeIDP/login-actions/authenticate?execution=1337'));
         // Then
         expect(result).toBe(false);
@@ -181,7 +181,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://web.skype.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView,
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView,
           new URL('https://login.skype.com/login/oauth/microsoft?client_id=313373'));
         // Then
         expect(result).toBe(false);
@@ -190,7 +190,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://web.skype.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView,
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView,
           new URL('https://login.live.com/login.srf?wa=wsignin1.0&rpsnv=13&ct=1610780563'));
         // Then
         expect(result).toBe(false);
@@ -201,7 +201,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://teams.microsoft.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView,
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView,
           new URL('https://login.microsoftonline.com/common/oauth2/authorize?response_type=id_token'));
         // Then
         expect(result).toBe(false);
@@ -210,7 +210,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://teams.microsoft.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView,
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView,
           new URL('https://login.live.com/Me.htm?v=3'));
         // Then
         expect(result).toBe(false);
@@ -221,7 +221,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://tweetdeck.twitter.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://mobile.twitter.com/login?hide_message=true&redirect_after_login=https%3A%2F%2Ftweetdeck.twitter.com%2F%3Fvia_twitter_login%3Dtrue'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://mobile.twitter.com/login?hide_message=true&redirect_after_login=https%3A%2F%2Ftweetdeck.twitter.com%2F%3Fvia_twitter_login%3Dtrue'));
         // Then
         expect(result).toBe(false);
       });
@@ -229,7 +229,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://mobile.twitter.com/login';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://tweetdeck.twitter.com?via_twitter_login=true'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://tweetdeck.twitter.com?via_twitter_login=true'));
         // Then
         expect(result).toBe(false);
       });
@@ -237,7 +237,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://tweetdeck.twitter.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://mobile.twitter.com/logout'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://mobile.twitter.com/logout'));
         // Then
         expect(result).toBe(false);
       });
@@ -247,7 +247,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://twitter.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://x.com/login?hide_message=true&redirect_after_login=https%3A%2F%2Ftweetdeck.twitter.com%2F%3Fvia_twitter_login%3Dtrue'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://x.com/login?hide_message=true&redirect_after_login=https%3A%2F%2Ftweetdeck.twitter.com%2F%3Fvia_twitter_login%3Dtrue'));
         // Then
         expect(result).toBe(false);
       });
@@ -255,7 +255,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://x.com/login';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://twitter.com?via_twitter_login=true'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://twitter.com?via_twitter_login=true'));
         // Then
         expect(result).toBe(false);
       });
@@ -263,7 +263,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://twitter.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://x.com/logout'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://x.com/logout'));
         // Then
         expect(result).toBe(false);
       });
@@ -273,7 +273,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://mail.zoho.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://accounts.zoho.com/signin?servicename&serviceurl=https://mail.zoho.com'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://accounts.zoho.com/signin?servicename&serviceurl=https://mail.zoho.com'));
         // Then
         expect(result).toBe(false);
       });
@@ -281,7 +281,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://mail.zoho.com';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://accounts.zoho.eu/signin?servicename&serviceurl=https://mail.zoho.eu'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://accounts.zoho.eu/signin?servicename&serviceurl=https://mail.zoho.eu'));
         // Then
         expect(result).toBe(false);
       });
@@ -291,7 +291,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://zoom.us/signin';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://us04web.zoom.us/profile'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://us04web.zoom.us/profile'));
         // Then
         expect(result).toBe(false);
       });
@@ -299,7 +299,7 @@ describe('Tab Manager Redirect module test suite', () => {
         // Given
         mockViewUrl = 'https://zoom.us/signin';
         // When
-        const result = redirect.shouldOpenInExternalBrowser(mockView, new URL('https://us04web.zoom.us/signin/otp/verify_help'));
+        const result = redirect.shouldOpenInExternalBrowser(webContentsView, new URL('https://us04web.zoom.us/signin/otp/verify_help'));
         // Then
         expect(result).toBe(false);
       });
@@ -312,7 +312,7 @@ describe('Tab Manager Redirect module test suite', () => {
     });
     describe('different origin and not handled', () => {
       beforeEach(() => {
-        redirect.handleRedirect(mockView)(event, 'https://example.com/site-page');
+        redirect.handleRedirect(webContentsView)(event, 'https://example.com/site-page');
       });
       test('should prevent default', () => {
         expect(event.preventDefault).toHaveBeenCalled();
@@ -323,7 +323,7 @@ describe('Tab Manager Redirect module test suite', () => {
     });
     describe('different origin, not handled, and invalid protocol', () => {
       beforeEach(() => {
-        redirect.handleRedirect(mockView)(event, 'smb://example.com/share');
+        redirect.handleRedirect(webContentsView)(event, 'smb://example.com/share');
       });
       test('should prevent default', () => {
         expect(event.preventDefault).toHaveBeenCalled();
@@ -336,25 +336,25 @@ describe('Tab Manager Redirect module test suite', () => {
   describe('windowOpenHandler', () => {
     test('same origin, opens window in Electron popup', () => {
       // When
-      const result = redirect.windowOpenHandler(mockView)({url: 'http://localhost/terms-and-conditions'});
+      const result = redirect.windowOpenHandler(webContentsView)({url: 'http://localhost/terms-and-conditions'});
       // Then
       expect(result).toEqual({action: 'allow'});
     });
     test('handled oauth, opens window in Electron popup', () => {
       // When
-      const result = redirect.windowOpenHandler(mockView)({url: 'https://accounts.google.com/o/oauth2/auth'});
+      const result = redirect.windowOpenHandler(webContentsView)({url: 'https://accounts.google.com/o/oauth2/auth'});
       // Then
       expect(result).toEqual({action: 'allow'});
     });
     test('handled internally, opens window in Electron popup', () => {
       // When
-      const result = redirect.windowOpenHandler(mockView)({url: 'https://files.slack.com/files-pri/ID123/download/image.png?origin_team=ID456'});
+      const result = redirect.windowOpenHandler(webContentsView)({url: 'https://files.slack.com/files-pri/ID123/download/image.png?origin_team=ID456'});
       // Then
       expect(result).toEqual({action: 'allow'});
     });
     test('different origin and not handled, opens window in external browser', () => {
       // When
-      const result = redirect.windowOpenHandler(mockView)({url: 'https://example.com/site-page'});
+      const result = redirect.windowOpenHandler(webContentsView)({url: 'https://example.com/site-page'});
       // Then
       expect(require('electron').shell.openExternal).toHaveBeenCalledWith('https://example.com/site-page');
       expect(result).toEqual({action: 'deny'});
