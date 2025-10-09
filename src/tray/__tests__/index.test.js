@@ -57,12 +57,11 @@ describe('Tray module test suite', () => {
       test('destroy previous tray', () => {
         // Given
         settings.updateSettings({trayEnabled: true});
-        tray.initTray();
-        electron.trayInstance.destroy.mockClear(); // previous tests might have already created a tray instance
+        const previousTray = tray.initTray();
         // When
         tray.initTray();
         // Then
-        expect(electron.trayInstance.destroy).toHaveBeenCalledTimes(1);
+        expect(previousTray.destroy).toHaveBeenCalledTimes(1);
       });
       test(`uses ${expectedIcon} icon`, () => {
         // Given

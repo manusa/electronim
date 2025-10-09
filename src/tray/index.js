@@ -35,6 +35,7 @@ const initTray = () => {
     tray = new Tray(path.resolve(__dirname, '..', 'assets', images[getPlatform()] || images.win32));
     tray.on('click', () => eventBus.emit(APP_EVENTS.restore));
   }
+  return tray;
 };
 
 module.exports = {initTray};

@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+const events = require('node:events');
 
 const mockWebContentsViewInstance = () => {
   const instance = {
@@ -104,10 +105,6 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     setSpellCheckerLanguages: jest.fn(),
     userAgentInterceptor: true
   };
-  const trayInstance = {
-    destroy: jest.fn(),
-    on: jest.fn()
-  };
   const instance = {
     WebContentsView: jest.fn(() => webContentsViewInstance),
     webContentsViewInstance,
@@ -116,8 +113,11 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     Menu: jest.fn(),
     MenuItem: jest.fn(),
     Notification: jest.fn(() => ({show: jest.fn()})),
-    Tray: jest.fn(() => trayInstance),
-    trayInstance,
+    Tray: jest.fn(() => {
+      const tray = new events.EventEmitter();
+      tray.destroy = jest.fn(tray.destroy);
+      return tray;
+    }),
     app: {
       commandLine: {
         appendSwitch: jest.fn()
