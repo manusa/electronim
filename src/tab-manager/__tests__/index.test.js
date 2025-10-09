@@ -14,14 +14,13 @@
    limitations under the License.
  */
 describe('Tab Manager module test suite', () => {
-  let mockView;
+  let electron;
   let userAgent;
   let tabManager;
   let settings;
   beforeEach(async () => {
     jest.resetModules();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    mockView = require('electron').webContentsViewInstance;
+    electron = require('../../__tests__').testElectron();
     settings = await require('../../__tests__').testSettings();
     userAgent = require('../../user-agent');
     tabManager = require('../');
@@ -122,9 +121,8 @@ describe('Tab Manager module test suite', () => {
       // When
       tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // Then
-      const WebContentsView = require('electron').WebContentsView;
-      expect(WebContentsView).toHaveBeenCalledTimes(1);
-      expect(WebContentsView).toHaveBeenCalledWith({
+      expect(electron.WebContentsView).toHaveBeenCalledTimes(1);
+      expect(electron.WebContentsView).toHaveBeenCalledWith({
         webPreferences: expect.objectContaining({sandbox: true, nodeIntegration: false})
       });
     });
@@ -132,29 +130,29 @@ describe('Tab Manager module test suite', () => {
       // When
       tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // Then
-      expect(require('electron').session.fromPartition).not.toHaveBeenCalled();
-      expect(require('electron').WebContentsView).toHaveBeenCalledWith({
+      expect(electron.session.fromPartition).not.toHaveBeenCalled();
+      expect(electron.WebContentsView).toHaveBeenCalledWith({
         webPreferences: expect.objectContaining({session: expect.anything()})});
     });
     test('sandboxed, should use isolated session', () => {
       // When
       tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', sandboxed: true}]);
       // Then
-      expect(require('electron').session.fromPartition).toHaveBeenCalledTimes(1);
-      expect(require('electron').WebContentsView).toHaveBeenCalledWith({
+      expect(electron.session.fromPartition).toHaveBeenCalledTimes(1);
+      expect(electron.WebContentsView).toHaveBeenCalledWith({
         webPreferences: expect.objectContaining({session: expect.anything()})});
     });
     test('openUrlsInApp=true, should not set setWindowOpenHandler', () => {
       // When
       tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', openUrlsInApp: true}]);
       // Then
-      expect(mockView.webContents.setWindowOpenHandler).not.toHaveBeenCalled();
+      expect(electron.WebContentsView.mock.results[0].value.webContents.setWindowOpenHandler).not.toHaveBeenCalled();
     });
     test('openUrlsInApp=true, should not set will-navigate event handler', () => {
       // When
       tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', openUrlsInApp: true}]);
       // Then
-      expect(mockView.listeners['will-navigate']).not.toBeDefined();
+      expect(electron.WebContentsView.mock.results[0].value.listeners['will-navigate']).not.toBeDefined();
     });
     test('Tab webContents should be configured and loaded', () => {
       // Given
@@ -162,7 +160,7 @@ describe('Tab Manager module test suite', () => {
       // When
       tabManager.addTabs(mockIpcSender)([{id: 1337, url: 'https://localhost'}]);
       // Then
-      expect(mockView.webContents.loadURL).toHaveBeenCalledWith('https://localhost');
+      expect(electron.WebContentsView.mock.results[0].value.webContents.loadURL).toHaveBeenCalledWith('https://localhost');
       expect(mockIpcSender.send).toHaveBeenCalledTimes(1);
       expect(mockIpcSender.send).toHaveBeenCalledWith('addTabs', [{id: 1337, url: 'https://localhost'}]);
     });
@@ -170,8 +168,8 @@ describe('Tab Manager module test suite', () => {
       // When
       tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // Then
-      expect(mockView.webContents.executeJavaScript).toHaveBeenCalledTimes(1);
-      expect(mockView.webContents.executeJavaScript).toHaveBeenCalledWith('window.tabId = \'1337\';');
+      expect(electron.WebContentsView.mock.results[0].value.webContents.executeJavaScript).toHaveBeenCalledTimes(1);
+      expect(electron.WebContentsView.mock.results[0].value.webContents.executeJavaScript).toHaveBeenCalledWith('window.tabId = \'1337\';');
     });
     describe('cleanUserAgent', () => {
       test('chromium version available, should remove non-standard tokens from user-agent header and set version', () => {
@@ -201,14 +199,14 @@ describe('Tab Manager module test suite', () => {
       });
       test('handlePageTitleUpdated, should send setTabTitle event', () => {
         // When
-        mockView.listeners['page-title-updated'](new Event(''), 'Dr.');
+        tabManager.getTab('1337').listeners['page-title-updated'](new Event(''), 'Dr.');
         // Then
         expect(mockIpcSender.send).toHaveBeenCalledWith('setTabTitle', {id: '1337', title: 'Dr.'});
       });
       describe('handlePageFaviconUpdated', () => {
         test('Favicons provided, should send setTabFavicon with the last of the provided favicons', () => {
           // When
-          mockView.listeners['page-favicon-updated'](new Event(''), [
+          tabManager.getTab('1337').listeners['page-favicon-updated'](new Event(''), [
             'http://url-to-favicon/aitana.png',
             'http://url-to-favicon/alex.png'
           ]);
@@ -218,14 +216,14 @@ describe('Tab Manager module test suite', () => {
         });
         test('No favicons provided, should send setTabFavicon with the last of the extracted favicons', async () => {
           // Given
-          mockView.webContents.executeJavaScript = jest.fn(arg => {
+          tabManager.getTab('1337').webContents.executeJavaScript = jest.fn(arg => {
             if (arg === 'Array.from(document.querySelectorAll(\'link[rel*="icon"]\')).map(el => el.href)') {
               return ['http://url-to-favicon/julia-128.png', 'http://url-to-favicon/julia.png'];
             }
             return [];
           });
           // When
-          await mockView.listeners['page-favicon-updated'](new Event(''));
+          await tabManager.getTab('1337').listeners['page-favicon-updated'](new Event(''));
           // Then
           expect(mockIpcSender.send)
             .toHaveBeenCalledWith('setTabFavicon', {id: '1337', favicon: 'http://url-to-favicon/julia.png'});
@@ -233,9 +231,9 @@ describe('Tab Manager module test suite', () => {
       });
       test('windowOpen (was new-window)', () => {
         // Given
-        mockView.webContents.getURL.mockReturnValue('file://tab/index.html');
+        tabManager.getTab('1337').webContents.getURL.mockReturnValue('file://tab/index.html');
         // When
-        mockView.webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
+        tabManager.getTab('1337').webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
         // Then
         expect(require('electron').shell.openExternal).toHaveBeenCalledWith('https://example.com');
       });
@@ -276,7 +274,7 @@ describe('Tab Manager module test suite', () => {
       // When
       tabManager.removeAll();
       // Then
-      expect(mockView.webContents.destroy).not.toHaveBeenCalled();
+      expect(electron.WebContentsView.mock.result).toBeUndefined();
     });
     test('Existing tabs, should delete all tabs entries and destroy their Views', () => {
       // Given
@@ -284,7 +282,7 @@ describe('Tab Manager module test suite', () => {
       // When
       tabManager.removeAll();
       // Then
-      expect(mockView.webContents.destroy).toHaveBeenCalledTimes(1);
+      expect(electron.WebContentsView.mock.results[0].value.webContents.destroy).toHaveBeenCalledTimes(1);
     });
   });
   describe('canNotify', () => {
