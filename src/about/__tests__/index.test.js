@@ -24,7 +24,7 @@ describe('About module test suite', () => {
   describe('openAboutDialog', () => {
     let openAbout;
     beforeEach(() => {
-      openAbout = about.openAboutDialog(electron.baseWindowInstance);
+      openAbout = about.openAboutDialog(new electron.BaseWindow());
     });
     describe('webPreferences', () => {
       test('is sandboxed', () => {

@@ -19,7 +19,6 @@
 describe('Main :: Tab listeners test suite', () => {
   let electron;
   let settings;
-  let mockBaseWindow;
   let main;
   let mockIpc;
   let mockView;
@@ -38,7 +37,6 @@ describe('Main :: Tab listeners test suite', () => {
     electron = require('../../__tests__').testElectron();
     await require('../../__tests__').testUserAgent();
     settings = await require('../../__tests__').testSettings();
-    mockBaseWindow = electron.baseWindowInstance;
     mockIpc = electron.ipcMain;
     mockView = electron.webContentsViewInstance;
     tabManagerModule = require('../../tab-manager');
@@ -91,9 +89,6 @@ describe('Main :: Tab listeners test suite', () => {
         setBounds: jest.fn(),
         webContents: {focus: jest.fn()}
       };
-      mockBaseWindow.getBrowserViews = jest.fn(() => ([]));
-      mockBaseWindow.setBrowserView = jest.fn();
-      mockBaseWindow.addBrowserView = jest.fn();
       tabManagerModule.getTab = jest.fn(id => (id === 'validId' ? activeTab : null));
     });
     test('no active tab, should do nothing', async () => {
@@ -102,33 +97,34 @@ describe('Main :: Tab listeners test suite', () => {
       // When
       mockIpc.listeners.activateTab({}, {id: 'not here'});
       // Then
-      expect(mockBaseWindow.setBrowserView).not.toHaveBeenCalled();
-      expect(mockBaseWindow.addBrowserView).not.toHaveBeenCalled();
+      expect(electron.BaseWindow.getAllWindows()[0].getContentBounds).not.toHaveBeenCalled();
     });
     test('active tab, should resize tab and set it as the main window browser view', async () => {
       // Given
-      mockBaseWindow.getContentBounds = jest.fn(() => ({width: 13, height: 83}));
       await waitForTrayInit(() => main.init());
+      const baseWindow = electron.BaseWindow.getAllWindows()[0];
+      baseWindow.getContentBounds = jest.fn(() => ({width: 13, height: 83}));
       // When
       mockIpc.listeners.activateTab({}, {id: 'validId'});
       // Then
       expect(activeTab.setBounds).toHaveBeenCalledWith({x: 0, y: 46, width: 13, height: 37});
-      expect(mockBaseWindow.contentView.addChildView)
+      expect(baseWindow.contentView.addChildView)
         .toHaveBeenCalledWith(expect.objectContaining({isTabContainer: true}));
-      expect(mockBaseWindow.contentView.addChildView).toHaveBeenCalledWith(activeTab);
+      expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(activeTab);
       expect(activeTab.webContents.focus).toHaveBeenCalledTimes(1);
     });
     test('#23, setBounds should be called AFTER adding view to BaseWindow', async () => {
       // Given
-      mockBaseWindow.getContentBounds = jest.fn(() => ({width: 13, height: 83}));
       await waitForTrayInit(() => main.init());
+      const baseWindow = electron.BaseWindow.getAllWindows()[0];
+      baseWindow.getContentBounds = jest.fn(() => ({width: 13, height: 83}));
       // When
       mockIpc.listeners.activateTab({}, {id: 'validId'});
       // Then
-      expect(mockBaseWindow.contentView.addChildView).toHaveBeenCalledBefore(mockView.setBounds);
-      expect(mockBaseWindow.contentView.addChildView).toHaveBeenCalledBefore(mockView.setBounds);
-      expect(mockBaseWindow.contentView.addChildView).toHaveBeenCalledBefore(activeTab.setBounds);
-      expect(mockBaseWindow.contentView.addChildView).toHaveBeenCalledBefore(activeTab.setBounds);
+      expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(mockView.setBounds);
+      expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(mockView.setBounds);
+      expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(activeTab.setBounds);
+      expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(activeTab.setBounds);
     });
   });
   test('canNotify, should call to the canNotify method of the tabManager', () => {
@@ -145,17 +141,18 @@ describe('Main :: Tab listeners test suite', () => {
   test('notificationClick, should restore window and activate tab', async () => {
     // Given
     settings.updateSettings({startMinimized: true});
-    mockBaseWindow.restore = jest.fn();
-    mockBaseWindow.show = jest.fn();
     jest.spyOn(tabManagerModule, 'getTab').mockImplementation();
     await waitForTrayInit(() => main.init());
+    const baseWindow = electron.BaseWindow.getAllWindows()[0];
+    baseWindow.restore = jest.fn();
+    baseWindow.show = jest.fn();
     // When
     mockIpc.listeners.notificationClick({}, {tabId: 'validId'});
     // Then
     expect(mockView.webContents.send).toHaveBeenCalledWith('activateTabInContainer', {tabId: 'validId'});
-    expect(mockBaseWindow.restore).toHaveBeenCalledTimes(1);
-    expect(mockBaseWindow.show).toHaveBeenCalledTimes(1);
-    expect(mockBaseWindow.show).toHaveBeenCalledAfter(mockBaseWindow.restore);
+    expect(baseWindow.restore).toHaveBeenCalledTimes(1);
+    expect(baseWindow.show).toHaveBeenCalledTimes(1);
+    expect(baseWindow.show).toHaveBeenCalledAfter(baseWindow.restore);
     expect(tabManagerModule.getTab).toHaveBeenCalledWith('validId');
   });
   test('handleReload', () => {

@@ -182,7 +182,7 @@ describe('Settings module test suite', () => {
     let mainWindow;
     let openSettings;
     beforeEach(() => {
-      mainWindow = electron.baseWindowInstance;
+      mainWindow = new electron.BaseWindow();
       mainWindow.getContentBounds = jest.fn(() => ({width: 13, height: 37}));
       openSettings = settings.openSettingsDialog(mainWindow);
     });

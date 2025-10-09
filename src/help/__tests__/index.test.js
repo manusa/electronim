@@ -24,7 +24,7 @@ describe('Help module test suite', () => {
   describe('openHelpDialog', () => {
     let openHelp;
     beforeEach(() => {
-      openHelp = help.openHelpDialog(electron.baseWindowInstance);
+      openHelp = help.openHelpDialog(new electron.BaseWindow());
     });
     describe('webPreferences', () => {
       test('is sandboxed', () => {

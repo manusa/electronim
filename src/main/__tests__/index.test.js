@@ -19,7 +19,6 @@
 describe('Main :: Index module test suite', () => {
   let electron;
   let settings;
-  let mockBaseWindow;
   let appMenuModule;
   let main;
 
@@ -32,7 +31,6 @@ describe('Main :: Index module test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
     electron = await require('../../__tests__').testElectron();
-    mockBaseWindow = electron.baseWindowInstance;
     // Each view should be a separate instance
     electron.WebContentsView = jest.fn(() => require('../../__tests__').mockWebContentsViewInstance());
     settings = await require('../../__tests__').testSettings();
@@ -83,33 +81,37 @@ describe('Main :: Index module test suite', () => {
         }));
       });
       describe('=true', () => {
+        let baseWindow;
         beforeEach(async () => {
           settings.updateSettings({startMinimized: true});
           await waitForTrayInit(main.init);
+          baseWindow = electron.BaseWindow.getAllWindows()[0];
         });
         test('should call showInactive', () => {
-          expect(mockBaseWindow.showInactive).toHaveBeenCalledTimes(1);
+          expect(baseWindow.showInactive).toHaveBeenCalledTimes(1);
         });
         test('should call minimize after showInactive', () => {
-          expect(mockBaseWindow.minimize).toHaveBeenCalledAfter(mockBaseWindow.showInactive);
+          expect(baseWindow.minimize).toHaveBeenCalledAfter(baseWindow.showInactive);
         });
         test('should not call show', () => {
-          expect(mockBaseWindow.show).not.toHaveBeenCalled();
+          expect(baseWindow.show).not.toHaveBeenCalled();
         });
       });
       describe('=false', () => {
+        let baseWindow;
         beforeEach(async () => {
           settings.updateSettings({startMinimized: false});
           await waitForTrayInit(main.init);
+          baseWindow = electron.BaseWindow.getAllWindows()[0];
         });
         test('should call show', () => {
-          expect(mockBaseWindow.show).toHaveBeenCalledTimes(1);
+          expect(baseWindow.show).toHaveBeenCalledTimes(1);
         });
         test('should not call showInactive', () => {
-          expect(mockBaseWindow.showInactive).not.toHaveBeenCalled();
+          expect(baseWindow.showInactive).not.toHaveBeenCalled();
         });
         test('should not call minimize', () => {
-          expect(mockBaseWindow.minimize).not.toHaveBeenCalled();
+          expect(baseWindow.minimize).not.toHaveBeenCalled();
         });
       });
     });
@@ -134,20 +136,22 @@ describe('Main :: Index module test suite', () => {
   });
   describe('mainWindow events', () => {
     let views;
-    let mockBaseWindowGetContentBounds;
+    let baseWindow;
+    let baseWindowGetContentBounds;
 
     beforeEach(async () => {
       jest.spyOn(global, 'setTimeout');
       views = [];
-      mockBaseWindow.getSize = jest.fn(() => ([13, 37]));
-      mockBaseWindowGetContentBounds = new Promise(resolve => {
-        mockBaseWindow.getContentBounds = jest.fn(() => {
+      await waitForTrayInit(main.init);
+      baseWindow = electron.BaseWindow.getAllWindows()[0];
+      baseWindow.getSize = jest.fn(() => ([13, 37]));
+      baseWindowGetContentBounds = new Promise(resolve => {
+        baseWindow.getContentBounds = jest.fn(() => {
           resolve();
           return ({x: 0, y: 0, width: 10, height: 34});
         });
       });
-      mockBaseWindow.contentView.children = views;
-      await waitForTrayInit(main.init);
+      baseWindow.contentView.children = views;
     });
     describe('maximize', () => {
       test('single view, should set View to fit window', async () => {
@@ -160,14 +164,14 @@ describe('Main :: Index module test suite', () => {
         });
         views.push(singleView);
         // When
-        mockBaseWindow.listeners.maximize({sender: mockBaseWindow});
+        baseWindow.listeners.maximize({sender: baseWindow});
         await setBoundsPromise;
         // Then
         expect(singleView.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
       });
       test('should store new size in configuration file', () => {
         // When
-        mockBaseWindow.listeners.maximize({sender: mockBaseWindow});
+        baseWindow.listeners.maximize({sender: baseWindow});
         // Then
         expect(settings.loadSettings()).toEqual(expect.objectContaining({width: 13, height: 37}));
       });
@@ -175,17 +179,14 @@ describe('Main :: Index module test suite', () => {
     describe('restore (required for windows when starting minimized)', () => {
       let mockAppMenu;
       beforeEach(async () => {
-        mockAppMenu = new electron.WebContentsView();
-        mockAppMenu.isAppMenu = true;
-        jest.spyOn(appMenuModule, 'newAppMenu').mockImplementation(() => mockAppMenu);
-        await waitForTrayInit(main.init);
+        mockAppMenu = appMenuModule.newAppMenu.mock.results[0].value;
       });
       test('should set app-menu bounds', async () => {
         const setBoundsPromise = new Promise(resolve => {
           mockAppMenu.setBounds = jest.fn(resolve);
         });
         // When
-        mockBaseWindow.listeners.restore({sender: mockBaseWindow});
+        baseWindow.listeners.restore({sender: baseWindow});
         await setBoundsPromise;
         // Then
         expect(mockAppMenu.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
@@ -194,32 +195,29 @@ describe('Main :: Index module test suite', () => {
     describe('resize', () => {
       test('#78: should be run in separate setTimeout timer function to resize properly in Linux (no timers)', () => {
         // When
-        mockBaseWindow.listeners.resize({sender: mockBaseWindow});
+        baseWindow.listeners.resize({sender: baseWindow});
         // Then
         expect(setTimeout).toHaveBeenCalledTimes(1);
-        expect(mockBaseWindow.getContentBounds).not.toHaveBeenCalled();
+        expect(baseWindow.getContentBounds).not.toHaveBeenCalled();
       });
       test('#78: should be run in separate setTimeout timer function to resize properly in Linux (timers)', async () => {
         // When
-        mockBaseWindow.listeners.resize({sender: mockBaseWindow});
-        await mockBaseWindowGetContentBounds;
+        baseWindow.listeners.resize({sender: baseWindow});
+        await baseWindowGetContentBounds;
         // Then
         expect(setTimeout).toHaveBeenCalledTimes(1);
-        expect(mockBaseWindow.getContentBounds).toHaveBeenCalledTimes(1);
+        expect(baseWindow.getContentBounds).toHaveBeenCalledTimes(1);
       });
       test('should store new size in configuration file', () => {
         // When
-        mockBaseWindow.listeners.resize({sender: mockBaseWindow});
+        baseWindow.listeners.resize({sender: baseWindow});
         // Then
         expect(settings.loadSettings()).toEqual(expect.objectContaining({width: 13, height: 37}));
       });
       describe('app-menu', () => {
         let mockAppMenu;
         beforeEach(async () => {
-          mockAppMenu = new electron.WebContentsView();
-          mockAppMenu.isAppMenu = true;
-          jest.spyOn(appMenuModule, 'newAppMenu').mockImplementation(() => mockAppMenu);
-          await waitForTrayInit(main.init);
+          mockAppMenu = appMenuModule.newAppMenu.mock.results[0].value;
         });
         test('should set app-menu bounds', async () => {
           // Given
@@ -227,7 +225,7 @@ describe('Main :: Index module test suite', () => {
             mockAppMenu.setBounds = jest.fn(resolve);
           });
           // When
-          mockBaseWindow.listeners.resize({sender: mockBaseWindow});
+          baseWindow.listeners.resize({sender: baseWindow});
           await setBoundsPromise;
           // Then
           expect(mockAppMenu.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
@@ -236,18 +234,17 @@ describe('Main :: Index module test suite', () => {
           // Given
           mockAppMenu.setBounds = null;
           // When
-          mockBaseWindow.listeners.resize({sender: mockBaseWindow});
+          baseWindow.listeners.resize({sender: baseWindow});
           // Then
-          expect(mockBaseWindow.setBounds).not.toHaveBeenCalled();
+          expect(baseWindow.setBounds).not.toHaveBeenCalled();
         });
       });
       test('find-in-page, should set specific dialog bounds', () => {
         // Given
-        main.init();
         electron.ipcMain.listeners.findInPageOpen();
-        const findInPageDialog = mockBaseWindow.contentView.children.find(cv => cv.isFindInPage);
+        const findInPageDialog = baseWindow.contentView.children.find(cv => cv.isFindInPage);
         // When
-        mockBaseWindow.listeners.resize({sender: mockBaseWindow});
+        baseWindow.listeners.resize({sender: baseWindow});
         // Then
         expect(findInPageDialog.setBounds).toHaveBeenCalledWith({x: -390, y: 0, width: 400, height: 60});
       });
@@ -261,7 +258,7 @@ describe('Main :: Index module test suite', () => {
         });
         views.push(singleView);
         // When
-        mockBaseWindow.listeners.resize({sender: mockBaseWindow});
+        baseWindow.listeners.resize({sender: baseWindow});
         await setBoundsPromise;
         // Then
         expect(singleView.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
@@ -280,7 +277,7 @@ describe('Main :: Index module test suite', () => {
         });
         views.push(topBar, content);
         // When
-        mockBaseWindow.listeners.resize({sender: mockBaseWindow});
+        baseWindow.listeners.resize({sender: baseWindow});
         await setBoundsPromise;
         // Then
         expect(settings.loadSettings()).toEqual(expect.objectContaining({width: 13, height: 37}));

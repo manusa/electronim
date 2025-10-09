@@ -27,7 +27,6 @@ describe('Main :: Global listeners test suite', () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
     await require('../../__tests__').testUserAgent();
-    baseWindow = electron.baseWindowInstance;
     webContentsViewInstances = [];
     // Each view should be a separate instance
     electron.WebContentsView = jest.fn(() => {
@@ -48,6 +47,7 @@ describe('Main :: Global listeners test suite', () => {
     main = require('../');
     main.init();
     await trayInitPromise;
+    baseWindow = electron.BaseWindow.getAllWindows()[0];
   });
   test.each([
     'aboutOpenDialog', 'appMenuOpen', 'appMenuClose', 'closeDialog',
@@ -315,7 +315,6 @@ describe('Main :: Global listeners test suite', () => {
     ])('%s, with dialog visible, should not traverse', event => {
       // Given
       baseWindow.contentView.children = [new electron.WebContentsView()];
-      main.init();
       // When
       eventBus.listeners[event]();
       // Then

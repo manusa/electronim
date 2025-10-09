@@ -94,7 +94,6 @@ const mockBaseWindowInstance = () => {
 
 const mockElectronInstance = ({...overriddenProps} = {}) => {
   const webContentsViewInstance = mockWebContentsViewInstance();
-  const baseWindowInstance = mockBaseWindowInstance();
   const sessionInstance = {
     availableSpellCheckerLanguages: [],
     clearCache: jest.fn(),
@@ -105,11 +104,17 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     setSpellCheckerLanguages: jest.fn(),
     userAgentInterceptor: true
   };
+  const BaseWindow = jest.fn(() => {
+    const baseWindow = mockBaseWindowInstance();
+    BaseWindow.windows.push(baseWindow);
+    return baseWindow;
+  });
+  BaseWindow.windows = [];
+  BaseWindow.getAllWindows = jest.fn(() => BaseWindow.windows);
   const instance = {
     WebContentsView: jest.fn(() => webContentsViewInstance),
     webContentsViewInstance,
-    BaseWindow: jest.fn(() => baseWindowInstance),
-    baseWindowInstance,
+    BaseWindow,
     Menu: jest.fn(),
     MenuItem: jest.fn(),
     Notification: jest.fn(() => ({show: jest.fn()})),
@@ -195,5 +200,5 @@ const testElectron = () => {
 };
 
 module.exports = {
-  mockBaseWindowInstance, mockWebContentsViewInstance, mockElectronInstance, testElectron
+  mockWebContentsViewInstance, mockElectronInstance, testElectron
 };

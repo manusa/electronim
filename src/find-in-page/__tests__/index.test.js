@@ -25,7 +25,6 @@ describe('Find in Page :: main test suite', () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
     await require('../../__tests__').testSettings();
-    baseWindow = electron.baseWindowInstance;
     // Each view should be a separate instance
     electron.WebContentsView = jest.fn(() => require('../../__tests__').mockWebContentsViewInstance());
     eventBus = electron.ipcMain;
@@ -33,6 +32,7 @@ describe('Find in Page :: main test suite', () => {
       .mockImplementation(() => Promise.resolve({}));
     main = require('../../main');
     main.init();
+    baseWindow = electron.BaseWindow.getAllWindows()[0];
   });
   describe('findInPageOpen', () => {
     test('should return if find-in-page already open', () => {

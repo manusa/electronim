@@ -23,12 +23,12 @@ describe('Main :: Main window listeners test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
-    baseWindow = electron.baseWindowInstance;
     settings = await require('../../__tests__').testSettings();
     await require('../../__tests__').testUserAgent();
     const trayInitPromise = new Promise(resolve => electron.ipcMain.on('trayInit', resolve));
     require('../').init();
     await trayInitPromise;
+    baseWindow = electron.BaseWindow.getAllWindows()[0];
   });
   describe('close', () => {
     let event;
