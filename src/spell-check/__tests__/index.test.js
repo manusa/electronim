@@ -20,9 +20,7 @@ describe('Spell-check module test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
     settings = await require('../../__tests__').testSettings();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    electron = require('electron');
-    electron.MenuItem = jest.fn(({label, click}) => ({label, click}));
+    electron = require('../../__tests__').testElectron();
     spellCheck = require('../');
   });
   test('getEnabledDictionaries, should return persisted enabled dictionaries', () => {
@@ -40,13 +38,13 @@ describe('Spell-check module test suite', () => {
       // When
       spellCheck.loadDictionaries();
       // Then
-      expect(electron.webContentsViewInstance.webContents.destroy).toHaveBeenCalledTimes(1);
+      expect(electron.WebContentsView.mock.results[0].value.webContents.destroy).toHaveBeenCalledTimes(1);
     });
     test('should not destroy non-existing previous fakeRenderer', () => {
       // When
       spellCheck.loadDictionaries();
       // Then
-      expect(electron.webContentsViewInstance.webContents.destroy).not.toHaveBeenCalled();
+      expect(electron.WebContentsView.mock.results[0].value.webContents.destroy).not.toHaveBeenCalled();
     });
     test('should remove and then add handler', () => {
       // When
@@ -70,7 +68,7 @@ describe('Spell-check module test suite', () => {
       // When
       spellCheck.loadDictionaries();
       // Then
-      expect(electron.webContentsViewInstance.webContents.loadURL)
+      expect(electron.WebContentsView.mock.results[0].value.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/\/dictionary.renderer\/index.html$/));
     });
   });
@@ -79,8 +77,8 @@ describe('Spell-check module test suite', () => {
     let webContents;
     beforeEach(() => {
       params = {};
-      webContents = electron.webContentsViewInstance.webContents;
       spellCheck.loadDictionaries();
+      webContents = electron.WebContentsView.mock.results[0].value.webContents;
     });
     describe('contextMenuHandler', () => {
       test('with no misspelled word, should return empty array', async () => {
