@@ -187,5 +187,5 @@ const testElectron = () => {
 };
 
 module.exports = {
-  mockWebContentsViewInstance, mockElectronInstance, testElectron
+  mockWebContentsViewInstance, testElectron
 };

@@ -15,7 +15,6 @@
  */
 module.exports = {
   mockWebContentsViewInstance: require('./electron.js').mockWebContentsViewInstance,
-  mockElectronInstance: require('./electron.js').mockElectronInstance,
   spawnElectron: require('./playwright.js').spawnElectron,
   testElectron: require('./electron.js').testElectron,
   testSettings: require('./settings.js').testSettings,
