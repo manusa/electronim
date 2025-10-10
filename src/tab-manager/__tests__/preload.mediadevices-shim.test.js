@@ -33,15 +33,11 @@ describe('Browser mediaDevices shim test suite', () => {
     globalThis.APP_EVENTS = {
       desktopCapturerGetSources: 'desktopCapturerGetSources'
     };
-    jest.mock('electron', () => ({
-      ipcRenderer: {
-        invoke: jest.fn(async () => [
-          {id: '1337', name: '1337', thumbnail: mockThumbnail},
-          {id: '313373', name: 'Other Window', thumbnail: mockThumbnail}
-        ])
-      }
-    }));
-    electron = require('electron');
+    electron = require('../../__tests__').testElectron();
+    electron.ipcRenderer.invoke = jest.fn(async () => [
+      {id: '1337', name: '1337', thumbnail: mockThumbnail},
+      {id: '313373', name: 'Other Window', thumbnail: mockThumbnail}
+    ]);
     globalThis.navigator.mediaDevices.getUserMedia = jest.fn(um => um.video.mandatory.chromeMediaSourceId);
     document.body.innerHTML = '';
     jest.isolateModules(() => {
