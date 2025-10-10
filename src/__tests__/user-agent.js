@@ -62,6 +62,7 @@ const testUserAgent = async ({
   userAgent.BROWSER_VERSIONS.firefoxESR = null;
 
   const server = await createTestServer({
+    cors: true,
     routes: {
       '/chromium': {
         status: chromiumStatus,
