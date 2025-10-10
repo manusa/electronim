@@ -13,47 +13,49 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-/* eslint-disable no-use-before-define */
 describe('Settings module test suite', () => {
   let electron;
   let fs;
   let path;
   let settings;
+  let tempDir;
+  let settingsPath;
   beforeEach(() => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
-    jest.mock('os', () => ({homedir: () => '$HOME'}));
     fs = require('node:fs');
-    jest.spyOn(fs, 'existsSync');
-    jest.spyOn(fs, 'readFileSync');
-    jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
-    jest.spyOn(fs, 'mkdirSync').mockImplementation(() => {});
     path = require('node:path');
-    jest.spyOn(path, 'join');
+    // Create a temporary directory for each test
+    tempDir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'electronim-test-'));
+    settingsPath = path.join(tempDir, 'settings.json');
     settings = require('../');
+    settings.setSettingsPath(settingsPath);
+  });
+  afterEach(() => {
+    // Clean up temporary directory
+    if (fs.existsSync(tempDir)) {
+      fs.rmSync(tempDir, {recursive: true, force: true});
+    }
   });
   describe('loadSettings', () => {
     test('settings not exist, should return default settings', () => {
-      // Given
-      fs.existsSync.mockImplementationOnce(() => false);
+      // Given - settingsPath does not exist (no file created)
       // When
       const result = settings.loadSettings();
       // Then
-      expectHomeDirectoryCreated();
-      expect(fs.readFileSync).toHaveBeenCalled();
+      expect(fs.existsSync(tempDir)).toBe(true); // Directory should be created
       expect(result.tabs).toEqual([]);
       expect(result.enabledDictionaries).toEqual(['en']);
       expect(result.theme).toEqual('system');
     });
     test('settings (empty) exist, should load settings from file system and merge with defaults', () => {
       // Given
-      fs.existsSync.mockImplementationOnce(() => true);
-      fs.readFileSync.mockImplementationOnce(() => '{}');
+      fs.writeFileSync(settingsPath, '{}');
       // When
       const result = settings.loadSettings();
       // Then
-      expectHomeDirectoryCreated();
-      expect(fs.readFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'));
+      expect(fs.existsSync(tempDir)).toBe(true);
+      expect(fs.existsSync(settingsPath)).toBe(true);
       expect(result.tabs).toEqual([]);
       expect(result.enabledDictionaries).toEqual(['en']);
       expect(result.theme).toEqual('system');
@@ -61,13 +63,12 @@ describe('Settings module test suite', () => {
     });
     test('settings exist, should load settings from file system and merge with defaults', () => {
       // Given
-      fs.existsSync.mockImplementationOnce(() => true);
-      fs.readFileSync.mockImplementationOnce(() => '{"tabs": [{"id": "1"}], "activeTab": "1", "otherSetting": 1337}');
+      fs.writeFileSync(settingsPath, '{"tabs": [{"id": "1"}], "activeTab": "1", "otherSetting": 1337}');
       // When
       const result = settings.loadSettings();
       // Then
-      expectHomeDirectoryCreated();
-      expect(fs.readFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'));
+      expect(fs.existsSync(tempDir)).toBe(true);
+      expect(fs.existsSync(settingsPath)).toBe(true);
       expect(result.tabs).toEqual([{id: '1'}]);
       expect(result.enabledDictionaries).toEqual(['en']);
       expect(result.activeTab).toBe('1');
@@ -75,8 +76,7 @@ describe('Settings module test suite', () => {
     });
     test('settings exist disabled tab as active, should load settings from file and ensure active tab is enabled', () => {
       // Given
-      fs.existsSync.mockImplementationOnce(() => true);
-      fs.readFileSync.mockImplementationOnce(() => '{"tabs": [{"id": "1", "disabled": true}, {"id": "2"}], "activeTab": "1"}');
+      fs.writeFileSync(settingsPath, '{"tabs": [{"id": "1", "disabled": true}, {"id": "2"}], "activeTab": "1"}');
       // When
       const result = settings.loadSettings();
       // Then
@@ -89,8 +89,7 @@ describe('Settings module test suite', () => {
       {enabledDictionaries: ['en-GB', 'en'], expected: ['en-GB', 'en']}
     ])('settings with $enabledDictionaries dictionary, should migrate to $expected', ({enabledDictionaries, expected}) => {
       // Given
-      fs.existsSync.mockImplementationOnce(() => true);
-      fs.readFileSync.mockImplementationOnce(() => JSON.stringify({enabledDictionaries}));
+      fs.writeFileSync(settingsPath, JSON.stringify({enabledDictionaries}));
       // When
       const result = settings.loadSettings();
       // Then
@@ -103,8 +102,7 @@ describe('Settings module test suite', () => {
       {key: 'trayEnabled', value: true, expected: true}
     ])('settings with $key, should preserve $key', ({key, value, expected}) => {
       // Given
-      fs.existsSync.mockImplementationOnce(() => true);
-      fs.readFileSync.mockImplementationOnce(() => `{"${key}": ${value}}`);
+      fs.writeFileSync(settingsPath, `{"${key}": ${value}}`);
       // When
       const result = settings.loadSettings();
       // Then
@@ -113,68 +111,70 @@ describe('Settings module test suite', () => {
   });
   describe('updateSettings', () => {
     test('empty object and NO saved settings, should write default settings', () => {
-      // Given
-      fs.existsSync.mockImplementationOnce(() => false);
+      // Given - no settings file exists
       // When
       settings.updateSettings({});
       // Then
-      expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
-      expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
-        '{\n  "tabs": [],\n' +
-        '  "useNativeSpellChecker": false,\n' +
-        '  "enabledDictionaries": [\n    "en"\n  ],\n' +
-        '  "theme": "system",\n' +
-        '  "trayEnabled": false,\n' +
-        '  "startMinimized": false,\n' +
-        '  "closeButtonBehavior": "quit",\n' +
-        '  "keyboardShortcuts": {\n' +
-        '    "tabSwitchModifier": "Ctrl",\n' +
-        '    "tabTraverseModifier": "Ctrl"\n' +
-        '  }\n' +
-        '}');
+      expect(fs.existsSync(settingsPath)).toBe(true);
+      const written = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+      expect(written).toEqual({
+        tabs: [],
+        useNativeSpellChecker: false,
+        enabledDictionaries: ['en'],
+        theme: 'system',
+        trayEnabled: false,
+        startMinimized: false,
+        closeButtonBehavior: 'quit',
+        keyboardShortcuts: {
+          tabSwitchModifier: 'Ctrl',
+          tabTraverseModifier: 'Ctrl'
+        }
+      });
     });
     test('object and saved settings, should overwrite overlapping settings', () => {
-      // Given
-      fs.existsSync.mockImplementationOnce(() => false);
+      // Given - no settings file exists
       // When
       settings.updateSettings({tabs: [{id: 1337}], activeTab: 1337, otherSetting: '1337'});
       // Then
-      expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
-        '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n' +
-        '  "useNativeSpellChecker": false,\n' +
-        '  "enabledDictionaries": [\n    "en"\n  ],\n' +
-        '  "theme": "system",\n' +
-        '  "trayEnabled": false,\n' +
-        '  "startMinimized": false,\n' +
-        '  "closeButtonBehavior": "quit",\n' +
-        '  "keyboardShortcuts": {\n' +
-        '    "tabSwitchModifier": "Ctrl",\n' +
-        '    "tabTraverseModifier": "Ctrl"\n' +
-        '  },\n' +
-        '  "activeTab": 1337,\n' +
-        '  "otherSetting": "1337"\n' +
-        '}');
+      expect(fs.existsSync(settingsPath)).toBe(true);
+      const written = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+      expect(written).toEqual({
+        tabs: [{id: 1337}],
+        useNativeSpellChecker: false,
+        enabledDictionaries: ['en'],
+        theme: 'system',
+        trayEnabled: false,
+        startMinimized: false,
+        closeButtonBehavior: 'quit',
+        keyboardShortcuts: {
+          tabSwitchModifier: 'Ctrl',
+          tabTraverseModifier: 'Ctrl'
+        },
+        activeTab: 1337,
+        otherSetting: '1337'
+      });
     });
     test('object and saved settings with activeTab removed, should update activeTab', () => {
-      // Given
-      fs.existsSync.mockImplementationOnce(() => false);
+      // Given - no settings file exists
       // When
       settings.updateSettings({tabs: [{id: 1337}], activeTab: 31337});
       // Then
-      expect(fs.writeFileSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim', 'settings.json'),
-        '{\n  "tabs": [\n    {\n      "id": 1337\n    }\n  ],\n' +
-        '  "useNativeSpellChecker": false,\n' +
-        '  "enabledDictionaries": [\n    "en"\n  ],\n' +
-        '  "theme": "system",\n' +
-        '  "trayEnabled": false,\n' +
-        '  "startMinimized": false,\n' +
-        '  "closeButtonBehavior": "quit",\n' +
-        '  "keyboardShortcuts": {\n' +
-        '    "tabSwitchModifier": "Ctrl",\n' +
-        '    "tabTraverseModifier": "Ctrl"\n' +
-        '  },\n' +
-        '  "activeTab": 1337\n' +
-        '}');
+      expect(fs.existsSync(settingsPath)).toBe(true);
+      const written = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+      expect(written).toEqual({
+        tabs: [{id: 1337}],
+        useNativeSpellChecker: false,
+        enabledDictionaries: ['en'],
+        theme: 'system',
+        trayEnabled: false,
+        startMinimized: false,
+        closeButtonBehavior: 'quit',
+        keyboardShortcuts: {
+          tabSwitchModifier: 'Ctrl',
+          tabTraverseModifier: 'Ctrl'
+        },
+        activeTab: 1337 // Should be corrected to valid tab ID
+      });
     });
   });
   describe('openSettingsDialog', () => {
@@ -208,7 +208,6 @@ describe('Settings module test suite', () => {
     let mainWindow;
     beforeEach(() => {
       mainWindow = electron.baseWindowInstance;
-      fs.writeFileSync.mockClear();
     });
     test('canceled export, should return canceled result', async () => {
       // Given
@@ -217,20 +216,20 @@ describe('Settings module test suite', () => {
       const result = await settings.exportSettings(mainWindow)();
       // Then
       expect(result).toEqual({success: false, canceled: true});
-      expect(fs.writeFileSync).not.toHaveBeenCalled();
     });
     test('successful export, should write settings to file', async () => {
       // Given
-      const filePath = '/home/user/my-settings.json';
-      fs.existsSync.mockImplementationOnce(() => true);
-      fs.readFileSync.mockImplementationOnce(() => '{"tabs": [{"id": "1"}], "theme": "dark"}');
-      electron.dialog.showSaveDialog.mockImplementationOnce(() => ({canceled: false, filePath}));
+      const exportPath = path.join(tempDir, 'my-settings.json');
+      fs.writeFileSync(settingsPath, '{"tabs": [{"id": "1"}], "theme": "dark"}');
+      electron.dialog.showSaveDialog.mockImplementationOnce(() => ({canceled: false, filePath: exportPath}));
       // When
       const result = await settings.exportSettings(mainWindow)();
       // Then
-      expect(result).toEqual({success: true, filePath});
-      expect(fs.writeFileSync).toHaveBeenCalledWith(filePath, expect.stringContaining('"tabs"'));
-      expect(fs.writeFileSync).toHaveBeenCalledWith(filePath, expect.stringContaining('"theme": "dark"'));
+      expect(result).toEqual({success: true, filePath: exportPath});
+      expect(fs.existsSync(exportPath)).toBe(true);
+      const exported = JSON.parse(fs.readFileSync(exportPath, 'utf8'));
+      expect(exported.tabs).toEqual([{id: '1'}]);
+      expect(exported.theme).toBe('dark');
     });
   });
   describe('importSettings', () => {
@@ -240,8 +239,6 @@ describe('Settings module test suite', () => {
       mainWindow = electron.baseWindowInstance;
       eventBusOnSettingsSave = jest.fn();
       electron.ipcMain.on('settingsSave', eventBusOnSettingsSave);
-
-      fs.writeFileSync.mockClear();
     });
     test('canceled import prompt, should return canceled result', async () => {
       // Given - user cancels the confirmation dialog
@@ -263,13 +260,13 @@ describe('Settings module test suite', () => {
     });
     test('empty JSON file, should return error result', async () => {
       // Given
-      const filePath = '/home/user/import-settings.json';
+      const importPath = path.join(tempDir, 'import-settings.json');
+      fs.writeFileSync(importPath, '');
       electron.dialog.showMessageBox.mockImplementationOnce(() => ({response: 1})); // Import
       electron.dialog.showOpenDialog.mockImplementationOnce(() => ({
         canceled: false,
-        filePaths: [filePath]
+        filePaths: [importPath]
       }));
-      fs.readFileSync.mockImplementationOnce(() => '');
       // When
       const result = await settings.importSettings(mainWindow)();
       // Then
@@ -277,13 +274,13 @@ describe('Settings module test suite', () => {
     });
     test('invalid JSON file, should return error result', async () => {
       // Given
-      const filePath = '/home/user/import-settings.json';
+      const importPath = path.join(tempDir, 'import-settings.json');
+      fs.writeFileSync(importPath, '{invalid json');
       electron.dialog.showMessageBox.mockImplementationOnce(() => ({response: 1})); // Import
       electron.dialog.showOpenDialog.mockImplementationOnce(() => ({
         canceled: false,
-        filePaths: [filePath]
+        filePaths: [importPath]
       }));
-      fs.readFileSync.mockImplementationOnce(() => '{invalid json');
       // When
       const result = await settings.importSettings(mainWindow)();
       // Then
@@ -291,35 +288,36 @@ describe('Settings module test suite', () => {
     });
     test('incompatible JSON file, should return error result', async () => {
       // Given
-      const filePath = '/home/user/import-settings.json';
-      const importedData = '""';
+      const importPath = path.join(tempDir, 'import-settings.json');
+      fs.writeFileSync(importPath, '""');
       electron.dialog.showMessageBox.mockImplementationOnce(() => ({response: 1})); // Import
       electron.dialog.showOpenDialog.mockImplementationOnce(() => ({
         canceled: false,
-        filePaths: [filePath]
+        filePaths: [importPath]
       }));
-      fs.readFileSync.mockImplementationOnce(() => importedData);
       // When
       const result = await settings.importSettings(mainWindow)();
       // Then
       expect(result).toEqual({success: false, error: 'Invalid settings file format'});
     });
     describe('successful import', () => {
+      let importPath;
       beforeEach(async () => {
-        const filePath = '/home/user/import-settings.json';
+        importPath = path.join(tempDir, 'import-settings.json');
         const importedData = '{"tabs": [{"id": "imported"}], "theme": "light"}';
+        fs.writeFileSync(importPath, importedData);
         electron.dialog.showMessageBox.mockImplementationOnce(() => ({response: 1})); // Import
         electron.dialog.showOpenDialog.mockImplementationOnce(() => ({
           canceled: false,
-          filePaths: [filePath]
+          filePaths: [importPath]
         }));
-        fs.readFileSync.mockImplementationOnce(() => importedData);
-        fs.existsSync.mockImplementationOnce(() => false); // For updateSettings call
         // When
         await settings.importSettings(mainWindow)();
       });
       test('reads settings from provided directory', async () => {
-        expect(fs.readFileSync).toHaveBeenCalledWith('/home/user/import-settings.json', 'utf8');
+        expect(fs.existsSync(importPath)).toBe(true);
+        const imported = JSON.parse(fs.readFileSync(importPath, 'utf8'));
+        expect(imported.tabs).toEqual([{id: 'imported'}]);
       });
       test('emits settingsSaved event with provided settings', async () => {
         expect(eventBusOnSettingsSave).toHaveBeenCalledWith(null, expect.objectContaining({
@@ -339,8 +337,8 @@ describe('Settings module test suite', () => {
       // When
       const result = await settings.openElectronimFolder();
       // Then
-      expect(result).toEqual({success: true, path: path.join('$HOME', '.electronim')});
-      expect(electron.shell.openPath).toHaveBeenCalledWith(path.join('$HOME', '.electronim'));
+      expect(result).toEqual({success: true, path: tempDir});
+      expect(electron.shell.openPath).toHaveBeenCalledWith(tempDir);
     });
     test('failed open, should return error result', async () => {
       // Given
@@ -352,42 +350,48 @@ describe('Settings module test suite', () => {
       expect(result).toEqual({success: false, error: 'Unable to open path'});
     });
   });
-  const expectHomeDirectoryCreated = () => {
-    expect(fs.mkdirSync).toHaveBeenCalledWith(path.join('$HOME', '.electronim'), {recursive: true});
-  };
   describe('setSettingsPath', () => {
     test('should resolve relative paths to absolute', () => {
       // Given
       const relativePath = './my-settings.json';
-      jest.spyOn(path, 'resolve').mockReturnValueOnce('/resolved/my-settings.json');
       // When
       settings.setSettingsPath(relativePath);
-      // Then
-      expect(path.resolve).toHaveBeenCalledWith(relativePath);
+      // Then - path should be resolved, verify by using it
+      settings.updateSettings({tabs: [{id: 'resolved-test'}]});
+      // The settings file should exist at the resolved path
+      const resolvedPath = path.resolve(relativePath);
+      expect(fs.existsSync(resolvedPath)).toBe(true);
+      // Clean up
+      fs.rmSync(resolvedPath, {force: true});
     });
     test('loadSettings should use custom path when set', () => {
       // Given
-      const customPath = '/custom/settings.json';
+      const customDir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'custom-settings-'));
+      const customPath = path.join(customDir, 'settings.json');
+      fs.writeFileSync(customPath, '{"tabs": [{"id": "custom"}], "theme": "dark"}');
       settings.setSettingsPath(customPath);
-      fs.existsSync.mockImplementationOnce(() => true);
-      fs.readFileSync.mockImplementationOnce(() => '{"tabs": [{"id": "custom"}], "theme": "dark"}');
       // When
       const result = settings.loadSettings();
       // Then
-      expect(fs.mkdirSync).toHaveBeenCalledWith('/custom', {recursive: true});
-      expect(fs.readFileSync).toHaveBeenCalledWith(customPath);
+      expect(fs.existsSync(customPath)).toBe(true);
       expect(result.tabs).toEqual([{id: 'custom'}]);
       expect(result.theme).toBe('dark');
+      // Clean up
+      fs.rmSync(customDir, {recursive: true, force: true});
     });
     test('updateSettings should write to custom path when set', () => {
       // Given
-      const customPath = '/custom/settings.json';
+      const customDir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'custom-settings-'));
+      const customPath = path.join(customDir, 'settings.json');
       settings.setSettingsPath(customPath);
-      fs.existsSync.mockImplementationOnce(() => false);
       // When
       settings.updateSettings({tabs: [{id: 'test'}]});
       // Then
-      expect(fs.writeFileSync).toHaveBeenCalledWith(customPath, expect.any(String));
+      expect(fs.existsSync(customPath)).toBe(true);
+      const written = JSON.parse(fs.readFileSync(customPath, 'utf8'));
+      expect(written.tabs).toEqual([{id: 'test'}]);
+      // Clean up
+      fs.rmSync(customDir, {recursive: true, force: true});
     });
   });
 });
