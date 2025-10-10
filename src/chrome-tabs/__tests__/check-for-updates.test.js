@@ -29,16 +29,16 @@ describe('Check For Updates module test suite', () => {
         expect(version).toMatch(/^\d+\.\d+\.\d+$/);
       });
     });
-    describe('with mocked axios', () => {
-      let axios;
+    describe('with mocked http client', () => {
+      let httpClient;
       let getLatestRelease;
       beforeEach(() => {
-        jest.mock('axios');
-        axios = require('axios');
+        jest.mock('../../http-client');
+        httpClient = require('../../http-client').httpClient;
         getLatestRelease = require('../check-for-updates').getLatestRelease;
       });
       test('with unexpected status code throws error', async () => {
-        axios.get.mockImplementationOnce(async () => ({status: 200}));
+        httpClient.get.mockImplementationOnce(async () => ({status: 200}));
         await expect(getLatestRelease).rejects.toThrow('Unexpected response from GitHub');
       });
       test.each([
@@ -48,7 +48,7 @@ describe('Check For Updates module test suite', () => {
         ['1.33.7-beta.1', '1.33.7-beta.1']
       ])('version: transforms %s tag_name to %s', async (tag_name, expected) => {
         // Given
-        axios.get.mockImplementationOnce(async () => ({
+        httpClient.get.mockImplementationOnce(async () => ({
           status: 302,
           headers: {
             location: `https://github.com/manusa/electronim/releases/tag/${tag_name}`
@@ -66,7 +66,7 @@ describe('Check For Updates module test suite', () => {
         ['0.0.0', true]
       ])('matchesCurrent: compares %s with 0.0.0', async (tag_name, expected) => {
         // Given
-        axios.get.mockImplementationOnce(async () => ({
+        httpClient.get.mockImplementationOnce(async () => ({
           status: 302,
           headers: {
             location: `https://github.com/manusa/electronim/releases/tag/${tag_name}`

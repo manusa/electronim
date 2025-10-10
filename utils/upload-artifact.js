@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const axios = require('axios');
+const {httpClient} = require('../src/http-client');
 const fs = require('node:fs');
 const path = require('node:path');
 const errorHandler = require('./error-handler');
@@ -44,7 +44,7 @@ const validateFile = artifactFile => {
 };
 
 const getReleaseId = async version => {
-  const {data: {id}} = await axios({
+  const {data: {id}} = await httpClient({
     method: 'GET',
     url: `https://api.github.com/repos/manusa/electronim/releases/tags/v${version}`,
     headers: {
@@ -65,7 +65,7 @@ const uploadArtifact = async () => {
   const artifactStream = fs.createReadStream(artifactFile);
   artifactStream.on('error', errorHandler);
   const {size: artifactSize} = fs.statSync(artifactFile);
-  const {data: {id: assetId}} = await axios({
+  const {data: {id: assetId}} = await httpClient({
     method: 'POST',
     url: `https://uploads.github.com/repos/manusa/electronim/releases/${releaseId}/assets?name=${artifactFileName}`,
     headers: {
@@ -76,6 +76,7 @@ const uploadArtifact = async () => {
     },
     maxContentLength: Infinity,
     maxBodyLength: Infinity,
+    timeout: 300000, // 5 minute timeout for large file uploads
     data: artifactStream
   });
   if (!assetId) {
