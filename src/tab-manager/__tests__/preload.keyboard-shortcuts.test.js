@@ -14,17 +14,12 @@
    limitations under the License.
  */
 describe('Browser Keyboard Shortcuts test suite', () => {
-  let mockIpcRenderer;
+  let electron;
   let browserKeyboardShortcuts;
   beforeEach(() => {
-    globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
-    mockIpcRenderer = {
-      send: jest.fn()
-    };
     jest.resetModules();
-    jest.mock('electron', () => ({
-      ipcRenderer: mockIpcRenderer
-    }));
+    globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
+    electron = require('../../__tests__').testElectron();
     browserKeyboardShortcuts = require('../preload.keyboard-shortcuts');
   });
   test('initKeyboardShortcuts should add window event listeners', () => {
@@ -44,8 +39,8 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       // When
       globalThis.dispatchEvent(new KeyboardEvent('keyup', {key: 'F5'}));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('reload');
+      expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.send).toHaveBeenCalledWith('reload');
     });
   });
   describe('Control modified events', () => {
@@ -55,7 +50,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       // When
       globalThis.dispatchEvent(new KeyboardEvent('keyup', {key: 'NONEXISTENT', ctrlKey: true}));
       // Then
-      expect(mockIpcRenderer.send).not.toHaveBeenCalled();
+      expect(electron.ipcRenderer.send).not.toHaveBeenCalled();
     });
   });
   describe('Command modified events', () => {
@@ -65,8 +60,8 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       // When
       globalThis.dispatchEvent(new KeyboardEvent('keyup', {key: 'R', metaKey: true}));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('reload');
+      expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.send).toHaveBeenCalledWith('reload');
     });
   });
   describe('Mouse wheel events', () => {
@@ -77,8 +72,8 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       // When
       document.dispatchEvent(new WheelEvent('wheel', {ctrlKey: true, deltaY: -100}));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('zoomIn');
+      expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.send).toHaveBeenCalledWith('zoomIn');
     });
     test('cmd+scrollUp, should send zoomIn event', () => {
       // Given
@@ -87,8 +82,8 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       // When
       document.dispatchEvent(new WheelEvent('wheel', {metaKey: true, deltaY: -100}));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('zoomIn');
+      expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.send).toHaveBeenCalledWith('zoomIn');
     });
     test('scrollUp, should not send events', () => {
       // Given
@@ -97,7 +92,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       // When
       document.dispatchEvent(new WheelEvent('wheel', {deltaY: -100}));
       // Then
-      expect(mockIpcRenderer.send).not.toHaveBeenCalled();
+      expect(electron.ipcRenderer.send).not.toHaveBeenCalled();
     });
     test('ctrl+scrollDown, should send zoomOut event', () => {
       // Given
@@ -106,8 +101,8 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       // When
       document.dispatchEvent(new WheelEvent('wheel', {ctrlKey: true, deltaY: 100}));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('zoomOut');
+      expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.send).toHaveBeenCalledWith('zoomOut');
     });
     test('cmd+scrollDown, should send zoomOut event', () => {
       // Given
@@ -116,8 +111,8 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       // When
       document.dispatchEvent(new WheelEvent('wheel', {metaKey: true, deltaY: 100}));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('zoomOut');
+      expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.send).toHaveBeenCalledWith('zoomOut');
     });
     test('scrollDown, should not send events', () => {
       // Given
@@ -126,7 +121,7 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       // When
       document.dispatchEvent(new WheelEvent('wheel', {deltaY: 100}));
       // Then
-      expect(mockIpcRenderer.send).not.toHaveBeenCalled();
+      expect(electron.ipcRenderer.send).not.toHaveBeenCalled();
     });
   });
 });
