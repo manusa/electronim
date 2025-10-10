@@ -16,22 +16,16 @@
 const {waitFor} = require('@testing-library/dom');
 
 describe('Browser Spell Check test suite', () => {
-  let mockIpcRenderer;
-  let mockWebFrame;
+  let electron;
   let browserSpellCheck;
   beforeEach(() => {
     jest.resetModules();
     global.APP_EVENTS = require('../../constants').APP_EVENTS;
-    mockIpcRenderer = {
-      invoke: jest.fn(async () => ({useNativeSpellChecker: false}))
-    };
-    mockWebFrame = {
+    electron = require('../../__tests__').testElectron();
+    electron.ipcRenderer.invoke = jest.fn(async () => ({useNativeSpellChecker: false}));
+    electron.webFrame = {
       setSpellCheckProvider: jest.fn()
     };
-    jest.mock('electron', () => ({
-      ipcRenderer: mockIpcRenderer,
-      webFrame: mockWebFrame
-    }));
     browserSpellCheck = require('../preload.spell-check');
   });
   describe('initSpellChecker', () => {
@@ -41,24 +35,24 @@ describe('Browser Spell Check test suite', () => {
       // When
       browserSpellCheck.initSpellChecker();
       // Then
-      await waitFor(() => expect(mockWebFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
-      expect(mockWebFrame.setSpellCheckProvider).toHaveBeenCalledWith('eo', expect.any(Object));
-      expect(mockIpcRenderer.invoke).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('settingsLoad');
+      await waitFor(() => expect(electron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
+      expect(electron.webFrame.setSpellCheckProvider).toHaveBeenCalledWith('eo', expect.any(Object));
+      expect(electron.ipcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith('settingsLoad');
     });
     test('native, should load settings and skip processing', async () => {
       // Given
-      mockIpcRenderer.invoke = jest.fn(async () => ({useNativeSpellChecker: true}));
+      electron.ipcRenderer.invoke = jest.fn(async () => ({useNativeSpellChecker: true}));
       // When
       await browserSpellCheck.initSpellChecker();
       // Then
-      expect(mockWebFrame.setSpellCheckProvider).not.toHaveBeenCalled();
-      expect(mockIpcRenderer.invoke).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('settingsLoad');
+      expect(electron.webFrame.setSpellCheckProvider).not.toHaveBeenCalled();
+      expect(electron.ipcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith('settingsLoad');
     });
     test('retries in case of failure', async () => {
       // Given
-      mockIpcRenderer.invoke = jest.fn()
+      electron.ipcRenderer.invoke = jest.fn()
         .mockImplementationOnce(async () => {
           throw new Error('failed');
         })
@@ -66,21 +60,21 @@ describe('Browser Spell Check test suite', () => {
       // When
       browserSpellCheck.initSpellChecker();
       // Then
-      await waitFor(() => expect(mockWebFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
-      expect(mockIpcRenderer.invoke).toHaveBeenCalledTimes(2);
-      expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('settingsLoad');
+      await waitFor(() => expect(electron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
+      expect(electron.ipcRenderer.invoke).toHaveBeenCalledTimes(2);
+      expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith('settingsLoad');
     });
   });
   test('spellCheck, should invoke dictionaryGetMisspelled and trigger callback', async () => {
     // Given
     const callback = jest.fn();
     browserSpellCheck.initSpellChecker();
-    await waitFor(() => expect(mockWebFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(electron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
     // When
-    await mockWebFrame.setSpellCheckProvider.mock.calls[0][1].spellCheck([], callback);
+    await electron.webFrame.setSpellCheckProvider.mock.calls[0][1].spellCheck([], callback);
     // Then
-    expect(mockIpcRenderer.invoke).toHaveBeenCalledTimes(2);
-    expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('dictionaryGetMisspelled', []);
+    expect(electron.ipcRenderer.invoke).toHaveBeenCalledTimes(2);
+    expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith('dictionaryGetMisspelled', []);
     expect(callback).toHaveBeenCalledTimes(1);
   });
 });
