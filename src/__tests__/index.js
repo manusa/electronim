@@ -20,6 +20,5 @@ module.exports = {
   testElectron: require('./electron.js').testElectron,
   testSettings: require('./settings.js').testSettings,
   testUserAgent: require('./user-agent.js').testUserAgent,
-  testCheckForUpdates: require('./check-for-updates.js').testCheckForUpdates,
   createTestServer: require('./http-server.js').createTestServer
 };
