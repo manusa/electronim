@@ -18,13 +18,8 @@ describe('Browser Notification Shim test suite', () => {
   let electron;
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('electron', () => ({
-      ipcRenderer: {
-        send: jest.fn(),
-        sendSync: jest.fn(() => true)
-      }
-    }));
-    electron = require('electron');
+    electron = require('../../__tests__').testElectron();
+    electron.ipcRenderer.sendSync = jest.fn(() => true);
     globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
     NativeNotification = jest.fn();
     NativeNotification.maxActions = jest.fn();
