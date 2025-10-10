@@ -14,11 +14,11 @@
    limitations under the License.
  */
 describe('Settings Module preload test suite', () => {
+  let electron;
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance({
-      ipcRenderer: 'the-ipc-renderer'
-    }));
+    electron = require('../../__tests__').testElectron();
+    electron.ipcRenderer = 'the-ipc-renderer';
   });
   describe('preload (just for coverage and sanity, see bundle tests)', () => {
     beforeEach(() => {
