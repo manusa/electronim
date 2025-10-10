@@ -16,8 +16,18 @@
 const {ELECTRONIM_VERSION} = require('../constants');
 const {httpClient} = require('../http-client');
 const GITHUB_RELEASES = 'https://github.com/manusa/electronim/releases';
-const GITHUB_RELEASES_LATEST = `${GITHUB_RELEASES}/latest`;
+
+// URL can be overridden for testing purposes
+let githubReleasesLatest = `${GITHUB_RELEASES}/latest`;
+
 const TAG_MATCHER = new RegExp(`${GITHUB_RELEASES}/tag/(.+)`);
+
+// For testing purposes only
+const setUrl = ({githubReleasesLatestUrl}) => {
+  if (githubReleasesLatestUrl) {
+    githubReleasesLatest = githubReleasesLatestUrl;
+  }
+};
 
 /**
  * Checks if there is a new version of Electronim available and compares it with the current version.
@@ -26,7 +36,7 @@ const TAG_MATCHER = new RegExp(`${GITHUB_RELEASES}/tag/(.+)`);
  */
 const getLatestRelease = async () => {
   // Use HTTP endpoint instead of API to avoid rate limits
-  const response = await httpClient.get(GITHUB_RELEASES_LATEST, {
+  const response = await httpClient.get(githubReleasesLatest, {
     headers: {Accept: '*/*'},
     maxRedirects: 0,
     validateStatus: null
@@ -44,4 +54,4 @@ const getLatestRelease = async () => {
   });
 };
 
-module.exports = {getLatestRelease};
+module.exports = {getLatestRelease, setUrl};
