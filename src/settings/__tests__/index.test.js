@@ -21,8 +21,7 @@ describe('Settings module test suite', () => {
   let settings;
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    electron = require('electron');
+    electron = require('../../__tests__').testElectron();
     jest.mock('os', () => ({homedir: () => '$HOME'}));
     fs = require('node:fs');
     jest.spyOn(fs, 'existsSync');
