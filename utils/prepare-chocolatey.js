@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const crypto = require('crypto');
+const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const errorHandler = require('./error-handler');

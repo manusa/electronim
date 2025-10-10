@@ -18,7 +18,7 @@
 
 const electron = require('electron');
 
-const proc = require('child_process');
+const proc = require('node:child_process');
 
 const child = proc.spawn(electron, [__dirname], {stdio: 'inherit', windowsHide: false, cwd: __dirname});
 child.on('close', code => process.exit(code));

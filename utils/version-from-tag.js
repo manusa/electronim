@@ -15,7 +15,7 @@
    limitations under the License.
  */
 
-const childProcess = require('child_process');
+const childProcess = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const errorHandler = require('./error-handler');
