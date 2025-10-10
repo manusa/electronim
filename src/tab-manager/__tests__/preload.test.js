@@ -19,8 +19,7 @@ describe('Tab Manager Module preload test suite', () => {
   let mockElectron;
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    mockElectron = require('electron');
+    mockElectron = require('../../__tests__').testElectron();
     // noinspection JSConstantReassignment,JSValidateTypes
     mockElectron.webFrame = {setSpellCheckProvider: jest.fn()};
     mockElectron.ipcRenderer.invoke = async () => ({useNativeSpellChecker: false});
