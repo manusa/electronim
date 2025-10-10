@@ -35,7 +35,7 @@ axiosRetry(httpClient, {
   retryCondition: error => {
     // Retry on network errors or 5xx server errors
     return axiosRetry.isNetworkOrIdempotentRequestError(error)
-      || (error.response && error.response.status >= 500);
+      || (error?.response?.status >= 500);
   }
 });
 
