@@ -27,9 +27,10 @@ const path = require('node:path');
  *   - routes[path].status - HTTP status code (default: 200)
  *   - routes[path].contentType - Content-Type header (default: 'application/json')
  *   - routes[path].body - Response body (string or object, objects are JSON.stringified)
+ * @param {boolean} options.cors - Enable CORS headers (default: false)
  * @returns {Promise<{server: http.Server, port: number, url: string, close: Function}>}
  */
-const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html', handler, routes} = {}) => {
+const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html', handler, routes, cors = false} = {}) => {
   let htmlContent;
   if (htmlFile && !handler && !routes) {
     const htmlPath = path.join(__dirname, htmlFile);
@@ -43,6 +44,15 @@ const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html',
       return;
     }
 
+    const headers = {
+      'Content-Type': 'text/html',
+      'Cache-Control': 'no-cache'
+    };
+
+    if (cors) {
+      headers['Access-Control-Allow-Origin'] = '*';
+    }
+
     // Use routes if provided
     if (routes && routes[req.url]) {
       const route = routes[req.url];
@@ -50,27 +60,16 @@ const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html',
       const contentType = route.contentType || 'application/json';
       const body = typeof route.body === 'object' ? JSON.stringify(route.body) : route.body;
 
-      res.writeHead(status, {
-        'Content-Type': contentType,
-        'Content-Length': Buffer.byteLength(body),
-        'Cache-Control': 'no-cache',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      });
+      headers['Content-Type'] = contentType;
+      headers['Content-Length'] = Buffer.byteLength(body);
+      res.writeHead(status, headers);
       res.end(body);
       return;
     }
 
     // Default: serve HTML file
-    res.writeHead(200, {
-      'Content-Type': 'text/html',
-      'Content-Length': Buffer.byteLength(htmlContent),
-      'Cache-Control': 'no-cache',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type'
-    });
+    headers['Content-Length'] = Buffer.byteLength(htmlContent);
+    res.writeHead(200, headers);
     res.end(htmlContent);
   });
 
