@@ -14,26 +14,21 @@
    limitations under the License.
  */
 import {jest} from '@jest/globals';
-import {loadDOM} from '../../__tests__/index.mjs';
 import {fireEvent} from '@testing-library/dom';
+import {loadDOM} from '../../__tests__/index.mjs';
 
 describe('Help in Browser test suite', () => {
-  let mockIpcRenderer;
+  let electron;
   beforeEach(async () => {
     jest.resetModules();
-    mockIpcRenderer = {
-      send: jest.fn()
+    electron = (await import('../../__tests__/electron.js')).testElectron();
+    electron.contextBridge = {
+      exposeInMainWorld: jest.fn((api, object) => {
+        globalThis[api] = object;
+      })
     };
-    jest.mock('electron', () => ({
-      ipcRenderer: mockIpcRenderer,
-      contextBridge: {
-        exposeInMainWorld: jest.fn((api, object) => {
-          window[api] = object;
-        })
-      }
-    }));
     await import('../../../bundles/help.preload');
-    window.ipcRenderer = mockIpcRenderer;
+    globalThis.ipcRenderer = electron.ipcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
   test('render, should render all documents', () => {
@@ -55,8 +50,8 @@ describe('Help in Browser test suite', () => {
       // When
       fireEvent.click(document.querySelector('.top-app-bar .leading-navigation-icon'));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('closeDialog');
+      expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.send).toHaveBeenCalledWith('closeDialog');
     });
   });
 });
