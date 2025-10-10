@@ -30,7 +30,7 @@ describe('Main :: Index module test suite', () => {
 
   beforeEach(async () => {
     jest.resetModules();
-    electron = await require('../../__tests__').testElectron();
+    electron = require('../../__tests__').testElectron();
     // Each view should be a separate instance
     electron.WebContentsView = jest.fn(() => require('../../__tests__').mockWebContentsViewInstance());
     settings = await require('../../__tests__').testSettings();
