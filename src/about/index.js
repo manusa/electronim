@@ -14,7 +14,7 @@
    limitations under the License.
  */
 const {WebContentsView} = require('electron');
-const path = require('path');
+const path = require('node:path');
 const {showDialog} = require('../base-window');
 const {handleRedirect, windowOpenHandler} = require('../tab-manager/redirect');
 

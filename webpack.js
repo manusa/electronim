@@ -15,7 +15,7 @@
    limitations under the License.
  */
 const webpack = require('webpack');
-const path = require('path');
+const path = require('node:path');
 const fsp = require('fs/promises');
 const fs = require('fs');
 

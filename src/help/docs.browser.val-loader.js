@@ -14,7 +14,7 @@
    limitations under the License.
  */
 const fs = require('fs');
-const path = require('path');
+const path = require('node:path');
 const md = require('markdown-it')({html: true, xhtmlOut: true}); // NOSONAR
 
 const DOCS_DIR = path.resolve(__dirname, '..', '..', 'docs');

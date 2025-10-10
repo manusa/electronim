@@ -29,7 +29,7 @@ describe('Settings module test suite', () => {
     jest.spyOn(fs, 'readFileSync');
     jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
     jest.spyOn(fs, 'mkdirSync').mockImplementation(() => {});
-    path = require('path');
+    path = require('node:path');
     jest.spyOn(path, 'join');
     settings = require('../');
   });
