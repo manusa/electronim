@@ -16,7 +16,7 @@
  */
 const axios = require('axios');
 const fs = require('fs');
-const path = require('path');
+const path = require('node:path');
 const errorHandler = require('./error-handler');
 const {extractVersionFromTag} = require('./common');
 

@@ -16,7 +16,7 @@
  */
 const crypto = require('crypto');
 const fs = require('fs');
-const path = require('path');
+const path = require('node:path');
 const errorHandler = require('./error-handler');
 
 const license = () => {

@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const path = require('path');
+const path = require('node:path');
 const {WebContentsView} = require('electron');
 const tabManager = require('../tab-manager');
 const {findDialog} = require('../base-window');

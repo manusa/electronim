@@ -15,7 +15,7 @@
  */
 const {ipcMain: eventBus, Tray} = require('electron');
 const {APP_EVENTS} = require('../constants');
-const path = require('path');
+const path = require('node:path');
 const {getPlatform, loadSettings} = require('../settings');
 let tray;
 

@@ -14,7 +14,7 @@
    limitations under the License.
  */
 const {app, WebContentsView, session} = require('electron');
-const path = require('path');
+const path = require('node:path');
 const {APP_EVENTS} = require('../constants');
 const {loadSettings, updateSettings} = require('../settings');
 const {getEnabledDictionaries, getUseNativeSpellChecker} = require('../spell-check');
