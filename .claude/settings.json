@@ -6,6 +6,7 @@
       "Bash(npm run pretest:*)",
       "Bash(git add:*)",
       "Bash(npm test:*)",
+      "Bash(NODE_OPTIONS=--experimental-vm-modules npm test:*)",
       "Bash(npm run test:e2e)",
       "Bash(npm run test:e2e:*)"
     ],
