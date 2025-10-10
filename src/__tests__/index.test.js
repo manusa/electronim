@@ -62,4 +62,61 @@ describe('Entrypoint test suite', () => {
         .toHaveBeenCalledWith('web-contents-created', require('../base-window').registerAppShortcuts);
     });
   });
+  describe('Custom settings path', () => {
+    let originalArgv;
+    let tmpDir;
+    let customSettingsPath;
+    let settings;
+    beforeEach(() => {
+      originalArgv = process.argv;
+      jest.resetModules();
+      tmpDir = require('node:fs').mkdtempSync(require('node:path').join(require('node:os').tmpdir(), 'electronim-test-'));
+      customSettingsPath = require('node:path').join(tmpDir, 'custom-settings.json');
+      require('node:fs').writeFileSync(customSettingsPath, JSON.stringify({
+        tabs: [{id: 'custom-tab', name: 'Custom Tab', url: 'https://custom.example.com'}],
+        customTestMarker: 'loaded-from-custom-path'
+      }));
+    });
+    afterEach(() => {
+      process.argv = originalArgv;
+      if (tmpDir) {
+        require('node:fs').rmSync(tmpDir, {recursive: true, force: true});
+      }
+    });
+    describe('when --settings-path flag is provided with valid path', () => {
+      beforeEach(() => {
+        process.argv = ['node', 'electron', '--settings-path', customSettingsPath];
+        require('../');
+        settings = require('../settings');
+      });
+      test('loads settings from the custom path', () => {
+        const loadedSettings = settings.loadSettings();
+        expect(loadedSettings.customTestMarker).toBe('loaded-from-custom-path');
+        expect(loadedSettings.tabs[0].id).toBe('custom-tab');
+      });
+    });
+    describe('when --settings-path flag is not provided', () => {
+      beforeEach(() => {
+        process.argv = ['node', 'electron'];
+        require('../');
+        settings = require('../settings');
+      });
+      test('loads settings from default path', () => {
+        const loadedSettings = settings.loadSettings();
+        expect(loadedSettings.customTestMarker).toBeUndefined();
+      });
+    });
+    describe('when running as packaged app (without defaultApp)', () => {
+      beforeEach(() => {
+        process.defaultApp = false;
+        process.argv = ['electron', '--settings-path', customSettingsPath];
+        require('../');
+        settings = require('../settings');
+      });
+      test('loads settings from the custom path', () => {
+        const loadedSettings = settings.loadSettings();
+        expect(loadedSettings.customTestMarker).toBe('loaded-from-custom-path');
+      });
+    });
+  });
 });
