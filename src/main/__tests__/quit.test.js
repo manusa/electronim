@@ -18,8 +18,7 @@ describe('Main :: Quit test suite', () => {
   let quit;
   beforeEach(() => {
     jest.resetModules();
-    jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
-    electron = require('electron');
+    electron = require('../../__tests__').testElectron();
     quit = require('../').quit;
   });
   describe('quit()', () => {
