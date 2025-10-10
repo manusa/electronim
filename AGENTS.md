@@ -26,7 +26,7 @@ npm install  # Install dependencies - takes ~55 seconds
 - `npm run build:win` - Builds and bundles the application for Windows systems
 
 ### Testing
-- `npm test` - Run full test suite - takes ~13 seconds, runs 656 tests. NEVER CANCEL - Set timeout to 30+ minutes.
+- `npm test` - Run full test suite - takes ~13 seconds, runs 689 tests. NEVER CANCEL - Set timeout to 30+ minutes.
 - `npm run test:e2e` - Run end-to-end tests to verify application startup - takes ~10-15 seconds
 - The project uses Jest with ECMAScript modules requiring the experimental VM modules flag for Node.js
 
@@ -151,25 +151,78 @@ The settings system uses Preact components with Material Design 3 styling:
 - Spell checking logic in `src/spell-check/`
 
 ### Testing Guidelines
+
+**CRITICAL: Minimize mocking as much as possible. Use real implementations and test infrastructure.**
+
+#### Test Organization
 - Tests are always located in nested `__tests__` directories next to the code they test
 - Test files should follow existing patterns in `src/**/__tests__/`:
   - Global `describe` block to define the test suite: component or behavior being tested
   - Nested `describe` blocks for scenarios or behaviors being tested
   - Use `beforeEach` and `afterEach` for setup and teardown of the test environment
   - Use `test` blocks for individual test cases with descriptive names
-  - Test blocks should have a single assertion or behavior being tested (the `beforeEach` can be used to perform the `act`or `when` step if needed, then the `test` block can just have the `assert` step)
+  - Test blocks should have a single assertion or behavior being tested (the `beforeEach` can be used to perform the `act` or `when` step if needed, then the `test` block can just have the `assert` step)
   - Use `expect` assertions to validate outcomes
-- Use JSDOM environment for browser component tests. These are the tests that have the `.browser.test.mjs` extension:
-  - Use Testing Library for DOM interaction and assertions
-- Mocking should be prevented as much as possible to ensure real behavior is tested
-- The `src/__tests__/index.js` provides utilities to mock Electron APIs and test-prepared modules such as settings.
 - Always test both valid and invalid input scenarios
+
+#### Testing Infrastructure (Use These Instead of Mocking!)
+The project provides several utilities in `src/__tests__/` to facilitate testing WITHOUT mocking:
+
+1. **HTTP Server Testing** (`src/__tests__/http-server.js`):
+   - `createTestServer(options)` - Creates a real HTTP server for testing
+   - Options:
+     - `port` - Port to listen on (default: 0 for random)
+     - `handler` - Custom request handler function(req, res)
+     - `routes` - Map of URL paths to response configurations
+     - `cors` - Enable CORS headers (default: false)
+   - Returns: `{server, port, url, close}`
+   - **USE THIS** instead of mocking HTTP clients or axios
+   - Example:
+     ```javascript
+     const testServer = await createTestServer({
+       handler: (req, res) => {
+         res.writeHead(200, {'Content-Type': 'application/json'});
+         res.end(JSON.stringify({data: 'test'}));
+       }
+     });
+     const response = await httpClient.get(testServer.url);
+     await testServer.close();
+     ```
+
+2. **Electron API Utilities** (`src/__tests__/electron.js`):
+   - Provides test-ready Electron API mocks
+   - Use `testElectron()` helper for setting up Electron mocks in tests
+   - **DO NOT** create your own Electron mocks - use these utilities
+
+3. **Settings Testing** (`src/__tests__/settings.js`):
+   - Provides utilities for testing with settings
+   - Use these instead of manually mocking settings
+
+4. **DOM Testing** (`src/__tests__/dom.mjs`):
+   - Utilities for DOM manipulation in tests
+   - Used for browser-based component tests
+
+5. **User Agent Testing** (`src/__tests__/user-agent.js`):
+   - Utilities for user agent testing
+
+#### Browser Component Testing
+- Browser test files use `.browser.test.mjs` extension
+- Use JSDOM environment for browser component tests
+- Use Testing Library for DOM interaction and assertions
+- Example: `src/settings/__tests__/settings.browser.test.mjs`
+
+#### Key Testing Principles
+1. **Avoid mocking whenever possible** - Use real implementations
+2. **Use provided test infrastructure** - Don't reinvent testing utilities
+3. **Test actual behavior** - Verify observable outcomes, not implementation details
+4. **Keep tests simple and readable** - Tests should be easy to understand
+5. **Don't tie tests to implementation** - Tests should survive refactoring
 
 ## Timing Expectations
 
 - **npm install**: ~55 seconds
 - **Linting and bundling** (`npm run pretest`): ~2 seconds
-- **Test suite** (`npm test`): ~13 seconds (641 tests)
+- **Test suite** (`npm test`): ~13 seconds (689 tests)
 - **Application startup**: ~3-5 seconds
 - **Platform builds**: 10-20 minutes (network dependent)
 
@@ -217,11 +270,11 @@ added 872 packages, and audited 873 packages in 55s
 5 vulnerabilities (1 low, 2 moderate, 2 high)
 ```
 
-### Sample Test Output  
+### Sample Test Output
 ```
-Test Suites: 47 passed, 47 total
-Tests:       486 passed, 486 total  
+Test Suites: 51 passed, 51 total
+Tests:       689 passed, 689 total
 Snapshots:   0 total
 Time:        13.069 s
-Coverage:    Lines: 96.8% | Functions: 94.2% | Branches: 89.4% | Statements: 96.8%
+Coverage:    Lines: ~96% | Functions: ~94% | Branches: ~89% | Statements: ~96%
 ```
