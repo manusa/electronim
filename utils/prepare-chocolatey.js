@@ -15,7 +15,7 @@
    limitations under the License.
  */
 const crypto = require('crypto');
-const fs = require('fs');
+const fs = require('node:fs');
 const path = require('node:path');
 const errorHandler = require('./error-handler');
 

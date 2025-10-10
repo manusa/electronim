@@ -16,8 +16,8 @@
  */
 const webpack = require('webpack');
 const path = require('node:path');
-const fsp = require('fs/promises');
-const fs = require('fs');
+const fsp = require('node:fs/promises');
+const fs = require('node:fs');
 
 const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION} = require('./src/constants');
 

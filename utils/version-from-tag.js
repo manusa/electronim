@@ -16,7 +16,7 @@
  */
 
 const childProcess = require('child_process');
-const fs = require('fs');
+const fs = require('node:fs');
 const path = require('node:path');
 const errorHandler = require('./error-handler');
 const {extractVersionFromTag} = require('./common');

@@ -24,7 +24,7 @@ describe('Settings module test suite', () => {
     jest.mock('electron', () => require('../../__tests__').mockElectronInstance());
     electron = require('electron');
     jest.mock('os', () => ({homedir: () => '$HOME'}));
-    fs = require('fs');
+    fs = require('node:fs');
     jest.spyOn(fs, 'existsSync');
     jest.spyOn(fs, 'readFileSync');
     jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {});

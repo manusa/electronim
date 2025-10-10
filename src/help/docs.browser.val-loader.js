@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const fs = require('fs');
+const fs = require('node:fs');
 const path = require('node:path');
 const md = require('markdown-it')({html: true, xhtmlOut: true}); // NOSONAR
 
