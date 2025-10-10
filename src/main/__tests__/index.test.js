@@ -152,6 +152,8 @@ describe('Main :: Index module test suite', () => {
         });
       });
       baseWindow.contentView.children = views;
+      // Clear setTimeout spy after initialization to only count calls from the actual test
+      setTimeout.mockClear();
     });
     describe('maximize', () => {
       test('single view, should set View to fit window', async () => {

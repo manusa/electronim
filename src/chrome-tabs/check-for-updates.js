@@ -13,8 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const axios = require('axios');
 const {ELECTRONIM_VERSION} = require('../constants');
+const {httpClient} = require('../http-client');
 const GITHUB_RELEASES = 'https://github.com/manusa/electronim/releases';
 const GITHUB_RELEASES_LATEST = `${GITHUB_RELEASES}/latest`;
 const TAG_MATCHER = new RegExp(`${GITHUB_RELEASES}/tag/(.+)`);
@@ -26,7 +26,7 @@ const TAG_MATCHER = new RegExp(`${GITHUB_RELEASES}/tag/(.+)`);
  */
 const getLatestRelease = async () => {
   // Use HTTP endpoint instead of API to avoid rate limits
-  const response = await axios.get(GITHUB_RELEASES_LATEST, {
+  const response = await httpClient.get(GITHUB_RELEASES_LATEST, {
     headers: {Accept: '*/*'},
     maxRedirects: 0,
     validateStatus: null

@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const axios = require('axios');
+const {httpClient} = require('../http-client');
 
 // URLs can be overridden for testing purposes
 let chromiumVersionsUrl = `https://versionhistory.googleapis.com/v1/chrome/platforms/linux/channels/stable/versions/all/releases?filter=endtime>${new Date().toISOString()}`;
@@ -40,19 +40,19 @@ const USER_AGENT_INTERCEPTOR_FILTER = {
 };
 
 const latestChromium = async () => {
-  const {data} = await axios.get(chromiumVersionsUrl);
+  const {data} = await httpClient.get(chromiumVersionsUrl);
   const stableVersion = data.releases
     .flatMap(release => release.version);
   return stableVersion && stableVersion.length > 0 ? stableVersion[0] : null;
 };
 
 const latestFirefox = async () => {
-  const {data: versions} = await axios.get(firefoxVersionsUrl);
+  const {data: versions} = await httpClient.get(firefoxVersionsUrl);
   return versions && versions.LATEST_FIREFOX_VERSION ? versions.LATEST_FIREFOX_VERSION : null;
 };
 
 const latestFirefoxESR = async () => {
-  const {data: versions} = await axios.get(firefoxVersionsUrl);
+  const {data: versions} = await httpClient.get(firefoxVersionsUrl);
   return versions && versions.FIREFOX_ESR ? versions.FIREFOX_ESR : null;
 };
 
