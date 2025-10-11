@@ -21,15 +21,7 @@ describe('Browser Notification Shim test suite', () => {
     electron = require('../../__tests__').testElectron();
     electron.ipcRenderer.sendSync = jest.fn(() => true);
     globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
-    NativeNotification = jest.fn();
-    NativeNotification.maxActions = jest.fn();
-    NativeNotification.permission = jest.fn();
-    NativeNotification.requestPermission = jest.fn();
-    NativeNotification.prototype = {
-      actions: 'Actions', badge: 'Badge', body: 'Body', data: 'Data', dir: 'Dir', lang: 'Lang', tag: 'Tag', icon: 'Icon',
-      image: 'Image', renotify: 'Renotify', requireInteraction: 'RequireInteraction', silent: 'Silent',
-      timestamp: 'Timestamp', title: 'Title', vibrate: 'Vibrate', close: jest.fn()
-    };
+    NativeNotification = electron.Notification;
     globalThis.Notification = NativeNotification;
   });
   describe('Notifications are enabled for the current tab', () => {
@@ -63,7 +55,7 @@ describe('Browser Notification Shim test suite', () => {
       expect(notification.title).toBe('Title');
       expect(notification.vibrate).toBe('Vibrate');
       notification.close();
-      expect(NativeNotification.prototype.close).toHaveBeenCalledTimes(1);
+      expect(NativeNotification.mock.results[0].value.close).toHaveBeenCalledTimes(1);
     });
     test('Notification should ALWAYS be clickable', () => {
       // Given

@@ -101,6 +101,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     setSpellCheckerLanguages: jest.fn(),
     userAgentInterceptor: true
   };
+  // BaseWindow
   const BaseWindow = jest.fn(() => {
     const baseWindow = newBaseWindowInstance();
     BaseWindow.windows.push(baseWindow);
@@ -108,11 +109,21 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
   });
   BaseWindow.windows = [];
   BaseWindow.getAllWindows = jest.fn(() => BaseWindow.windows);
+  // ipcMain
   const ipcMain = new events.EventEmitter();
   ipcMain.emit = jest.fn(ipcMain.emit);
   ipcMain.handle = jest.fn((channel, func) => ipcMain.on(channel, func));
   ipcMain.removeHandler = jest.fn(ipcMain.removeAllListeners);
   ipcMain.send = (channel, ...args) => ipcMain.rawListeners(channel)[0](...args);
+  // Notification
+  const Notification = jest.fn(() => ({
+    actions: 'Actions', badge: 'Badge', body: 'Body', data: 'Data', dir: 'Dir', lang: 'Lang', tag: 'Tag', icon: 'Icon',
+    image: 'Image', renotify: 'Renotify', requireInteraction: 'RequireInteraction', silent: 'Silent',
+    timestamp: 'Timestamp', title: 'Title', vibrate: 'Vibrate', close: jest.fn(), show: jest.fn()
+  }));
+  Notification.maxActions = jest.fn(() => 1);
+  Notification.permission = jest.fn(() => 'granted');
+  Notification.requestPermission = jest.fn();
   const instance = {
     WebContentsView: jest.fn(() => webContentsViewInstance),
     webContentsViewInstance,
@@ -126,7 +137,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
       return menuInstance;
     }),
     MenuItem: jest.fn(def => def),
-    Notification: jest.fn(() => ({show: jest.fn()})),
+    Notification,
     Tray: jest.fn(() => {
       const tray = new events.EventEmitter();
       tray.destroy = jest.fn(tray.destroy);
