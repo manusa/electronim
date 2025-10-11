@@ -26,6 +26,7 @@ There are 3 options for installing and running ElectronIM in Linux:
 1. Compressed tar.gz package
 2. AppImage package
 3. Snap package
+4. Fedora COPR repository
 
 ##### Compressed tar.gz
 
@@ -62,6 +63,23 @@ Once snapd is installed in your system, run the following command to install Ele
 
 ```
 $ sudo snap install electronim
+```
+
+##### [Fedora COPR](https://copr.fedorainfracloud.org/coprs/manusa/electronim/) repository
+
+For Fedora, CentOS, RHEL, and other compatible distributions, ElectronIM is available through a COPR repository.
+
+To install ElectronIM from the COPR repository:
+
+```
+$ sudo dnf copr enable manusa/electronim
+$ sudo dnf install electronim
+```
+
+Once installed, you can launch ElectronIM from your application menu or by running:
+
+```
+$ electronim
 ```
 
 ## Settings
