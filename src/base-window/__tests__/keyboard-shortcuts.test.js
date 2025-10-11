@@ -72,4 +72,91 @@ describe('Main :: Global Keyboard Shortcuts module test suite', () => {
       expect(inputEvent.preventDefault).not.toHaveBeenCalled();
     });
   });
+  describe('eventKeyForModifier', () => {
+    let settings;
+    beforeEach(async () => {
+      settings = await require('../../__tests__').testSettings();
+    });
+    describe('alt modifier', () => {
+      beforeEach(() => {
+        settings.updateSettings({
+          keyboardShortcuts: {
+            tabSwitchModifier: 'alt',
+            tabTraverseModifier: 'alt'
+          }
+        });
+        require('../keyboard-shortcuts').initKeyboardEvents();
+      });
+      test('tabSwitchModifier set to "alt" triggers tabSwitchToPosition with alt key', () => {
+        view.listeners['before-input-event'](inputEvent, {key: '1', alt: true});
+        expect(electron.ipcMain.emit).toHaveBeenCalledWith('tabSwitchToPosition', 1);
+      });
+      test('tabTraverseModifier set to "alt" triggers tabTraverseNext with alt+Tab', () => {
+        view.listeners['before-input-event'](inputEvent, {key: 'Tab', alt: true});
+        expect(electron.ipcMain.emit).toHaveBeenCalledWith('tabTraverseNext');
+      });
+    });
+    describe('meta/cmd/command modifiers', () => {
+      test.each(['meta', 'cmd', 'command'])('tabSwitchModifier set to "%s" triggers tabSwitchToPosition with meta key', async modifier => {
+        settings.updateSettings({
+          keyboardShortcuts: {
+            tabSwitchModifier: modifier,
+            tabTraverseModifier: 'Ctrl'
+          }
+        });
+        require('../keyboard-shortcuts').initKeyboardEvents();
+        view.listeners['before-input-event'](inputEvent, {key: '1', meta: true});
+        expect(electron.ipcMain.emit).toHaveBeenCalledWith('tabSwitchToPosition', 1);
+      });
+      test.each(['meta', 'cmd', 'command'])('tabTraverseModifier set to "%s" triggers tabTraverseNext with meta+Tab', async modifier => {
+        settings.updateSettings({
+          keyboardShortcuts: {
+            tabSwitchModifier: 'Ctrl',
+            tabTraverseModifier: modifier
+          }
+        });
+        require('../keyboard-shortcuts').initKeyboardEvents();
+        view.listeners['before-input-event'](inputEvent, {key: 'Tab', meta: true});
+        expect(electron.ipcMain.emit).toHaveBeenCalledWith('tabTraverseNext');
+      });
+    });
+    describe('control/ctrl modifiers', () => {
+      test.each(['control', 'ctrl'])('tabSwitchModifier set to "%s" triggers tabSwitchToPosition with control key', async modifier => {
+        settings.updateSettings({
+          keyboardShortcuts: {
+            tabSwitchModifier: modifier,
+            tabTraverseModifier: 'Ctrl'
+          }
+        });
+        require('../keyboard-shortcuts').initKeyboardEvents();
+        view.listeners['before-input-event'](inputEvent, {key: '1', control: true});
+        expect(electron.ipcMain.emit).toHaveBeenCalledWith('tabSwitchToPosition', 1);
+      });
+    });
+    describe('unknown modifier (default case)', () => {
+      test('throws error when tabSwitchModifier is set to unknown value', async () => {
+        settings.updateSettings({
+          keyboardShortcuts: {
+            tabSwitchModifier: 'invalidModifier',
+            tabTraverseModifier: 'Ctrl'
+          }
+        });
+        expect(() => {
+          require('../keyboard-shortcuts').initKeyboardEvents();
+        }).toThrow('Unknown modifier: invalidModifier');
+      });
+      test('throws error when tabTraverseModifier is set to unknown value', async () => {
+        settings = await require('../../__tests__').testSettings();
+        settings.updateSettings({
+          keyboardShortcuts: {
+            tabSwitchModifier: 'Ctrl',
+            tabTraverseModifier: 'unknownKey'
+          }
+        });
+        expect(() => {
+          require('../keyboard-shortcuts').initKeyboardEvents();
+        }).toThrow('Unknown modifier: unknownKey');
+      });
+    });
+  });
 });
