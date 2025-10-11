@@ -116,20 +116,20 @@ describe('Tab Manager context-menu test suite', () => {
       });
       test('click, should go back', async () => {
         // When
-        electron.MenuItem.mock.calls.filter(c => c[0].label === 'Back')[0][0].click();
+        electron.MenuItem.mock.calls.find(c => c[0].label === 'Back')[0].click();
         // Then
         expect(tabManager.getTab('1337').webContents.navigationHistory.goBack).toHaveBeenCalledTimes(1);
       });
     });
     test('Reload click, should trigger reload', async () => {
       // When
-      electron.MenuItem.mock.calls.filter(c => c[0].label === 'Reload')[0][0].click();
+      electron.MenuItem.mock.calls.find(c => c[0].label === 'Reload')[0].click();
       // Then
       expect(tabManager.getTab('1337').webContents.reload).toHaveBeenCalledTimes(1);
     });
     test('DevTools click, should open devtools', async () => {
       // When
-      electron.MenuItem.mock.calls.filter(c => c[0].label === 'DevTools')[0][0].click();
+      electron.MenuItem.mock.calls.find(c => c[0].label === 'DevTools')[0].click();
       // Then
       expect(tabManager.getTab('1337').webContents.openDevTools).toHaveBeenCalledTimes(1);
     });
@@ -145,7 +145,7 @@ describe('Tab Manager context-menu test suite', () => {
         });
         test('click, should cut', async () => {
           // When
-          electron.MenuItem.mock.calls.filter(c => c[0].label === 'Cut')[0][0].click();
+          electron.MenuItem.mock.calls.find(c => c[0].label === 'Cut')[0].click();
           // Then
           expect(tabManager.getTab('1337').webContents.cut).toHaveBeenCalledTimes(1);
         });
@@ -170,7 +170,7 @@ describe('Tab Manager context-menu test suite', () => {
         });
         test('click, should copy', async () => {
           // When
-          electron.MenuItem.mock.calls.filter(c => c[0].label === 'Copy')[0][0].click();
+          electron.MenuItem.mock.calls.find(c => c[0].label === 'Copy')[0].click();
           // Then
           expect(tabManager.getTab('1337').webContents.copy).toHaveBeenCalledTimes(1);
         });
@@ -186,7 +186,7 @@ describe('Tab Manager context-menu test suite', () => {
         });
         test('click, should copy image', async () => {
           // When
-          electron.MenuItem.mock.calls.filter(c => c[0].label === 'Copy image')[0][0].click();
+          electron.MenuItem.mock.calls.find(c => c[0].label === 'Copy image')[0].click();
           // Then
           expect(tabManager.getTab('1337').webContents.copyImageAt).toHaveBeenCalledTimes(1);
         });
@@ -203,7 +203,7 @@ describe('Tab Manager context-menu test suite', () => {
       });
       test('click, should paste', async () => {
         // When
-        electron.MenuItem.mock.calls.filter(c => c[0].label === 'Paste')[0][0].click();
+        electron.MenuItem.mock.calls.find(c => c[0].label === 'Paste')[0].click();
         // Then
         expect(tabManager.getTab('1337').webContents.paste).toHaveBeenCalledTimes(1);
       });

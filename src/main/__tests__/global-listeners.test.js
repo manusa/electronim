@@ -201,7 +201,7 @@ describe('Main :: Global listeners test suite', () => {
     eventBus.send('helpOpenDialog', {sender: baseWindow.webContents});
     // Then
     const view = electron.WebContentsView.mock.results
-      .map(r => r.value).filter(bv => bv.webContents.loadedUrl.endsWith('help/index.html'))[0];
+      .map(r => r.value).find(bv => bv.webContents.loadedUrl.endsWith('help/index.html'));
     expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(view);
     expect(view.webContents.loadURL)
       .toHaveBeenCalledWith(expect.stringMatching(/help\/index.html$/));
@@ -242,7 +242,7 @@ describe('Main :: Global listeners test suite', () => {
     eventBus.send('settingsOpenDialog');
     // Then
     const view = webContentsViewInstances
-      .filter(wcv => wcv.webContents.loadedUrl.endsWith('settings/index.html'))[0];
+      .find(wcv => wcv.webContents.loadedUrl.endsWith('settings/index.html'));
     expect(view).toBeDefined();
     expect(view.isDialog).toBe(true);
     expect(view.webContents.loadURL)
@@ -266,7 +266,7 @@ describe('Main :: Global listeners test suite', () => {
       eventBus.send('settingsSave', {}, {tabs: [{id: 1337}], enabledDictionaries: []});
       // Then
       const view = webContentsViewInstances
-        .filter(wcv => wcv.webContents.loadedUrl.endsWith('spell-check/dictionary.renderer/index.html'))[0];
+        .find(wcv => wcv.webContents.loadedUrl.endsWith('spell-check/dictionary.renderer/index.html'));
       expect(view.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/spell-check\/dictionary.renderer\/index.html$/));
     });
