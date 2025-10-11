@@ -105,17 +105,16 @@ describe('docs.browser.val-loader test suite', () => {
       Object.entries(docsObject.docs).forEach(([, html]) => {
         expect(html).toBeDefined();
         expect(typeof html).toBe('string');
-        // HTML should contain tags (unless empty file)
-        if (html.length > 0) {
-          expect(html).toMatch(/<[^>]+>/);
-        }
+        // All markdown files start with # heading, so HTML should contain h1 tags
+        expect(html).toContain('<h1');
+        expect(html).toContain('</h1>');
       });
     });
 
     test('renders XHTML-compliant output with self-closing tags', () => {
-      // At least one doc should have self-closing tags
+      // At least one doc should have self-closing tags (e.g., <br />)
       const allHtml = Object.values(docsObject.docs).join('');
-      expect(allHtml).toMatch(/<[^>]+\/>/);
+      expect(allHtml).toContain('<br />');
     });
 
     test('prefixes relative URLs with ../../docs/', () => {
