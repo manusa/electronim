@@ -124,23 +124,25 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
   Notification.maxActions = jest.fn(() => 1);
   Notification.permission = jest.fn(() => 'granted');
   Notification.requestPermission = jest.fn();
+  const Menu = jest.fn(() => {
+    const menuInstance = {
+      entries: [],
+      append: jest.fn(e => menuInstance.entries.push(e)),
+      popup: jest.fn()
+    };
+    return menuInstance;
+  });
   const instance = {
     WebContentsView: jest.fn(() => webContentsViewInstance),
     webContentsViewInstance,
     BaseWindow,
-    Menu: jest.fn(() => {
-      const menuInstance = {
-        entries: [],
-        append: jest.fn(e => menuInstance.entries.push(e)),
-        popup: jest.fn()
-      };
-      return menuInstance;
-    }),
+    Menu,
     MenuItem: jest.fn(def => def),
     Notification,
     Tray: jest.fn(() => {
       const tray = new events.EventEmitter();
       tray.destroy = jest.fn(tray.destroy);
+      tray.setContextMenu = jest.fn();
       return tray;
     }),
     app: {
