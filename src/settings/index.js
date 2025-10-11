@@ -21,6 +21,7 @@ const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, KEYBOARD_SHORTCUTS} = require('../con
 const {showDialog} = require('../base-window');
 
 const APP_DIR = '.electronim';
+const APP_NAME = 'electronim';
 const SETTINGS_FILE = 'settings.json';
 const DEFAULT_SETTINGS = {
   tabs: [],
@@ -45,9 +46,33 @@ const webPreferences = {
   partition: 'persist:electronim'
 };
 
+/**
+ * Determines the appropriate config directory based on XDG Base Directory specification.
+ * Provides backward compatibility by checking for legacy directory first.
+ *
+ * Priority order:
+ * 1. Legacy directory (~/.electronim) if it exists
+ * 2. XDG_CONFIG_HOME/electronim if XDG_CONFIG_HOME is set
+ * 3. ~/.config/electronim (XDG default)
+ *
+ * @returns {string} The path to the config directory
+ */
+const getConfigDirectory = () => {
+  const legacyDir = path.join(HOME_DIR, APP_DIR);
+
+  // Check if legacy directory exists (backward compatibility)
+  if (fs.existsSync(legacyDir)) {
+    return legacyDir;
+  }
+
+  // Use XDG_CONFIG_HOME if set, otherwise default to ~/.config
+  const xdgConfigHome = process.env.XDG_CONFIG_HOME || path.join(HOME_DIR, '.config');
+  return path.join(xdgConfigHome, APP_NAME);
+};
+
 // Overrideable for tests
 const paths = {};
-paths.appDir = path.join(HOME_DIR, APP_DIR);
+paths.appDir = getConfigDirectory();
 paths.settingsPath = path.join(paths.appDir, SETTINGS_FILE);
 
 /**
