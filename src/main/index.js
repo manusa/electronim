@@ -112,6 +112,13 @@ const handleMainWindowResize = () => {
 
 const handleTabReload = event => event.sender.reloadIgnoringCache();
 
+const handleSpecificTabReload = (_event, {tabId}) => {
+  const tab = tabManager.getTab(tabId);
+  if (tab) {
+    tab.webContents.reloadIgnoringCache();
+  }
+};
+
 const handleTabTraverse = getTabIdFunction => () => {
   if (mainWindow.contentView.children.length === 1) {
     return;
@@ -176,6 +183,7 @@ const initTabListener = () => {
     activateTab({tabId});
   });
   eventBus.on(APP_EVENTS.reload, handleTabReload);
+  eventBus.on(APP_EVENTS.reloadTab, handleSpecificTabReload);
   eventBus.on(APP_EVENTS.tabReorder, handleTabReorder);
   eventBus.on(APP_EVENTS.zoomIn, handleZoomIn);
   eventBus.on(APP_EVENTS.zoomOut, handleZoomOut);
