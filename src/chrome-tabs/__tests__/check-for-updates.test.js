@@ -19,11 +19,11 @@
 const {createTestServer} = require('../../__tests__');
 
 describe('Check For Updates module test suite', () => {
+  beforeEach(() => {
+    jest.resetModules();
+  });
   describe('getLatestRelease', () => {
     describe('with real call', () => {
-      beforeEach(() => {
-        jest.resetModules();
-      });
       test('retrieves the latest released version from GitHub', async () => {
         // When
         const {version} = await require('../check-for-updates').getLatestRelease();
@@ -32,25 +32,23 @@ describe('Check For Updates module test suite', () => {
       });
     });
     describe('with HTTP server', () => {
-      beforeEach(() => {
-        jest.resetModules();
-      });
       let server;
       let testHandler;
       beforeAll(async () => {
         server = await createTestServer({
           handler: (req, res) => {
-            if (testHandler) {
-              testHandler(req, res);
-            } else {
-              res.writeHead(500, {'Content-Type': 'text/plain'});
-              res.end('No handler set');
-            }
+            testHandler(req, res);
           }
         });
       });
       afterAll(async () => {
         await server.close();
+      });
+      beforeEach(() => {
+        const checkForUpdates = require('../check-for-updates');
+        checkForUpdates.setUrl({
+          githubReleasesLatestUrl: `${server.url}/latest`
+        });
       });
       test('with unexpected status code throws error', async () => {
         // Given
@@ -59,9 +57,6 @@ describe('Check For Updates module test suite', () => {
           res.end();
         };
         const checkForUpdates = require('../check-for-updates');
-        checkForUpdates.setUrl({
-          githubReleasesLatestUrl: `${server.url}/latest`
-        });
         // When & Then
         await expect(checkForUpdates.getLatestRelease()).rejects.toThrow('Unexpected response from GitHub');
       });
@@ -80,9 +75,6 @@ describe('Check For Updates module test suite', () => {
           res.end();
         };
         const checkForUpdates = require('../check-for-updates');
-        checkForUpdates.setUrl({
-          githubReleasesLatestUrl: `${server.url}/latest`
-        });
         // When
         const {version} = await checkForUpdates.getLatestRelease();
         // Then
@@ -103,9 +95,6 @@ describe('Check For Updates module test suite', () => {
           res.end();
         };
         const checkForUpdates = require('../check-for-updates');
-        checkForUpdates.setUrl({
-          githubReleasesLatestUrl: `${server.url}/latest`
-        });
         // When
         const {matchesCurrent} = await checkForUpdates.getLatestRelease();
         // Then
