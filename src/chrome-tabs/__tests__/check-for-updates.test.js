@@ -18,17 +18,12 @@
  */
 const {createTestServer} = require('../../__tests__');
 
-// Store test servers in global scope to ensure cleanup
-if (!globalThis.__testHttpServers__) {
-  globalThis.__testHttpServers__ = [];
-}
-
 describe('Check For Updates module test suite', () => {
-  beforeEach(() => {
-    jest.resetModules();
-  });
   describe('getLatestRelease', () => {
     describe('with real call', () => {
+      beforeEach(() => {
+        jest.resetModules();
+      });
       test('retrieves the latest released version from GitHub', async () => {
         // When
         const {version} = await require('../check-for-updates').getLatestRelease();
@@ -37,19 +32,36 @@ describe('Check For Updates module test suite', () => {
       });
     });
     describe('with HTTP server', () => {
-      test('with unexpected status code throws error', async () => {
-        // Given
-        const checkForUpdates = require('../check-for-updates');
-        const server = await createTestServer({
+      beforeEach(() => {
+        jest.resetModules();
+      });
+      let server;
+      let testHandler;
+      beforeAll(async () => {
+        server = await createTestServer({
           handler: (req, res) => {
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end();
+            if (testHandler) {
+              testHandler(req, res);
+            } else {
+              res.writeHead(500, {'Content-Type': 'text/plain'});
+              res.end('No handler set');
+            }
           }
         });
+      });
+      afterAll(async () => {
+        await server.close();
+      });
+      test('with unexpected status code throws error', async () => {
+        // Given
+        testHandler = (req, res) => {
+          res.writeHead(200, {'Content-Type': 'text/plain'});
+          res.end();
+        };
+        const checkForUpdates = require('../check-for-updates');
         checkForUpdates.setUrl({
           githubReleasesLatestUrl: `${server.url}/latest`
         });
-        globalThis.__testHttpServers__.push(server);
         // When & Then
         await expect(checkForUpdates.getLatestRelease()).rejects.toThrow('Unexpected response from GitHub');
       });
@@ -60,20 +72,17 @@ describe('Check For Updates module test suite', () => {
         ['1.33.7-beta.1', '1.33.7-beta.1']
       ])('version: transforms %s tag_name to %s', async (tag_name, expected) => {
         // Given
+        testHandler = (req, res) => {
+          res.writeHead(302, {
+            location: `https://github.com/manusa/electronim/releases/tag/${tag_name}`,
+            'Content-Type': 'text/plain'
+          });
+          res.end();
+        };
         const checkForUpdates = require('../check-for-updates');
-        const server = await createTestServer({
-          handler: (req, res) => {
-            res.writeHead(302, {
-              location: `https://github.com/manusa/electronim/releases/tag/${tag_name}`,
-              'Content-Type': 'text/plain'
-            });
-            res.end();
-          }
-        });
         checkForUpdates.setUrl({
           githubReleasesLatestUrl: `${server.url}/latest`
         });
-        globalThis.__testHttpServers__.push(server);
         // When
         const {version} = await checkForUpdates.getLatestRelease();
         // Then
@@ -86,20 +95,17 @@ describe('Check For Updates module test suite', () => {
         ['0.0.0', true]
       ])('matchesCurrent: compares %s with 0.0.0', async (tag_name, expected) => {
         // Given
+        testHandler = (req, res) => {
+          res.writeHead(302, {
+            location: `https://github.com/manusa/electronim/releases/tag/${tag_name}`,
+            'Content-Type': 'text/plain'
+          });
+          res.end();
+        };
         const checkForUpdates = require('../check-for-updates');
-        const server = await createTestServer({
-          handler: (req, res) => {
-            res.writeHead(302, {
-              location: `https://github.com/manusa/electronim/releases/tag/${tag_name}`,
-              'Content-Type': 'text/plain'
-            });
-            res.end();
-          }
-        });
         checkForUpdates.setUrl({
           githubReleasesLatestUrl: `${server.url}/latest`
         });
-        globalThis.__testHttpServers__.push(server);
         // When
         const {matchesCurrent} = await checkForUpdates.getLatestRelease();
         // Then
