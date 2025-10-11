@@ -77,7 +77,7 @@ const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html',
   await new Promise((resolve, reject) => {
     server.listen(port, 'localhost', err => {
       if (err) {
-        reject(err);
+        reject(err instanceof Error ? err : new Error(String(err)));
       } else {
         resolve();
       }
