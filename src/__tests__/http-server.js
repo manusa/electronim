@@ -54,7 +54,7 @@ const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html',
     }
 
     // Use routes if provided
-    if (routes && routes[req.url]) {
+    if (routes?.[req.url]) {
       const route = routes[req.url];
       const status = route.status || 200;
       const contentType = route.contentType || 'application/json';
