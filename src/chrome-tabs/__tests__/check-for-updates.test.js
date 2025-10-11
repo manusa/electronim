@@ -32,20 +32,13 @@ describe('Check For Updates module test suite', () => {
       });
     });
     describe('with HTTP server', () => {
-      let server;
       let testHandler;
-      beforeAll(async () => {
-        server = await createTestServer({
-          handler: (req, res) => {
-            testHandler(req, res);
-          }
+      let checkForUpdates;
+      beforeEach(async () => {
+        const server = await createTestServer({
+          handler: (req, res) => testHandler(req, res)
         });
-      });
-      afterAll(async () => {
-        await server.close();
-      });
-      beforeEach(() => {
-        const checkForUpdates = require('../check-for-updates');
+        checkForUpdates = require('../check-for-updates');
         checkForUpdates.setUrl({
           githubReleasesLatestUrl: `${server.url}/latest`
         });
@@ -56,7 +49,6 @@ describe('Check For Updates module test suite', () => {
           res.writeHead(200, {'Content-Type': 'text/plain'});
           res.end();
         };
-        const checkForUpdates = require('../check-for-updates');
         // When & Then
         await expect(checkForUpdates.getLatestRelease()).rejects.toThrow('Unexpected response from GitHub');
       });
@@ -74,7 +66,6 @@ describe('Check For Updates module test suite', () => {
           });
           res.end();
         };
-        const checkForUpdates = require('../check-for-updates');
         // When
         const {version} = await checkForUpdates.getLatestRelease();
         // Then
@@ -94,7 +85,6 @@ describe('Check For Updates module test suite', () => {
           });
           res.end();
         };
-        const checkForUpdates = require('../check-for-updates');
         // When
         const {matchesCurrent} = await checkForUpdates.getLatestRelease();
         // Then
