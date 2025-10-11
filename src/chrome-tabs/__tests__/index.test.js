@@ -64,4 +64,74 @@ describe('Chrome Tabs Module module test suite', () => {
       expect(unref).toHaveBeenCalled();
     });
   });
+  describe('context menu', () => {
+    let tabContainer;
+    beforeEach(() => {
+      tabContainer = chromeTabs.newTabContainer();
+    });
+    describe('registration', () => {
+      test('should register context-menu listener on tab container', () => {
+        // Then
+        expect(tabContainer.webContents.on).toHaveBeenCalledWith('context-menu', expect.any(Function));
+      });
+    });
+    describe('menu items', () => {
+      let menu;
+      beforeEach(() => {
+        // When - trigger context menu
+        const contextMenuHandler = tabContainer.listeners['context-menu'];
+        contextMenuHandler({}, {x: 100, y: 200});
+        menu = electron.Menu.mock.results[electron.Menu.mock.results.length - 1].value;
+      });
+      test('should create menu with three items', () => {
+        expect(menu.entries).toHaveLength(3);
+      });
+      test('should have Settings menu item', () => {
+        expect(menu.entries[0]).toEqual(expect.objectContaining({label: 'Settings'}));
+      });
+      test('should have Help menu item', () => {
+        expect(menu.entries[1]).toEqual(expect.objectContaining({label: 'Help'}));
+      });
+      test('should have DevTools menu item', () => {
+        expect(menu.entries[2]).toEqual(expect.objectContaining({label: 'DevTools'}));
+      });
+      test('should popup menu at cursor position', () => {
+        expect(menu.popup).toHaveBeenCalledWith({x: 100, y: 200});
+      });
+    });
+    describe('menu actions', () => {
+      let menu;
+      let settingsListener;
+      let helpListener;
+      beforeEach(() => {
+        // Given - register event listeners
+        settingsListener = jest.fn();
+        helpListener = jest.fn();
+        electron.ipcMain.on('settingsOpenDialog', settingsListener);
+        electron.ipcMain.on('helpOpenDialog', helpListener);
+        // When - trigger context menu
+        const contextMenuHandler = tabContainer.listeners['context-menu'];
+        contextMenuHandler({}, {x: 100, y: 200});
+        menu = electron.Menu.mock.results[electron.Menu.mock.results.length - 1].value;
+      });
+      test('Settings click should emit settingsOpenDialog event', () => {
+        // When
+        menu.entries[0].click();
+        // Then
+        expect(settingsListener).toHaveBeenCalledWith(expect.anything(), expect.anything());
+      });
+      test('Help click should emit helpOpenDialog event', () => {
+        // When
+        menu.entries[1].click();
+        // Then
+        expect(helpListener).toHaveBeenCalledWith(expect.anything(), expect.anything());
+      });
+      test('DevTools click should open DevTools in detached mode', () => {
+        // When
+        menu.entries[2].click();
+        // Then
+        expect(tabContainer.webContents.openDevTools).toHaveBeenCalledWith({mode: 'detach', activate: true});
+      });
+    });
+  });
 });
