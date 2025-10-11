@@ -70,17 +70,6 @@ The first time you open the application you'll be presented with the settings di
 where you can add the services you'll be using:
 ![Settings](screenshots/settings-empty.png)
 
-### Settings File Location
-
-ElectronIM follows the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) for storing configuration files:
-
-- **New installations**: Settings are stored in `$XDG_CONFIG_HOME/electronim/settings.json` (or `~/.config/electronim/settings.json` if `XDG_CONFIG_HOME` is not set)
-- **Legacy installations**: If you have existing settings in `~/.electronim/`, ElectronIM will continue using that directory for backward compatibility
-
-To customize the settings location, you can:
-- Set the `XDG_CONFIG_HOME` environment variable (e.g., `export XDG_CONFIG_HOME=/custom/config`)
-- Use the `--settings-path` command-line argument (e.g., `electronim --settings-path /path/to/settings.json`)
-
 Insert a valid URL into the empty text-field and press enter to add the new entry.
 
 Repeat this process for each service you want to add.

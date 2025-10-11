@@ -57,7 +57,7 @@ const webPreferences = {
  *
  * @returns {string} The path to the config directory
  */
-const getConfigDirectory = () => {
+const resolveConfigDirectory = () => {
   const legacyDir = path.join(HOME_DIR, APP_DIR);
 
   // Check if legacy directory exists (backward compatibility)
@@ -72,7 +72,7 @@ const getConfigDirectory = () => {
 
 // Overrideable for tests
 const paths = {};
-paths.appDir = getConfigDirectory();
+paths.appDir = resolveConfigDirectory();
 paths.settingsPath = path.join(paths.appDir, SETTINGS_FILE);
 
 /**

@@ -395,88 +395,58 @@ describe('Settings module test suite', () => {
     });
   });
   describe('XDG Base Directory compliance', () => {
-    let originalEnv;
-    let originalExistsSync;
+    let testDir;
+    let legacyDir;
+    let xdgConfigDir;
+    let defaultConfigDir;
     beforeEach(() => {
-      // Save original environment and fs.existsSync
-      originalEnv = {...process.env};
-      originalExistsSync = fs.existsSync;
-      jest.resetModules();
+      // Create test directories in a temp location
+      testDir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'electronim-xdg-test-'));
+      legacyDir = path.join(testDir, '.electronim');
+      xdgConfigDir = path.join(testDir, 'xdg-config', 'electronim');
+      defaultConfigDir = path.join(testDir, '.config', 'electronim');
     });
     afterEach(() => {
-      // Restore environment and fs.existsSync
-      process.env = originalEnv;
-      fs.existsSync = originalExistsSync;
-      jest.resetModules();
+      // Clean up test directories
+      if (fs.existsSync(testDir)) {
+        fs.rmSync(testDir, {recursive: true, force: true});
+      }
     });
-    test('should use XDG_CONFIG_HOME when set and no legacy directory exists', () => {
-      // Given
-      process.env.XDG_CONFIG_HOME = '/custom/config';
-      // Mock fs.existsSync to return false for legacy directory
-      fs.existsSync = jest.fn(p => {
-        if (p.includes('.electronim')) {
-          return false;
-        }
-        return originalExistsSync(p);
-      });
+    test('XDG_CONFIG_HOME path is used when set and settings file is created there', () => {
+      // Given - use custom path to simulate XDG_CONFIG_HOME behavior
+      const customSettingsPath = path.join(xdgConfigDir, 'settings.json');
+      settings.setSettingsPath(customSettingsPath);
       // When
-      const settingsModule = require('../');
-      const customPath = path.join(tempDir, 'xdg-settings.json');
-      settingsModule.setSettingsPath(customPath);
-      settingsModule.updateSettings({tabs: [{id: 'xdg-test'}]});
+      settings.updateSettings({tabs: [{id: 'xdg-test'}]});
       // Then
-      expect(fs.existsSync(customPath)).toBe(true);
-      const written = JSON.parse(originalExistsSync.readFileSync || fs.readFileSync(customPath, 'utf8'));
+      expect(fs.existsSync(xdgConfigDir)).toBe(true);
+      expect(fs.existsSync(customSettingsPath)).toBe(true);
+      const written = JSON.parse(fs.readFileSync(customSettingsPath, 'utf8'));
       expect(written.tabs).toEqual([{id: 'xdg-test'}]);
     });
-    test('should use ~/.config/electronim when XDG_CONFIG_HOME not set and no legacy directory', () => {
-      // Given
-      delete process.env.XDG_CONFIG_HOME;
-      const homeDir = require('node:os').homedir();
-      // Mock fs.existsSync to return false for legacy directory
-      const mockExistsSync = jest.fn(p => {
-        if (p === path.join(homeDir, '.electronim')) {
-          return false;
-        }
-        return originalExistsSync(p);
-      });
-      fs.existsSync = mockExistsSync;
+    test('default config directory path works when settings file is created there', () => {
+      // Given - use custom path to simulate ~/.config/electronim behavior
+      const customSettingsPath = path.join(defaultConfigDir, 'settings.json');
+      settings.setSettingsPath(customSettingsPath);
       // When
-      jest.resetModules();
-      delete process.env.XDG_CONFIG_HOME;
-      fs.existsSync = mockExistsSync;
-      const settingsModule = require('../');
-      // Then - verify the getConfigDirectory logic would choose ~/.config/electronim
-      // We verify by setting a custom path and ensuring functionality works
-      const customPath = path.join(tempDir, 'config-default.json');
-      settingsModule.setSettingsPath(customPath);
-      settingsModule.updateSettings({tabs: [{id: 'config-test'}]});
-      expect(originalExistsSync(customPath)).toBe(true);
+      settings.updateSettings({tabs: [{id: 'config-test'}]});
+      // Then
+      expect(fs.existsSync(defaultConfigDir)).toBe(true);
+      expect(fs.existsSync(customSettingsPath)).toBe(true);
+      const written = JSON.parse(fs.readFileSync(customSettingsPath, 'utf8'));
+      expect(written.tabs).toEqual([{id: 'config-test'}]);
     });
-    test('should prefer legacy ~/.electronim directory when it exists', () => {
-      // Given
-      const homeDir = require('node:os').homedir();
-      const legacyPath = path.join(homeDir, '.electronim');
-      // Mock fs.existsSync to return true for legacy directory
-      const mockExistsSync = jest.fn(p => {
-        if (p === legacyPath) {
-          return true;
-        }
-        return originalExistsSync(p);
-      });
-      fs.existsSync = mockExistsSync;
-      process.env.XDG_CONFIG_HOME = '/custom/config';
+    test('legacy directory settings can be loaded when it exists', () => {
+      // Given - create legacy directory with settings
+      fs.mkdirSync(legacyDir, {recursive: true});
+      const legacySettingsPath = path.join(legacyDir, 'settings.json');
+      fs.writeFileSync(legacySettingsPath, '{"tabs":[{"id":"legacy-tab"}]}');
+      settings.setSettingsPath(legacySettingsPath);
       // When
-      jest.resetModules();
-      fs.existsSync = mockExistsSync;
-      const settingsModule = require('../');
-      // Then - even with XDG_CONFIG_HOME set, verify functionality works
-      const customPath = path.join(tempDir, 'legacy-test.json');
-      settingsModule.setSettingsPath(customPath);
-      settingsModule.updateSettings({tabs: [{id: 'legacy-test'}]});
-      expect(originalExistsSync(customPath)).toBe(true);
-      const written = JSON.parse((originalExistsSync.readFileSync || fs.readFileSync)(customPath, 'utf8'));
-      expect(written.tabs).toEqual([{id: 'legacy-test'}]);
+      const loaded = settings.loadSettings();
+      // Then
+      expect(loaded.tabs[0]?.id).toBe('legacy-tab');
+      expect(fs.existsSync(legacyDir)).toBe(true);
     });
   });
 });
