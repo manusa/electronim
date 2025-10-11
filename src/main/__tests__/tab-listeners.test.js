@@ -161,6 +161,31 @@ describe('Main :: Tab listeners test suite', () => {
     // Then
     expect(event.sender.reloadIgnoringCache).toHaveBeenCalledTimes(1);
   });
+  describe('handleSpecificTabReload', () => {
+    test('valid tab ID, should reload the specified tab', () => {
+      // Given
+      const mockTab = {
+        webContents: {reloadIgnoringCache: jest.fn()}
+      };
+      jest.spyOn(tabManagerModule, 'getTab').mockReturnValue(mockTab);
+      main.init();
+      // When
+      mockIpc.send('reloadTab', {}, {tabId: 'test-tab-id'});
+      // Then
+      expect(tabManagerModule.getTab).toHaveBeenCalledWith('test-tab-id');
+      expect(mockTab.webContents.reloadIgnoringCache).toHaveBeenCalledTimes(1);
+    });
+    test('invalid tab ID, should do nothing', () => {
+      // Given
+      jest.spyOn(tabManagerModule, 'getTab').mockReturnValue(null);
+      main.init();
+      // When
+      mockIpc.send('reloadTab', {}, {tabId: 'invalid-id'});
+      // Then
+      expect(tabManagerModule.getTab).toHaveBeenCalledWith('invalid-id');
+      // No error should be thrown
+    });
+  });
   test('handleZoomIn', () => {
     const event = {sender: {
       getZoomFactor: jest.fn(() => 0),

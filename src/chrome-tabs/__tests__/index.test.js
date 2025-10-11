@@ -27,6 +27,62 @@ describe('Chrome Tabs Module module test suite', () => {
     }));
     chromeTabs = require('../');
   });
+  describe('handleContextMenu', () => {
+    let tabContainer;
+    let contextMenuListener;
+    beforeEach(() => {
+      tabContainer = chromeTabs.newTabContainer();
+      contextMenuListener = tabContainer.webContents.listeners('context-menu');
+    });
+    test('should show Reload option when right-clicking on a tab', async () => {
+      // Given
+      const event = {};
+      const params = {x: 100, y: 50};
+      tabContainer.webContents.executeJavaScript.mockResolvedValue('test-tab-id');
+      // When
+      await contextMenuListener(event, params);
+      // Then
+      expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+        label: 'Reload'
+      }));
+    });
+    test('should not show Reload option when not clicking on a tab', async () => {
+      // Given
+      const event = {};
+      const params = {x: 100, y: 50};
+      tabContainer.webContents.executeJavaScript.mockResolvedValue(null);
+      // When
+      await contextMenuListener(event, params);
+      // Then
+      const reloadMenuItem = electron.MenuItem.mock.calls.find(call => call[0].label === 'Reload');
+      expect(reloadMenuItem).toBeUndefined();
+    });
+    test('should emit reloadTab event when Reload is clicked', async () => {
+      // Given
+      const event = {};
+      const params = {x: 100, y: 50};
+      const tabId = 'test-tab-id';
+      tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
+      // When
+      await contextMenuListener(event, params);
+      const reloadMenuItem = electron.MenuItem.mock.calls.find(call => call[0].label === 'Reload')[0];
+      reloadMenuItem.click();
+      // Then
+      expect(electron.ipcMain.emit).toHaveBeenCalledWith('reloadTab', event, {tabId});
+    });
+    test('should always show Settings, Help, and DevTools options', async () => {
+      // Given
+      const event = {};
+      const params = {x: 100, y: 50};
+      tabContainer.webContents.executeJavaScript.mockResolvedValue(null);
+      // When
+      await contextMenuListener(event, params);
+      // Then
+      expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'Settings'}));
+      expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'Help'}));
+      expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'DevTools'}));
+    });
+  });
   describe('newTabContainer', () => {
     test('webPreferences is sandboxed and has no node integration', () => {
       // When

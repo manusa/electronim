@@ -51,6 +51,7 @@ const APP_EVENTS = {
   notificationClick: 'notificationClick',
   quit: 'quit',
   reload: 'reload',
+  reloadTab: 'reloadTab',
   // Restore and show the main window in case it was hidden
   restore: 'restore',
   settingsLoad: 'settingsLoad',

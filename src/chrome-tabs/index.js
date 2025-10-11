@@ -36,8 +36,26 @@ const checkForUpdates = webContents => {
     .catch(e => console.debug('Error checking for updates', e));
 };
 
-const handleContextMenu = viewOrWindow => (event, params) => {
+const handleContextMenu = viewOrWindow => async (event, params) => {
   const menu = new Menu();
+
+  // Try to find the tab ID at the clicked position
+  const tabId = await viewOrWindow.webContents.executeJavaScript(`
+    (function() {
+      const element = document.elementFromPoint(${params.x}, ${params.y});
+      const tabElement = element?.closest('.chrome-tab');
+      return tabElement?.getAttribute('data-tab-id') || null;
+    })();
+  `).catch(() => null);
+
+  if (tabId) {
+    menu.append(new MenuItem({
+      label: 'Reload',
+      click: () => eventBus.emit(APP_EVENTS.reloadTab, event, {tabId})
+    }));
+    menu.append(new MenuItem({type: 'separator'}));
+  }
+
   menu.append(new MenuItem({
     label: 'Settings',
     click: () => eventBus.emit(APP_EVENTS.settingsOpenDialog, event, params)
