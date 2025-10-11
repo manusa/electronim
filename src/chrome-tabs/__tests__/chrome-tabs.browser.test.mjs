@@ -160,7 +160,7 @@ describe('ChromeTabs in Browser test suite', () => {
       mockIpcRenderer.events.addTabs({}, tabs);
       await waitFor(() => {
         if ($chromeTabs.querySelectorAll('.chrome-tab').length !== 3) {
-          throw Error('Tabs are not ready');
+          throw new Error('Tabs are not ready');
         }
       });
     });
