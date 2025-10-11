@@ -48,12 +48,12 @@ const latestChromium = async () => {
 
 const latestFirefox = async () => {
   const {data: versions} = await httpClient.get(firefoxVersionsUrl);
-  return versions && versions.LATEST_FIREFOX_VERSION ? versions.LATEST_FIREFOX_VERSION : null;
+  return versions?.LATEST_FIREFOX_VERSION ?? null;
 };
 
 const latestFirefoxESR = async () => {
   const {data: versions} = await httpClient.get(firefoxVersionsUrl);
-  return versions && versions.FIREFOX_ESR ? versions.FIREFOX_ESR : null;
+  return versions?.FIREFOX_ESR ?? null;
 };
 
 const initBrowserVersions = async () => {

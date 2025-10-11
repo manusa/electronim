@@ -26,7 +26,7 @@ export const validateUrl = (url, allowNoProtocol = true) => {
   if (allowNoProtocol) {
     url = prependProtocol(url);
   }
-  if (!url || !url.match(/^https?:\/\/.+/)) {
+  if (!url?.match(/^https?:\/\/.+/)) {
     return false;
   }
   try {

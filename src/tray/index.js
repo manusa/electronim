@@ -26,7 +26,7 @@ const images = {
 };
 
 const initTray = () => {
-  if (tray && tray.destroy) {
+  if (tray?.destroy) {
     tray.destroy();
     tray = null;
   }
