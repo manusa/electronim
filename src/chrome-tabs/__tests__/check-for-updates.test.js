@@ -16,6 +16,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+const {createTestServer} = require('../../__tests__');
+
 describe('Check For Updates module test suite', () => {
   beforeEach(() => {
     jest.resetModules();
@@ -29,17 +31,26 @@ describe('Check For Updates module test suite', () => {
         expect(version).toMatch(/^\d+\.\d+\.\d+$/);
       });
     });
-    describe('with mocked http client', () => {
-      let httpClient;
-      let getLatestRelease;
-      beforeEach(() => {
-        jest.mock('../../http-client');
-        httpClient = require('../../http-client').httpClient;
-        getLatestRelease = require('../check-for-updates').getLatestRelease;
+    describe('with HTTP server', () => {
+      let testHandler;
+      let checkForUpdates;
+      beforeEach(async () => {
+        const server = await createTestServer({
+          handler: (req, res) => testHandler(req, res)
+        });
+        checkForUpdates = require('../check-for-updates');
+        checkForUpdates.setUrl({
+          githubReleasesLatestUrl: `${server.url}/latest`
+        });
       });
       test('with unexpected status code throws error', async () => {
-        httpClient.get.mockImplementationOnce(async () => ({status: 200}));
-        await expect(getLatestRelease).rejects.toThrow('Unexpected response from GitHub');
+        // Given
+        testHandler = (req, res) => {
+          res.writeHead(200, {'Content-Type': 'text/plain'});
+          res.end();
+        };
+        // When & Then
+        await expect(checkForUpdates.getLatestRelease()).rejects.toThrow('Unexpected response from GitHub');
       });
       test.each([
         ['v1.33.7', '1.33.7'],
@@ -48,14 +59,15 @@ describe('Check For Updates module test suite', () => {
         ['1.33.7-beta.1', '1.33.7-beta.1']
       ])('version: transforms %s tag_name to %s', async (tag_name, expected) => {
         // Given
-        httpClient.get.mockImplementationOnce(async () => ({
-          status: 302,
-          headers: {
-            location: `https://github.com/manusa/electronim/releases/tag/${tag_name}`
-          }
-        }));
+        testHandler = (req, res) => {
+          res.writeHead(302, {
+            location: `https://github.com/manusa/electronim/releases/tag/${tag_name}`,
+            'Content-Type': 'text/plain'
+          });
+          res.end();
+        };
         // When
-        const {version} = await getLatestRelease();
+        const {version} = await checkForUpdates.getLatestRelease();
         // Then
         expect(version).toBe(expected);
       });
@@ -66,14 +78,15 @@ describe('Check For Updates module test suite', () => {
         ['0.0.0', true]
       ])('matchesCurrent: compares %s with 0.0.0', async (tag_name, expected) => {
         // Given
-        httpClient.get.mockImplementationOnce(async () => ({
-          status: 302,
-          headers: {
-            location: `https://github.com/manusa/electronim/releases/tag/${tag_name}`
-          }
-        }));
+        testHandler = (req, res) => {
+          res.writeHead(302, {
+            location: `https://github.com/manusa/electronim/releases/tag/${tag_name}`,
+            'Content-Type': 'text/plain'
+          });
+          res.end();
+        };
         // When
-        const {matchesCurrent} = await getLatestRelease();
+        const {matchesCurrent} = await checkForUpdates.getLatestRelease();
         // Then
         expect(matchesCurrent).toBe(expected);
       });

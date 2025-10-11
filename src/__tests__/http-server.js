@@ -17,6 +17,11 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 
+// Store test servers in global scope to ensure cleanup
+if (!globalThis.__testHttpServers__) {
+  globalThis.__testHttpServers__ = [];
+}
+
 /**
  * Creates a simple HTTP server for testing purposes
  * @param {Object} options - Server configuration options
@@ -87,7 +92,7 @@ const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html',
   const actualPort = server.address().port;
   const url = `http://localhost:${actualPort}`;
 
-  return {
+  const testServer = {
     server,
     port: actualPort,
     url,
@@ -98,6 +103,8 @@ const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html',
       });
     }
   };
+  globalThis.__testHttpServers__.push(testServer);
+  return testServer;
 };
 
 module.exports = {createTestServer};

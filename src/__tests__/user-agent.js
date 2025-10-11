@@ -14,12 +14,6 @@
    limitations under the License.
  */
 
-// Store test servers in global scope to ensure cleanup
-// even when jest.resetModules() clears the module cache
-if (!globalThis.__testHttpServers__) {
-  globalThis.__testHttpServers__ = [];
-}
-
 const DEFAULT_CHROMIUM_RESPONSE = {
   releases: [
     {name: 'chrome/platforms/linux/channels/stable/versions/1337/releases/1704308709', version: '1337'}
@@ -79,8 +73,6 @@ const testUserAgent = async ({
     chromiumVersionsUrl: `${server.url}/chromium`,
     firefoxVersionsUrl: `${server.url}/firefox`
   });
-
-  globalThis.__testHttpServers__.push(server);
 
   return userAgent;
 };
