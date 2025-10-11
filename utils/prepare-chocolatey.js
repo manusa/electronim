@@ -33,7 +33,7 @@ const calculateHash = () => {
   const hash = hashSum.digest('hex').toUpperCase();
   const chocolateyInstall = path.resolve(__dirname, '..', 'build-config', 'chocolateyInstall.ps1');
   fs.writeFileSync(chocolateyInstall, fs.readFileSync(chocolateyInstall).toString()
-    .replace(/\$hash = .+$/gm, `$hash = "${hash}"`)
+    .replaceAll(/\$hash = .+$/gm, `$hash = "${hash}"`)
   );
 };
 

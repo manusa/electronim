@@ -70,12 +70,12 @@ const initBrowserVersions = async () => {
 };
 
 const replaceChromeVersion = userAgent => (BROWSER_VERSIONS.chromium ?
-  userAgent.replace(/Chrome\/.*? /g, `Chrome/${BROWSER_VERSIONS.chromium} `)
+  userAgent.replaceAll(/Chrome\/.*? /g, `Chrome/${BROWSER_VERSIONS.chromium} `)
   : userAgent);
 
 const sanitizeUserAgent = userAgent => userAgent
-  .replace(/ElectronIM\/.*? /g, '')
-  .replace(/Electron\/.*? /g, '');
+  .replaceAll(/ElectronIM\/.*? /g, '')
+  .replaceAll(/Electron\/.*? /g, '');
 
 const defaultUserAgent = userAgent => sanitizeUserAgent(replaceChromeVersion(userAgent));
 

@@ -35,7 +35,7 @@ const versionFromTag = () => {
   console.log(`Setting electronim.spec version to ${version}`);
   const electronimSpec = path.resolve(__dirname, '..', 'build-config', 'electronim.spec');
   fs.writeFileSync(electronimSpec, fs.readFileSync(electronimSpec).toString()
-    .replace(/Version.+$/gm, `Version: ${version}`)
+    .replaceAll(/Version.+$/gm, `Version: ${version}`)
   );
   process.exit(0);
 };
