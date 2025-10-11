@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {ipcMain: eventBus, Tray} = require('electron');
+const {ipcMain: eventBus, Tray, Menu, MenuItem} = require('electron');
 const {APP_EVENTS} = require('../constants');
 const path = require('node:path');
 const {getPlatform, loadSettings} = require('../settings');
@@ -25,6 +25,20 @@ const images = {
   win32: 'icon.ico'
 };
 
+const createContextMenu = () => {
+  const menu = new Menu();
+  menu.append(new MenuItem({
+    label: 'Show',
+    click: () => eventBus.emit(APP_EVENTS.restore)
+  }));
+  menu.append(new MenuItem({type: 'separator'}));
+  menu.append(new MenuItem({
+    label: 'Quit',
+    click: () => eventBus.emit(APP_EVENTS.quit)
+  }));
+  return menu;
+};
+
 const initTray = () => {
   if (tray?.destroy) {
     tray.destroy();
@@ -34,6 +48,7 @@ const initTray = () => {
   if (trayEnabled) {
     tray = new Tray(path.resolve(__dirname, '..', 'assets', images[getPlatform()] || images.win32));
     tray.on('click', () => eventBus.emit(APP_EVENTS.restore));
+    tray.setContextMenu(createContextMenu());
   }
   return tray;
 };

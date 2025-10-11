@@ -71,6 +71,25 @@ describe('Tray module test suite', () => {
         // Then
         expect(electron.Tray).toHaveBeenCalledWith(path.resolve(__dirname, '..', '..', 'assets', expectedIcon));
       });
+      test('sets context menu with Show and Quit options', () => {
+        // Given
+        settings.updateSettings({trayEnabled: true});
+        // When
+        const result = tray.initTray();
+        // Then
+        expect(result.setContextMenu).toHaveBeenCalledTimes(1);
+        expect(electron.Menu).toHaveBeenCalledTimes(1);
+        expect(electron.MenuItem).toHaveBeenCalledTimes(3);
+        expect(electron.MenuItem).toHaveBeenCalledWith({
+          label: 'Show',
+          click: expect.any(Function)
+        });
+        expect(electron.MenuItem).toHaveBeenCalledWith({type: 'separator'});
+        expect(electron.MenuItem).toHaveBeenCalledWith({
+          label: 'Quit',
+          click: expect.any(Function)
+        });
+      });
     });
   });
 });
