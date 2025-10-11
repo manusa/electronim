@@ -248,5 +248,90 @@ describe('ChromeTabs in Browser test suite', () => {
       expect(mockIpcRenderer.send).toHaveBeenCalledWith('appMenuOpen');
     });
   });
+  describe('Context menu tab ID detection (DOM integration)', () => {
+    let tabs;
+    beforeEach(async () => {
+      tabs = [
+        {id: 1337, active: true, url: 'https://1337.com'},
+        {id: 313373, title: '313373', url: 'https://313373.com'},
+        {id: 13373, favicon: 'https://13373.png', url: 'https://13373.com'}
+      ];
+      Object.defineProperty($chromeTabs, 'clientWidth', {value: 100});
+      globalThis.dispatchEvent(new CustomEvent('resize'));
+      mockIpcRenderer.events.addTabs({}, tabs);
+      await waitFor(() => {
+        if ($chromeTabs.querySelectorAll('.chrome-tab').length !== 3) {
+          throw new Error('Tabs are not ready');
+        }
+      });
+    });
+    test('should verify all tabs have data-tab-id attribute', () => {
+      // This test verifies that the DOM structure matches what the context menu handler expects
+      // The production code (chrome-tabs/index.js:43-48) uses element.closest('.chrome-tab')
+      // and getAttribute('data-tab-id'), so we need to ensure these exist
+      const tabElements = $chromeTabs.querySelectorAll('.chrome-tab');
+      expect(tabElements.length).toBe(3);
+
+      tabElements.forEach((tab, index) => {
+        expect(tab.hasAttribute('data-tab-id')).toBe(true);
+        expect(tab.getAttribute('data-tab-id')).toBe(String(tabs[index].id));
+      });
+    });
+    test('should verify chrome-tab class exists on all tab elements', () => {
+      const tabElements = $chromeTabs.querySelectorAll('.chrome-tab');
+      expect(tabElements.length).toBe(3);
+
+      tabElements.forEach(tab => {
+        expect(tab.classList.contains('chrome-tab')).toBe(true);
+      });
+    });
+    test('should find tab element using closest from child elements', () => {
+      // This test verifies the exact behavior used in production (chrome-tabs/index.js:46)
+      // where element.closest('.chrome-tab') is called on any clicked child element
+
+      // Test from tab title
+      const tabTitle = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"] .chrome-tab-title');
+      expect(tabTitle).not.toBeNull();
+      const tabFromTitle = tabTitle.closest('.chrome-tab');
+      expect(tabFromTitle).not.toBeNull();
+      expect(tabFromTitle.getAttribute('data-tab-id')).toBe('1337');
+
+      // Test from tab favicon
+      const tabFavicon = $chromeTabs.querySelector('.chrome-tab[data-tab-id="13373"] .chrome-tab-favicon-icon');
+      expect(tabFavicon).not.toBeNull();
+      const tabFromFavicon = tabFavicon.closest('.chrome-tab');
+      expect(tabFromFavicon).not.toBeNull();
+      expect(tabFromFavicon.getAttribute('data-tab-id')).toBe('13373');
+    });
+    test('should return null when closest is called on non-tab elements', () => {
+      // Verify that elements outside of tabs don't have .chrome-tab as ancestor
+      const menuButton = document.querySelector('.menu__button');
+      expect(menuButton).not.toBeNull();
+      const tabElement = menuButton.closest('.chrome-tab');
+      expect(tabElement).toBeNull();
+    });
+    test('should verify tab child elements exist for context menu interaction', () => {
+      // Verify that tabs have the expected child elements that users might click on
+      const tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"]');
+      expect(tab).not.toBeNull();
+
+      // Verify title element exists
+      const titleElement = tab.querySelector('.chrome-tab-title');
+      expect(titleElement).not.toBeNull();
+      expect(titleElement.textContent).toBe('313373');
+
+      // Verify that clicking on any child element can find the parent tab
+      expect(titleElement.closest('.chrome-tab')).toBe(tab);
+    });
+    test('should verify all tabs can be found using data-tab-id selector', () => {
+      // The production code uses getAttribute('data-tab-id') to get the ID
+      // This test ensures the selector pattern works correctly
+      tabs.forEach(tabData => {
+        const tab = $chromeTabs.querySelector(`.chrome-tab[data-tab-id="${tabData.id}"]`);
+        expect(tab).not.toBeNull();
+        expect(tab.getAttribute('data-tab-id')).toBe(String(tabData.id));
+      });
+    });
+  });
 });
 
