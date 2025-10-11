@@ -21,7 +21,7 @@ const DOCS_DIR = path.resolve(__dirname, '..', '..', 'docs');
 // Should be a relative path from the src/help directory (or wherever index.html is located)
 const DOCS_DIR_RELATIVE = '../../docs';
 
-const fixRelativeUrls = s => s.replace(
+const fixRelativeUrls = s => s.replaceAll(
   /((src|href)\s*?=\s*?['"](?!http))([^'"]+)(['"])/gi,
   `$1${DOCS_DIR_RELATIVE}/$3$4`
 );
