@@ -63,6 +63,17 @@ describe('Find in Page :: main test suite', () => {
           y: 0, height: 60, width: 400
         }));
     });
+    test('should register did-finish-load listener to send ready event', () => {
+      // When
+      eventBus.emit('findInPageOpen');
+      const findInPageView = baseWindow.contentView.addChildView.mock.calls[0][0];
+      // Then
+      expect(findInPageView.webContents.once).toHaveBeenCalledWith('did-finish-load', expect.any(Function));
+      // When did-finish-load event fires
+      findInPageView.listeners['did-finish-load']();
+      // Then
+      expect(findInPageView.webContents.send).toHaveBeenCalledWith('findInPageReady');
+    });
   });
   describe('findInPageClose', () => {
     test('should stop find in page in tabManager', () => {

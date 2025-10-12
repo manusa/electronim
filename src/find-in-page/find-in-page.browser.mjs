@@ -15,7 +15,7 @@
  */
 import {createRef, html, render, useLayoutEffect, useState, Icon, IconButton, TextField} from '../components/index.mjs';
 
-const {close, findInPage, onFindInPage} = window.electron;
+const {close, findInPage, onFindInPage, onReady} = window.electron;
 
 const getFindInPage = () => document.querySelector('.find-in-page');
 
@@ -27,8 +27,10 @@ const FindInPage = () => {
       setResult(r);
       inputRef.current?.focus();
     });
-    // Use setTimeout to ensure focus works on macOS where WebContentsView may not be fully ready
-    setTimeout(() => inputRef.current?.focus(), 0);
+    // Wait for the ready signal from main process to ensure WebContentsView is fully initialized
+    onReady(() => {
+      inputRef.current?.focus();
+    });
   }, [inputRef]);
   const noBubbling = func => e => {
     e.preventDefault();

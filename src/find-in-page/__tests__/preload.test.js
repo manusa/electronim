@@ -28,7 +28,8 @@ describe('Find in Page :: preload test suite', () => {
       expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
         close: expect.toBeFunction(),
         findInPage: expect.toBeFunction(),
-        onFindInPage: expect.toBeFunction()
+        onFindInPage: expect.toBeFunction(),
+        onReady: expect.toBeFunction()
       });
     });
     describe('API', () => {
@@ -51,6 +52,11 @@ describe('Find in Page :: preload test suite', () => {
         api.onFindInPage(mockFunction);
         expect(electron.ipcRenderer.on).toHaveBeenCalledWith('findInPageFound', mockFunction);
       });
+      test('onReady invokes onReady to register callback', () => {
+        const mockFunction = jest.fn();
+        api.onReady(mockFunction);
+        expect(electron.ipcRenderer.once).toHaveBeenCalledWith('findInPageReady', mockFunction);
+      });
     });
   });
   describe('preload.bundle', () => {
@@ -61,7 +67,8 @@ describe('Find in Page :: preload test suite', () => {
       expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
         close: expect.toBeFunction(),
         findInPage: expect.toBeFunction(),
-        onFindInPage: expect.toBeFunction()
+        onFindInPage: expect.toBeFunction(),
+        onReady: expect.toBeFunction()
       });
     });
   });

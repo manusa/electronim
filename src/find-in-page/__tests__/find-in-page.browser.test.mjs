@@ -26,6 +26,10 @@ describe('Find in Page :: in browser test suite', () => {
       findInPage: jest.fn(),
       onFindInPage: jest.fn(callback => {
         onFindInPageCallback = callback;
+      }),
+      onReady: jest.fn(callback => {
+        // Simulate the ready event being triggered immediately in tests
+        callback();
       })
     };
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});

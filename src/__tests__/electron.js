@@ -21,6 +21,9 @@ const mockWebContentsViewInstance = () => {
     on: jest.fn((eventName, func) => {
       instance.listeners[eventName] = func;
     }),
+    once: jest.fn((eventName, func) => {
+      instance.listeners[eventName] = func;
+    }),
     setBounds: jest.fn(),
     webContents: {
       loadedUrl: '',
@@ -44,6 +47,7 @@ const mockWebContentsViewInstance = () => {
         goBack: jest.fn()
       },
       on: jest.fn((...args) => instance.on(...args)),
+      once: jest.fn((...args) => instance.once(...args)),
       openDevTools: jest.fn(),
       paste: jest.fn(),
       reload: jest.fn(),
@@ -177,6 +181,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     ipcMain,
     ipcRenderer: {
       on: jest.fn(),
+      once: jest.fn(),
       send: jest.fn()
     },
     nativeTheme: {},
