@@ -25,9 +25,10 @@ const FindInPage = () => {
   useLayoutEffect(() => {
     onFindInPage((_e, r) => {
       setResult(r);
-      inputRef.current.focus();
+      inputRef.current?.focus();
     });
-    inputRef.current.focus();
+    // Use setTimeout to ensure focus works on macOS where WebContentsView may not be fully ready
+    setTimeout(() => inputRef.current?.focus(), 0);
   }, [inputRef]);
   const noBubbling = func => e => {
     e.preventDefault();

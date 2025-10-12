@@ -57,8 +57,8 @@ describe('Find in Page :: in browser test suite', () => {
     beforeEach(() => {
       $input = document.querySelector('.input-wrapper input');
     });
-    test('should be focused', () => {
-      expect(document.activeElement).toBe($input);
+    test('should be focused', async () => {
+      await waitFor(() => expect(document.activeElement).toBe($input));
     });
     test('should call findInPage on Enter', () => {
       // Given
@@ -103,8 +103,8 @@ describe('Find in Page :: in browser test suite', () => {
       // Then
       await waitFor(() => expect($results.textContent).toBe('1/2'));
     });
-    test('should set focus on input', () => {
-      expect(document.activeElement).toBe(document.querySelector('.input-wrapper input'));
+    test('should set focus on input', async () => {
+      await waitFor(() => expect(document.activeElement).toBe(document.querySelector('.input-wrapper input')));
     });
   });
 });
