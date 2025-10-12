@@ -15,7 +15,7 @@
  */
 import {createRef, html, render, useLayoutEffect, useState, Icon, IconButton, TextField} from '../components/index.mjs';
 
-const {close, findInPage, onFindInPage} = window.electron;
+const {close, findInPage, onFindInPage, onReady} = window.electron;
 
 const getFindInPage = () => document.querySelector('.find-in-page');
 
@@ -25,9 +25,12 @@ const FindInPage = () => {
   useLayoutEffect(() => {
     onFindInPage((_e, r) => {
       setResult(r);
-      inputRef.current.focus();
+      inputRef.current?.focus();
     });
-    inputRef.current.focus();
+    // Wait for the ready signal from main process to ensure WebContentsView is fully initialized
+    onReady(() => {
+      inputRef.current?.focus();
+    });
   }, [inputRef]);
   const noBubbling = func => e => {
     e.preventDefault();

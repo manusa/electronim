@@ -19,5 +19,6 @@ const {contextBridge, ipcRenderer} = require('electron');
 contextBridge.exposeInMainWorld('electron', {
   close: () => ipcRenderer.send(APP_EVENTS.findInPageClose),
   findInPage: args => ipcRenderer.send(APP_EVENTS.findInPage, args),
-  onFindInPage: func => ipcRenderer.on(APP_EVENTS.findInPageFound, func)
+  onFindInPage: func => ipcRenderer.on(APP_EVENTS.findInPageFound, func),
+  onReady: func => ipcRenderer.once(APP_EVENTS.findInPageReady, func)
 });

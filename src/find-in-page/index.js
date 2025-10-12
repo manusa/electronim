@@ -53,6 +53,11 @@ const findInPageOpen = mainWindow => () => {
   const {width} = mainWindow.getContentBounds();
   mainWindow.contentView.addChildView(findInPage);
   findInPage.setBounds({x: width - FIND_IN_PAGE_WIDTH, y: 0, width: FIND_IN_PAGE_WIDTH, height: FIND_IN_PAGE_HEIGHT});
+  findInPage.webContents.focus();
+  // Signal when the view is ready to ensure proper focus on all platforms (especially macOS)
+  findInPage.webContents.once('did-finish-load', () => {
+    findInPage.webContents.send(APP_EVENTS.findInPageReady);
+  });
 };
 
 const findInPageClose = mainWindow => () => {

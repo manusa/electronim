@@ -42,6 +42,7 @@ const APP_EVENTS = {
   electronimNewVersionAvailable: 'electronimNewVersionAvailable',
   findInPage: 'findInPage',
   findInPageFound: 'findInPageFound',
+  findInPageReady: 'findInPageReady',
   findInPageStop: 'findInPageStop',
   findInPageClose: 'findInPageClose',
   findInPageOpen: 'findInPageOpen',
