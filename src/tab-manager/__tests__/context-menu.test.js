@@ -86,14 +86,14 @@ describe('Tab Manager context-menu test suite', () => {
       expect(electron.Menu).toHaveBeenCalledTimes(1);
       expect(mockMenu.popup).toHaveBeenCalledWith({x: 14, y: 38});
     });
-    test.each(['Back', 'Reload', 'Cut', 'Copy', 'Copy image', 'Paste', 'Copy link address', 'Copy link text', 'DevTools'])(
+    test.each(['Back', 'Reload', 'Find in Page', 'Cut', 'Copy', 'Copy image', 'Paste', 'Copy link address', 'Copy link text', 'DevTools'])(
       'adds MenuItem with label %s', async label => {
         expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label}));
       });
     describe('separator', () => {
       test('groups are separated by a separator', async () => {
-        // separator after Back and Reload
-        expect(mockMenu.entries[2].type).toBe('separator');
+        // separator after Back, Reload, and Find in Page
+        expect(mockMenu.entries[3].type).toBe('separator');
       });
       test('last item is not a separator', () => {
         expect(mockMenu.entries[mockMenu.entries.length - 1].type).not.toBe('separator');
@@ -126,6 +126,15 @@ describe('Tab Manager context-menu test suite', () => {
       electron.MenuItem.mock.calls.find(c => c[0].label === 'Reload')[0].click();
       // Then
       expect(tabManager.getTab('1337').webContents.reload).toHaveBeenCalledTimes(1);
+    });
+    test('Find in Page click, should trigger findInPageOpen event', async () => {
+      // Given
+      const findInPageListener = jest.fn();
+      electron.ipcMain.once('findInPageOpen', findInPageListener);
+      // When
+      electron.MenuItem.mock.calls.find(c => c[0].label === 'Find in Page')[0].click();
+      // Then
+      expect(findInPageListener).toHaveBeenCalledTimes(1);
     });
     test('DevTools click, should open devtools', async () => {
       // When
