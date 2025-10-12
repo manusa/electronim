@@ -13,8 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {Menu, MenuItem, clipboard} = require('electron');
+const {Menu, MenuItem, clipboard, ipcMain: eventBus} = require('electron');
 const {contextMenuHandler, contextMenuNativeHandler} = require('../spell-check');
+const {APP_EVENTS} = require('../constants');
 
 const entries = ({webContents, params}) => {
   return [
@@ -25,6 +26,9 @@ const entries = ({webContents, params}) => {
     }, {
       label: 'Reload',
       click: () => webContents.reload()
+    }, {
+      label: 'Find in Page',
+      click: () => eventBus.emit(APP_EVENTS.findInPageOpen)
     }], [{
       label: 'Cut',
       visible: params.editFlags.canCut,
