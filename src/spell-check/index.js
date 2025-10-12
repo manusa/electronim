@@ -27,6 +27,9 @@ const AVAILABLE_DICTIONARIES = {
   de: {
     name: 'German'
   },
+  el: {
+    name: 'Greek'
+  },
   'en-GB': {
     name: 'English (GB)'
   },

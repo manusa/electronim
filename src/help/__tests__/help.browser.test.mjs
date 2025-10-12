@@ -36,9 +36,35 @@ describe('Help in Browser test suite', () => {
     expect(document.querySelector('.toc-container').innerHTML)
       .toMatch(/Table of Contents/);
     const documentsContent = document.querySelector('.documents-container').innerHTML;
-    expect(documentsContent).toContain('<h1>Setup</h1>');
-    expect(documentsContent).toContain('<h1>Keyboard Shortcuts</h1>');
-    expect(documentsContent).toContain('<h1>Troubleshooting</h1>');
+    expect(documentsContent).toContain('<h1 id="Setup.md">Setup</h1>');
+    expect(documentsContent).toContain('<h1 id="Keyboard-shortcuts.md">Keyboard Shortcuts</h1>');
+    expect(documentsContent).toContain('<h1 id="Troubleshooting.md">Troubleshooting</h1>');
+  });
+  test('render, should dynamically generate ToC from metadata', () => {
+    // Then
+    const tocContent = document.querySelector('.toc-container').innerHTML;
+    expect(tocContent).toContain('Setup');
+    expect(tocContent).toContain('Keyboard Shortcuts');
+    expect(tocContent).toContain('Troubleshooting');
+
+    // Check for links to main sections
+    expect(tocContent).toContain('href="#Setup.md"');
+    expect(tocContent).toContain('href="#Keyboard-shortcuts.md"');
+    expect(tocContent).toContain('href="#Troubleshooting.md"');
+  });
+  test('render, should include sub-level ToC for H2 headings', () => {
+    // Then
+    const tocContent = document.querySelector('.toc-container').innerHTML;
+
+    // Check for sublevel class
+    expect(tocContent).toContain('toc-sublevel');
+
+    // Check for H2 headings from Setup.md
+    expect(tocContent).toContain('Install');
+    expect(tocContent).toContain('Settings');
+
+    // Check for links to subsections
+    expect(tocContent).toMatch(/href="#Setup\.md__[^"]+"/);
   });
   test('render, should show version in footer', () => {
     // Then

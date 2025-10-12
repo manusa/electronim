@@ -23,7 +23,14 @@ describe('Help index.html test suite', () => {
       close: jest.fn(),
       docs: {
         doc: 'This is a doc'
-      }
+      },
+      metadata: [
+        {
+          id: 'doc',
+          title: 'Test Document',
+          headings: []
+        }
+      ]
     };
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
