@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-describe('Tab Manager Redirect module test suite', () => {
+describe('Service Manager Redirect module test suite', () => {
   let redirect;
   let webContentsView;
   let mockViewUrl;

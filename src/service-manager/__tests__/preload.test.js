@@ -15,7 +15,7 @@
  */
 const {waitFor} = require('@testing-library/dom');
 
-describe('Tab Manager Module preload test suite', () => {
+describe('Service Manager Module preload test suite', () => {
   let mockElectron;
   beforeEach(() => {
     jest.resetModules();
@@ -64,7 +64,7 @@ describe('Tab Manager Module preload test suite', () => {
     });
     test('adds required libraries', async () => {
       // When
-      require('../../../bundles/tab-manager.preload');
+      require('../../../bundles/service-manager.preload');
       // Then
       expect(globalThis.Notification).toEqual(expect.any(Function));
       expect(globalThis.navigator.mediaDevices.getDisplayMedia).toEqual(expect.any(Function));

@@ -22,7 +22,7 @@ describe('Main :: Tab listeners test suite', () => {
   let main;
   let mockIpc;
   let mockView;
-  let tabManagerModule;
+  let serviceManagerModule;
 
   const waitForTrayInit = async initFn => {
     const trayInitPromise = new Promise(resolve => electron.ipcMain.on('trayInit', resolve));
@@ -37,14 +37,14 @@ describe('Main :: Tab listeners test suite', () => {
     settings = await require('../../__tests__').testSettings();
     mockIpc = electron.ipcMain;
     mockView = electron.webContentsViewInstance;
-    tabManagerModule = require('../../tab-manager');
+    serviceManagerModule = require('../../service-manager');
     main = require('../');
   });
   describe('tabsReady', () => {
     let addTabsNested;
     beforeEach(() => {
       addTabsNested = jest.fn();
-      jest.spyOn(tabManagerModule, 'addTabs')
+      jest.spyOn(serviceManagerModule, 'addTabs')
         .mockImplementation(() => addTabsNested);
     });
     test('No tabs in settings, should open settings dialog', () => {
@@ -54,7 +54,7 @@ describe('Main :: Tab listeners test suite', () => {
       // When
       mockIpc.send('tabsReady', {});
       // Then
-      expect(tabManagerModule.addTabs).not.toHaveBeenCalled();
+      expect(serviceManagerModule.addTabs).not.toHaveBeenCalled();
       expect(addTabsNested).not.toHaveBeenCalled();
       expect(mockView.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
@@ -73,7 +73,7 @@ describe('Main :: Tab listeners test suite', () => {
       // When
       mockIpc.send('tabsReady', event);
       // Then
-      expect(tabManagerModule.addTabs).toHaveBeenCalledWith(event.sender);
+      expect(serviceManagerModule.addTabs).toHaveBeenCalledWith(event.sender);
       expect(addTabsNested).toHaveBeenCalledTimes(1);
       expect(addTabsNested).toHaveBeenCalledWith([{id: '1337', otherInfo: 'A Tab', active: true}]);
       expect(mockView.webContents.loadURL)
@@ -87,7 +87,7 @@ describe('Main :: Tab listeners test suite', () => {
         setBounds: jest.fn(),
         webContents: {focus: jest.fn()}
       };
-      tabManagerModule.getTab = jest.fn(id => (id === 'validId' ? activeTab : null));
+      serviceManagerModule.getTab = jest.fn(id => (id === 'validId' ? activeTab : null));
     });
     test('no active tab, should do nothing', async () => {
       // Given
@@ -125,21 +125,21 @@ describe('Main :: Tab listeners test suite', () => {
       expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(activeTab.setBounds);
     });
   });
-  test('canNotify, should call to the canNotify method of the tabManager', () => {
+  test('canNotify, should call to the canNotify method of the serviceManager', () => {
     // Given
     const mockIpcMainEvent = {returnValue: null};
-    tabManagerModule.canNotify = jest.fn(() => 'yepe');
+    serviceManagerModule.canNotify = jest.fn(() => 'yepe');
     main.init();
     // When
     mockIpc.send('canNotify', mockIpcMainEvent, 'validId');
     // Then
-    expect(tabManagerModule.canNotify).toHaveBeenCalledWith('validId');
+    expect(serviceManagerModule.canNotify).toHaveBeenCalledWith('validId');
     expect(mockIpcMainEvent.returnValue).toBe('yepe');
   });
   test('notificationClick, should restore window and activate tab', async () => {
     // Given
     settings.updateSettings({startMinimized: true});
-    jest.spyOn(tabManagerModule, 'getTab').mockImplementation();
+    jest.spyOn(serviceManagerModule, 'getTab').mockImplementation();
     await waitForTrayInit(() => main.init());
     const baseWindow = electron.BaseWindow.getAllWindows()[0];
     baseWindow.restore = jest.fn();
@@ -151,7 +151,7 @@ describe('Main :: Tab listeners test suite', () => {
     expect(baseWindow.restore).toHaveBeenCalledTimes(1);
     expect(baseWindow.show).toHaveBeenCalledTimes(1);
     expect(baseWindow.show).toHaveBeenCalledAfter(baseWindow.restore);
-    expect(tabManagerModule.getTab).toHaveBeenCalledWith('validId');
+    expect(serviceManagerModule.getTab).toHaveBeenCalledWith('validId');
   });
   test('handleReload', () => {
     const event = {sender: {reloadIgnoringCache: jest.fn()}};
@@ -167,22 +167,22 @@ describe('Main :: Tab listeners test suite', () => {
       const mockTab = {
         webContents: {reloadIgnoringCache: jest.fn()}
       };
-      jest.spyOn(tabManagerModule, 'getTab').mockReturnValue(mockTab);
+      jest.spyOn(serviceManagerModule, 'getTab').mockReturnValue(mockTab);
       main.init();
       // When
       mockIpc.send('reloadTab', {}, {tabId: 'test-tab-id'});
       // Then
-      expect(tabManagerModule.getTab).toHaveBeenCalledWith('test-tab-id');
+      expect(serviceManagerModule.getTab).toHaveBeenCalledWith('test-tab-id');
       expect(mockTab.webContents.reloadIgnoringCache).toHaveBeenCalledTimes(1);
     });
     test('invalid tab ID, should do nothing', () => {
       // Given
-      jest.spyOn(tabManagerModule, 'getTab').mockReturnValue(null);
+      jest.spyOn(serviceManagerModule, 'getTab').mockReturnValue(null);
       main.init();
       // When
       mockIpc.send('reloadTab', {}, {tabId: 'invalid-id'});
       // Then
-      expect(tabManagerModule.getTab).toHaveBeenCalledWith('invalid-id');
+      expect(serviceManagerModule.getTab).toHaveBeenCalledWith('invalid-id');
       // No error should be thrown
     });
   });
@@ -243,15 +243,15 @@ describe('Main :: Tab listeners test suite', () => {
       const updatedSettings = settings.loadSettings();
       expect(updatedSettings.tabs).toEqual([{id: '313373'}, {id: '1337'}]);
     });
-    test('Several tabs, order changed, should update tabManager order', () => {
+    test('Several tabs, order changed, should update serviceManager order', () => {
       // Given
       settings.updateSettings({tabs: [{id: '1337'}, {id: '313373'}]});
-      jest.spyOn(tabManagerModule, 'sortTabs').mockImplementation();
+      jest.spyOn(serviceManagerModule, 'sortTabs').mockImplementation();
       main.init();
       // When
       mockIpc.send('tabReorder', {}, {tabIds: ['313373', '1337']});
       // Then
-      expect(tabManagerModule.sortTabs).toHaveBeenCalledWith(['313373', '1337']);
+      expect(serviceManagerModule.sortTabs).toHaveBeenCalledWith(['313373', '1337']);
     });
     test('Several tabs with hidden, order changed, should update settings keeping hidden tags', () => {
       // Given

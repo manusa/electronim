@@ -76,23 +76,23 @@ describe('Find in Page :: main test suite', () => {
     });
   });
   describe('findInPageClose', () => {
-    test('should stop find in page in tabManager', () => {
+    test('should stop find in page in serviceManager', () => {
       // Given
-      const tabManager = require('../../tab-manager');
-      tabManager.addTabs({send: jest.fn()})([{id: 'A'}]);
+      const serviceManager = require('../../service-manager');
+      serviceManager.addTabs({send: jest.fn()})([{id: 'A'}]);
       // When
       eventBus.emit('findInPageClose');
       // Then
-      expect(tabManager.getTab('A').webContents.stopFindInPage).toHaveBeenCalledTimes(1);
+      expect(serviceManager.getTab('A').webContents.stopFindInPage).toHaveBeenCalledTimes(1);
     });
-    test('should remove found-in-page listener in tabManager', () => {
+    test('should remove found-in-page listener in serviceManager', () => {
       // Given
-      const tabManager = require('../../tab-manager');
-      tabManager.addTabs({send: jest.fn()})([{id: 'A'}]);
+      const serviceManager = require('../../service-manager');
+      serviceManager.addTabs({send: jest.fn()})([{id: 'A'}]);
       // When
       eventBus.emit('findInPageClose');
       // Then
-      expect(tabManager.getTab('A').webContents.removeAllListeners).toHaveBeenCalledWith('found-in-page');
+      expect(serviceManager.getTab('A').webContents.removeAllListeners).toHaveBeenCalledWith('found-in-page');
     });
     test('should stop find in page in all child views', () => {
       // Given
@@ -186,10 +186,10 @@ describe('Find in Page :: main test suite', () => {
     describe('with regular tab', () => {
       let tab;
       beforeEach(() => {
-        const tabManager = require('../../tab-manager');
-        tabManager.addTabs({send: jest.fn()})([{id: 'A'}]);
-        tabManager.setActiveTab('A');
-        tab = tabManager.getTab('A');
+        const serviceManager = require('../../service-manager');
+        serviceManager.addTabs({send: jest.fn()})([{id: 'A'}]);
+        serviceManager.setActiveTab('A');
+        tab = serviceManager.getTab('A');
       });
       test('should register found-in-page listener', () => {
         // When

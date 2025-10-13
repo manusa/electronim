@@ -30,7 +30,7 @@ const PRELOAD_ENTRIES = [
   'find-in-page',
   'help',
   'settings',
-  'tab-manager'
+  'service-manager'
 ];
 
 const ESM_ENTRIES = {

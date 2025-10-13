@@ -30,7 +30,7 @@ const webPreferences = {
   nativeWindowOpen: true,
   nodeIntegration: false,
   sandbox: true,
-  preload: path.resolve(__dirname, '..', '..', 'bundles', 'tab-manager.preload.js')
+  preload: path.resolve(__dirname, '..', '..', 'bundles', 'service-manager.preload.js')
 };
 
 const handlePageTitleUpdated = (ipcSender, tabId) => (_e, title) => {

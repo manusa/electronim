@@ -15,7 +15,7 @@
  */
 const path = require('node:path');
 const {WebContentsView} = require('electron');
-const tabManager = require('../tab-manager');
+const serviceManager = require('../service-manager');
 const {findDialog} = require('../base-window');
 const {APP_EVENTS} = require('../constants');
 
@@ -61,7 +61,7 @@ const findInPageOpen = mainWindow => () => {
 };
 
 const findInPageClose = mainWindow => () => {
-  tabManager.stopFindInPage();
+  serviceManager.stopFindInPage();
   mainWindow.contentView.children.forEach(cv => {
     cv.webContents.stopFindInPage('clearSelection');
     cv.webContents.removeAllListeners('found-in-page');
@@ -85,8 +85,8 @@ const findInPage = mainWindow => (event, {text, forward = true}) => {
   const dialog = findDialog(mainWindow);
   if (dialog) {
     webContents = dialog.webContents;
-  } else if (tabManager.getActiveTab() && tabManager.getTab(tabManager.getActiveTab())) {
-    webContents = tabManager.getTab(tabManager.getActiveTab()).webContents;
+  } else if (serviceManager.getActiveTab() && serviceManager.getTab(serviceManager.getActiveTab())) {
+    webContents = serviceManager.getTab(serviceManager.getActiveTab()).webContents;
   }
   const findInPageDialog = mainWindow.contentView.children.find(isFindInPage);
   if (webContents === null || !findInPageDialog) {
