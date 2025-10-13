@@ -25,101 +25,101 @@ describe('Service Manager module test suite', () => {
     userAgent = require('../../user-agent');
     serviceManager = require('../');
   });
-  describe('getTab', () => {
-    test('with existing tab, should return tab', () => {
+  describe('getService', () => {
+    test('with existing service, should return service', () => {
       // Given
-      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addServices({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // When
-      const result = serviceManager.getTab(1337);
+      const result = serviceManager.getService(1337);
       // Then
       expect(result.webContents.loadURL).toHaveBeenCalledWith('https://localhost');
     });
-    test('with NON-existing tab, should return undefined', () => {
+    test('with NON-existing service, should return undefined', () => {
       // Given
-      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addServices({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // When
-      const result = serviceManager.getTab(313373);
+      const result = serviceManager.getService(313373);
       // Then
       expect(result).toBeUndefined();
     });
     test('with null id, should return null', () => {
       // Given
-      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addServices({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // When
-      const result = serviceManager.getTab();
+      const result = serviceManager.getService();
       // Then
       expect(result).toBeNull();
     });
   });
-  describe('Tab traversal functions', () => {
+  describe('Service traversal functions', () => {
     beforeEach(() => {
-      serviceManager.addTabs({send: jest.fn()})([
+      serviceManager.addServices({send: jest.fn()})([
         {id: 'A'},
         {id: 'B'},
         {id: 'C'}
       ]);
     });
-    describe('getNextTab with tabs [A, B, C]', () => {
-      test('with currentTab = A, should return B', () => {
+    describe('getNextService with services [A, B, C]', () => {
+      test('with currentService = A, should return B', () => {
         // Given
-        serviceManager.setActiveTab('A');
+        serviceManager.setActiveService('A');
         // When
-        const nextTab = serviceManager.getNextTab();
+        const nextService = serviceManager.getNextService();
         // Then
-        expect(nextTab).toBe('B');
+        expect(nextService).toBe('B');
       });
-      test('with currentTab = C, should return A', () => {
+      test('with currentService = C, should return A', () => {
         // Given
-        serviceManager.setActiveTab('C');
+        serviceManager.setActiveService('C');
         // When
-        const nextTab = serviceManager.getNextTab();
+        const nextService = serviceManager.getNextService();
         // Then
-        expect(nextTab).toBe('A');
-      });
-    });
-    describe('getPreviousTab', () => {
-      test('with currentTab = B, should return A', () => {
-        // Given
-        serviceManager.setActiveTab('B');
-        // When
-        const nextTab = serviceManager.getPreviousTab();
-        // Then
-        expect(nextTab).toBe('A');
-      });
-      test('with currentTab = A, should return C', () => {
-        // Given
-        serviceManager.setActiveTab('A');
-        // When
-        const nextTab = serviceManager.getPreviousTab();
-        // Then
-        expect(nextTab).toBe('C');
+        expect(nextService).toBe('A');
       });
     });
-    describe('getTabAt', () => {
-      test('with position in range, should return tab in range', () => {
+    describe('getPreviousService', () => {
+      test('with currentService = B, should return A', () => {
+        // Given
+        serviceManager.setActiveService('B');
         // When
-        const nextTab = serviceManager.getTabAt(2);
+        const nextService = serviceManager.getPreviousService();
         // Then
-        expect(nextTab).toBe('B');
+        expect(nextService).toBe('A');
+      });
+      test('with currentService = A, should return C', () => {
+        // Given
+        serviceManager.setActiveService('A');
+        // When
+        const nextService = serviceManager.getPreviousService();
+        // Then
+        expect(nextService).toBe('C');
+      });
+    });
+    describe('getServiceAt', () => {
+      test('with position in range, should return service in range', () => {
+        // When
+        const nextService = serviceManager.getServiceAt(2);
+        // Then
+        expect(nextService).toBe('B');
       });
       test('with position out of range (upper), should return last', () => {
         // When
-        const nextTab = serviceManager.getTabAt(9);
+        const nextService = serviceManager.getServiceAt(9);
         // Then
-        expect(nextTab).toBe('C');
+        expect(nextService).toBe('C');
       });
       test('with position out of range (lower), should return last', () => {
         // When
-        const nextTab = serviceManager.getTabAt(-1);
+        const nextService = serviceManager.getServiceAt(-1);
         // Then
-        expect(nextTab).toBe('A');
+        expect(nextService).toBe('A');
       });
     });
   });
-  describe('addTabs', () => {
+  describe('addServices', () => {
     test('webPreferences is sandboxed and has no node integration', () => {
       // When
-      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addServices({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // Then
       expect(electron.WebContentsView).toHaveBeenCalledTimes(1);
       expect(electron.WebContentsView).toHaveBeenCalledWith({
@@ -128,7 +128,7 @@ describe('Service Manager module test suite', () => {
     });
     test('not sandboxed, should use shared session', () => {
       // When
-      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addServices({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // Then
       expect(electron.session.fromPartition).not.toHaveBeenCalled();
       expect(electron.WebContentsView).toHaveBeenCalledWith({
@@ -136,7 +136,7 @@ describe('Service Manager module test suite', () => {
     });
     test('sandboxed, should use isolated session', () => {
       // When
-      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', sandboxed: true}]);
+      serviceManager.addServices({send: jest.fn()})([{id: 1337, url: 'https://localhost', sandboxed: true}]);
       // Then
       expect(electron.session.fromPartition).toHaveBeenCalledTimes(1);
       expect(electron.WebContentsView).toHaveBeenCalledWith({
@@ -144,13 +144,13 @@ describe('Service Manager module test suite', () => {
     });
     test('openUrlsInApp=true, should not set setWindowOpenHandler', () => {
       // When
-      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', openUrlsInApp: true}]);
+      serviceManager.addServices({send: jest.fn()})([{id: 1337, url: 'https://localhost', openUrlsInApp: true}]);
       // Then
       expect(electron.WebContentsView.mock.results[0].value.webContents.setWindowOpenHandler).not.toHaveBeenCalled();
     });
     test('openUrlsInApp=true, should not set will-navigate event handler', () => {
       // When
-      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', openUrlsInApp: true}]);
+      serviceManager.addServices({send: jest.fn()})([{id: 1337, url: 'https://localhost', openUrlsInApp: true}]);
       // Then
       expect(electron.WebContentsView.mock.results[0].value.listeners['will-navigate']).not.toBeDefined();
     });
@@ -158,7 +158,7 @@ describe('Service Manager module test suite', () => {
       // Given
       const mockIpcSender = {send: jest.fn()};
       // When
-      serviceManager.addTabs(mockIpcSender)([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addServices(mockIpcSender)([{id: 1337, url: 'https://localhost'}]);
       // Then
       expect(electron.WebContentsView.mock.results[0].value.webContents.loadURL).toHaveBeenCalledWith('https://localhost');
       expect(mockIpcSender.send).toHaveBeenCalledTimes(1);
@@ -166,7 +166,7 @@ describe('Service Manager module test suite', () => {
     });
     test('Tab webContents should contain a reference to its id', () => {
       // When
-      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addServices({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // Then
       expect(electron.WebContentsView.mock.results[0].value.webContents.executeJavaScript).toHaveBeenCalledTimes(1);
       expect(electron.WebContentsView.mock.results[0].value.webContents.executeJavaScript).toHaveBeenCalledWith('window.tabId = \'1337\';');
@@ -176,17 +176,17 @@ describe('Service Manager module test suite', () => {
         // Given
         userAgent.BROWSER_VERSIONS.chromium = '79.0.1337.79';
         // When
-        serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+        serviceManager.addServices({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
         // Then
-        const result = serviceManager.getTab(1337).webContents.userAgent;
+        const result = serviceManager.getService(1337).webContents.userAgent;
         expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
         expect(require('electron').app.userAgentFallback).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
       });
       test('chromium not version available, should remove non-standard tokens from user-agent header', () => {
         // When
-        serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+        serviceManager.addServices({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
         // Then
-        const result = serviceManager.getTab(1337).webContents.userAgent;
+        const result = serviceManager.getService(1337).webContents.userAgent;
         expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/WillBeReplacedByLatestChromium Safari/537.36');
         expect(require('electron').app.userAgentFallback).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/WillBeReplacedByLatestChromium Safari/537.36');
       });
@@ -195,18 +195,18 @@ describe('Service Manager module test suite', () => {
       let mockIpcSender;
       beforeEach(() => {
         mockIpcSender = {send: jest.fn()};
-        serviceManager.addTabs(mockIpcSender)([{id: '1337', url: 'https://localhost'}]);
+        serviceManager.addServices(mockIpcSender)([{id: '1337', url: 'https://localhost'}]);
       });
       test('handlePageTitleUpdated, should send setTabTitle event', () => {
         // When
-        serviceManager.getTab('1337').listeners['page-title-updated'](new Event(''), 'Dr.');
+        serviceManager.getService('1337').listeners['page-title-updated'](new Event(''), 'Dr.');
         // Then
         expect(mockIpcSender.send).toHaveBeenCalledWith('setTabTitle', {id: '1337', title: 'Dr.'});
       });
       describe('handlePageFaviconUpdated', () => {
         test('Favicons provided, should send setTabFavicon with the last of the provided favicons', () => {
           // When
-          serviceManager.getTab('1337').listeners['page-favicon-updated'](new Event(''), [
+          serviceManager.getService('1337').listeners['page-favicon-updated'](new Event(''), [
             'http://url-to-favicon/aitana.png',
             'http://url-to-favicon/alex.png'
           ]);
@@ -216,14 +216,14 @@ describe('Service Manager module test suite', () => {
         });
         test('No favicons provided, should send setTabFavicon with the last of the extracted favicons', async () => {
           // Given
-          serviceManager.getTab('1337').webContents.executeJavaScript = jest.fn(arg => {
+          serviceManager.getService('1337').webContents.executeJavaScript = jest.fn(arg => {
             if (arg === 'Array.from(document.querySelectorAll(\'link[rel*="icon"]\')).map(el => el.href)') {
               return ['http://url-to-favicon/julia-128.png', 'http://url-to-favicon/julia.png'];
             }
             return [];
           });
           // When
-          await serviceManager.getTab('1337').listeners['page-favicon-updated'](new Event(''));
+          await serviceManager.getService('1337').listeners['page-favicon-updated'](new Event(''));
           // Then
           expect(mockIpcSender.send)
             .toHaveBeenCalledWith('setTabFavicon', {id: '1337', favicon: 'http://url-to-favicon/julia.png'});
@@ -231,40 +231,40 @@ describe('Service Manager module test suite', () => {
       });
       test('windowOpen (was new-window)', () => {
         // Given
-        serviceManager.getTab('1337').webContents.getURL.mockReturnValue('file://tab/index.html');
+        serviceManager.getService('1337').webContents.getURL.mockReturnValue('file://tab/index.html');
         // When
-        serviceManager.getTab('1337').webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
+        serviceManager.getService('1337').webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
         // Then
         expect(require('electron').shell.openExternal).toHaveBeenCalledWith('https://example.com');
       });
     });
   });
-  describe('sortTabs', () => {
+  describe('sortServices', () => {
     test('Aborts in case of inconsistency', () => {
       // Given
       jest.spyOn(console, 'error').mockImplementationOnce(() => {});
       // When
-      serviceManager.sortTabs(['1', '2']);
+      serviceManager.sortServices(['1', '2']);
       // Then
-      expect(console.error).toHaveBeenCalledWith('Inconsistent tab state, skipping sort operation (2 !== 0).');
+      expect(console.error).toHaveBeenCalledWith('Inconsistent service state, skipping sort operation (2 !== 0).');
     });
-    test('Sorts tabs with new order', () => {
+    test('Sorts services with new order', () => {
       // Given
-      serviceManager.addTabs({send: jest.fn()})([{id: 'A1337', url: 'https://localhost'}, {id: 'B31337', url: 'https://example.com'}]);
+      serviceManager.addServices({send: jest.fn()})([{id: 'A1337', url: 'https://localhost'}, {id: 'B31337', url: 'https://example.com'}]);
       // When
-      serviceManager.sortTabs(['B31337', 'A1337']);
+      serviceManager.sortServices(['B31337', 'A1337']);
       // Then
-      expect(serviceManager.getTabAt(1)).toBe('B31337');
-      expect(serviceManager.getTabAt(2)).toBe('A1337');
+      expect(serviceManager.getServiceAt(1)).toBe('B31337');
+      expect(serviceManager.getServiceAt(2)).toBe('A1337');
     });
   });
-  describe('activeTab', () => {
-    test('setActiveTab/getActiveTab, should set/return currently active tab', () => {
+  describe('activeService', () => {
+    test('setActiveService/getActiveService, should set/return currently active service', () => {
       // Given
-      expect(serviceManager.getActiveTab()).toBeNull();
-      serviceManager.setActiveTab('1337');
+      expect(serviceManager.getActiveService()).toBeNull();
+      serviceManager.setActiveService('1337');
       // When
-      const result = serviceManager.getActiveTab();
+      const result = serviceManager.getActiveService();
       // Then
       expect(result).toBe('1337');
     });
@@ -278,7 +278,7 @@ describe('Service Manager module test suite', () => {
     });
     test('Existing tabs, should delete all tabs entries and destroy their Views', () => {
       // Given
-      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addServices({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // When
       serviceManager.removeAll();
       // Then

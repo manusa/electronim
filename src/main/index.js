@@ -61,14 +61,14 @@ const resetMainWindow = () => {
 };
 
 const activateTab = ({tabId, restoreWindow = true}) => {
-  const activeTab = serviceManager.getTab(tabId);
+  const activeTab = serviceManager.getService(tabId);
   if (activeTab) {
     const {width, height} = mainWindow.getContentBounds();
     resetMainWindow();
     mainWindow.contentView.addChildView(activeTab);
     tabContainer.setBounds({x: 0, y: 0, width, height: TABS_CONTAINER_HEIGHT});
     activeTab.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
-    serviceManager.setActiveTab(tabId);
+    serviceManager.setActiveService(tabId);
     if (restoreWindow) {
       activeTab.webContents.focus();
     }
@@ -113,7 +113,7 @@ const handleMainWindowResize = () => {
 const handleTabReload = event => event.sender.reloadIgnoringCache();
 
 const handleSpecificTabReload = (_event, {tabId}) => {
-  const tab = serviceManager.getTab(tabId);
+  const tab = serviceManager.getService(tabId);
   if (tab) {
     tab.webContents.reloadIgnoringCache();
   }
@@ -129,7 +129,7 @@ const handleTabTraverse = getTabIdFunction => () => {
 };
 
 const handleTabSwitchToPosition = tabPosition => {
-  handleTabTraverse(() => serviceManager.getTabAt(tabPosition))();
+  handleTabTraverse(() => serviceManager.getServiceAt(tabPosition))();
 };
 
 const handleZoomIn = event => event.sender.setZoomFactor(event.sender.getZoomFactor() + 0.1);
@@ -154,7 +154,7 @@ const handleTabReorder = (_event, {tabIds: visibleTabIds}) => {
     ...visibleTabIds.map(tabId => currentTabMap[tabId]),
     ...hiddenTabIds.map(tabId => currentTabMap[tabId])
   ];
-  serviceManager.sortTabs(visibleTabIds);
+  serviceManager.sortServices(visibleTabIds);
   updateSettings({tabs});
 };
 
@@ -166,7 +166,7 @@ const initTabListener = () => {
       .map(tab => ({...tab, active: tab.id === currentSettings.activeTab}));
     if (tabs.length > 0) {
       const ipcSender = event.sender;
-      serviceManager.addTabs(ipcSender)(tabs);
+      serviceManager.addServices(ipcSender)(tabs);
     } else {
       eventBus.emit(APP_EVENTS.settingsOpenDialog);
     }
@@ -205,7 +205,7 @@ const appMenuClose = () => {
     return;
   }
   mainWindow.contentView.removeChildView(appMenu);
-  activateTab({tabId: serviceManager.getActiveTab()});
+  activateTab({tabId: serviceManager.getActiveService()});
 };
 
 const fullscreenToggle = () => {
@@ -218,7 +218,7 @@ const closeDialog = () => {
     return;
   }
   mainWindow.contentView.removeChildView(dialogView);
-  activateTab({tabId: serviceManager.getActiveTab()});
+  activateTab({tabId: serviceManager.getActiveService()});
   dialogView.webContents.destroy();
 };
 
@@ -287,8 +287,8 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.settingsImport, importSettings(mainWindow));
   eventBus.handle(APP_EVENTS.settingsOpenFolder, openElectronimFolder);
   eventBus.on(APP_EVENTS.tabSwitchToPosition, handleTabSwitchToPosition);
-  eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(serviceManager.getNextTab));
-  eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(serviceManager.getPreviousTab));
+  eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(serviceManager.getNextService));
+  eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(serviceManager.getPreviousService));
   eventBus.on(APP_EVENTS.trayInit, initTray);
 };
 

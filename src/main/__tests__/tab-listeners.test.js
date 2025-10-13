@@ -44,7 +44,7 @@ describe('Main :: Tab listeners test suite', () => {
     let addTabsNested;
     beforeEach(() => {
       addTabsNested = jest.fn();
-      jest.spyOn(serviceManagerModule, 'addTabs')
+      jest.spyOn(serviceManagerModule, 'addServices')
         .mockImplementation(() => addTabsNested);
     });
     test('No tabs in settings, should open settings dialog', () => {
@@ -54,7 +54,7 @@ describe('Main :: Tab listeners test suite', () => {
       // When
       mockIpc.send('tabsReady', {});
       // Then
-      expect(serviceManagerModule.addTabs).not.toHaveBeenCalled();
+      expect(serviceManagerModule.addServices).not.toHaveBeenCalled();
       expect(addTabsNested).not.toHaveBeenCalled();
       expect(mockView.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
@@ -73,7 +73,7 @@ describe('Main :: Tab listeners test suite', () => {
       // When
       mockIpc.send('tabsReady', event);
       // Then
-      expect(serviceManagerModule.addTabs).toHaveBeenCalledWith(event.sender);
+      expect(serviceManagerModule.addServices).toHaveBeenCalledWith(event.sender);
       expect(addTabsNested).toHaveBeenCalledTimes(1);
       expect(addTabsNested).toHaveBeenCalledWith([{id: '1337', otherInfo: 'A Tab', active: true}]);
       expect(mockView.webContents.loadURL)
@@ -87,7 +87,7 @@ describe('Main :: Tab listeners test suite', () => {
         setBounds: jest.fn(),
         webContents: {focus: jest.fn()}
       };
-      serviceManagerModule.getTab = jest.fn(id => (id === 'validId' ? activeTab : null));
+      serviceManagerModule.getService = jest.fn(id => (id === 'validId' ? activeTab : null));
     });
     test('no active tab, should do nothing', async () => {
       // Given
@@ -139,7 +139,7 @@ describe('Main :: Tab listeners test suite', () => {
   test('notificationClick, should restore window and activate tab', async () => {
     // Given
     settings.updateSettings({startMinimized: true});
-    jest.spyOn(serviceManagerModule, 'getTab').mockImplementation();
+    jest.spyOn(serviceManagerModule, 'getService').mockImplementation();
     await waitForTrayInit(() => main.init());
     const baseWindow = electron.BaseWindow.getAllWindows()[0];
     baseWindow.restore = jest.fn();
@@ -151,7 +151,7 @@ describe('Main :: Tab listeners test suite', () => {
     expect(baseWindow.restore).toHaveBeenCalledTimes(1);
     expect(baseWindow.show).toHaveBeenCalledTimes(1);
     expect(baseWindow.show).toHaveBeenCalledAfter(baseWindow.restore);
-    expect(serviceManagerModule.getTab).toHaveBeenCalledWith('validId');
+    expect(serviceManagerModule.getService).toHaveBeenCalledWith('validId');
   });
   test('handleReload', () => {
     const event = {sender: {reloadIgnoringCache: jest.fn()}};
@@ -167,22 +167,22 @@ describe('Main :: Tab listeners test suite', () => {
       const mockTab = {
         webContents: {reloadIgnoringCache: jest.fn()}
       };
-      jest.spyOn(serviceManagerModule, 'getTab').mockReturnValue(mockTab);
+      jest.spyOn(serviceManagerModule, 'getService').mockReturnValue(mockTab);
       main.init();
       // When
       mockIpc.send('reloadTab', {}, {tabId: 'test-tab-id'});
       // Then
-      expect(serviceManagerModule.getTab).toHaveBeenCalledWith('test-tab-id');
+      expect(serviceManagerModule.getService).toHaveBeenCalledWith('test-tab-id');
       expect(mockTab.webContents.reloadIgnoringCache).toHaveBeenCalledTimes(1);
     });
     test('invalid tab ID, should do nothing', () => {
       // Given
-      jest.spyOn(serviceManagerModule, 'getTab').mockReturnValue(null);
+      jest.spyOn(serviceManagerModule, 'getService').mockReturnValue(null);
       main.init();
       // When
       mockIpc.send('reloadTab', {}, {tabId: 'invalid-id'});
       // Then
-      expect(serviceManagerModule.getTab).toHaveBeenCalledWith('invalid-id');
+      expect(serviceManagerModule.getService).toHaveBeenCalledWith('invalid-id');
       // No error should be thrown
     });
   });
@@ -246,12 +246,12 @@ describe('Main :: Tab listeners test suite', () => {
     test('Several tabs, order changed, should update serviceManager order', () => {
       // Given
       settings.updateSettings({tabs: [{id: '1337'}, {id: '313373'}]});
-      jest.spyOn(serviceManagerModule, 'sortTabs').mockImplementation();
+      jest.spyOn(serviceManagerModule, 'sortServices').mockImplementation();
       main.init();
       // When
       mockIpc.send('tabReorder', {}, {tabIds: ['313373', '1337']});
       // Then
-      expect(serviceManagerModule.sortTabs).toHaveBeenCalledWith(['313373', '1337']);
+      expect(serviceManagerModule.sortServices).toHaveBeenCalledWith(['313373', '1337']);
     });
     test('Several tabs with hidden, order changed, should update settings keeping hidden tags', () => {
       // Given
