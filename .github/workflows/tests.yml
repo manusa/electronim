@@ -38,7 +38,18 @@ jobs:
       - name: Pretest
         run: npm run pretest
       - name: Test
-        run: NODE_OPTIONS=--experimental-vm-modules npm test
+        run: npm test
+      - name: E2E Tests
+        run: |
+          # Start virtual display for headless Electron
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          # Wait for display to be ready
+          sleep 3
+          # Run E2E tests
+          npm run test:e2e
       - name: SonarCloud
         run: |
           ./node_modules/.bin/sonar

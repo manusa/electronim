@@ -28,7 +28,8 @@ describe('E2E :: Application startup test suite', () => {
 
     beforeAll(async () => {
       // Start HTTP server with test page
-      testServer = await createTestServer();
+      // Use manualCleanup to prevent auto-close after each test
+      testServer = await createTestServer({manualCleanup: true});
 
       // Start Electron with test settings
       electron = await spawnElectron({
