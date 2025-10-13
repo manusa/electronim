@@ -33,9 +33,10 @@ if (!globalThis.__testHttpServers__) {
  *   - routes[path].contentType - Content-Type header (default: 'application/json')
  *   - routes[path].body - Response body (string or object, objects are JSON.stringified)
  * @param {boolean} options.cors - Enable CORS headers (default: false)
+ * @param {boolean} options.manualCleanup - If true, server won't be auto-closed after each test (default: false)
  * @returns {Promise<{server: http.Server, port: number, url: string, close: Function}>}
  */
-const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html', handler, routes, cors = false} = {}) => {
+const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html', handler, routes, cors = false, manualCleanup = false} = {}) => {
   let htmlContent;
   if (htmlFile && !handler && !routes) {
     const htmlPath = path.join(__dirname, htmlFile);
@@ -103,7 +104,12 @@ const createTestServer = async ({port = 0, htmlFile = 'testdata/test-page.html',
       });
     }
   };
-  globalThis.__testHttpServers__.push(testServer);
+
+  // Only track for automatic cleanup if not manually managed
+  if (!manualCleanup) {
+    globalThis.__testHttpServers__.push(testServer);
+  }
+
   return testServer;
 };
 
