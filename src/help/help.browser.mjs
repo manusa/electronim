@@ -13,26 +13,36 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {docs, close} = window.electron;
+const {docs, metadata, close} = window.electron;
 
 import {ELECTRONIM_VERSION, html, render, Icon, TopAppBar} from '../components/index.mjs';
 
 const helpRoot = () => document.querySelector('.help-root');
 
 const Document = ({id}) => html`
-  <a id=${id} />
   <div dangerouslySetInnerHTML=${{
     __html: docs[id]
   }}></div>
+`;
+
+const TocItem = ({item}) => html`
+  <li>
+    <a href="#${item.id}">${item.title}</a>
+    ${item.headings && item.headings.length > 0 && html`
+      <ol class="toc-sublevel">
+        ${item.headings.map(heading => html`
+          <li><a href="#${item.id}__${heading.id}">${heading.text}</a></li>
+        `)}
+      </ol>
+    `}
+  </li>
 `;
 
 const Toc = () => html`
   <div class="toc-container">
     <h1>Table of Contents</h1>
     <ol>
-      <li><a href="#Setup.md">Setup</a></li>
-      <li><a href="#Keyboard-shortcuts.md">Keyboard Shortcuts</a></li>
-      <li><a href="#Troubleshooting.md">Troubleshooting</a></li>
+      ${metadata.map(item => html`<${TocItem} item=${item} />`)}
     </ol>
   </div>
 `;
@@ -45,9 +55,7 @@ const Footer = () => html`
 
 const Content = () => html`
   <div class="documents-container">
-    <${Document} id="Setup.md"/>
-    <${Document} id="Keyboard-shortcuts.md"/>
-    <${Document} id="Troubleshooting.md"/>
+    ${metadata.map(({id}) => html`<${Document} id=${id}/>`)}
     <${Footer}/>
   </div>
 `;

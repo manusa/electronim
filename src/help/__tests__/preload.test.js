@@ -26,15 +26,17 @@ describe('Help Module preload test suite', () => {
       jest.mock('!val-loader!./docs.browser.val-loader', () => ({
         docs: {
           one: 'this is a doc'
-        }
+        },
+        metadata: []
       }), {virtual: true});
       require('../preload');
     });
     describe('creates an API', () => {
-      test('with doc entries', () => {
+      test('with doc entries and metadata', () => {
         expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
           close: expect.toBeFunction(),
-          docs: {one: 'this is a doc'}
+          docs: {one: 'this is a doc'},
+          metadata: []
         });
       });
       test('with close function', () => {
@@ -48,15 +50,37 @@ describe('Help Module preload test suite', () => {
     beforeEach(() => {
       require('../../../bundles/help.preload');
     });
-    test('loads document contents with valid asset URLs', () => {
+    test('loads document contents with valid asset URLs and IDs', () => {
       const electronApi = electron.contextBridge.exposeInMainWorld.mock.calls[0][1];
       expect(electronApi.docs).toEqual(expect.objectContaining({
-        'Keyboard-shortcuts.md': expect.stringMatching(/<h1>Keyboard Shortcuts/i),
-        'Roadmap.md': expect.any(String),
-        'Screenshots.md': expect.stringContaining('<img src="../../docs/screenshots/main.png" alt="Main" />'),
+        'Keyboard-shortcuts.md': expect.stringMatching(/<h1 id="Keyboard-shortcuts.md">Keyboard Shortcuts/i),
         'Setup.md': expect.stringMatching(/There are several options available/i),
         'Troubleshooting.md': expect.any(String)
       }));
+
+      // Verify that only documents in DOCUMENT_ORDER are loaded
+      expect(Object.keys(electronApi.docs)).toHaveLength(3);
+      expect(electronApi.docs['Roadmap.md']).toBeUndefined();
+      expect(electronApi.docs['Screenshots.md']).toBeUndefined();
+    });
+    test('loads metadata for all documents', () => {
+      const electronApi = electron.contextBridge.exposeInMainWorld.mock.calls[0][1];
+      expect(electronApi.metadata).toBeDefined();
+      expect(Array.isArray(electronApi.metadata)).toBe(true);
+      expect(electronApi.metadata.length).toBe(3);
+
+      // Verify metadata structure
+      electronApi.metadata.forEach(meta => {
+        expect(meta).toHaveProperty('id');
+        expect(meta).toHaveProperty('title');
+        expect(meta).toHaveProperty('headings');
+      });
+
+      // Verify specific titles
+      const titles = electronApi.metadata.map(m => m.title);
+      expect(titles).toContain('Setup');
+      expect(titles).toContain('Keyboard Shortcuts');
+      expect(titles).toContain('Troubleshooting');
     });
   });
 });

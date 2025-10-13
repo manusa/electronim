@@ -15,9 +15,10 @@
  */
 /* eslint-disable no-undef */
 const {contextBridge, ipcRenderer} = require('electron');
-const {docs} = require('!val-loader!./docs.browser.val-loader');
+const {docs, metadata} = require('!val-loader!./docs.browser.val-loader');
 
 contextBridge.exposeInMainWorld('electron', {
   close: () => ipcRenderer.send(APP_EVENTS.closeDialog),
-  docs
+  docs,
+  metadata
 });
