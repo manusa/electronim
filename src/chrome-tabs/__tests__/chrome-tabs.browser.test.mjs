@@ -273,8 +273,8 @@ describe('ChromeTabs in Browser test suite', () => {
       expect(tabElements.length).toBe(3);
 
       tabElements.forEach((tab, index) => {
-        expect(tab.hasAttribute('data-tab-id')).toBe(true);
-        expect(tab.getAttribute('data-tab-id')).toBe(String(tabs[index].id));
+        expect('tabId' in tab.dataset).toBe(true);
+        expect(tab.dataset.tabId).toBe(String(tabs[index].id));
       });
     });
     test('should verify chrome-tab class exists on all tab elements', () => {
@@ -294,14 +294,14 @@ describe('ChromeTabs in Browser test suite', () => {
       expect(tabTitle).not.toBeNull();
       const tabFromTitle = tabTitle.closest('.chrome-tab');
       expect(tabFromTitle).not.toBeNull();
-      expect(tabFromTitle.getAttribute('data-tab-id')).toBe('1337');
+      expect(tabFromTitle.dataset.tabId).toBe('1337');
 
       // Test from tab favicon
       const tabFavicon = $chromeTabs.querySelector('.chrome-tab[data-tab-id="13373"] .chrome-tab-favicon-icon');
       expect(tabFavicon).not.toBeNull();
       const tabFromFavicon = tabFavicon.closest('.chrome-tab');
       expect(tabFromFavicon).not.toBeNull();
-      expect(tabFromFavicon.getAttribute('data-tab-id')).toBe('13373');
+      expect(tabFromFavicon.dataset.tabId).toBe('13373');
     });
     test('should return null when closest is called on non-tab elements', () => {
       // Verify that elements outside of tabs don't have .chrome-tab as ancestor
@@ -329,7 +329,7 @@ describe('ChromeTabs in Browser test suite', () => {
       tabs.forEach(tabData => {
         const tab = $chromeTabs.querySelector(`.chrome-tab[data-tab-id="${tabData.id}"]`);
         expect(tab).not.toBeNull();
-        expect(tab.getAttribute('data-tab-id')).toBe(String(tabData.id));
+        expect(tab.dataset.tabId).toBe(String(tabData.id));
       });
     });
   });
