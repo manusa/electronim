@@ -16,7 +16,7 @@
 const {WebContentsView} = require('electron');
 const path = require('node:path');
 const {showDialog} = require('../base-window');
-const {handleRedirect, windowOpenHandler} = require('../tab-manager/redirect');
+const {handleRedirect, windowOpenHandler} = require('../service-manager/redirect');
 
 const webPreferences = {
   contextIsolation: true,

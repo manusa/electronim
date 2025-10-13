@@ -64,7 +64,7 @@ describe('Tab Manager Module preload test suite', () => {
     });
     test('adds required libraries', async () => {
       // When
-      require('../../../bundles/tab-manager.preload');
+      require('../../../bundles/service-manager.preload');
       // Then
       expect(globalThis.Notification).toEqual(expect.any(Function));
       expect(globalThis.navigator.mediaDevices.getDisplayMedia).toEqual(expect.any(Function));

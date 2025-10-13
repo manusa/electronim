@@ -112,7 +112,7 @@ describe('Main :: Global listeners test suite', () => {
       });
       test('should activate current tab', () => {
         // Given
-        const tabManagerModule = require('../../tab-manager');
+        const tabManagerModule = require('../../service-manager');
         jest.spyOn(tabManagerModule, 'getActiveTab').mockImplementation();
         // When
         eventBus.send('closeDialog');
@@ -272,7 +272,7 @@ describe('Main :: Global listeners test suite', () => {
     });
     test('should reset all views', () => {
       // Given
-      const tabManagerModule = require('../../tab-manager');
+      const tabManagerModule = require('../../service-manager');
       jest.spyOn(tabManagerModule, 'removeAll').mockImplementation();
       // When
       eventBus.send('settingsSave', {}, {tabs: [{id: 1337}], enabledDictionaries: []});
@@ -310,7 +310,7 @@ describe('Main :: Global listeners test suite', () => {
   describe('handleTabTraverse', () => {
     let tabManagerModule;
     beforeEach(() => {
-      tabManagerModule = require('../../tab-manager');
+      tabManagerModule = require('../../service-manager');
       jest.spyOn(tabManagerModule, 'getTab').mockImplementation();
     });
     test.each([

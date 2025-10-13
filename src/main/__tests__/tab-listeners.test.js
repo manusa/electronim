@@ -37,7 +37,7 @@ describe('Main :: Tab listeners test suite', () => {
     settings = await require('../../__tests__').testSettings();
     mockIpc = electron.ipcMain;
     mockView = electron.webContentsViewInstance;
-    tabManagerModule = require('../../tab-manager');
+    tabManagerModule = require('../../service-manager');
     main = require('../');
   });
   describe('tabsReady', () => {

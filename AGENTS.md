@@ -100,7 +100,7 @@ The project includes E2E tests to verify the complete Electron application stack
 ### Project Structure
 - `src/` - Main source code
   - `main/` - Electron main process logic
-  - `tab-manager/` - Core tab and messaging functionality
+  - `service-manager/` - Core service and messaging functionality
   - `settings/` - Application settings and configuration UI
   - `cli/` - Command-line argument parsing and validation
   - `about/` - About dialog and information

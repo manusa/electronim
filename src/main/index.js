@@ -30,7 +30,7 @@ const {getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSett
 const {
   getAvailableDictionaries, getAvailableNativeDictionaries, loadDictionaries, getEnabledDictionaries
 } = require('../spell-check');
-const tabManager = require('../tab-manager');
+const serviceManager = require('../service-manager');
 const {initTray} = require('../tray');
 const {initBrowserVersions, userAgentForWebContents} = require('../user-agent');
 
@@ -61,14 +61,14 @@ const resetMainWindow = () => {
 };
 
 const activateTab = ({tabId, restoreWindow = true}) => {
-  const activeTab = tabManager.getTab(tabId);
+  const activeTab = serviceManager.getTab(tabId);
   if (activeTab) {
     const {width, height} = mainWindow.getContentBounds();
     resetMainWindow();
     mainWindow.contentView.addChildView(activeTab);
     tabContainer.setBounds({x: 0, y: 0, width, height: TABS_CONTAINER_HEIGHT});
     activeTab.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
-    tabManager.setActiveTab(tabId);
+    serviceManager.setActiveTab(tabId);
     if (restoreWindow) {
       activeTab.webContents.focus();
     }
@@ -113,7 +113,7 @@ const handleMainWindowResize = () => {
 const handleTabReload = event => event.sender.reloadIgnoringCache();
 
 const handleSpecificTabReload = (_event, {tabId}) => {
-  const tab = tabManager.getTab(tabId);
+  const tab = serviceManager.getTab(tabId);
   if (tab) {
     tab.webContents.reloadIgnoringCache();
   }
@@ -129,7 +129,7 @@ const handleTabTraverse = getTabIdFunction => () => {
 };
 
 const handleTabSwitchToPosition = tabPosition => {
-  handleTabTraverse(() => tabManager.getTabAt(tabPosition))();
+  handleTabTraverse(() => serviceManager.getTabAt(tabPosition))();
 };
 
 const handleZoomIn = event => event.sender.setZoomFactor(event.sender.getZoomFactor() + 0.1);
@@ -154,7 +154,7 @@ const handleTabReorder = (_event, {tabIds: visibleTabIds}) => {
     ...visibleTabIds.map(tabId => currentTabMap[tabId]),
     ...hiddenTabIds.map(tabId => currentTabMap[tabId])
   ];
-  tabManager.sortTabs(visibleTabIds);
+  serviceManager.sortTabs(visibleTabIds);
   updateSettings({tabs});
 };
 
@@ -166,7 +166,7 @@ const initTabListener = () => {
       .map(tab => ({...tab, active: tab.id === currentSettings.activeTab}));
     if (tabs.length > 0) {
       const ipcSender = event.sender;
-      tabManager.addTabs(ipcSender)(tabs);
+      serviceManager.addTabs(ipcSender)(tabs);
     } else {
       eventBus.emit(APP_EVENTS.settingsOpenDialog);
     }
@@ -175,7 +175,7 @@ const initTabListener = () => {
     activateTab({tabId: data.id, restoreWindow: data.restoreWindow});
   });
   eventBus.on(APP_EVENTS.canNotify, (event, tabId) => {
-    event.returnValue = tabManager.canNotify(tabId);
+    event.returnValue = serviceManager.canNotify(tabId);
   });
   eventBus.on(APP_EVENTS.notificationClick, (_event, {tabId}) => {
     tabContainer.webContents.send(APP_EVENTS.activateTabInContainer, {tabId});
@@ -205,7 +205,7 @@ const appMenuClose = () => {
     return;
   }
   mainWindow.contentView.removeChildView(appMenu);
-  activateTab({tabId: tabManager.getActiveTab()});
+  activateTab({tabId: serviceManager.getActiveTab()});
 };
 
 const fullscreenToggle = () => {
@@ -218,7 +218,7 @@ const closeDialog = () => {
     return;
   }
   mainWindow.contentView.removeChildView(dialogView);
-  activateTab({tabId: tabManager.getActiveTab()});
+  activateTab({tabId: serviceManager.getActiveTab()});
   dialogView.webContents.destroy();
 };
 
@@ -247,7 +247,7 @@ const saveSettings = (_event, settings) => {
     mainWindow.contentView.removeChildView(view);
     view.webContents.destroy();
   });
-  tabManager.removeAll();
+  serviceManager.removeAll();
   tabContainer = newTabContainer();
   eventBus.emit(APP_EVENTS.keyboardEventsInit);
   eventBus.emit(APP_EVENTS.trayInit);
@@ -287,8 +287,8 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.settingsImport, importSettings(mainWindow));
   eventBus.handle(APP_EVENTS.settingsOpenFolder, openElectronimFolder);
   eventBus.on(APP_EVENTS.tabSwitchToPosition, handleTabSwitchToPosition);
-  eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(tabManager.getNextTab));
-  eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(tabManager.getPreviousTab));
+  eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(serviceManager.getNextTab));
+  eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(serviceManager.getPreviousTab));
   eventBus.on(APP_EVENTS.trayInit, initTray);
 };
 
