@@ -20,7 +20,7 @@ describe('Browser Spell Check test suite', () => {
   let browserSpellCheck;
   beforeEach(() => {
     jest.resetModules();
-    global.APP_EVENTS = require('../../constants').APP_EVENTS;
+    globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
     electron = require('../../__tests__').testElectron();
     electron.ipcRenderer.invoke = jest.fn(async () => ({useNativeSpellChecker: false}));
     electron.webFrame = {

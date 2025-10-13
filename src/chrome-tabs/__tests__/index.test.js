@@ -112,7 +112,7 @@ describe('Chrome Tabs Module module test suite', () => {
     test('sets interval to check for updates with unref', () => {
       // Given
       const unref = jest.fn();
-      global.setInterval = jest.fn(() => ({unref}));
+      globalThis.setInterval = jest.fn(() => ({unref}));
       // When
       chromeTabs.newTabContainer();
       // Then

@@ -21,7 +21,7 @@ describe('App Menu Module preload test suite', () => {
   });
   describe('preload (just for coverage and sanity, see bundle tests)', () => {
     beforeEach(() => {
-      global.APP_EVENTS = require('../../constants').APP_EVENTS;
+      globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
       require('../preload');
     });
     test('creates an API', () => {
