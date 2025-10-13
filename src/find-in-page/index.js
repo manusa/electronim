@@ -85,8 +85,8 @@ const findInPage = mainWindow => (event, {text, forward = true}) => {
   const dialog = findDialog(mainWindow);
   if (dialog) {
     webContents = dialog.webContents;
-  } else if (serviceManager.getActiveTab() && serviceManager.getTab(serviceManager.getActiveTab())) {
-    webContents = serviceManager.getTab(serviceManager.getActiveTab()).webContents;
+  } else if (serviceManager.getActiveService() && serviceManager.getService(serviceManager.getActiveService())) {
+    webContents = serviceManager.getService(serviceManager.getActiveService()).webContents;
   }
   const findInPageDialog = mainWindow.contentView.children.find(isFindInPage);
   if (webContents === null || !findInPageDialog) {

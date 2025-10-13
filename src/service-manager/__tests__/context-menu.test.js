@@ -27,8 +27,8 @@ describe('Service Manager context-menu test suite', () => {
     event = new Event('');
     params = {x: 13, y: 37};
     serviceManager = require('../');
-    serviceManager.addTabs({send: jest.fn()})([{id: '1337', url: 'https://localhost'}]);
-    listeners = serviceManager.getTab('1337').webContents.listeners;
+    serviceManager.addServices({send: jest.fn()})([{id: '1337', url: 'https://localhost'}]);
+    listeners = serviceManager.getService('1337').webContents.listeners;
   });
   describe('spellCheckContextMenu', () => {
     let spellChecker;
@@ -45,7 +45,7 @@ describe('Service Manager context-menu test suite', () => {
     });
     describe('with native spellcheck', () => {
       beforeEach(() => {
-        serviceManager.getTab('1337').webContents.session.spellcheck = true;
+        serviceManager.getService('1337').webContents.session.spellcheck = true;
       });
       test('Spelling suggestions, should open a Menu with all suggestions', async () => {
         // Given
@@ -107,7 +107,7 @@ describe('Service Manager context-menu test suite', () => {
         }));
       });
       test('enabled when canGoBack returns true', async () => {
-        serviceManager.getTab('1337').webContents.navigationHistory.canGoBack = jest.fn(() => true);
+        serviceManager.getService('1337').webContents.navigationHistory.canGoBack = jest.fn(() => true);
         await listeners('context-menu')(event, params);
         expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
           enabled: false,
@@ -118,14 +118,14 @@ describe('Service Manager context-menu test suite', () => {
         // When
         electron.MenuItem.mock.calls.find(c => c[0].label === 'Back')[0].click();
         // Then
-        expect(serviceManager.getTab('1337').webContents.navigationHistory.goBack).toHaveBeenCalledTimes(1);
+        expect(serviceManager.getService('1337').webContents.navigationHistory.goBack).toHaveBeenCalledTimes(1);
       });
     });
     test('Reload click, should trigger reload', async () => {
       // When
       electron.MenuItem.mock.calls.find(c => c[0].label === 'Reload')[0].click();
       // Then
-      expect(serviceManager.getTab('1337').webContents.reload).toHaveBeenCalledTimes(1);
+      expect(serviceManager.getService('1337').webContents.reload).toHaveBeenCalledTimes(1);
     });
     test('Find in Page click, should trigger findInPageOpen event', async () => {
       // Given
@@ -140,7 +140,7 @@ describe('Service Manager context-menu test suite', () => {
       // When
       electron.MenuItem.mock.calls.find(c => c[0].label === 'DevTools')[0].click();
       // Then
-      expect(serviceManager.getTab('1337').webContents.openDevTools).toHaveBeenCalledTimes(1);
+      expect(serviceManager.getService('1337').webContents.openDevTools).toHaveBeenCalledTimes(1);
     });
     describe('Clipboard related', () => {
       describe('Cut', () => {
@@ -156,7 +156,7 @@ describe('Service Manager context-menu test suite', () => {
           // When
           electron.MenuItem.mock.calls.find(c => c[0].label === 'Cut')[0].click();
           // Then
-          expect(serviceManager.getTab('1337').webContents.cut).toHaveBeenCalledTimes(1);
+          expect(serviceManager.getService('1337').webContents.cut).toHaveBeenCalledTimes(1);
         });
       });
       describe('Copy', () => {
@@ -181,7 +181,7 @@ describe('Service Manager context-menu test suite', () => {
           // When
           electron.MenuItem.mock.calls.find(c => c[0].label === 'Copy')[0].click();
           // Then
-          expect(serviceManager.getTab('1337').webContents.copy).toHaveBeenCalledTimes(1);
+          expect(serviceManager.getService('1337').webContents.copy).toHaveBeenCalledTimes(1);
         });
       });
       describe('Copy image', () => {
@@ -197,7 +197,7 @@ describe('Service Manager context-menu test suite', () => {
           // When
           electron.MenuItem.mock.calls.find(c => c[0].label === 'Copy image')[0].click();
           // Then
-          expect(serviceManager.getTab('1337').webContents.copyImageAt).toHaveBeenCalledTimes(1);
+          expect(serviceManager.getService('1337').webContents.copyImageAt).toHaveBeenCalledTimes(1);
         });
       });
     });
@@ -214,7 +214,7 @@ describe('Service Manager context-menu test suite', () => {
         // When
         electron.MenuItem.mock.calls.find(c => c[0].label === 'Paste')[0].click();
         // Then
-        expect(serviceManager.getTab('1337').webContents.paste).toHaveBeenCalledTimes(1);
+        expect(serviceManager.getService('1337').webContents.paste).toHaveBeenCalledTimes(1);
       });
     });
     describe('Link context menu', () => {

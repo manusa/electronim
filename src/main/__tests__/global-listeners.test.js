@@ -113,11 +113,11 @@ describe('Main :: Global listeners test suite', () => {
       test('should activate current tab', () => {
         // Given
         const serviceManagerModule = require('../../service-manager');
-        jest.spyOn(serviceManagerModule, 'getActiveTab').mockImplementation();
+        jest.spyOn(serviceManagerModule, 'getActiveService').mockImplementation();
         // When
         eventBus.send('closeDialog');
         // Then
-        expect(serviceManagerModule.getActiveTab).toHaveBeenCalledTimes(1);
+        expect(serviceManagerModule.getActiveService).toHaveBeenCalledTimes(1);
       });
       test('should not call update settings', () => {
         // Given
@@ -311,7 +311,7 @@ describe('Main :: Global listeners test suite', () => {
     let serviceManagerModule;
     beforeEach(() => {
       serviceManagerModule = require('../../service-manager');
-      jest.spyOn(serviceManagerModule, 'getTab').mockImplementation();
+      jest.spyOn(serviceManagerModule, 'getService').mockImplementation();
     });
     test.each([
       'tabTraverseNext', 'tabTraversePrevious'
@@ -321,35 +321,35 @@ describe('Main :: Global listeners test suite', () => {
       // When
       eventBus.send(event);
       // Then
-      expect(serviceManagerModule.getTab).not.toHaveBeenCalled();
+      expect(serviceManagerModule.getService).not.toHaveBeenCalled();
     });
     describe('with tabs visible, should traverse', () => {
       beforeEach(() => {
         baseWindow.getBrowserViews = jest.fn(() => [new electron.BrowserView(), new electron.BrowserView()]);
       });
       test('tabTraverseNext', () => {
-        jest.spyOn(serviceManagerModule, 'getNextTab').mockImplementation(() => 'nextTabId');
+        jest.spyOn(serviceManagerModule, 'getNextService').mockImplementation(() => 'nextTabId');
         main.init();
         // When
         eventBus.emit('tabTraverseNext');
         // Then
-        expect(serviceManagerModule.getTab).toHaveBeenCalledWith('nextTabId');
+        expect(serviceManagerModule.getService).toHaveBeenCalledWith('nextTabId');
       });
       test('tabTraversePrevious', () => {
-        jest.spyOn(serviceManagerModule, 'getPreviousTab').mockImplementation(() => 'previousTabId');
+        jest.spyOn(serviceManagerModule, 'getPreviousService').mockImplementation(() => 'previousTabId');
         main.init();
         // When
         eventBus.emit('tabTraversePrevious');
         // Then
-        expect(serviceManagerModule.getTab).toHaveBeenCalledWith('previousTabId');
+        expect(serviceManagerModule.getService).toHaveBeenCalledWith('previousTabId');
       });
       test('tabSwitchToPosition', () => {
-        jest.spyOn(serviceManagerModule, 'getTabAt').mockImplementation(() => 'tabAtPosition');
+        jest.spyOn(serviceManagerModule, 'getServiceAt').mockImplementation(() => 'tabAtPosition');
         main.init();
         // When
         eventBus.send('tabSwitchToPosition');
         // Then
-        expect(serviceManagerModule.getTab).toHaveBeenCalledWith('tabAtPosition');
+        expect(serviceManagerModule.getService).toHaveBeenCalledWith('tabAtPosition');
       });
     });
   });

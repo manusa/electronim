@@ -79,20 +79,20 @@ describe('Find in Page :: main test suite', () => {
     test('should stop find in page in serviceManager', () => {
       // Given
       const serviceManager = require('../../service-manager');
-      serviceManager.addTabs({send: jest.fn()})([{id: 'A'}]);
+      serviceManager.addServices({send: jest.fn()})([{id: 'A'}]);
       // When
       eventBus.emit('findInPageClose');
       // Then
-      expect(serviceManager.getTab('A').webContents.stopFindInPage).toHaveBeenCalledTimes(1);
+      expect(serviceManager.getService('A').webContents.stopFindInPage).toHaveBeenCalledTimes(1);
     });
     test('should remove found-in-page listener in serviceManager', () => {
       // Given
       const serviceManager = require('../../service-manager');
-      serviceManager.addTabs({send: jest.fn()})([{id: 'A'}]);
+      serviceManager.addServices({send: jest.fn()})([{id: 'A'}]);
       // When
       eventBus.emit('findInPageClose');
       // Then
-      expect(serviceManager.getTab('A').webContents.removeAllListeners).toHaveBeenCalledWith('found-in-page');
+      expect(serviceManager.getService('A').webContents.removeAllListeners).toHaveBeenCalledWith('found-in-page');
     });
     test('should stop find in page in all child views', () => {
       // Given
@@ -187,9 +187,9 @@ describe('Find in Page :: main test suite', () => {
       let tab;
       beforeEach(() => {
         const serviceManager = require('../../service-manager');
-        serviceManager.addTabs({send: jest.fn()})([{id: 'A'}]);
-        serviceManager.setActiveTab('A');
-        tab = serviceManager.getTab('A');
+        serviceManager.addServices({send: jest.fn()})([{id: 'A'}]);
+        serviceManager.setActiveService('A');
+        tab = serviceManager.getService('A');
       });
       test('should register found-in-page listener', () => {
         // When

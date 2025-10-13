@@ -22,8 +22,8 @@ const {userAgentForWebContents, addUserAgentInterceptor} = require('../user-agen
 const {handleContextMenu} = require('./context-menu');
 const {handleRedirect, windowOpenHandler} = require('./redirect');
 
-let activeTab = null;
-const tabs = {};
+let activeService = null;
+const services = {};
 
 const webPreferences = {
   contextIsolation: false,
@@ -65,10 +65,10 @@ const cleanUserAgent = view => {
   setGlobalUserAgentFallback(validUserAgent);
 };
 
-const addTabs = ipcSender => tabsMetadata => {
+const addServices = ipcSender => servicesMetadata => {
   const useNativeSpellChecker = getUseNativeSpellChecker();
   const enabledDictionaries = getEnabledDictionaries();
-  tabsMetadata.forEach(({
+  servicesMetadata.forEach(({
     id, url, sandboxed = false, openUrlsInApp = false
   }) => {
     const tabPreferences = {...webPreferences};
@@ -114,67 +114,67 @@ const addTabs = ipcSender => tabsMetadata => {
     tab.webContents.on('dom-ready', registerIdInTab);
     registerIdInTab();
 
-    tabs[id.toString()] = tab;
+    services[id.toString()] = tab;
   });
-  ipcSender.send(APP_EVENTS.addTabs, tabsMetadata);
+  ipcSender.send(APP_EVENTS.addTabs, servicesMetadata);
 };
 
-const sortTabs = tabIds => {
-  if (tabIds.length !== Object.keys(tabs).length) {
+const sortServices = serviceIds => {
+  if (serviceIds.length !== Object.keys(services).length) {
     // Skip in case there are inconsistencies
-    console.error(`Inconsistent tab state, skipping sort operation (${tabIds.length} !== ${Object.keys(tabs).length}).`);
+    console.error(`Inconsistent service state, skipping sort operation (${serviceIds.length} !== ${Object.keys(services).length}).`);
     return;
   }
-  const oldTabs = {...tabs};
+  const oldServices = {...services};
   // Clean previous state
-  Object.keys(tabs).forEach(key => delete tabs[key]);
-  // Set the tabs with the correct ordering
-  for (const tabId of tabIds) {
-    tabs[tabId] = oldTabs[tabId];
+  Object.keys(services).forEach(key => delete services[key]);
+  // Set the services with the correct ordering
+  for (const serviceId of serviceIds) {
+    services[serviceId] = oldServices[serviceId];
   }
 };
 
-const getTab = tabId => (tabId ? tabs[tabId.toString()] : null);
+const getService = serviceId => (serviceId ? services[serviceId.toString()] : null);
 
-const getActiveTab = () => activeTab;
+const getActiveService = () => activeService;
 
-const setActiveTab = tabId => {
-  activeTab = tabId.toString();
-  updateSettings({activeTab});
+const setActiveService = serviceId => {
+  activeService = serviceId.toString();
+  updateSettings({activeTab: activeService});
 };
 
-const getTabTraverse = operation => () => {
-  const tabIds = Object.keys(tabs);
-  const idx = operation(tabIds.indexOf(getActiveTab()));
+const traverseFunction = operation => () => {
+  const serviceIds = Object.keys(services);
+  const idx = operation(serviceIds.indexOf(getActiveService()));
   if (idx < 0) {
-    return tabIds[tabIds.length - 1];
-  } else if (idx >= tabIds.length) {
-    return tabIds[0];
+    return serviceIds[serviceIds.length - 1];
+  } else if (idx >= serviceIds.length) {
+    return serviceIds[0];
   }
-  return tabIds[idx];
+  return serviceIds[idx];
 };
 
-const getNextTab = getTabTraverse(idx => idx + 1);
-const getPreviousTab = getTabTraverse(idx => idx - 1);
-const getTabAt = position => {
-  const tabIds = Object.keys(tabs);
+const getNextService = traverseFunction(idx => idx + 1);
+const getPreviousService = traverseFunction(idx => idx - 1);
+const getServiceAt = position => {
+  const serviceIds = Object.keys(services);
   const idx = position - 1;
-  if (idx > 0 && idx < tabIds.length) {
-    return tabIds[idx];
+  if (idx > 0 && idx < serviceIds.length) {
+    return serviceIds[idx];
   } else if (idx < 1) {
-    return tabIds[0];
+    return serviceIds[0];
   }
-  return tabIds[tabIds.length - 1];
+  return serviceIds[serviceIds.length - 1];
 };
 
 const removeAll = () => {
-  Object.values(tabs).forEach(view => view.webContents.destroy());
-  Object.keys(tabs).forEach(key => delete tabs[key]);
+  Object.values(services).forEach(view => view.webContents.destroy());
+  Object.keys(services).forEach(key => delete services[key]);
 };
 
-const reload = () => Object.values(tabs).forEach(view => view.webContents.reload());
+const reload = () => Object.values(services).forEach(view => view.webContents.reload());
 
-const stopFindInPage = () => Object.values(tabs).forEach(view => {
+const stopFindInPage = () => Object.values(services).forEach(view => {
   view.webContents.stopFindInPage('clearSelection');
   view.webContents.removeAllListeners('found-in-page');
 });
@@ -189,6 +189,16 @@ const canNotify = tabId => {
 };
 
 module.exports = {
-  addTabs, sortTabs, getTab, getTabAt, getActiveTab, setActiveTab, getNextTab, getPreviousTab,
-  canNotify, reload, removeAll, stopFindInPage
+  addServices,
+  sortServices,
+  getService,
+  getServiceAt,
+  getActiveService,
+  setActiveService,
+  getNextService,
+  getPreviousService,
+  canNotify,
+  reload,
+  removeAll,
+  stopFindInPage
 };
