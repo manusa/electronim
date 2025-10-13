@@ -112,12 +112,12 @@ describe('Main :: Global listeners test suite', () => {
       });
       test('should activate current tab', () => {
         // Given
-        const tabManagerModule = require('../../service-manager');
-        jest.spyOn(tabManagerModule, 'getActiveTab').mockImplementation();
+        const serviceManagerModule = require('../../service-manager');
+        jest.spyOn(serviceManagerModule, 'getActiveTab').mockImplementation();
         // When
         eventBus.send('closeDialog');
         // Then
-        expect(tabManagerModule.getActiveTab).toHaveBeenCalledTimes(1);
+        expect(serviceManagerModule.getActiveTab).toHaveBeenCalledTimes(1);
       });
       test('should not call update settings', () => {
         // Given
@@ -272,14 +272,14 @@ describe('Main :: Global listeners test suite', () => {
     });
     test('should reset all views', () => {
       // Given
-      const tabManagerModule = require('../../service-manager');
-      jest.spyOn(tabManagerModule, 'removeAll').mockImplementation();
+      const serviceManagerModule = require('../../service-manager');
+      jest.spyOn(serviceManagerModule, 'removeAll').mockImplementation();
       // When
       eventBus.send('settingsSave', {}, {tabs: [{id: 1337}], enabledDictionaries: []});
       // Then
       expect(baseWindow.contentView.removeChildView).toHaveBeenCalledTimes(1);
       expect(baseWindow.contentView.removeChildView).toHaveBeenCalledWith(settingsView);
-      expect(tabManagerModule.removeAll).toHaveBeenCalledTimes(1);
+      expect(serviceManagerModule.removeAll).toHaveBeenCalledTimes(1);
       expect(settingsView.webContents.destroy).toHaveBeenCalledTimes(1);
     });
     test('should set saved theme', () => {
@@ -308,10 +308,10 @@ describe('Main :: Global listeners test suite', () => {
     expect(result).toEqual({success: false, canceled: true});
   });
   describe('handleTabTraverse', () => {
-    let tabManagerModule;
+    let serviceManagerModule;
     beforeEach(() => {
-      tabManagerModule = require('../../service-manager');
-      jest.spyOn(tabManagerModule, 'getTab').mockImplementation();
+      serviceManagerModule = require('../../service-manager');
+      jest.spyOn(serviceManagerModule, 'getTab').mockImplementation();
     });
     test.each([
       'tabTraverseNext', 'tabTraversePrevious'
@@ -321,35 +321,35 @@ describe('Main :: Global listeners test suite', () => {
       // When
       eventBus.send(event);
       // Then
-      expect(tabManagerModule.getTab).not.toHaveBeenCalled();
+      expect(serviceManagerModule.getTab).not.toHaveBeenCalled();
     });
     describe('with tabs visible, should traverse', () => {
       beforeEach(() => {
         baseWindow.getBrowserViews = jest.fn(() => [new electron.BrowserView(), new electron.BrowserView()]);
       });
       test('tabTraverseNext', () => {
-        jest.spyOn(tabManagerModule, 'getNextTab').mockImplementation(() => 'nextTabId');
+        jest.spyOn(serviceManagerModule, 'getNextTab').mockImplementation(() => 'nextTabId');
         main.init();
         // When
         eventBus.emit('tabTraverseNext');
         // Then
-        expect(tabManagerModule.getTab).toHaveBeenCalledWith('nextTabId');
+        expect(serviceManagerModule.getTab).toHaveBeenCalledWith('nextTabId');
       });
       test('tabTraversePrevious', () => {
-        jest.spyOn(tabManagerModule, 'getPreviousTab').mockImplementation(() => 'previousTabId');
+        jest.spyOn(serviceManagerModule, 'getPreviousTab').mockImplementation(() => 'previousTabId');
         main.init();
         // When
         eventBus.emit('tabTraversePrevious');
         // Then
-        expect(tabManagerModule.getTab).toHaveBeenCalledWith('previousTabId');
+        expect(serviceManagerModule.getTab).toHaveBeenCalledWith('previousTabId');
       });
       test('tabSwitchToPosition', () => {
-        jest.spyOn(tabManagerModule, 'getTabAt').mockImplementation(() => 'tabAtPosition');
+        jest.spyOn(serviceManagerModule, 'getTabAt').mockImplementation(() => 'tabAtPosition');
         main.init();
         // When
         eventBus.send('tabSwitchToPosition');
         // Then
-        expect(tabManagerModule.getTab).toHaveBeenCalledWith('tabAtPosition');
+        expect(serviceManagerModule.getTab).toHaveBeenCalledWith('tabAtPosition');
       });
     });
   });

@@ -13,47 +13,47 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-describe('Tab Manager module test suite', () => {
+describe('Service Manager module test suite', () => {
   let electron;
   let userAgent;
-  let tabManager;
+  let serviceManager;
   let settings;
   beforeEach(async () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
     settings = await require('../../__tests__').testSettings();
     userAgent = require('../../user-agent');
-    tabManager = require('../');
+    serviceManager = require('../');
   });
   describe('getTab', () => {
     test('with existing tab, should return tab', () => {
       // Given
-      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // When
-      const result = tabManager.getTab(1337);
+      const result = serviceManager.getTab(1337);
       // Then
       expect(result.webContents.loadURL).toHaveBeenCalledWith('https://localhost');
     });
     test('with NON-existing tab, should return undefined', () => {
       // Given
-      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // When
-      const result = tabManager.getTab(313373);
+      const result = serviceManager.getTab(313373);
       // Then
       expect(result).toBeUndefined();
     });
     test('with null id, should return null', () => {
       // Given
-      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // When
-      const result = tabManager.getTab();
+      const result = serviceManager.getTab();
       // Then
       expect(result).toBeNull();
     });
   });
   describe('Tab traversal functions', () => {
     beforeEach(() => {
-      tabManager.addTabs({send: jest.fn()})([
+      serviceManager.addTabs({send: jest.fn()})([
         {id: 'A'},
         {id: 'B'},
         {id: 'C'}
@@ -62,17 +62,17 @@ describe('Tab Manager module test suite', () => {
     describe('getNextTab with tabs [A, B, C]', () => {
       test('with currentTab = A, should return B', () => {
         // Given
-        tabManager.setActiveTab('A');
+        serviceManager.setActiveTab('A');
         // When
-        const nextTab = tabManager.getNextTab();
+        const nextTab = serviceManager.getNextTab();
         // Then
         expect(nextTab).toBe('B');
       });
       test('with currentTab = C, should return A', () => {
         // Given
-        tabManager.setActiveTab('C');
+        serviceManager.setActiveTab('C');
         // When
-        const nextTab = tabManager.getNextTab();
+        const nextTab = serviceManager.getNextTab();
         // Then
         expect(nextTab).toBe('A');
       });
@@ -80,17 +80,17 @@ describe('Tab Manager module test suite', () => {
     describe('getPreviousTab', () => {
       test('with currentTab = B, should return A', () => {
         // Given
-        tabManager.setActiveTab('B');
+        serviceManager.setActiveTab('B');
         // When
-        const nextTab = tabManager.getPreviousTab();
+        const nextTab = serviceManager.getPreviousTab();
         // Then
         expect(nextTab).toBe('A');
       });
       test('with currentTab = A, should return C', () => {
         // Given
-        tabManager.setActiveTab('A');
+        serviceManager.setActiveTab('A');
         // When
-        const nextTab = tabManager.getPreviousTab();
+        const nextTab = serviceManager.getPreviousTab();
         // Then
         expect(nextTab).toBe('C');
       });
@@ -98,19 +98,19 @@ describe('Tab Manager module test suite', () => {
     describe('getTabAt', () => {
       test('with position in range, should return tab in range', () => {
         // When
-        const nextTab = tabManager.getTabAt(2);
+        const nextTab = serviceManager.getTabAt(2);
         // Then
         expect(nextTab).toBe('B');
       });
       test('with position out of range (upper), should return last', () => {
         // When
-        const nextTab = tabManager.getTabAt(9);
+        const nextTab = serviceManager.getTabAt(9);
         // Then
         expect(nextTab).toBe('C');
       });
       test('with position out of range (lower), should return last', () => {
         // When
-        const nextTab = tabManager.getTabAt(-1);
+        const nextTab = serviceManager.getTabAt(-1);
         // Then
         expect(nextTab).toBe('A');
       });
@@ -119,7 +119,7 @@ describe('Tab Manager module test suite', () => {
   describe('addTabs', () => {
     test('webPreferences is sandboxed and has no node integration', () => {
       // When
-      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // Then
       expect(electron.WebContentsView).toHaveBeenCalledTimes(1);
       expect(electron.WebContentsView).toHaveBeenCalledWith({
@@ -128,7 +128,7 @@ describe('Tab Manager module test suite', () => {
     });
     test('not sandboxed, should use shared session', () => {
       // When
-      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // Then
       expect(electron.session.fromPartition).not.toHaveBeenCalled();
       expect(electron.WebContentsView).toHaveBeenCalledWith({
@@ -136,7 +136,7 @@ describe('Tab Manager module test suite', () => {
     });
     test('sandboxed, should use isolated session', () => {
       // When
-      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', sandboxed: true}]);
+      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', sandboxed: true}]);
       // Then
       expect(electron.session.fromPartition).toHaveBeenCalledTimes(1);
       expect(electron.WebContentsView).toHaveBeenCalledWith({
@@ -144,13 +144,13 @@ describe('Tab Manager module test suite', () => {
     });
     test('openUrlsInApp=true, should not set setWindowOpenHandler', () => {
       // When
-      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', openUrlsInApp: true}]);
+      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', openUrlsInApp: true}]);
       // Then
       expect(electron.WebContentsView.mock.results[0].value.webContents.setWindowOpenHandler).not.toHaveBeenCalled();
     });
     test('openUrlsInApp=true, should not set will-navigate event handler', () => {
       // When
-      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', openUrlsInApp: true}]);
+      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost', openUrlsInApp: true}]);
       // Then
       expect(electron.WebContentsView.mock.results[0].value.listeners['will-navigate']).not.toBeDefined();
     });
@@ -158,7 +158,7 @@ describe('Tab Manager module test suite', () => {
       // Given
       const mockIpcSender = {send: jest.fn()};
       // When
-      tabManager.addTabs(mockIpcSender)([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addTabs(mockIpcSender)([{id: 1337, url: 'https://localhost'}]);
       // Then
       expect(electron.WebContentsView.mock.results[0].value.webContents.loadURL).toHaveBeenCalledWith('https://localhost');
       expect(mockIpcSender.send).toHaveBeenCalledTimes(1);
@@ -166,7 +166,7 @@ describe('Tab Manager module test suite', () => {
     });
     test('Tab webContents should contain a reference to its id', () => {
       // When
-      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // Then
       expect(electron.WebContentsView.mock.results[0].value.webContents.executeJavaScript).toHaveBeenCalledTimes(1);
       expect(electron.WebContentsView.mock.results[0].value.webContents.executeJavaScript).toHaveBeenCalledWith('window.tabId = \'1337\';');
@@ -176,17 +176,17 @@ describe('Tab Manager module test suite', () => {
         // Given
         userAgent.BROWSER_VERSIONS.chromium = '79.0.1337.79';
         // When
-        tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+        serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
         // Then
-        const result = tabManager.getTab(1337).webContents.userAgent;
+        const result = serviceManager.getTab(1337).webContents.userAgent;
         expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
         expect(require('electron').app.userAgentFallback).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/79.0.1337.79 Safari/537.36');
       });
       test('chromium not version available, should remove non-standard tokens from user-agent header', () => {
         // When
-        tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+        serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
         // Then
-        const result = tabManager.getTab(1337).webContents.userAgent;
+        const result = serviceManager.getTab(1337).webContents.userAgent;
         expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/WillBeReplacedByLatestChromium Safari/537.36');
         expect(require('electron').app.userAgentFallback).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/WillBeReplacedByLatestChromium Safari/537.36');
       });
@@ -195,18 +195,18 @@ describe('Tab Manager module test suite', () => {
       let mockIpcSender;
       beforeEach(() => {
         mockIpcSender = {send: jest.fn()};
-        tabManager.addTabs(mockIpcSender)([{id: '1337', url: 'https://localhost'}]);
+        serviceManager.addTabs(mockIpcSender)([{id: '1337', url: 'https://localhost'}]);
       });
       test('handlePageTitleUpdated, should send setTabTitle event', () => {
         // When
-        tabManager.getTab('1337').listeners['page-title-updated'](new Event(''), 'Dr.');
+        serviceManager.getTab('1337').listeners['page-title-updated'](new Event(''), 'Dr.');
         // Then
         expect(mockIpcSender.send).toHaveBeenCalledWith('setTabTitle', {id: '1337', title: 'Dr.'});
       });
       describe('handlePageFaviconUpdated', () => {
         test('Favicons provided, should send setTabFavicon with the last of the provided favicons', () => {
           // When
-          tabManager.getTab('1337').listeners['page-favicon-updated'](new Event(''), [
+          serviceManager.getTab('1337').listeners['page-favicon-updated'](new Event(''), [
             'http://url-to-favicon/aitana.png',
             'http://url-to-favicon/alex.png'
           ]);
@@ -216,14 +216,14 @@ describe('Tab Manager module test suite', () => {
         });
         test('No favicons provided, should send setTabFavicon with the last of the extracted favicons', async () => {
           // Given
-          tabManager.getTab('1337').webContents.executeJavaScript = jest.fn(arg => {
+          serviceManager.getTab('1337').webContents.executeJavaScript = jest.fn(arg => {
             if (arg === 'Array.from(document.querySelectorAll(\'link[rel*="icon"]\')).map(el => el.href)') {
               return ['http://url-to-favicon/julia-128.png', 'http://url-to-favicon/julia.png'];
             }
             return [];
           });
           // When
-          await tabManager.getTab('1337').listeners['page-favicon-updated'](new Event(''));
+          await serviceManager.getTab('1337').listeners['page-favicon-updated'](new Event(''));
           // Then
           expect(mockIpcSender.send)
             .toHaveBeenCalledWith('setTabFavicon', {id: '1337', favicon: 'http://url-to-favicon/julia.png'});
@@ -231,9 +231,9 @@ describe('Tab Manager module test suite', () => {
       });
       test('windowOpen (was new-window)', () => {
         // Given
-        tabManager.getTab('1337').webContents.getURL.mockReturnValue('file://tab/index.html');
+        serviceManager.getTab('1337').webContents.getURL.mockReturnValue('file://tab/index.html');
         // When
-        tabManager.getTab('1337').webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
+        serviceManager.getTab('1337').webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
         // Then
         expect(require('electron').shell.openExternal).toHaveBeenCalledWith('https://example.com');
       });
@@ -244,27 +244,27 @@ describe('Tab Manager module test suite', () => {
       // Given
       jest.spyOn(console, 'error').mockImplementationOnce(() => {});
       // When
-      tabManager.sortTabs(['1', '2']);
+      serviceManager.sortTabs(['1', '2']);
       // Then
       expect(console.error).toHaveBeenCalledWith('Inconsistent tab state, skipping sort operation (2 !== 0).');
     });
     test('Sorts tabs with new order', () => {
       // Given
-      tabManager.addTabs({send: jest.fn()})([{id: 'A1337', url: 'https://localhost'}, {id: 'B31337', url: 'https://example.com'}]);
+      serviceManager.addTabs({send: jest.fn()})([{id: 'A1337', url: 'https://localhost'}, {id: 'B31337', url: 'https://example.com'}]);
       // When
-      tabManager.sortTabs(['B31337', 'A1337']);
+      serviceManager.sortTabs(['B31337', 'A1337']);
       // Then
-      expect(tabManager.getTabAt(1)).toBe('B31337');
-      expect(tabManager.getTabAt(2)).toBe('A1337');
+      expect(serviceManager.getTabAt(1)).toBe('B31337');
+      expect(serviceManager.getTabAt(2)).toBe('A1337');
     });
   });
   describe('activeTab', () => {
     test('setActiveTab/getActiveTab, should set/return currently active tab', () => {
       // Given
-      expect(tabManager.getActiveTab()).toBeNull();
-      tabManager.setActiveTab('1337');
+      expect(serviceManager.getActiveTab()).toBeNull();
+      serviceManager.setActiveTab('1337');
       // When
-      const result = tabManager.getActiveTab();
+      const result = serviceManager.getActiveTab();
       // Then
       expect(result).toBe('1337');
     });
@@ -272,15 +272,15 @@ describe('Tab Manager module test suite', () => {
   describe('removeAll', () => {
     test('No tabs, should do nothing', () => {
       // When
-      tabManager.removeAll();
+      serviceManager.removeAll();
       // Then
       expect(electron.WebContentsView.mock.result).toBeUndefined();
     });
     test('Existing tabs, should delete all tabs entries and destroy their Views', () => {
       // Given
-      tabManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
+      serviceManager.addTabs({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // When
-      tabManager.removeAll();
+      serviceManager.removeAll();
       // Then
       expect(electron.WebContentsView.mock.results[0].value.webContents.destroy).toHaveBeenCalledTimes(1);
     });
@@ -293,7 +293,7 @@ describe('Tab Manager module test suite', () => {
         disableNotificationsGlobally: false
       });
       // When
-      const result = tabManager.canNotify('1337');
+      const result = serviceManager.canNotify('1337');
       // Then
       expect(result).toBe(true);
     });
@@ -304,7 +304,7 @@ describe('Tab Manager module test suite', () => {
         disableNotificationsGlobally: true
       });
       // When
-      const result = tabManager.canNotify('1337');
+      const result = serviceManager.canNotify('1337');
       // Then
       expect(result).toBe(false);
     });
@@ -315,7 +315,7 @@ describe('Tab Manager module test suite', () => {
         disableNotificationsGlobally: false
       });
       // When
-      const result = tabManager.canNotify('1337');
+      const result = serviceManager.canNotify('1337');
       // Then
       expect(result).toBe(false);
     });
@@ -327,7 +327,7 @@ describe('Tab Manager module test suite', () => {
         disableNotificationsGlobally: undefined
       });
       // When
-      const result = tabManager.canNotify('1337');
+      const result = serviceManager.canNotify('1337');
       // Then
       expect(result).toBe(true);
     });

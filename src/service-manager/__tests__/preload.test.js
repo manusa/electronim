@@ -15,7 +15,7 @@
  */
 const {waitFor} = require('@testing-library/dom');
 
-describe('Tab Manager Module preload test suite', () => {
+describe('Service Manager Module preload test suite', () => {
   let mockElectron;
   beforeEach(() => {
     jest.resetModules();
