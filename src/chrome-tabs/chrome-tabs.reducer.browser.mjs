@@ -94,7 +94,7 @@ export const setTabFavicon = ({dispatch}) => (_event, {id, favicon}) => {
     id, property: 'favicon', value: favicon
   }});
 };
-export const setTabTitle = ({dispatch}) => (_event, {id, title}) => {
+export const setServiceTitle = ({dispatch}) => (_event, {id, title}) => {
   dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {
     id, property: 'title', value: title
   }});
