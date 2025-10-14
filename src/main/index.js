@@ -60,17 +60,17 @@ const resetMainWindow = () => {
   }
 };
 
-const activateTab = ({tabId, restoreWindow = true}) => {
-  const activeTab = serviceManager.getService(tabId);
-  if (activeTab) {
+const activateService = ({tabId, restoreWindow = true}) => {
+  const activeService = serviceManager.getService(tabId);
+  if (activeService) {
     const {width, height} = mainWindow.getContentBounds();
     resetMainWindow();
-    mainWindow.contentView.addChildView(activeTab);
+    mainWindow.contentView.addChildView(activeService);
     tabContainer.setBounds({x: 0, y: 0, width, height: TABS_CONTAINER_HEIGHT});
-    activeTab.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
+    activeService.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
     serviceManager.setActiveService(tabId);
     if (restoreWindow) {
-      activeTab.webContents.focus();
+      activeService.webContents.focus();
     }
   }
 };
@@ -124,8 +124,8 @@ const handleTabTraverse = getTabIdFunction => () => {
     return;
   }
   const tabId = getTabIdFunction();
-  tabContainer.webContents.send(APP_EVENTS.activateTabInContainer, {tabId});
-  activateTab({tabId});
+  tabContainer.webContents.send(APP_EVENTS.activateServiceInContainer, {tabId});
+  activateService({tabId});
 };
 
 const handleTabSwitchToPosition = tabPosition => {
@@ -171,16 +171,16 @@ const initTabListener = () => {
       eventBus.emit(APP_EVENTS.settingsOpenDialog);
     }
   });
-  eventBus.on(APP_EVENTS.activateTab, (_event, data) => {
-    activateTab({tabId: data.id, restoreWindow: data.restoreWindow});
+  eventBus.on(APP_EVENTS.activateService, (_event, data) => {
+    activateService({tabId: data.id, restoreWindow: data.restoreWindow});
   });
   eventBus.on(APP_EVENTS.canNotify, (event, tabId) => {
     event.returnValue = serviceManager.canNotify(tabId);
   });
   eventBus.on(APP_EVENTS.notificationClick, (_event, {tabId}) => {
-    tabContainer.webContents.send(APP_EVENTS.activateTabInContainer, {tabId});
+    tabContainer.webContents.send(APP_EVENTS.activateServiceInContainer, {tabId});
     eventBus.emit(APP_EVENTS.restore);
-    activateTab({tabId});
+    activateService({tabId});
   });
   eventBus.on(APP_EVENTS.reload, handleTabReload);
   eventBus.on(APP_EVENTS.reloadTab, handleSpecificTabReload);
@@ -205,7 +205,7 @@ const appMenuClose = () => {
     return;
   }
   mainWindow.contentView.removeChildView(appMenu);
-  activateTab({tabId: serviceManager.getActiveService()});
+  activateService({tabId: serviceManager.getActiveService()});
 };
 
 const fullscreenToggle = () => {
@@ -218,7 +218,7 @@ const closeDialog = () => {
     return;
   }
   mainWindow.contentView.removeChildView(dialogView);
-  activateTab({tabId: serviceManager.getActiveService()});
+  activateService({tabId: serviceManager.getActiveService()});
   dialogView.webContents.destroy();
 };
 

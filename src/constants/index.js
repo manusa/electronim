@@ -26,8 +26,8 @@ const findRootDir = () => {
 
 const APP_EVENTS = {
   aboutOpenDialog: 'aboutOpenDialog',
-  activateTab: 'activateTab',
-  activateTabInContainer: 'activateTabInContainer',
+  activateService: 'activateService',
+  activateServiceInContainer: 'activateServiceInContainer',
   addServices: 'addServices',
   appMenuOpen: 'appMenuOpen',
   appMenuClose: 'appMenuClose',

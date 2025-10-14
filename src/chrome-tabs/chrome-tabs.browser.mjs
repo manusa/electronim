@@ -18,8 +18,8 @@ import {
   APP_EVENTS, html, render, useLayoutEffect, useReducer, useState, Icon, IconButton
 } from '../components/index.mjs';
 import {
-  initialState, reducer, activateTab, addServices, moveTab, setNewVersionAvailable, setTabFavicon, setTabTitle,
-  sendActivateTab
+  initialState, reducer, activateService, addServices, moveTab, setNewVersionAvailable, setTabFavicon, setTabTitle,
+  sendActivateService
 } from './chrome-tabs.reducer.browser.mjs';
 
 const shouldUseDarkColors = () => globalThis?.matchMedia?.('(prefers-color-scheme: dark)').matches;
@@ -100,8 +100,8 @@ const BackgroundSvg = () => html`
 const Tab = ({dispatch, numberOfTabs, idx, id, active, offsetX = 0, title, url, customName, width, ...rest}) => {
   const tabClick = () => {
     if (active !== true) {
-      sendActivateTab({id, restoreWindow: true});
-      activateTab({dispatch})(null, {tabId: id});
+      sendActivateService({id, restoreWindow: true});
+      activateService({dispatch})(null, {tabId: id});
     }
   };
   const [draggedId, setDraggedId] = useState(id);
@@ -190,7 +190,7 @@ const TabContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   useLayoutEffect(() => {
     ipcRenderer.on(APP_EVENTS.addServices, addServices({dispatch}));
-    ipcRenderer.on(APP_EVENTS.activateTabInContainer, activateTab({dispatch}));
+    ipcRenderer.on(APP_EVENTS.activateServiceInContainer, activateService({dispatch}));
     ipcRenderer.on(APP_EVENTS.electronimNewVersionAvailable, setNewVersionAvailable({dispatch}));
     ipcRenderer.on(APP_EVENTS.setTabFavicon, setTabFavicon({dispatch}));
     ipcRenderer.on(APP_EVENTS.setTabTitle, setTabTitle({dispatch}));

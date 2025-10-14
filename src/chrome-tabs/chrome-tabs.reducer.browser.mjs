@@ -15,8 +15,8 @@
  */
 /* eslint-disable no-undef */
 import {APP_EVENTS} from '../components/index.mjs';
-export const sendActivateTab = ({id, restoreWindow = true}) => {
-  ipcRenderer.send(APP_EVENTS.activateTab, {id, restoreWindow});
+export const sendActivateService = ({id, restoreWindow = true}) => {
+  ipcRenderer.send(APP_EVENTS.activateService, {id, restoreWindow});
 };
 const sendReorderTabs = tabs =>
   ipcRenderer.send(APP_EVENTS.tabReorder, {tabIds: tabs.map(({id}) => id)});
@@ -27,7 +27,7 @@ export const initialState = {
 };
 
 const ACTIONS = {
-  ACTIVATE_TAB: 'ACTIVATE_TAB',
+  ACTIVATE_SERVICE: 'ACTIVATE_SERVICE',
   MOVE_TAB: 'MOVE_TAB',
   SET_NEW_VERSION_AVAILABLE: 'SET_NEW_VERSION_AVAILABLE',
   SET_TAB_PROPERTY: 'SET_TAB_PROPERTY',
@@ -36,7 +36,7 @@ const ACTIONS = {
 
 export const reducer = (state, action) => {
   switch (action.type) {
-    case ACTIONS.ACTIVATE_TAB: {
+    case ACTIONS.ACTIVATE_SERVICE: {
       return {...state,
         tabs: state.tabs.map(tab => ({...tab, active: tab.id === action.payload}))
       };
@@ -75,13 +75,13 @@ export const reducer = (state, action) => {
 };
 
 // Action creators
-export const activateTab = ({dispatch}) => (_event, {tabId}) =>
-  dispatch({type: ACTIONS.ACTIVATE_TAB, payload: tabId});
+export const activateService = ({dispatch}) => (_event, {tabId}) =>
+  dispatch({type: ACTIONS.ACTIVATE_SERVICE, payload: tabId});
 export const addServices = ({dispatch}) => (_event, tabs) => {
   dispatch({type: ACTIONS.SET_TABS, payload: tabs});
   const activeTabMeta = tabs.find(({active}) => active === true);
   if (tabs.length > 0 && activeTabMeta) {
-    sendActivateTab({id: activeTabMeta.id, restoreWindow: false});
+    sendActivateService({id: activeTabMeta.id, restoreWindow: false});
   }
 };
 export const moveTab = ({dispatch}) => ({id, idx, offsetX}) =>
