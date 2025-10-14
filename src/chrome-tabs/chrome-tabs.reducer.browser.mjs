@@ -18,8 +18,8 @@ import {APP_EVENTS} from '../components/index.mjs';
 export const sendActivateService = ({id, restoreWindow = true}) => {
   ipcRenderer.send(APP_EVENTS.activateService, {id, restoreWindow});
 };
-const sendReorderTabs = tabs =>
-  ipcRenderer.send(APP_EVENTS.tabReorder, {tabIds: tabs.map(({id}) => id)});
+const sendReorderServices = tabs =>
+  ipcRenderer.send(APP_EVENTS.servicesReorder, {tabIds: tabs.map(({id}) => id)});
 
 export const initialState = {
   tabs: [],
@@ -50,7 +50,7 @@ export const reducer = (state, action) => {
       tab.offsetX = offsetX;
       ret.tabs.splice(fromIdx, 1);
       ret.tabs.splice(idx, 0, tab);
-      sendReorderTabs(ret.tabs);
+      sendReorderServices(ret.tabs);
       return ret;
     }
     case ACTIONS.SET_NEW_VERSION_AVAILABLE: {

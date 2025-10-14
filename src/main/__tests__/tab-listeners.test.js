@@ -232,13 +232,13 @@ describe('Main :: Tab listeners test suite', () => {
     expect(event.sender.setZoomFactor).toHaveBeenCalledTimes(1);
     expect(event.sender.setZoomFactor).toHaveBeenCalledWith(1);
   });
-  describe('handleTabReorder', () => {
+  describe('handleServicesReorder', () => {
     test('Several tabs, order changed, should update settings', () => {
       // Given
       settings.updateSettings({tabs: [{id: '1337'}, {id: '313373'}]});
       main.init();
       // When
-      mockIpc.send('tabReorder', {}, {tabIds: ['313373', '1337']});
+      mockIpc.send('servicesReorder', {}, {tabIds: ['313373', '1337']});
       // Then
       const updatedSettings = settings.loadSettings();
       expect(updatedSettings.tabs).toEqual([{id: '313373'}, {id: '1337'}]);
@@ -249,7 +249,7 @@ describe('Main :: Tab listeners test suite', () => {
       jest.spyOn(serviceManagerModule, 'sortServices').mockImplementation();
       main.init();
       // When
-      mockIpc.send('tabReorder', {}, {tabIds: ['313373', '1337']});
+      mockIpc.send('servicesReorder', {}, {tabIds: ['313373', '1337']});
       // Then
       expect(serviceManagerModule.sortServices).toHaveBeenCalledWith(['313373', '1337']);
     });
@@ -260,7 +260,7 @@ describe('Main :: Tab listeners test suite', () => {
       ]});
       main.init();
       // When
-      mockIpc.send('tabReorder', {}, {tabIds: ['313373', '1337']});
+      mockIpc.send('servicesReorder', {}, {tabIds: ['313373', '1337']});
       // Then
       expect(settings.loadSettings().tabs).toEqual([
         {id: '313373'}, {id: '1337'}, {id: 'hidden'}, {id: 'hidden-too'}

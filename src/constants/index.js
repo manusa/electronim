@@ -64,7 +64,7 @@ const APP_EVENTS = {
   setServiceFavicon: 'setServiceFavicon',
   setServiceTitle: 'setServiceTitle',
   servicesReady: 'servicesReady',
-  tabReorder: 'tabReorder',
+  servicesReorder: 'servicesReorder',
   tabSwitchToPosition: 'tabSwitchToPosition',
   tabTraverseNext: 'tabTraverseNext',
   tabTraversePrevious: 'tabTraversePrevious',

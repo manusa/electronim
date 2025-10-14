@@ -143,7 +143,7 @@ const handleZoomOut = event => {
 
 const handleZoomReset = event => event.sender.setZoomFactor(1);
 
-const handleTabReorder = (_event, {tabIds: visibleTabIds}) => {
+const handleServicesReorder = (_event, {tabIds: visibleTabIds}) => {
   const currentTabs = loadSettings().tabs;
   const hiddenTabIds = currentTabs.map(({id}) => id)
     .filter(tabId => !visibleTabIds.includes(tabId));
@@ -184,7 +184,7 @@ const initTabListener = () => {
   });
   eventBus.on(APP_EVENTS.reload, handleTabReload);
   eventBus.on(APP_EVENTS.reloadTab, handleSpecificTabReload);
-  eventBus.on(APP_EVENTS.tabReorder, handleTabReorder);
+  eventBus.on(APP_EVENTS.servicesReorder, handleServicesReorder);
   eventBus.on(APP_EVENTS.zoomIn, handleZoomIn);
   eventBus.on(APP_EVENTS.zoomOut, handleZoomOut);
   eventBus.on(APP_EVENTS.zoomReset, handleZoomReset);
