@@ -19,11 +19,8 @@ import {loadDOM} from '../../__tests__/index.mjs';
 describe('App Menu index.html test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
-    globalThis.electron = {
-      close: jest.fn(),
-      helpOpenDialog: jest.fn(),
-      settingsOpenDialog: jest.fn()
-    };
+    await (await import('../../__tests__/electron.mjs')).testElectron();
+    await import('../../../bundles/app-menu.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
   test('loads required styles', () => {
