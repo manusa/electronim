@@ -104,7 +104,7 @@ describe('Chrome Tabs Module module test suite', () => {
       webContentsViewInstance.webContents.send = jest.fn(() => resolveSend(true));
       chromeTabs.newTabContainer();
       // When
-      electron.ipcMain.emit('tabsReady');
+      electron.ipcMain.emit('servicesReady');
       // Then
       await expect(isSent).resolves.toBe(true);
       expect(webContentsViewInstance.webContents.send).toHaveBeenCalledWith('electronimNewVersionAvailable', true);

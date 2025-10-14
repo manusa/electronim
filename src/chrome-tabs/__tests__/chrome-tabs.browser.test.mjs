@@ -19,20 +19,20 @@ import {createEvent, fireEvent, waitFor} from '@testing-library/dom';
 
 describe('ChromeTabs in Browser test suite', () => {
   let electron;
-  let tabsReady;
+  let servicesReady;
   let $chromeTabs;
   beforeEach(async () => {
     jest.resetModules();
     electron = await (await import('../../__tests__/electron.mjs')).testElectron();
-    tabsReady = jest.fn();
-    electron.ipcMain.once('tabsReady', tabsReady);
+    servicesReady = jest.fn();
+    electron.ipcMain.once('servicesReady', servicesReady);
     await import('../../../bundles/chrome-tabs.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
     $chromeTabs = await waitFor(() => document.querySelector('.chrome-tabs'));
   });
-  test('APP_EVENTS.tabsReady should be fired on load', () => {
-    expect(tabsReady).toHaveBeenCalledTimes(1);
-    expect(tabsReady).toHaveBeenCalledWith({});
+  test('APP_EVENTS.servicesReady should be fired on load', () => {
+    expect(servicesReady).toHaveBeenCalledTimes(1);
+    expect(servicesReady).toHaveBeenCalledWith({});
   });
   describe('External events (ipcRenderer.on)', () => {
     let tabs;

@@ -30,7 +30,7 @@ const openMenu = event => {
   event.preventDefault();
   ipcRenderer.send(APP_EVENTS.appMenuOpen);
 };
-const sendTabsReady = () => ipcRenderer.send(APP_EVENTS.tabsReady, {});
+const sendServicesReady = () => ipcRenderer.send(APP_EVENTS.servicesReady, {});
 
 const TRANSPARENT_GIF = new Image();
 TRANSPARENT_GIF.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
@@ -194,7 +194,7 @@ const TabContainer = () => {
     ipcRenderer.on(APP_EVENTS.electronimNewVersionAvailable, setNewVersionAvailable({dispatch}));
     ipcRenderer.on(APP_EVENTS.setServiceFavicon, setServiceFavicon({dispatch}));
     ipcRenderer.on(APP_EVENTS.setServiceTitle, setServiceTitle({dispatch}));
-    sendTabsReady();
+    sendServicesReady();
   }, []);
   return html`
       <${ChromeTabs} state=${state} dispatch=${dispatch}/>

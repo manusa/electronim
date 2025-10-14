@@ -40,7 +40,7 @@ describe('Main :: Tab listeners test suite', () => {
     serviceManagerModule = require('../../service-manager');
     main = require('../');
   });
-  describe('tabsReady', () => {
+  describe('servicesReady', () => {
     let addServicesNested;
     beforeEach(() => {
       addServicesNested = jest.fn();
@@ -52,7 +52,7 @@ describe('Main :: Tab listeners test suite', () => {
       settings.updateSettings({tabs: []});
       main.init();
       // When
-      mockIpc.send('tabsReady', {});
+      mockIpc.send('servicesReady', {});
       // Then
       expect(serviceManagerModule.addServices).not.toHaveBeenCalled();
       expect(addServicesNested).not.toHaveBeenCalled();
@@ -71,7 +71,7 @@ describe('Main :: Tab listeners test suite', () => {
       });
       main.init();
       // When
-      mockIpc.send('tabsReady', event);
+      mockIpc.send('servicesReady', event);
       // Then
       expect(serviceManagerModule.addServices).toHaveBeenCalledWith(event.sender);
       expect(addServicesNested).toHaveBeenCalledTimes(1);

@@ -79,9 +79,9 @@ export const activateService = ({dispatch}) => (_event, {tabId}) =>
   dispatch({type: ACTIONS.ACTIVATE_SERVICE, payload: tabId});
 export const addServices = ({dispatch}) => (_event, tabs) => {
   dispatch({type: ACTIONS.SET_TABS, payload: tabs});
-  const activeTabMeta = tabs.find(({active}) => active === true);
-  if (tabs.length > 0 && activeTabMeta) {
-    sendActivateService({id: activeTabMeta.id, restoreWindow: false});
+  const activeServiceMeta = tabs.find(({active}) => active === true);
+  if (tabs.length > 0 && activeServiceMeta) {
+    sendActivateService({id: activeServiceMeta.id, restoreWindow: false});
   }
 };
 export const moveTab = ({dispatch}) => ({id, idx, offsetX}) =>
