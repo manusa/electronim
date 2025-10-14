@@ -198,11 +198,11 @@ describe('Service Manager module test suite', () => {
         mockIpcSender = {send: jest.fn()};
         serviceManager.addServices(mockIpcSender)([{id: '1337', url: 'https://localhost'}]);
       });
-      test('handlePageTitleUpdated, should send setTabTitle event', () => {
+      test('handlePageTitleUpdated, should send setServiceTitle event', () => {
         // When
         serviceManager.getService('1337').listeners['page-title-updated'](new Event(''), 'Dr.');
         // Then
-        expect(mockIpcSender.send).toHaveBeenCalledWith('setTabTitle', {id: '1337', title: 'Dr.'});
+        expect(mockIpcSender.send).toHaveBeenCalledWith('setServiceTitle', {id: '1337', title: 'Dr.'});
       });
       describe('handlePageFaviconUpdated', () => {
         test('Favicons provided, should send setTabFavicon with the last of the provided favicons', () => {

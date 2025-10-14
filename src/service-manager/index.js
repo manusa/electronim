@@ -34,7 +34,7 @@ const defaultWebPreferences = {
 };
 
 const handlePageTitleUpdated = (ipcSender, serviceId) => (_e, title) => {
-  ipcSender.send(APP_EVENTS.setTabTitle, {id: serviceId, title: title});
+  ipcSender.send(APP_EVENTS.setServiceTitle, {id: serviceId, title: title});
 };
 
 const extractFavicon = async view => {

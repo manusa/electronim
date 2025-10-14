@@ -18,7 +18,7 @@ import {
   APP_EVENTS, html, render, useLayoutEffect, useReducer, useState, Icon, IconButton
 } from '../components/index.mjs';
 import {
-  initialState, reducer, activateService, addServices, moveTab, setNewVersionAvailable, setTabFavicon, setTabTitle,
+  initialState, reducer, activateService, addServices, moveTab, setNewVersionAvailable, setTabFavicon, setServiceTitle,
   sendActivateService
 } from './chrome-tabs.reducer.browser.mjs';
 
@@ -193,7 +193,7 @@ const TabContainer = () => {
     ipcRenderer.on(APP_EVENTS.activateServiceInContainer, activateService({dispatch}));
     ipcRenderer.on(APP_EVENTS.electronimNewVersionAvailable, setNewVersionAvailable({dispatch}));
     ipcRenderer.on(APP_EVENTS.setTabFavicon, setTabFavicon({dispatch}));
-    ipcRenderer.on(APP_EVENTS.setTabTitle, setTabTitle({dispatch}));
+    ipcRenderer.on(APP_EVENTS.setServiceTitle, setServiceTitle({dispatch}));
     sendTabsReady();
   }, []);
   return html`
