@@ -184,7 +184,11 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     ipcRenderer: {
       on: jest.fn(),
       once: jest.fn(),
-      send: jest.fn()
+      send: jest.fn((channel, ...args) => {
+        if (ipcMain.rawListeners(channel)?.[0]) {
+          ipcMain.rawListeners(channel)[0](...args);
+        }
+      })
     },
     nativeTheme: {},
     session: {

@@ -23,7 +23,6 @@ describe('Help in Browser test suite', () => {
     jest.resetModules();
     electron = await (await import('../../__tests__/electron.mjs')).testElectron();
     await import('../../../bundles/help.preload');
-    globalThis.ipcRenderer = electron.ipcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
   test('render, should render all documents', () => {
