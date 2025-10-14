@@ -41,11 +41,11 @@ describe('Main :: Tab listeners test suite', () => {
     main = require('../');
   });
   describe('tabsReady', () => {
-    let addTabsNested;
+    let addServicesNested;
     beforeEach(() => {
-      addTabsNested = jest.fn();
+      addServicesNested = jest.fn();
       jest.spyOn(serviceManagerModule, 'addServices')
-        .mockImplementation(() => addTabsNested);
+        .mockImplementation(() => addServicesNested);
     });
     test('No tabs in settings, should open settings dialog', () => {
       // Given
@@ -55,7 +55,7 @@ describe('Main :: Tab listeners test suite', () => {
       mockIpc.send('tabsReady', {});
       // Then
       expect(serviceManagerModule.addServices).not.toHaveBeenCalled();
-      expect(addTabsNested).not.toHaveBeenCalled();
+      expect(addServicesNested).not.toHaveBeenCalled();
       expect(mockView.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
     });
@@ -74,8 +74,8 @@ describe('Main :: Tab listeners test suite', () => {
       mockIpc.send('tabsReady', event);
       // Then
       expect(serviceManagerModule.addServices).toHaveBeenCalledWith(event.sender);
-      expect(addTabsNested).toHaveBeenCalledTimes(1);
-      expect(addTabsNested).toHaveBeenCalledWith([{id: '1337', otherInfo: 'A Tab', active: true}]);
+      expect(addServicesNested).toHaveBeenCalledTimes(1);
+      expect(addServicesNested).toHaveBeenCalledWith([{id: '1337', otherInfo: 'A Tab', active: true}]);
       expect(mockView.webContents.loadURL)
         .not.toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
     });

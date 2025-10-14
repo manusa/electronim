@@ -28,7 +28,7 @@ const APP_EVENTS = {
   aboutOpenDialog: 'aboutOpenDialog',
   activateTab: 'activateTab',
   activateTabInContainer: 'activateTabInContainer',
-  addTabs: 'addTabs',
+  addServices: 'addServices',
   appMenuOpen: 'appMenuOpen',
   appMenuClose: 'appMenuClose',
   canNotify: 'canNotify',
