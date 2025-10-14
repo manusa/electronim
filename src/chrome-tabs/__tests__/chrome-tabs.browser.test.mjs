@@ -222,8 +222,8 @@ describe('ChromeTabs in Browser test suite', () => {
     });
     test('drag, one position right, should switch positions in array', async () => {
       // Given
-      const tabReorder = jest.fn();
-      electron.ipcMain.on('tabReorder', tabReorder);
+      const servicesReorder = jest.fn();
+      electron.ipcMain.on('servicesReorder', servicesReorder);
       const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"]');
       const event = new MouseEvent('drag', {clientX: 200, clientY: 1});
       // When
@@ -232,21 +232,21 @@ describe('ChromeTabs in Browser test suite', () => {
       await waitFor(() =>
         expect($chromeTabs.querySelectorAll('.chrome-tab')[0].dataset.tabId).toBe('313373'));
       expect($chromeTabs.querySelectorAll('.chrome-tab')[1].dataset.tabId).toBe('1337');
-      expect(tabReorder).toHaveBeenCalledTimes(1);
-      expect(tabReorder).toHaveBeenCalledWith({tabIds: [313373, 1337, 13373]});
+      expect(servicesReorder).toHaveBeenCalledTimes(1);
+      expect(servicesReorder).toHaveBeenCalledWith({tabIds: [313373, 1337, 13373]});
     });
     test('drag, one position right out of window, should leave tabs as before drag started', async () => {
       // Given
-      const tabReorder = jest.fn();
-      electron.ipcMain.on('tabReorder', tabReorder);
+      const servicesReorder = jest.fn();
+      electron.ipcMain.on('servicesReorder', servicesReorder);
       const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"]');
       const event = new MouseEvent('drag', {clientX: 200, clientY: -100});
       // When
       fireEvent($tab, event);
       // Then
       await waitFor(() =>
-        expect(tabReorder).toHaveBeenCalledWith({tabIds: [1337, 313373, 13373]}));
-      expect(tabReorder).toHaveBeenCalledTimes(1);
+        expect(servicesReorder).toHaveBeenCalledWith({tabIds: [1337, 313373, 13373]}));
+      expect(servicesReorder).toHaveBeenCalledTimes(1);
       expect($chromeTabs.querySelectorAll('.chrome-tab')[0].dataset.tabId).toBe('1337');
     });
   });
