@@ -47,7 +47,7 @@ describe('Main :: Tab listeners test suite', () => {
       jest.spyOn(serviceManagerModule, 'addServices')
         .mockImplementation(() => addServicesNested);
     });
-    test('No tabs in settings, should open settings dialog', () => {
+    test('No services in settings, should open settings dialog', () => {
       // Given
       settings.updateSettings({tabs: []});
       main.init();
@@ -59,7 +59,7 @@ describe('Main :: Tab listeners test suite', () => {
       expect(mockView.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
     });
-    test('Previous saved tabs in loaded settings, should add tabs to manager and mark first enabled tab as active', () => {
+    test('Previous saved services in loaded settings, should add services to manager and mark first enabled service as active', () => {
       // Given
       const event = {sender: {send: jest.fn()}};
       settings.updateSettings({
@@ -80,36 +80,36 @@ describe('Main :: Tab listeners test suite', () => {
         .not.toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
     });
   });
-  describe('activateTab', () => {
-    let activeTab;
+  describe('activateService', () => {
+    let activeService;
     beforeEach(() => {
-      activeTab = {
+      activeService = {
         setBounds: jest.fn(),
         webContents: {focus: jest.fn()}
       };
-      serviceManagerModule.getService = jest.fn(id => (id === 'validId' ? activeTab : null));
+      serviceManagerModule.getService = jest.fn(id => (id === 'validId' ? activeService : null));
     });
-    test('no active tab, should do nothing', async () => {
+    test('no active service, should do nothing', async () => {
       // Given
       await waitForTrayInit(() => main.init());
       // When
-      mockIpc.emit('activateTab', {}, {id: 'not here'});
+      mockIpc.emit('activateService', {}, {id: 'not here'});
       // Then
       expect(electron.BaseWindow.getAllWindows()[0].getContentBounds).not.toHaveBeenCalled();
     });
-    test('active tab, should resize tab and set it as the main window browser view', async () => {
+    test('active service, should resize service tab and set it as the main window browser view', async () => {
       // Given
       await waitForTrayInit(() => main.init());
       const baseWindow = electron.BaseWindow.getAllWindows()[0];
       baseWindow.getContentBounds = jest.fn(() => ({width: 13, height: 83}));
       // When
-      mockIpc.emit('activateTab', {}, {id: 'validId'});
+      mockIpc.emit('activateService', {}, {id: 'validId'});
       // Then
-      expect(activeTab.setBounds).toHaveBeenCalledWith({x: 0, y: 46, width: 13, height: 37});
+      expect(activeService.setBounds).toHaveBeenCalledWith({x: 0, y: 46, width: 13, height: 37});
       expect(baseWindow.contentView.addChildView)
         .toHaveBeenCalledWith(expect.objectContaining({isTabContainer: true}));
-      expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(activeTab);
-      expect(activeTab.webContents.focus).toHaveBeenCalledTimes(1);
+      expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(activeService);
+      expect(activeService.webContents.focus).toHaveBeenCalledTimes(1);
     });
     test('#23, setBounds should be called AFTER adding view to BaseWindow', async () => {
       // Given
@@ -117,12 +117,12 @@ describe('Main :: Tab listeners test suite', () => {
       const baseWindow = electron.BaseWindow.getAllWindows()[0];
       baseWindow.getContentBounds = jest.fn(() => ({width: 13, height: 83}));
       // When
-      mockIpc.emit('activateTab', {}, {id: 'validId'});
+      mockIpc.emit('activateService', {}, {id: 'validId'});
       // Then
       expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(mockView.setBounds);
       expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(mockView.setBounds);
-      expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(activeTab.setBounds);
-      expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(activeTab.setBounds);
+      expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(activeService.setBounds);
+      expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(activeService.setBounds);
     });
   });
   test('canNotify, should call to the canNotify method of the serviceManager', () => {
@@ -147,7 +147,7 @@ describe('Main :: Tab listeners test suite', () => {
     // When
     mockIpc.send('notificationClick', {}, {tabId: 'validId'});
     // Then
-    expect(mockView.webContents.send).toHaveBeenCalledWith('activateTabInContainer', {tabId: 'validId'});
+    expect(mockView.webContents.send).toHaveBeenCalledWith('activateServiceInContainer', {tabId: 'validId'});
     expect(baseWindow.restore).toHaveBeenCalledTimes(1);
     expect(baseWindow.show).toHaveBeenCalledTimes(1);
     expect(baseWindow.show).toHaveBeenCalledAfter(baseWindow.restore);

@@ -62,13 +62,13 @@ describe('ChromeTabs in Browser test suite', () => {
       expect($addedTabs[1].hasAttribute('active')).toBe(false);
       expect($addedTabs[2].querySelector('.chrome-tab-favicon-icon').getAttribute('src'))
         .toBe('https://13373.png');
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('activateTab', {id: 1337, restoreWindow: false});
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('activateService', {id: 1337, restoreWindow: false});
     });
-    test('activateTabInContainer, should change active tab', async () => {
+    test('activateServiceInContainer, should change active tab', async () => {
       // Given
       mockIpcRenderer.events.addServices({}, tabs);
       // When
-      mockIpcRenderer.events.activateTabInContainer({}, {tabId: 313373});
+      mockIpcRenderer.events.activateServiceInContainer({}, {tabId: 313373});
       // Then
       await waitFor(() =>
         expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"]').hasAttribute('active')).toBe(true));
@@ -168,7 +168,7 @@ describe('ChromeTabs in Browser test suite', () => {
       // When
       fireEvent.click($chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"]'));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenNthCalledWith(3, 'activateTab', {id: 313373, restoreWindow: true});
+      expect(mockIpcRenderer.send).toHaveBeenNthCalledWith(3, 'activateService', {id: 313373, restoreWindow: true});
     });
     test('click, on active tab, should do nothing', () => {
       // When
@@ -196,7 +196,7 @@ describe('ChromeTabs in Browser test suite', () => {
       // When
       fireEvent($tab, event);
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('activateTab', {id: 313373, restoreWindow: true});
+      expect(mockIpcRenderer.send).toHaveBeenCalledWith('activateService', {id: 313373, restoreWindow: true});
       expect(event.dataTransfer.setDragImage).toHaveBeenCalledTimes(1);
     });
     test('drag, same position, should keep positions moving current tab left', async () => {
