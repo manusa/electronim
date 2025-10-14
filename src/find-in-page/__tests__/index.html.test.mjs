@@ -19,15 +19,8 @@ import {loadDOM} from '../../__tests__/index.mjs';
 describe('Find in Page :: index.html test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
-    window.electron = {
-      close: jest.fn(),
-      findInPage: jest.fn(),
-      onFindInPage: jest.fn(),
-      onReady: jest.fn(callback => {
-        // Simulate the ready event being triggered immediately in tests
-        callback();
-      })
-    };
+    await (await import('../../__tests__/electron.mjs')).testElectron();
+    await import('../../../bundles/find-in-page.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
   test('loads required styles', () => {
