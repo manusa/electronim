@@ -40,22 +40,40 @@ describe('Find in Page :: preload test suite', () => {
       test.each([
         ['close', 'findInPageClose']
       ])('%s invokes %s', (apiMethod, event) => {
+        // Given
+        const eventListener = jest.fn();
+        electron.ipcMain.on(event, eventListener);
+        // When
         api[apiMethod]();
-        expect(electron.ipcRenderer.send).toHaveBeenCalledWith(event);
+        // Then
+        expect(eventListener).toHaveBeenCalled();
       });
       test('findInPage invokes findInPage', () => {
+        // Given
+        const findInPage = jest.fn();
+        electron.ipcMain.on('findInPage', findInPage);
+        // When
         api.findInPage('test');
-        expect(electron.ipcRenderer.send).toHaveBeenCalledWith('findInPage', 'test');
+        // Then
+        expect(findInPage).toHaveBeenCalledWith('test');
       });
-      test('onFindInPage invokes onFindInPage to register callback', () => {
-        const mockFunction = jest.fn();
-        api.onFindInPage(mockFunction);
-        expect(electron.ipcRenderer.on).toHaveBeenCalledWith('findInPageFound', mockFunction);
+      test('onFindInPage registers callback for findInPageFound', () => {
+        // Given
+        const callbackFunction = jest.fn();
+        // When
+        api.onFindInPage(callbackFunction);
+        // Then
+        electron.ipcRenderer.emit('findInPageFound');
+        expect(callbackFunction).toHaveBeenCalled();
       });
-      test('onReady invokes onReady to register callback', () => {
-        const mockFunction = jest.fn();
-        api.onReady(mockFunction);
-        expect(electron.ipcRenderer.once).toHaveBeenCalledWith('findInPageReady', mockFunction);
+      test('onReady registers callback for findInPageReady', () => {
+        // Given
+        const callbackFunction = jest.fn();
+        // When
+        api.onReady(callbackFunction);
+        // Then
+        electron.ipcRenderer.emit('findInPageReady');
+        expect(callbackFunction).toHaveBeenCalled();
       });
     });
   });
