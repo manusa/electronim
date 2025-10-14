@@ -18,27 +18,20 @@ import {loadDOM} from '../../__tests__/index.mjs';
 import {getByTestId, fireEvent, waitFor} from '@testing-library/dom';
 
 describe('Find in Page :: in browser test suite', () => {
-  let onFindInPageCallback;
+  let electron;
   beforeEach(async () => {
     jest.resetModules();
-    window.electron = {
-      close: jest.fn(),
-      findInPage: jest.fn(),
-      onFindInPage: jest.fn(callback => {
-        onFindInPageCallback = callback;
-      }),
-      onReady: jest.fn(callback => {
-        // Simulate the ready event being triggered immediately in tests
-        callback();
-      })
-    };
+    electron = await (await import('../../__tests__/electron.mjs')).testElectron();
+    await import('../../../bundles/find-in-page.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
+    // Simulate webcontents ready
+    electron.ipcRenderer.emit('findInPageReady');
   });
   describe.each([
-    {testId: 'find-previous', icon: '\ue316', title: 'Previous', expectedFunction: 'findInPage'},
-    {testId: 'find-next', icon: '\ue313', title: 'Next', expectedFunction: 'findInPage'},
-    {testId: 'close', icon: '\ue5cd', title: 'Close', expectedFunction: 'close'}
-  ])('Has Icon button $testId entry', ({testId, icon, title, expectedFunction}) => {
+    {testId: 'find-previous', icon: '\ue316', title: 'Previous', expectedEvent: 'findInPage'},
+    {testId: 'find-next', icon: '\ue313', title: 'Next', expectedEvent: 'findInPage'},
+    {testId: 'close', icon: '\ue5cd', title: 'Close', expectedEvent: 'findInPageClose'}
+  ])('Has Icon button $testId entry', ({testId, icon, title, expectedEvent}) => {
     let $iconButton;
     beforeEach(() => {
       $iconButton = getByTestId(document, testId);
@@ -49,16 +42,25 @@ describe('Find in Page :: in browser test suite', () => {
     test(`should have title ${icon}`, () => {
       expect($iconButton.getAttribute('title')).toBe(title);
     });
-    test('click, should invoke function', () => {
+    test(`click, should send ${expectedEvent} to ipcMain`, () => {
+      // Given
+      const listener = jest.fn();
+      electron.ipcMain.once(expectedEvent, listener);
       // When
       fireEvent.click($iconButton);
       // Then
-      expect(window.electron[expectedFunction]).toHaveBeenCalledTimes(1);
+      expect(listener).toHaveBeenCalledTimes(1);
     });
   });
   describe('Input field', () => {
+    let findInPage;
+    let findInPageClose;
     let $input;
     beforeEach(() => {
+      findInPage = jest.fn();
+      electron.ipcMain.on('findInPage', findInPage);
+      findInPageClose = jest.fn();
+      electron.ipcMain.on('findInPageClose', findInPageClose);
       $input = document.querySelector('.input-wrapper input');
     });
     test('should be focused', async () => {
@@ -70,20 +72,20 @@ describe('Find in Page :: in browser test suite', () => {
       // When
       fireEvent.keyDown($input, {key: 'Enter'});
       // Then
-      expect(window.electron.findInPage).toHaveBeenCalledTimes(1);
-      expect(window.electron.findInPage).toHaveBeenCalledWith({text: 'test'});
+      expect(findInPage).toHaveBeenCalledTimes(1);
+      expect(findInPage).toHaveBeenCalledWith({text: 'test'});
     });
     test('should close on Escape', () => {
       // When
       fireEvent.keyDown($input, {key: 'Escape'});
       // Then
-      expect(window.electron.close).toHaveBeenCalledTimes(1);
+      expect(findInPageClose).toHaveBeenCalledTimes(1);
     });
     test('should not call findInPage on other keys', () => {
       // When
       fireEvent.keyDown($input, {key: 'a'});
       // Then
-      expect(window.electron.findInPage).not.toHaveBeenCalled();
+      expect(findInPage).not.toHaveBeenCalled();
     });
   });
   describe('Results', () => {
@@ -97,13 +99,13 @@ describe('Find in Page :: in browser test suite', () => {
     });
     test('should be visible when matches', async () => {
       // Given
-      onFindInPageCallback(null, {matches: 1});
+      electron.ipcRenderer.emit('findInPageFound', null, {matches: 1});
       // Then
       await waitFor(() => expect($results.style.visibility).toBe('visible'));
     });
     test('should show active match ordinal and total matches', async () => {
       // Given
-      onFindInPageCallback(null, {matches: 2, activeMatchOrdinal: 1});
+      electron.ipcRenderer.emit('findInPageFound', null, {matches: 2, activeMatchOrdinal: 1});
       // Then
       await waitFor(() => expect($results.textContent).toBe('1/2'));
     });
