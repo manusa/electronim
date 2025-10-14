@@ -18,22 +18,21 @@ import {loadDOM} from '../../__tests__/index.mjs';
 import {createEvent, fireEvent, waitFor} from '@testing-library/dom';
 
 describe('ChromeTabs in Browser test suite', () => {
-  let mockIpcRenderer;
+  let electron;
+  let tabsReady;
   let $chromeTabs;
   beforeEach(async () => {
     jest.resetModules();
-    mockIpcRenderer = {
-      events: {},
-      on: jest.fn((key, event) => (mockIpcRenderer.events[key] = event)),
-      send: jest.fn()
-    };
+    electron = await (await import('../../__tests__/electron.mjs')).testElectron();
+    tabsReady = jest.fn();
+    electron.ipcMain.once('tabsReady', tabsReady);
     await import('../../../bundles/chrome-tabs.preload');
-    globalThis.ipcRenderer = mockIpcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
     $chromeTabs = await waitFor(() => document.querySelector('.chrome-tabs'));
   });
   test('APP_EVENTS.tabsReady should be fired on load', () => {
-    expect(mockIpcRenderer.send).toHaveBeenCalledWith('tabsReady', {});
+    expect(tabsReady).toHaveBeenCalledTimes(1);
+    expect(tabsReady).toHaveBeenCalledWith({});
   });
   describe('External events (ipcRenderer.on)', () => {
     let tabs;
@@ -47,8 +46,11 @@ describe('ChromeTabs in Browser test suite', () => {
       ];
     });
     test('addServices, should set tabs without restoring the main window / activating any tab', async () => {
+      // Given
+      const activateService = jest.fn();
+      electron.ipcMain.once('activateService', activateService);
       // When
-      mockIpcRenderer.events.addServices({}, tabs);
+      electron.ipcRenderer.emit('addServices', {}, tabs);
       // Then
       await waitFor(() =>
         expect($chromeTabs.querySelectorAll('.chrome-tab').length).toBe(3));
@@ -62,20 +64,20 @@ describe('ChromeTabs in Browser test suite', () => {
       expect($addedTabs[1].hasAttribute('active')).toBe(false);
       expect($addedTabs[2].querySelector('.chrome-tab-favicon-icon').getAttribute('src'))
         .toBe('https://13373.png');
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('activateService', {id: 1337, restoreWindow: false});
+      expect(activateService).toHaveBeenCalledWith({id: 1337, restoreWindow: false});
     });
     test('activateServiceInContainer, should change active tab', async () => {
       // Given
-      mockIpcRenderer.events.addServices({}, tabs);
+      electron.ipcRenderer.emit('addServices', {}, tabs);
       // When
-      mockIpcRenderer.events.activateServiceInContainer({}, {tabId: 313373});
+      electron.ipcRenderer.emit('activateServiceInContainer', {}, {tabId: 313373});
       // Then
       await waitFor(() =>
         expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"]').hasAttribute('active')).toBe(true));
     });
     describe('electronimNewVersionAvailable is true', () => {
       beforeEach(() => {
-        mockIpcRenderer.events.electronimNewVersionAvailable({}, true);
+        electron.ipcRenderer.emit('electronimNewVersionAvailable', {}, true);
       });
       test('Main button shows arrow up', async () => {
         await waitFor(() =>
@@ -90,9 +92,9 @@ describe('ChromeTabs in Browser test suite', () => {
     });
     test('setTabFavicon, should change favicon of specified tab', async () => {
       // Given
-      mockIpcRenderer.events.addServices({}, tabs);
+      electron.ipcRenderer.emit('addServices', {}, tabs);
       // When
-      mockIpcRenderer.events.setTabFavicon({}, {id: 313373, favicon: 'https://f/replaced.png'});
+      electron.ipcRenderer.emit('setTabFavicon', {}, {id: 313373, favicon: 'https://f/replaced.png'});
       // Then
       await waitFor(() => expect(
         $chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"] .chrome-tab-favicon-icon').getAttribute('src'))
@@ -103,9 +105,9 @@ describe('ChromeTabs in Browser test suite', () => {
     });
     test('setServiceTitle, should change title of specified tab', async () => {
       // Given
-      mockIpcRenderer.events.addServices({}, tabs);
+      electron.ipcRenderer.emit('addServices', {}, tabs);
       // When
-      mockIpcRenderer.events.setServiceTitle({}, {id: 313373, title: 'replaced'});
+      electron.ipcRenderer.emit('setServiceTitle', {}, {id: 313373, title: 'replaced'});
       // Then
       await waitFor(() => expect(
         $chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"] .chrome-tab-title').innerHTML)
@@ -121,7 +123,7 @@ describe('ChromeTabs in Browser test suite', () => {
         {id: 2, title: 'Normal Tab', url: 'https://normal.com'}
       ];
       // When
-      mockIpcRenderer.events.addServices({}, tabsWithCustomName);
+      electron.ipcRenderer.emit('addServices', {}, tabsWithCustomName);
       // Then
       await waitFor(() =>
         expect($chromeTabs.querySelectorAll('.chrome-tab').length).toBe(2));
@@ -135,12 +137,12 @@ describe('ChromeTabs in Browser test suite', () => {
       const tabsWithCustomName = [
         {id: 1, customName: 'My Custom Tab', title: 'Original Title', url: 'https://test.com'}
       ];
-      mockIpcRenderer.events.addServices({}, tabsWithCustomName);
+      electron.ipcRenderer.emit('addServices', {}, tabsWithCustomName);
       await waitFor(() =>
         expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-title').innerHTML)
           .toBe('My Custom Tab'));
       // When
-      mockIpcRenderer.events.setServiceTitle({}, {id: 1, title: 'New Page Title'});
+      electron.ipcRenderer.emit('setServiceTitle', {}, {id: 1, title: 'New Page Title'});
       // Then
       await waitFor(() =>
         expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-title').innerHTML)
@@ -157,7 +159,7 @@ describe('ChromeTabs in Browser test suite', () => {
       ];
       Object.defineProperty($chromeTabs, 'clientWidth', {value: 100});
       globalThis.dispatchEvent(new CustomEvent('resize'));
-      mockIpcRenderer.events.addServices({}, tabs);
+      electron.ipcRenderer.emit('addServices', {}, tabs);
       await waitFor(() => {
         if ($chromeTabs.querySelectorAll('.chrome-tab').length !== 3) {
           throw new Error('Tabs are not ready');
@@ -165,16 +167,22 @@ describe('ChromeTabs in Browser test suite', () => {
       });
     });
     test('click, on inactive tab, should request tab activation', () => {
+      // Given
+      const activateService = jest.fn();
+      electron.ipcMain.on('activateService', activateService);
       // When
       fireEvent.click($chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"]'));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenNthCalledWith(3, 'activateService', {id: 313373, restoreWindow: true});
+      expect(activateService).toHaveBeenCalledWith({id: 313373, restoreWindow: true});
     });
     test('click, on active tab, should do nothing', () => {
+      // Given
+      const activateService = jest.fn();
+      electron.ipcMain.once('activateService', activateService);
       // When
       fireEvent.click($chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"]'));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(2);
+      expect(activateService).not.toHaveBeenCalled();
     });
     test('dragOver, should invoke preventDefault to allow drop', () => {
       // Given
@@ -187,6 +195,8 @@ describe('ChromeTabs in Browser test suite', () => {
     });
     test('dragStart, on inactive tab, should activate tab and set initial drag values', () => {
       // Given
+      const activateService = jest.fn();
+      electron.ipcMain.once('activateService', activateService);
       const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"]');
       const event = new MouseEvent('dragstart', {
         clientX: 100, clientY: 0});
@@ -196,7 +206,7 @@ describe('ChromeTabs in Browser test suite', () => {
       // When
       fireEvent($tab, event);
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('activateService', {id: 313373, restoreWindow: true});
+      expect(activateService).toHaveBeenCalledWith({id: 313373, restoreWindow: true});
       expect(event.dataTransfer.setDragImage).toHaveBeenCalledTimes(1);
     });
     test('drag, same position, should keep positions moving current tab left', async () => {
@@ -212,6 +222,8 @@ describe('ChromeTabs in Browser test suite', () => {
     });
     test('drag, one position right, should switch positions in array', async () => {
       // Given
+      const tabReorder = jest.fn();
+      electron.ipcMain.on('tabReorder', tabReorder);
       const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"]');
       const event = new MouseEvent('drag', {clientX: 200, clientY: 1});
       // When
@@ -220,19 +232,21 @@ describe('ChromeTabs in Browser test suite', () => {
       await waitFor(() =>
         expect($chromeTabs.querySelectorAll('.chrome-tab')[0].dataset.tabId).toBe('313373'));
       expect($chromeTabs.querySelectorAll('.chrome-tab')[1].dataset.tabId).toBe('1337');
-      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(3);
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('tabReorder', {tabIds: [313373, 1337, 13373]});
+      expect(tabReorder).toHaveBeenCalledTimes(1);
+      expect(tabReorder).toHaveBeenCalledWith({tabIds: [313373, 1337, 13373]});
     });
     test('drag, one position right out of window, should leave tabs as before drag started', async () => {
       // Given
+      const tabReorder = jest.fn();
+      electron.ipcMain.on('tabReorder', tabReorder);
       const $tab = $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"]');
       const event = new MouseEvent('drag', {clientX: 200, clientY: -100});
       // When
       fireEvent($tab, event);
       // Then
       await waitFor(() =>
-        expect(mockIpcRenderer.send).toHaveBeenCalledWith('tabReorder', {tabIds: [1337, 313373, 13373]}));
-      expect(mockIpcRenderer.send).toHaveBeenCalledTimes(3);
+        expect(tabReorder).toHaveBeenCalledWith({tabIds: [1337, 313373, 13373]}));
+      expect(tabReorder).toHaveBeenCalledTimes(1);
       expect($chromeTabs.querySelectorAll('.chrome-tab')[0].dataset.tabId).toBe('1337');
     });
   });
@@ -242,10 +256,13 @@ describe('ChromeTabs in Browser test suite', () => {
       expect(buttonClass).toBe('\ue5d4');
     });
     test('menuButton click, should dispatch APP_EVENTS.appMenuOpen', () => {
+      // Given
+      const appMenuOpen = jest.fn();
+      electron.ipcMain.once('appMenuOpen', appMenuOpen);
       // When
       fireEvent.click(document.querySelector('.menu__button'));
       // Then
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('appMenuOpen');
+      expect(appMenuOpen).toHaveBeenCalledTimes(1);
     });
   });
   describe('Context menu tab ID detection (DOM integration)', () => {
@@ -258,7 +275,7 @@ describe('ChromeTabs in Browser test suite', () => {
       ];
       Object.defineProperty($chromeTabs, 'clientWidth', {value: 100});
       globalThis.dispatchEvent(new CustomEvent('resize'));
-      mockIpcRenderer.events.addServices({}, tabs);
+      electron.ipcRenderer.emit('addServices', {}, tabs);
       await waitFor(() => {
         if ($chromeTabs.querySelectorAll('.chrome-tab').length !== 3) {
           throw new Error('Tabs are not ready');

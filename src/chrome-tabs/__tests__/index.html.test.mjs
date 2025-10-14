@@ -19,11 +19,8 @@ import {loadDOM} from '../../__tests__/index.mjs';
 describe('Chrome Tabs index.html test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
-    globalThis.APP_EVENTS = (await import('../../constants')).APP_EVENTS;
-    globalThis.ipcRenderer = {
-      on: jest.fn(),
-      send: jest.fn()
-    };
+    await (await import('../../__tests__/electron.mjs')).testElectron();
+    await import('../../../bundles/chrome-tabs.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
   test('loads required styles', () => {

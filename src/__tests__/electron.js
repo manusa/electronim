@@ -119,6 +119,13 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
   ipcMain.handle = jest.fn((channel, func) => ipcMain.on(channel, func));
   ipcMain.removeHandler = jest.fn(ipcMain.removeAllListeners);
   ipcMain.send = (channel, ...args) => ipcMain.rawListeners(channel)[0](...args);
+  // ipcRenderer
+  const ipcRenderer = new events.EventEmitter();
+  ipcRenderer.send = jest.fn((channel, ...args) => {
+    if (ipcMain.rawListeners(channel)?.[0]) {
+      ipcMain.rawListeners(channel)[0](...args);
+    }
+  });
   // Notification
   const Notification = jest.fn(() => ({
     actions: 'Actions', badge: 'Badge', body: 'Body', data: 'Data', dir: 'Dir', lang: 'Lang', tag: 'Tag', icon: 'Icon',
@@ -181,15 +188,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
       })
     },
     ipcMain,
-    ipcRenderer: {
-      on: jest.fn(),
-      once: jest.fn(),
-      send: jest.fn((channel, ...args) => {
-        if (ipcMain.rawListeners(channel)?.[0]) {
-          ipcMain.rawListeners(channel)[0](...args);
-        }
-      })
-    },
+    ipcRenderer,
     nativeTheme: {},
     session: {
       fromPartition: jest.fn(() => sessionInstance),
