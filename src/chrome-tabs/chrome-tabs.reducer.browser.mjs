@@ -77,7 +77,7 @@ export const reducer = (state, action) => {
 // Action creators
 export const activateTab = ({dispatch}) => (_event, {tabId}) =>
   dispatch({type: ACTIONS.ACTIVATE_TAB, payload: tabId});
-export const addTabs = ({dispatch}) => (_event, tabs) => {
+export const addServices = ({dispatch}) => (_event, tabs) => {
   dispatch({type: ACTIONS.SET_TABS, payload: tabs});
   const activeTabMeta = tabs.find(({active}) => active === true);
   if (tabs.length > 0 && activeTabMeta) {

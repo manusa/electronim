@@ -162,14 +162,15 @@ describe('Service Manager module test suite', () => {
       // Then
       expect(electron.WebContentsView.mock.results[0].value.webContents.loadURL).toHaveBeenCalledWith('https://localhost');
       expect(mockIpcSender.send).toHaveBeenCalledTimes(1);
-      expect(mockIpcSender.send).toHaveBeenCalledWith('addTabs', [{id: 1337, url: 'https://localhost'}]);
+      expect(mockIpcSender.send).toHaveBeenCalledWith('addServices', [{id: 1337, url: 'https://localhost'}]);
     });
     test('Tab webContents should contain a reference to its id', () => {
       // When
       serviceManager.addServices({send: jest.fn()})([{id: 1337, url: 'https://localhost'}]);
       // Then
       expect(electron.WebContentsView.mock.results[0].value.webContents.executeJavaScript).toHaveBeenCalledTimes(1);
-      expect(electron.WebContentsView.mock.results[0].value.webContents.executeJavaScript).toHaveBeenCalledWith('window.tabId = \'1337\';');
+      expect(electron.WebContentsView.mock.results[0].value.webContents.executeJavaScript)
+        .toHaveBeenCalledWith('window.tabId = \'1337\';window.serviceId = \'1337\';');
     });
     describe('cleanUserAgent', () => {
       test('chromium version available, should remove non-standard tokens from user-agent header and set version', () => {

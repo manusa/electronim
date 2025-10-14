@@ -25,7 +25,7 @@ const {handleRedirect, windowOpenHandler} = require('./redirect');
 let activeService = null;
 const services = {};
 
-const webPreferences = {
+const defaultWebPreferences = {
   contextIsolation: false,
   nativeWindowOpen: true,
   nodeIntegration: false,
@@ -33,8 +33,8 @@ const webPreferences = {
   preload: path.resolve(__dirname, '..', '..', 'bundles', 'service-manager.preload.js')
 };
 
-const handlePageTitleUpdated = (ipcSender, tabId) => (_e, title) => {
-  ipcSender.send(APP_EVENTS.setTabTitle, {id: tabId, title: title});
+const handlePageTitleUpdated = (ipcSender, serviceId) => (_e, title) => {
+  ipcSender.send(APP_EVENTS.setTabTitle, {id: serviceId, title: title});
 };
 
 const extractFavicon = async view => {
@@ -47,12 +47,12 @@ const extractFavicon = async view => {
   return favicons;
 };
 
-const handlePageFaviconUpdated = (view, ipcSender, tabId) => async (_e, favicons = []) => {
+const handlePageFaviconUpdated = (view, ipcSender, serviceId) => async (_e, favicons = []) => {
   if (favicons.length === 0) {
     favicons = await extractFavicon(view);
   }
   if (favicons.length > 0) {
-    ipcSender.send(APP_EVENTS.setTabFavicon, {id: tabId, favicon: favicons[favicons.length - 1]});
+    ipcSender.send(APP_EVENTS.setTabFavicon, {id: serviceId, favicon: favicons[favicons.length - 1]});
   }
 };
 
@@ -71,52 +71,52 @@ const addServices = ipcSender => servicesMetadata => {
   servicesMetadata.forEach(({
     id, url, sandboxed = false, openUrlsInApp = false
   }) => {
-    const tabPreferences = {...webPreferences};
+    const servicePreferences = {...defaultWebPreferences};
     if (sandboxed) {
-      tabPreferences.session = session.fromPartition(`persist:${id}`, {cache: true});
+      servicePreferences.session = session.fromPartition(`persist:${id}`, {cache: true});
     } else {
-      tabPreferences.session = session.defaultSession;
+      servicePreferences.session = session.defaultSession;
     }
-    addUserAgentInterceptor(tabPreferences.session);
+    addUserAgentInterceptor(servicePreferences.session);
 
-    tabPreferences.session.spellcheck = useNativeSpellChecker;
+    servicePreferences.session.spellcheck = useNativeSpellChecker;
     if (useNativeSpellChecker) {
-      tabPreferences.session.setSpellCheckerEnabled(true);
-      tabPreferences.session.setSpellCheckerLanguages(tabPreferences.session.availableSpellCheckerLanguages
+      servicePreferences.session.setSpellCheckerEnabled(true);
+      servicePreferences.session.setSpellCheckerLanguages(servicePreferences.session.availableSpellCheckerLanguages
         .filter(lang => enabledDictionaries.includes(lang)));
     }
 
 
-    tabPreferences.experiment = false;
-    if (tabPreferences.experiment) { // USE NATIVE SPELL CHECKER
-      tabPreferences.session.setSpellCheckerDictionaryDownloadURL('file:///home/user/00-MN/projects/manusa/electronim/dictionaries/');
+    servicePreferences.experiment = false;
+    if (servicePreferences.experiment) { // USE NATIVE SPELL CHECKER
+      servicePreferences.session.setSpellCheckerDictionaryDownloadURL('file:///home/user/00-MN/projects/manusa/electronim/dictionaries/');
     }
-    const tab = new WebContentsView({webPreferences: tabPreferences});
+    const service = new WebContentsView({webPreferences: servicePreferences});
 
-    cleanUserAgent(tab);
-    tab.webContents.loadURL(url);
+    cleanUserAgent(service);
+    service.webContents.loadURL(url);
 
     if (!openUrlsInApp) {
-      tab.webContents.on('will-navigate', handleRedirect(tab));
-      tab.webContents.setWindowOpenHandler(windowOpenHandler(tab));
+      service.webContents.on('will-navigate', handleRedirect(service));
+      service.webContents.setWindowOpenHandler(windowOpenHandler(service));
     }
 
-    const handlePageTitleUpdatedForCurrentTab = handlePageTitleUpdated(ipcSender, id);
-    tab.webContents.on('page-title-updated', handlePageTitleUpdatedForCurrentTab);
-    const handlePageFaviconUpdatedForCurrentTab = handlePageFaviconUpdated(tab, ipcSender, id);
-    tab.webContents.on('page-favicon-updated', handlePageFaviconUpdatedForCurrentTab);
+    const handlePageTitleUpdatedForCurrentService = handlePageTitleUpdated(ipcSender, id);
+    service.webContents.on('page-title-updated', handlePageTitleUpdatedForCurrentService);
+    const handlePageFaviconUpdatedForCurrentService = handlePageFaviconUpdated(service, ipcSender, id);
+    service.webContents.on('page-favicon-updated', handlePageFaviconUpdatedForCurrentService);
 
-    tab.webContents.on('context-menu', handleContextMenu(tab));
+    service.webContents.on('context-menu', handleContextMenu(service));
 
-    const registerIdInTab = () => {
-      tab.webContents.executeJavaScript(`window.tabId = '${id}';`);
+    const registerIdInDom = () => {
+      service.webContents.executeJavaScript(`window.tabId = '${id}';window.serviceId = '${id}';`);
     };
-    tab.webContents.on('dom-ready', registerIdInTab);
-    registerIdInTab();
+    service.webContents.on('dom-ready', registerIdInDom);
+    registerIdInDom();
 
-    services[id.toString()] = tab;
+    services[id.toString()] = service;
   });
-  ipcSender.send(APP_EVENTS.addTabs, servicesMetadata);
+  ipcSender.send(APP_EVENTS.addServices, servicesMetadata);
 };
 
 const sortServices = serviceIds => {

@@ -46,9 +46,9 @@ describe('ChromeTabs in Browser test suite', () => {
         {id: 13373, favicon: 'https://13373.png', url: 'https://13373.com'}
       ];
     });
-    test('addTabs, should set tabs without restoring the main window / activating any tab', async () => {
+    test('addServices, should set tabs without restoring the main window / activating any tab', async () => {
       // When
-      mockIpcRenderer.events.addTabs({}, tabs);
+      mockIpcRenderer.events.addServices({}, tabs);
       // Then
       await waitFor(() =>
         expect($chromeTabs.querySelectorAll('.chrome-tab').length).toBe(3));
@@ -66,7 +66,7 @@ describe('ChromeTabs in Browser test suite', () => {
     });
     test('activateTabInContainer, should change active tab', async () => {
       // Given
-      mockIpcRenderer.events.addTabs({}, tabs);
+      mockIpcRenderer.events.addServices({}, tabs);
       // When
       mockIpcRenderer.events.activateTabInContainer({}, {tabId: 313373});
       // Then
@@ -90,7 +90,7 @@ describe('ChromeTabs in Browser test suite', () => {
     });
     test('setTabFavicon, should change favicon of specified tab', async () => {
       // Given
-      mockIpcRenderer.events.addTabs({}, tabs);
+      mockIpcRenderer.events.addServices({}, tabs);
       // When
       mockIpcRenderer.events.setTabFavicon({}, {id: 313373, favicon: 'https://f/replaced.png'});
       // Then
@@ -103,7 +103,7 @@ describe('ChromeTabs in Browser test suite', () => {
     });
     test('setTabTitle, should change title of specified tab', async () => {
       // Given
-      mockIpcRenderer.events.addTabs({}, tabs);
+      mockIpcRenderer.events.addServices({}, tabs);
       // When
       mockIpcRenderer.events.setTabTitle({}, {id: 313373, title: 'replaced'});
       // Then
@@ -114,14 +114,14 @@ describe('ChromeTabs in Browser test suite', () => {
         $chromeTabs.querySelector('.chrome-tab[data-tab-id="1337"] .chrome-tab-title').innerHTML)
         .toBe('https://1337.com');
     });
-    test('addTabs with customName, should display customName instead of title', async () => {
+    test('addServices with customName, should display customName instead of title', async () => {
       // Given
       const tabsWithCustomName = [
         {id: 1, customName: 'My Custom Tab', title: 'Original Title', url: 'https://test.com'},
         {id: 2, title: 'Normal Tab', url: 'https://normal.com'}
       ];
       // When
-      mockIpcRenderer.events.addTabs({}, tabsWithCustomName);
+      mockIpcRenderer.events.addServices({}, tabsWithCustomName);
       // Then
       await waitFor(() =>
         expect($chromeTabs.querySelectorAll('.chrome-tab').length).toBe(2));
@@ -135,7 +135,7 @@ describe('ChromeTabs in Browser test suite', () => {
       const tabsWithCustomName = [
         {id: 1, customName: 'My Custom Tab', title: 'Original Title', url: 'https://test.com'}
       ];
-      mockIpcRenderer.events.addTabs({}, tabsWithCustomName);
+      mockIpcRenderer.events.addServices({}, tabsWithCustomName);
       await waitFor(() =>
         expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-title').innerHTML)
           .toBe('My Custom Tab'));
@@ -157,7 +157,7 @@ describe('ChromeTabs in Browser test suite', () => {
       ];
       Object.defineProperty($chromeTabs, 'clientWidth', {value: 100});
       globalThis.dispatchEvent(new CustomEvent('resize'));
-      mockIpcRenderer.events.addTabs({}, tabs);
+      mockIpcRenderer.events.addServices({}, tabs);
       await waitFor(() => {
         if ($chromeTabs.querySelectorAll('.chrome-tab').length !== 3) {
           throw new Error('Tabs are not ready');
@@ -258,7 +258,7 @@ describe('ChromeTabs in Browser test suite', () => {
       ];
       Object.defineProperty($chromeTabs, 'clientWidth', {value: 100});
       globalThis.dispatchEvent(new CustomEvent('resize'));
-      mockIpcRenderer.events.addTabs({}, tabs);
+      mockIpcRenderer.events.addServices({}, tabs);
       await waitFor(() => {
         if ($chromeTabs.querySelectorAll('.chrome-tab').length !== 3) {
           throw new Error('Tabs are not ready');

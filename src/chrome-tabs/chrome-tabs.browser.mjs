@@ -18,7 +18,7 @@ import {
   APP_EVENTS, html, render, useLayoutEffect, useReducer, useState, Icon, IconButton
 } from '../components/index.mjs';
 import {
-  initialState, reducer, activateTab, addTabs, moveTab, setNewVersionAvailable, setTabFavicon, setTabTitle,
+  initialState, reducer, activateTab, addServices, moveTab, setNewVersionAvailable, setTabFavicon, setTabTitle,
   sendActivateTab
 } from './chrome-tabs.reducer.browser.mjs';
 
@@ -189,7 +189,7 @@ const Menu = ({state: {newVersionAvailable}}) => {
 const TabContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   useLayoutEffect(() => {
-    ipcRenderer.on(APP_EVENTS.addTabs, addTabs({dispatch}));
+    ipcRenderer.on(APP_EVENTS.addServices, addServices({dispatch}));
     ipcRenderer.on(APP_EVENTS.activateTabInContainer, activateTab({dispatch}));
     ipcRenderer.on(APP_EVENTS.electronimNewVersionAvailable, setNewVersionAvailable({dispatch}));
     ipcRenderer.on(APP_EVENTS.setTabFavicon, setTabFavicon({dispatch}));
