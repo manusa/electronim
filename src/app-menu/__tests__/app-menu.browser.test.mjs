@@ -18,22 +18,21 @@ import {loadDOM} from '../../__tests__/index.mjs';
 import {getByTestId, fireEvent} from '@testing-library/dom';
 
 describe('App Menu in Browser test suite', () => {
+  let electron;
   beforeEach(async () => {
     jest.resetModules();
-    globalThis.electron = {
-      aboutOpenDialog: jest.fn(),
-      close: jest.fn(),
-      helpOpenDialog: jest.fn(),
-      quit: jest.fn(),
-      settingsOpenDialog: jest.fn()
-    };
+    electron = await (await import('../../__tests__/electron.mjs')).testElectron();
+    await import('../../../bundles/app-menu.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
   test('wrapper, click should close menu (WebContentsView)', () => {
+    // Given
+    const appMenuClose = jest.fn();
+    electron.ipcMain.once('appMenuClose', appMenuClose);
     // When
     fireEvent.click(document.querySelector('.app-menu .wrapper'));
     // Then
-    expect(globalThis.electron.close).toHaveBeenCalledTimes(1);
+    expect(appMenuClose).toHaveBeenCalledTimes(1);
   });
   describe.each([
     {testId: 'about', icon: '\ue88e', label: 'About', expectedFunction: 'aboutOpenDialog'},
@@ -54,10 +53,13 @@ describe('App Menu in Browser test suite', () => {
       expect(entry.querySelector('.menu-item__leading-icon').textContent).toBe(icon);
     });
     test('click, should invoke function', () => {
+      // Given
+      const listener = jest.fn();
+      electron.ipcMain.once(expectedFunction, listener);
       // When
       fireEvent.click(entry);
       // Then
-      expect(globalThis.electron[expectedFunction]).toHaveBeenCalledTimes(1);
+      expect(listener).toHaveBeenCalledTimes(1);
     });
   });
 });
