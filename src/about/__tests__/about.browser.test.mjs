@@ -18,19 +18,25 @@ import {loadDOM} from '../../__tests__/index.mjs';
 import {fireEvent} from '@testing-library/dom';
 
 describe('About in Browser test suite', () => {
+  let electron;
   beforeEach(async () => {
     jest.resetModules();
-    globalThis.electron = {
-      close: jest.fn(),
-      versions: {electron: '1.33.7', chrome: '1337', node: '42', v8: '13.37'}
-    };
+    electron = await (await import('../../__tests__/electron.mjs')).testElectron();
+    Object.defineProperty(process, 'versions', {
+      value: {electron: '1.33.7', chrome: '1337', node: '42', v8: '13.37'},
+      configurable: true
+    });
+    await import('../../../bundles/about.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
   test('close, click should close dialog', () => {
+    // Given
+    const closeDialog = jest.fn();
+    electron.ipcMain.once('closeDialog', closeDialog);
     // When
     fireEvent.click(document.querySelector('.top-app-bar .leading-navigation-icon'));
     // Then
-    expect(globalThis.electron.close).toHaveBeenCalledTimes(1);
+    expect(closeDialog).toHaveBeenCalledTimes(1);
   });
   test.each([
     {label: 'Electron', expectedVersion: '1.33.7'},
