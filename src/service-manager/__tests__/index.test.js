@@ -205,7 +205,7 @@ describe('Service Manager module test suite', () => {
         expect(mockIpcSender.send).toHaveBeenCalledWith('setServiceTitle', {id: '1337', title: 'Dr.'});
       });
       describe('handlePageFaviconUpdated', () => {
-        test('Favicons provided, should send setTabFavicon with the last of the provided favicons', () => {
+        test('Favicons provided, should send setServiceFavicon with the last of the provided favicons', () => {
           // When
           serviceManager.getService('1337').listeners['page-favicon-updated'](new Event(''), [
             'https://url-to-favicon/aitana.png',
@@ -213,9 +213,9 @@ describe('Service Manager module test suite', () => {
           ]);
           // Then
           expect(mockIpcSender.send)
-            .toHaveBeenCalledWith('setTabFavicon', {id: '1337', favicon: 'https://url-to-favicon/alex.png'});
+            .toHaveBeenCalledWith('setServiceFavicon', {id: '1337', favicon: 'https://url-to-favicon/alex.png'});
         });
-        test('No favicons provided, should send setTabFavicon with the last of the extracted favicons', async () => {
+        test('No favicons provided, should send setServiceFavicon with the last of the extracted favicons', async () => {
           // Given
           serviceManager.getService('1337').webContents.executeJavaScript = jest.fn(arg => {
             if (arg === 'Array.from(document.querySelectorAll(\'link[rel*="icon"]\')).map(el => el.href)') {
@@ -227,7 +227,7 @@ describe('Service Manager module test suite', () => {
           await serviceManager.getService('1337').listeners['page-favicon-updated'](new Event(''));
           // Then
           expect(mockIpcSender.send)
-            .toHaveBeenCalledWith('setTabFavicon', {id: '1337', favicon: 'https://url-to-favicon/julia.png'});
+            .toHaveBeenCalledWith('setServiceFavicon', {id: '1337', favicon: 'https://url-to-favicon/julia.png'});
         });
       });
       test('windowOpen (was new-window)', () => {

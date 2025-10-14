@@ -90,11 +90,11 @@ describe('ChromeTabs in Browser test suite', () => {
             .toBe('New ElectronIM version is available'));
       });
     });
-    test('setTabFavicon, should change favicon of specified tab', async () => {
+    test('setServiceFavicon, should change favicon of specified tab', async () => {
       // Given
       electron.ipcRenderer.emit('addServices', {}, tabs);
       // When
-      electron.ipcRenderer.emit('setTabFavicon', {}, {id: 313373, favicon: 'https://f/replaced.png'});
+      electron.ipcRenderer.emit('setServiceFavicon', {}, {id: 313373, favicon: 'https://f/replaced.png'});
       // Then
       await waitFor(() => expect(
         $chromeTabs.querySelector('.chrome-tab[data-tab-id="313373"] .chrome-tab-favicon-icon').getAttribute('src'))

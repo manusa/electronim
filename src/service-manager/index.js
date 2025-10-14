@@ -52,7 +52,7 @@ const handlePageFaviconUpdated = (view, ipcSender, serviceId) => async (_e, favi
     favicons = await extractFavicon(view);
   }
   if (favicons.length > 0) {
-    ipcSender.send(APP_EVENTS.setTabFavicon, {id: serviceId, favicon: favicons[favicons.length - 1]});
+    ipcSender.send(APP_EVENTS.setServiceFavicon, {id: serviceId, favicon: favicons[favicons.length - 1]});
   }
 };
 
