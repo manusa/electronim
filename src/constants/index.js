@@ -61,7 +61,7 @@ const APP_EVENTS = {
   settingsExport: 'settingsExport',
   settingsImport: 'settingsImport',
   settingsOpenFolder: 'settingsOpenFolder',
-  setTabFavicon: 'setTabFavicon',
+  setServiceFavicon: 'setServiceFavicon',
   setServiceTitle: 'setServiceTitle',
   tabsReady: 'tabsReady',
   tabReorder: 'tabReorder',

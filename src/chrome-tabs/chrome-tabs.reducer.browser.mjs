@@ -89,7 +89,7 @@ export const moveTab = ({dispatch}) => ({id, idx, offsetX}) =>
 export const setNewVersionAvailable = ({dispatch}) => (_event, newVersionAvailable) => {
   dispatch({type: ACTIONS.SET_NEW_VERSION_AVAILABLE, payload: newVersionAvailable});
 };
-export const setTabFavicon = ({dispatch}) => (_event, {id, favicon}) => {
+export const setServiceFavicon = ({dispatch}) => (_event, {id, favicon}) => {
   dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {
     id, property: 'favicon', value: favicon
   }});
