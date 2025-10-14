@@ -21,12 +21,7 @@ describe('Help in Browser test suite', () => {
   let electron;
   beforeEach(async () => {
     jest.resetModules();
-    electron = (await import('../../__tests__/electron.js')).testElectron();
-    electron.contextBridge = {
-      exposeInMainWorld: jest.fn((api, object) => {
-        globalThis[api] = object;
-      })
-    };
+    electron = await (await import('../../__tests__/electron.mjs')).testElectron();
     await import('../../../bundles/help.preload');
     globalThis.ipcRenderer = electron.ipcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});

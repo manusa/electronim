@@ -162,7 +162,9 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
       writeText: jest.fn()
     },
     contextBridge: {
-      exposeInMainWorld: jest.fn()
+      exposeInMainWorld: jest.fn((apiKey, api) => {
+        globalThis[apiKey] = api;
+      })
     },
     desktopCapturer: {
       getSources: jest.fn(async () => [])
