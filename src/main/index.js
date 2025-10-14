@@ -159,7 +159,7 @@ const handleTabReorder = (_event, {tabIds: visibleTabIds}) => {
 };
 
 const initTabListener = () => {
-  eventBus.on(APP_EVENTS.tabsReady, event => {
+  eventBus.on(APP_EVENTS.servicesReady, event => {
     const currentSettings = loadSettings();
     const tabs = currentSettings.tabs
       .filter(tab => !tab.disabled)

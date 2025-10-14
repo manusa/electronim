@@ -63,7 +63,7 @@ const APP_EVENTS = {
   settingsOpenFolder: 'settingsOpenFolder',
   setServiceFavicon: 'setServiceFavicon',
   setServiceTitle: 'setServiceTitle',
-  tabsReady: 'tabsReady',
+  servicesReady: 'servicesReady',
   tabReorder: 'tabReorder',
   tabSwitchToPosition: 'tabSwitchToPosition',
   tabTraverseNext: 'tabTraverseNext',
