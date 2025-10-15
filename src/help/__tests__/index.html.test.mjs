@@ -19,19 +19,8 @@ import {loadDOM} from '../../__tests__/index.mjs';
 describe('Help index.html test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
-    window.electron = {
-      close: jest.fn(),
-      docs: {
-        doc: 'This is a doc'
-      },
-      metadata: [
-        {
-          id: 'doc',
-          title: 'Test Document',
-          headings: []
-        }
-      ]
-    };
+    await (await import('../../__tests__/electron.mjs')).testElectron();
+    await import('../../../bundles/help.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
   test('loads required styles', () => {
