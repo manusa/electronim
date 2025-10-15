@@ -45,7 +45,9 @@ export const reducer = (state, action) => {
       const {id, idx, offsetX} = action.payload;
       const fromIdx = state.tabs.findIndex(t => t.id === id);
       const ret = {...state, tabs: [...state.tabs]};
-      ret.tabs.forEach(t => (t.offsetX = 0));
+      for (const t of ret.tabs) {
+        t.offsetX = 0;
+      }
       const tab = ret.tabs[fromIdx];
       tab.offsetX = offsetX;
       ret.tabs.splice(fromIdx, 1);
