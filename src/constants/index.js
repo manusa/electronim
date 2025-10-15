@@ -68,6 +68,7 @@ const APP_EVENTS = {
   tabSwitchToPosition: 'tabSwitchToPosition',
   tabTraverseNext: 'tabTraverseNext',
   tabTraversePrevious: 'tabTraversePrevious',
+  toggleTabNotifications: 'toggleTabNotifications',
   trayInit: 'trayInit',
   zoomIn: 'zoomIn',
   zoomOut: 'zoomOut',

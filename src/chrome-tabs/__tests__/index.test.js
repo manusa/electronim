@@ -70,6 +70,99 @@ describe('Chrome Tabs Module module test suite', () => {
       // Then
       expect(electron.ipcMain.emit).toHaveBeenCalledWith('reloadTab', event, {tabId});
     });
+    test('should show "Disable notifications" when notifications are enabled for tab', async () => {
+      // Given
+      const event = {};
+      const params = {x: 100, y: 50};
+      const tabId = 'test-tab-id';
+      tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
+
+      // Mock settings with notifications enabled for this tab
+      jest.doMock('../../settings', () => ({
+        loadSettings: () => ({
+          disableNotificationsGlobally: false,
+          tabs: [{id: 'test-tab-id', disableNotifications: false}]
+        })
+      }));
+
+      // When
+      await contextMenuListener(event, params);
+
+      // Then
+      expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+        label: 'Disable notifications'
+      }));
+    });
+    test('should show "Enable notifications" when notifications are disabled for tab', async () => {
+      // Given
+      const event = {};
+      const params = {x: 100, y: 50};
+      const tabId = 'test-tab-id';
+      tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
+
+      // Mock settings with notifications disabled for this tab
+      jest.doMock('../../settings', () => ({
+        loadSettings: () => ({
+          disableNotificationsGlobally: false,
+          tabs: [{id: 'test-tab-id', disableNotifications: true}]
+        })
+      }));
+
+      // When
+      await contextMenuListener(event, params);
+
+      // Then
+      expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+        label: 'Enable notifications'
+      }));
+    });
+    test('should not show notification menu when notifications are disabled globally', async () => {
+      // Given
+      const event = {};
+      const params = {x: 100, y: 50};
+      const tabId = 'test-tab-id';
+      tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
+
+      // Mock settings with notifications disabled globally
+      jest.doMock('../../settings', () => ({
+        loadSettings: () => ({
+          disableNotificationsGlobally: true,
+          tabs: [{id: 'test-tab-id', disableNotifications: false}]
+        })
+      }));
+
+      // When
+      await contextMenuListener(event, params);
+
+      // Then
+      const notificationMenuItem = electron.MenuItem.mock.calls.find(call =>
+        call[0].label === 'Disable notifications' || call[0].label === 'Enable notifications'
+      );
+      expect(notificationMenuItem).toBeUndefined();
+    });
+    test('should emit toggleTabNotifications event when notification toggle is clicked', async () => {
+      // Given
+      const event = {};
+      const params = {x: 100, y: 50};
+      const tabId = 'test-tab-id';
+      tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
+
+      // Mock settings with notifications enabled for this tab
+      jest.doMock('../../settings', () => ({
+        loadSettings: () => ({
+          disableNotificationsGlobally: false,
+          tabs: [{id: 'test-tab-id', disableNotifications: false}]
+        })
+      }));
+
+      // When
+      await contextMenuListener(event, params);
+      const notificationMenuItem = electron.MenuItem.mock.calls.find(call => call[0].label === 'Disable notifications')[0];
+      notificationMenuItem.click();
+
+      // Then
+      expect(electron.ipcMain.emit).toHaveBeenCalledWith('toggleTabNotifications', event, {tabId});
+    });
     test('should always show Settings, Help, and DevTools options', async () => {
       // Given
       const event = {};

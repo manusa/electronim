@@ -37,6 +37,7 @@ const checkForUpdates = webContents => {
 };
 
 const handleContextMenu = viewOrWindow => async (event, params) => {
+  const {loadSettings} = require('../settings');
   const menu = new Menu();
 
   // Try to find the tab ID at the clicked position
@@ -49,6 +50,21 @@ const handleContextMenu = viewOrWindow => async (event, params) => {
   `).catch(() => null);
 
   if (tabId) {
+    const settings = loadSettings();
+    const {disableNotificationsGlobally} = settings;
+
+    // Only show notification menu if notifications are not disabled globally
+    if (!disableNotificationsGlobally) {
+      const currentTab = settings.tabs.find(tab => tab.id === tabId);
+      const notificationsDisabled = currentTab?.disableNotifications || false;
+
+      menu.append(new MenuItem({
+        label: notificationsDisabled ? 'Enable notifications' : 'Disable notifications',
+        click: () => eventBus.emit(APP_EVENTS.toggleTabNotifications, event, {tabId})
+      }));
+      menu.append(new MenuItem({type: 'separator'}));
+    }
+
     menu.append(new MenuItem({
       label: 'Reload',
       click: () => eventBus.emit(APP_EVENTS.reloadTab, event, {tabId})

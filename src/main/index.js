@@ -160,6 +160,23 @@ const handleServicesReorder = (_event, {tabIds: visibleTabIds}) => {
   updateSettings({tabs});
 };
 
+const handleToggleTabNotifications = (_event, {tabId}) => {
+  const currentSettings = loadSettings();
+  const tabs = currentSettings.tabs.map(tab => {
+    if (tab.id === tabId) {
+      return {...tab, disableNotifications: !tab.disableNotifications};
+    }
+    return tab;
+  });
+  updateSettings({tabs});
+
+  // Refresh the tab container to update the notification icon
+  const updatedTabs = tabs
+    .filter(tab => !tab.disabled)
+    .map(tab => ({...tab, active: tab.id === currentSettings.activeTab}));
+  tabContainer.webContents.send(APP_EVENTS.addServices, updatedTabs);
+};
+
 const initTabListener = () => {
   eventBus.on(APP_EVENTS.servicesReady, event => {
     const currentSettings = loadSettings();
@@ -187,6 +204,7 @@ const initTabListener = () => {
   eventBus.on(APP_EVENTS.reload, handleTabReload);
   eventBus.on(APP_EVENTS.reloadTab, handleSpecificTabReload);
   eventBus.on(APP_EVENTS.servicesReorder, handleServicesReorder);
+  eventBus.on(APP_EVENTS.toggleTabNotifications, handleToggleTabNotifications);
   eventBus.on(APP_EVENTS.zoomIn, handleZoomIn);
   eventBus.on(APP_EVENTS.zoomOut, handleZoomOut);
   eventBus.on(APP_EVENTS.zoomReset, handleZoomReset);
