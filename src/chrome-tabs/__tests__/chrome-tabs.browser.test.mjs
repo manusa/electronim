@@ -55,7 +55,9 @@ describe('ChromeTabs in Browser test suite', () => {
       await waitFor(() =>
         expect($chromeTabs.querySelectorAll('.chrome-tab').length).toBe(3));
       const $addedTabs = $chromeTabs.querySelectorAll('.chrome-tab');
-      $addedTabs.forEach(tab => expect(tab.style.width).toBe('259px'));
+      for (const tab of $addedTabs) {
+        expect(tab.style.width).toBe('259px');
+      }
       expect($addedTabs[0].querySelector('.chrome-tab-title').innerHTML)
         .toBe('https://1337.com');
       expect($addedTabs[0].hasAttribute('active')).toBe(true);
@@ -289,18 +291,20 @@ describe('ChromeTabs in Browser test suite', () => {
       const tabElements = $chromeTabs.querySelectorAll('.chrome-tab');
       expect(tabElements.length).toBe(3);
 
-      tabElements.forEach((tab, index) => {
+      let index = 0;
+      for (const tab of tabElements) {
         expect('tabId' in tab.dataset).toBe(true);
         expect(tab.dataset.tabId).toBe(String(tabs[index].id));
-      });
+        index++;
+      }
     });
     test('should verify chrome-tab class exists on all tab elements', () => {
       const tabElements = $chromeTabs.querySelectorAll('.chrome-tab');
       expect(tabElements.length).toBe(3);
 
-      tabElements.forEach(tab => {
+      for (const tab of tabElements) {
         expect(tab.classList.contains('chrome-tab')).toBe(true);
-      });
+      }
     });
     test('should find tab element using closest from child elements', () => {
       // This test verifies the exact behavior used in production (chrome-tabs/index.js:46)
@@ -343,11 +347,11 @@ describe('ChromeTabs in Browser test suite', () => {
     test('should verify all tabs can be found using data-tab-id selector', () => {
       // The production code uses getAttribute('data-tab-id') to get the ID
       // This test ensures the selector pattern works correctly
-      tabs.forEach(tabData => {
+      for (const tabData of tabs) {
         const tab = $chromeTabs.querySelector(`.chrome-tab[data-tab-id="${tabData.id}"]`);
         expect(tab).not.toBeNull();
         expect(tab.dataset.tabId).toBe(String(tabData.id));
-      });
+      }
     });
   });
 });
