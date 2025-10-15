@@ -15,17 +15,16 @@
  */
 import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
-import {ipcRenderer} from './settings.browser.mjs';
 import {findByTestId, fireEvent, getAllByText, getByTestId, getByText, waitFor} from '@testing-library/dom';
+import {testEnvironment} from './settings.browser.mjs';
 
 describe('Settings in Browser test suite', () => {
-  let mockIpcRenderer;
+  let electron;
+  let settings;
   beforeEach(async () => {
     jest.resetModules();
-    mockIpcRenderer = ipcRenderer();
+    ({electron, settings} = await testEnvironment());
     await import('../../../bundles/settings.preload');
-    window.ELECTRONIM_VERSION = '1.33.7';
-    window.ipcRenderer = mockIpcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
   describe('TopApp Bar', () => {
@@ -39,7 +38,7 @@ describe('Settings in Browser test suite', () => {
       describe('With no pre-existing settings', () => {
         beforeEach(async () => {
           jest.resetModules();
-          mockIpcRenderer.mockCurrentSettings.tabs = [];
+          settings.updateSettings({tabs: []});
           await loadDOM({meta: import.meta, path: ['..', 'index.html']});
         });
         test('Cancel/Back button is disabled', () => {
@@ -57,30 +56,32 @@ describe('Settings in Browser test suite', () => {
         // When
         fireEvent.click(document.querySelector('.settings__submit'));
         // Then
-        expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-        expect(mockIpcRenderer.send).toHaveBeenCalledWith('settingsSave',
-          {
-            tabs: [
-              {id: '1', url: 'https://initial-tab.com', sandboxed: true},
-              {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true},
-              {id: '3', url: 'https://initial-tab-3.com', openUrlsInApp: true}
-            ],
-            useNativeSpellChecker: false,
-            enabledDictionaries: ['en'],
-            disableNotificationsGlobally: false,
-            theme: 'dark',
-            trayEnabled: true,
-            startMinimized: false,
-            closeButtonBehavior: 'quit',
-            keyboardShortcuts: {}
-          });
+        const savedSettings = settings.loadSettings();
+        expect(savedSettings).toEqual({
+          activeTab: '1',
+          tabs: [
+            {id: '1', url: 'https://initial-tab.com', sandboxed: true},
+            {id: '2', url: 'https://initial-tab-2.com', disabled: true, disableNotifications: true},
+            {id: '3', url: 'https://initial-tab-3.com', openUrlsInApp: true}
+          ],
+          useNativeSpellChecker: false,
+          enabledDictionaries: ['en'],
+          disableNotificationsGlobally: false,
+          theme: 'dark',
+          trayEnabled: true,
+          startMinimized: false,
+          closeButtonBehavior: 'quit',
+          keyboardShortcuts: {}
+        });
       });
       test('Cancel should send close dialog event', () => {
+        // Given
+        const closeDialog = jest.fn();
+        electron.ipcMain.on('closeDialog', closeDialog);
         // When
         fireEvent.click(document.querySelector('.top-app-bar .leading-navigation-icon'));
         // Then
-        expect(mockIpcRenderer.send).toHaveBeenCalledTimes(1);
-        expect(mockIpcRenderer.send).toHaveBeenCalledWith('closeDialog');
+        expect(closeDialog).toHaveBeenCalledTimes(1);
       });
     });
   });
@@ -549,9 +550,8 @@ describe('Settings in Browser test suite', () => {
             await waitFor(() => expect($customNameInput.value).toBe('Custom Name for Alex'));
             fireEvent.click($submitButton);
             // Then
-            await waitFor(() => expect(mockIpcRenderer.send).toHaveBeenCalled());
-            const savedData = mockIpcRenderer.send.mock.calls[0][1];
-            expect(savedData.tabs[0].customName).toBe('Custom Name for Alex');
+            const savedSettings = settings.loadSettings();
+            expect(savedSettings.tabs[0].customName).toBe('Custom Name for Alex');
           });
         });
       });

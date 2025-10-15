@@ -17,16 +17,14 @@ import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
 import {getByText, waitFor, findByTestId} from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
-import {ipcRenderer} from './settings.browser.mjs';
+import {testEnvironment} from './settings.browser.mjs';
 
 describe('Settings (Keyboard) in Browser test suite', () => {
-  let mockIpcRenderer;
   let user;
   beforeEach(async () => {
     jest.resetModules();
-    mockIpcRenderer = ipcRenderer();
+    await testEnvironment();
     await import('../../../bundles/settings.preload');
-    window.ipcRenderer = mockIpcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
     user = userEvent.setup(document);
     // Show Keyboard settings pane

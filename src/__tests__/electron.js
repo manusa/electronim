@@ -121,6 +121,12 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
   ipcMain.send = (channel, ...args) => ipcMain.rawListeners(channel)[0](...args);
   // ipcRenderer
   const ipcRenderer = new events.EventEmitter();
+  ipcRenderer.invoke = async (channel, ...args) => {
+    if (ipcMain.rawListeners(channel)?.[0]) {
+      return ipcMain.rawListeners(channel)[0](...args);
+    }
+    throw new Error(`No handler for channel ${channel}`);
+  };
   ipcRenderer.send = jest.fn((channel, ...args) => {
     if (ipcMain.rawListeners(channel)?.[0]) {
       ipcMain.rawListeners(channel)[0](...args);

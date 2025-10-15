@@ -14,14 +14,14 @@
    limitations under the License.
  */
 import {jest} from '@jest/globals';
-import {loadDOM} from '../../__tests__/index.mjs';
 import {getByTestId, fireEvent, waitFor} from '@testing-library/dom';
+import {loadDOM, testElectron} from '../../__tests__/index.mjs';
 
 describe('Find in Page :: in browser test suite', () => {
   let electron;
   beforeEach(async () => {
     jest.resetModules();
-    electron = await (await import('../../__tests__/electron.mjs')).testElectron();
+    electron = await testElectron();
     await import('../../../bundles/find-in-page.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
     // Simulate webcontents ready

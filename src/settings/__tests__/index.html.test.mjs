@@ -15,12 +15,13 @@
  */
 import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
-import {ipcRenderer} from './settings.browser.mjs';
+import {testEnvironment} from './settings.browser.mjs';
 
 describe('Settings index.html test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
-    window.ipcRenderer = ipcRenderer();
+    await testEnvironment();
+    await import('../../../bundles/settings.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
   test('loads required styles', () => {

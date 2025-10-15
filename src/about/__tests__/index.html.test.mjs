@@ -14,12 +14,12 @@
    limitations under the License.
  */
 import {jest} from '@jest/globals';
-import {loadDOM} from '../../__tests__/index.mjs';
+import {loadDOM, testElectron} from '../../__tests__/index.mjs';
 
 describe('About index.html test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
-    await (await import('../../__tests__/electron.mjs')).testElectron();
+    await testElectron();
     await import('../../../bundles/about.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });

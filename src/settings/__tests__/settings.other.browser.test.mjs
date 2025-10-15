@@ -17,16 +17,16 @@ import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
 import {findByTestId, fireEvent, getByText, waitFor} from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
-import {ipcRenderer} from './settings.browser.mjs';
+import {testEnvironment} from './settings.browser.mjs';
 
 describe('Settings (Other) in Browser test suite', () => {
-  let mockIpcRenderer;
+  let electron;
+  let settings;
   let user;
   beforeEach(async () => {
     jest.resetModules();
-    mockIpcRenderer = ipcRenderer();
+    ({electron, settings} = await testEnvironment());
     await import('../../../bundles/settings.preload');
-    window.ipcRenderer = mockIpcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
     user = userEvent.setup(document);
     // Show other settings pane
@@ -43,7 +43,7 @@ describe('Settings (Other) in Browser test suite', () => {
     test('Different theme can be selected', async () => {
       await user.selectOptions($themeContainer.querySelector('select'), 'light');
       await user.click(document.querySelector('.settings__submit'));
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('settingsSave', expect.objectContaining({
+      expect(settings.loadSettings()).toEqual(expect.objectContaining({
         theme: 'light'
       }));
     }, 10000);
@@ -83,7 +83,7 @@ describe('Settings (Other) in Browser test suite', () => {
     test('Different behavior can be selected', async () => {
       await user.selectOptions($closeButtonBehaviorContainer.querySelector('select'), 'minimize');
       await user.click(document.querySelector('.settings__submit'));
-      expect(mockIpcRenderer.send).toHaveBeenCalledWith('settingsSave', expect.objectContaining({
+      expect(settings.loadSettings()).toEqual(expect.objectContaining({
         closeButtonBehavior: 'minimize'
       }));
     }, 10000);
@@ -146,16 +146,31 @@ describe('Settings (Other) in Browser test suite', () => {
       $openFolderButton = document.querySelector('.settings__open-folder');
     });
     test('Export button triggers settingsExport IPC call', async () => {
+      // Given
+      const settingsExport = jest.fn();
+      electron.ipcMain.once('settingsExport', settingsExport);
+      // When
       await user.click($exportButton);
-      expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('settingsExport');
+      // Then
+      expect(settingsExport).toHaveBeenCalled();
     });
     test('Import button triggers settingsImport IPC call', async () => {
+      // Given
+      const settingsImport = jest.fn();
+      electron.ipcMain.once('settingsImport', settingsImport);
+      // When
       await user.click($importButton);
-      expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('settingsImport');
+      // Then
+      expect(settingsImport).toHaveBeenCalled();
     });
     test('Open Folder button triggers settingsOpenFolder IPC call', async () => {
+      // Given
+      const settingsOpenFolder = jest.fn();
+      electron.ipcMain.once('settingsOpenFolder', settingsOpenFolder);
+      // When
       await user.click($openFolderButton);
-      expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('settingsOpenFolder');
+      // Then
+      expect(settingsOpenFolder).toHaveBeenCalled();
     });
   });
   test('ElectronIM version is visible', async () => {

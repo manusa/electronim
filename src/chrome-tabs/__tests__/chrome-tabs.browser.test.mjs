@@ -14,8 +14,8 @@
    limitations under the License.
  */
 import {jest} from '@jest/globals';
-import {loadDOM} from '../../__tests__/index.mjs';
 import {createEvent, fireEvent, waitFor} from '@testing-library/dom';
+import {loadDOM, testElectron} from '../../__tests__/index.mjs';
 
 describe('ChromeTabs in Browser test suite', () => {
   let electron;
@@ -23,7 +23,7 @@ describe('ChromeTabs in Browser test suite', () => {
   let $chromeTabs;
   beforeEach(async () => {
     jest.resetModules();
-    electron = await (await import('../../__tests__/electron.mjs')).testElectron();
+    electron = await testElectron();
     servicesReady = jest.fn();
     electron.ipcMain.once('servicesReady', servicesReady);
     await import('../../../bundles/chrome-tabs.preload');

@@ -1,5 +1,5 @@
 /*
-   Copyright 2022 Marc Nuri San Felix
+   Copyright 2025 Marc Nuri San Felix
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,7 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-
-export {loadDOM} from './dom.mjs';
-export {testElectron} from './electron.mjs';
-export {testSettings} from './settings.mjs';
+export const testSettings = async () => {
+  const require = (await import('node:module')).createRequire(import.meta.url);
+  const settings = require('./settings.js');
+  return settings.testSettings();
+};

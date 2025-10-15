@@ -14,14 +14,14 @@
    limitations under the License.
  */
 import {jest} from '@jest/globals';
-import {loadDOM} from '../../__tests__/index.mjs';
+import {loadDOM, testElectron} from '../../__tests__/index.mjs';
 import {fireEvent} from '@testing-library/dom';
 
 describe('About in Browser test suite', () => {
   let electron;
   beforeEach(async () => {
     jest.resetModules();
-    electron = await (await import('../../__tests__/electron.mjs')).testElectron();
+    electron = await testElectron();
     Object.defineProperty(process, 'versions', {
       value: {electron: '1.33.7', chrome: '1337', node: '42', v8: '13.37'},
       configurable: true

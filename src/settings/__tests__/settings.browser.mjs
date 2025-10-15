@@ -13,16 +13,22 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {jest} from '@jest/globals';
+import {testElectron, testSettings} from '../../__tests__/index.mjs';
 
-export const ipcRenderer = () => {
-  const mockDictionariesAvailableNative = ['en'];
-  const mockDictionariesAvailable = {
+export const testEnvironment = async () => {
+  const electron = await testElectron();
+  const settings = await testSettings();
+  electron.ipcMain.on('settingsLoad', settings.loadSettings);
+  electron.ipcMain.on('settingsSave', updatedSettings => {
+    settings.updateSettings(updatedSettings);
+  });
+  electron.ipcMain.on('dictionaryGetAvailable', () => ({
     en: {name: 'English'},
     es: {name: 'Spanish'}
-  };
-  const mockDictionariesEnabled = ['en'];
-  const mockCurrentSettings = {
+  }));
+  electron.ipcMain.on('dictionaryGetAvailableNative', () => (['en']));
+  electron.ipcMain.on('dictionaryGetEnabled', () => settings.loadSettings().enabledDictionaries);
+  settings.updateSettings({
     useNativeSpellChecker: false,
     disableNotificationsGlobally: false,
     tabs: [
@@ -35,26 +41,7 @@ export const ipcRenderer = () => {
     startMinimized: false,
     closeButtonBehavior: 'quit',
     keyboardShortcuts: {}
-  };
-  return {
-    mockDictionariesAvailableNative,
-    mockDictionariesAvailable,
-    mockDictionariesEnabled,
-    mockCurrentSettings,
-    send: jest.fn(),
-    invoke: jest.fn(async channel => {
-      switch (channel) {
-        case 'settingsLoad':
-          return mockCurrentSettings;
-        case 'dictionaryGetAvailableNative':
-          return mockDictionariesAvailableNative;
-        case 'dictionaryGetAvailable':
-          return mockDictionariesAvailable;
-        case 'dictionaryGetEnabled':
-          return mockDictionariesEnabled;
-        default:
-          return {};
-      }
-    })
-  };
+  });
+  await import('../../../bundles/settings.preload');
+  return {electron, settings};
 };

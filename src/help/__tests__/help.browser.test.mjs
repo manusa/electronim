@@ -15,13 +15,13 @@
  */
 import {jest} from '@jest/globals';
 import {fireEvent} from '@testing-library/dom';
-import {loadDOM} from '../../__tests__/index.mjs';
+import {loadDOM, testElectron} from '../../__tests__/index.mjs';
 
 describe('Help in Browser test suite', () => {
   let electron;
   beforeEach(async () => {
     jest.resetModules();
-    electron = await (await import('../../__tests__/electron.mjs')).testElectron();
+    electron = await testElectron();
     await import('../../../bundles/help.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });

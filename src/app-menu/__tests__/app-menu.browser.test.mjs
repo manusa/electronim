@@ -14,14 +14,14 @@
    limitations under the License.
  */
 import {jest} from '@jest/globals';
-import {loadDOM} from '../../__tests__/index.mjs';
+import {loadDOM, testElectron} from '../../__tests__/index.mjs';
 import {getByTestId, fireEvent} from '@testing-library/dom';
 
 describe('App Menu in Browser test suite', () => {
   let electron;
   beforeEach(async () => {
     jest.resetModules();
-    electron = await (await import('../../__tests__/electron.mjs')).testElectron();
+    electron = await testElectron();
     await import('../../../bundles/app-menu.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });

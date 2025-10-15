@@ -17,16 +17,14 @@ import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
 import {fireEvent, getByText, waitFor} from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
-import {ipcRenderer} from './settings.browser.mjs';
+import {testEnvironment} from './settings.browser.mjs';
 
 describe('Settings (Spell check) in Browser test suite', () => {
-  let mockIpcRenderer;
   let $spellCheckContainer;
   beforeEach(async () => {
     jest.resetModules();
-    mockIpcRenderer = ipcRenderer();
+    await testEnvironment();
     await import('../../../bundles/settings.preload');
-    window.ipcRenderer = mockIpcRenderer;
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
     const user = userEvent.setup(document);
     // Show Spell check settings pane
