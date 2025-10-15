@@ -137,7 +137,7 @@ describe('Chrome Tabs Module module test suite', () => {
         // When - trigger context menu
         const contextMenuHandler = tabContainer.listeners['context-menu'];
         contextMenuHandler({}, {x: 100, y: 200});
-        menu = electron.Menu.mock.results[electron.Menu.mock.results.length - 1].value;
+        menu = electron.Menu.mock.results.at(-1).value;
       });
       test('should create menu with three items', () => {
         expect(menu.entries).toHaveLength(3);
@@ -168,7 +168,7 @@ describe('Chrome Tabs Module module test suite', () => {
         // When - trigger context menu
         const contextMenuHandler = tabContainer.listeners['context-menu'];
         contextMenuHandler({}, {x: 100, y: 200});
-        menu = electron.Menu.mock.results[electron.Menu.mock.results.length - 1].value;
+        menu = electron.Menu.mock.results.at(-1).value;
       });
       test('Settings click should emit settingsOpenDialog event', () => {
         // When
