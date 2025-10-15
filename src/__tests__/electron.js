@@ -132,6 +132,15 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
       ipcMain.rawListeners(channel)[0](...args);
     }
   });
+  // Menu
+  const Menu = jest.fn(() => {
+    const menuInstance = {
+      entries: [],
+      append: jest.fn(e => menuInstance.entries.push(e)),
+      popup: jest.fn()
+    };
+    return menuInstance;
+  });
   // Notification
   const Notification = jest.fn(() => ({
     actions: 'Actions', badge: 'Badge', body: 'Body', data: 'Data', dir: 'Dir', lang: 'Lang', tag: 'Tag', icon: 'Icon',
@@ -141,14 +150,13 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
   Notification.maxActions = jest.fn(() => 1);
   Notification.permission = jest.fn(() => 'granted');
   Notification.requestPermission = jest.fn();
-  const Menu = jest.fn(() => {
-    const menuInstance = {
-      entries: [],
-      append: jest.fn(e => menuInstance.entries.push(e)),
-      popup: jest.fn()
-    };
-    return menuInstance;
-  });
+  // webFrame
+  const webFrame = {
+    spellCheckProviders: {},
+    setSpellCheckProvider: jest.fn((language, provider) => {
+      webFrame.spellCheckProviders[language] = provider;
+    })
+  };
   const instance = {
     WebContentsView: jest.fn(() => webContentsViewInstance),
     webContentsViewInstance,
@@ -204,6 +212,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
       openExternal: jest.fn(async () => {}),
       openPath: jest.fn(async () => {})
     },
+    webFrame,
     ...overriddenProps
   };
   return instance;
