@@ -70,9 +70,9 @@ describe('docs.browser.val-loader test suite', () => {
       expect(Object.keys(result.docs).length).toBeGreaterThan(0);
 
       // Verify all loaded files end with .md
-      Object.keys(result.docs).forEach(fileName => {
+      for (const fileName of Object.keys(result.docs)) {
         expect(fileName).toMatch(/\.md$/);
-      });
+      }
 
       // Verify specific documents are loaded (from DOCUMENT_ORDER)
       expect(result.docs['Setup.md']).toBeDefined();
@@ -85,9 +85,9 @@ describe('docs.browser.val-loader test suite', () => {
       const expectedFiles = ['Setup.md', 'Keyboard-shortcuts.md', 'Troubleshooting.md'];
       const loadedFiles = Object.keys(result.docs);
 
-      expectedFiles.forEach(file => {
+      for (const file of expectedFiles) {
         expect(loadedFiles).toContain(file);
-      });
+      }
 
       // Should not load files not in DOCUMENT_ORDER (like Screenshots.md or Roadmap.md)
       expect(result.docs['Screenshots.md']).toBeUndefined();
@@ -95,18 +95,18 @@ describe('docs.browser.val-loader test suite', () => {
     });
 
     test('converts markdown to HTML', () => {
-      Object.entries(result.docs).forEach(([, html]) => {
+      for (const [, html] of Object.entries(result.docs)) {
         expect(html).toBeDefined();
         expect(typeof html).toBe('string');
         // All markdown files start with # heading, so HTML should contain h1 tags
         expect(html).toContain('<h1');
         expect(html).toContain('</h1>');
-      });
+      }
     });
 
     test('adds IDs to headings for anchor navigation', () => {
       // Check that h1 and h2 elements have id attributes
-      Object.entries(result.docs).forEach(([fileName, html]) => {
+      for (const [fileName, html] of Object.entries(result.docs)) {
         const h1Match = html.match(/<h1 id="([^"]+)">/);
         expect(h1Match).not.toBeNull();
         expect(h1Match[1]).toBe(fileName); // H1 should have document filename as ID
@@ -114,11 +114,11 @@ describe('docs.browser.val-loader test suite', () => {
         // If there are h2 elements, they should have IDs too
         const h2Matches = html.match(/<h2 id="[^"]+">/g);
         if (h2Matches) {
-          h2Matches.forEach(h2Tag => {
+          for (const h2Tag of h2Matches) {
             expect(h2Tag).toMatch(new RegExp(`<h2 id="${fileName}__[^"]+">`, 'g'));
-          });
+          }
         }
-      });
+      }
     });
 
     test('renders XHTML-compliant output with self-closing tags', () => {
@@ -128,25 +128,25 @@ describe('docs.browser.val-loader test suite', () => {
     });
 
     test('prefixes relative URLs with ../../docs/', () => {
-      Object.entries(result.docs).forEach(([, html]) => {
+      for (const [, html] of Object.entries(result.docs)) {
         const srcMatches = html.match(/src="([^"]+)"/g) || [];
         const hrefMatches = html.match(/href="([^"]+)"/g) || [];
 
-        [...srcMatches, ...hrefMatches].forEach(attr => {
+        for (const attr of [...srcMatches, ...hrefMatches]) {
           // Either absolute URL or prefixed with ../../docs/ or is an anchor link
           // eslint-disable-next-line no-div-regex
           expect(attr).toMatch(/="(https?:\/\/|\.\.\/\.\.\/docs\/|#)/);
-        });
-      });
+        }
+      }
     });
 
     test('does not modify absolute URLs', () => {
       const allHtml = Object.values(result.docs).join('');
       const absoluteUrls = allHtml.match(/https?:\/\/[^"'\s]+/g) || [];
 
-      absoluteUrls.forEach(url => {
+      for (const url of absoluteUrls) {
         expect(url).not.toContain('../../docs/http');
-      });
+      }
     });
   });
 
@@ -166,14 +166,14 @@ describe('docs.browser.val-loader test suite', () => {
     });
 
     test('metadata contains document id and title', () => {
-      result.metadata.forEach(meta => {
+      for (const meta of result.metadata) {
         expect(meta).toHaveProperty('id');
         expect(meta).toHaveProperty('title');
         expect(meta).toHaveProperty('headings');
         expect(meta.id).toMatch(/\.md$/);
         expect(typeof meta.title).toBe('string');
         expect(Array.isArray(meta.headings)).toBe(true);
-      });
+      }
     });
 
     test('metadata is in correct order', () => {
@@ -189,16 +189,16 @@ describe('docs.browser.val-loader test suite', () => {
     });
 
     test('metadata headings contain H2 elements with text and id', () => {
-      result.metadata.forEach(meta => {
-        meta.headings.forEach(heading => {
+      for (const meta of result.metadata) {
+        for (const heading of meta.headings) {
           expect(heading).toHaveProperty('level');
           expect(heading).toHaveProperty('text');
           expect(heading).toHaveProperty('id');
           expect(heading.level).toBe(2);
           expect(typeof heading.text).toBe('string');
           expect(typeof heading.id).toBe('string');
-        });
-      });
+        }
+      }
     });
 
     test('Setup.md has expected H2 headings', () => {
