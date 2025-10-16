@@ -70,11 +70,11 @@ describe('Help Module preload test suite', () => {
       expect(electronApi.metadata.length).toBe(3);
 
       // Verify metadata structure
-      electronApi.metadata.forEach(meta => {
+      for (const meta of electronApi.metadata) {
         expect(meta).toHaveProperty('id');
         expect(meta).toHaveProperty('title');
         expect(meta).toHaveProperty('headings');
-      });
+      }
 
       // Verify specific titles
       const titles = electronApi.metadata.map(m => m.title);
