@@ -56,11 +56,8 @@ electronim
 
 ## Motivation
 
-Inspired by [Rambox](https://github.com/ramboxapp/community-edition) and
-[Franz](https://github.com/meetfranz/franz), I created **ElectronIM** out of the necessity of
-having an all-in-one instant messaging app that didn't require registration and provided 
-spell checking for free.
-
+Inspired by [Rambox](https://github.com/ramboxapp/community-edition) and [Franz](https://github.com/meetfranz/franz), I created **ElectronIM** out of the necessity for an all-in-one instant messaging app that did not require registration, provided spell checking for free, and ensured maximum user privacy by never tracking user activity or sending telemetry data.
+With built-in screen sharing and strict privacy principles, ElectronIM offers a secure and flexible communication hub.
 
 ## Documentation
 
