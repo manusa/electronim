@@ -60,11 +60,11 @@ const isSameOrigin = (viewUrl, url) => url.origin === viewUrl.origin;
 const shouldOpenInExternalBrowser = (view, url) => {
   const viewUrl = new URL(view.webContents.getURL());
   let ret = true;
-  [isSameOrigin, isOAuth, isHandledInternally].forEach(f => {
+  for (const f of [isSameOrigin, isOAuth, isHandledInternally]) {
     if (ret && f(viewUrl, url)) {
       ret = false;
     }
-  });
+  }
   return ret;
 };
 
