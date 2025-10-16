@@ -68,9 +68,9 @@ const cleanUserAgent = view => {
 const addServices = ipcSender => servicesMetadata => {
   const useNativeSpellChecker = getUseNativeSpellChecker();
   const enabledDictionaries = getEnabledDictionaries();
-  servicesMetadata.forEach(({
+  for (const {
     id, url, sandboxed = false, openUrlsInApp = false
-  }) => {
+  } of servicesMetadata) {
     const servicePreferences = {...defaultWebPreferences};
     if (sandboxed) {
       servicePreferences.session = session.fromPartition(`persist:${id}`, {cache: true});
@@ -115,7 +115,7 @@ const addServices = ipcSender => servicesMetadata => {
     registerIdInDom();
 
     services[id.toString()] = service;
-  });
+  }
   ipcSender.send(APP_EVENTS.addServices, servicesMetadata);
 };
 
@@ -127,7 +127,9 @@ const sortServices = serviceIds => {
   }
   const oldServices = {...services};
   // Clean previous state
-  Object.keys(services).forEach(key => delete services[key]);
+  for (const key of Object.keys(services)) {
+    delete services[key];
+  }
   // Set the services with the correct ordering
   for (const serviceId of serviceIds) {
     services[serviceId] = oldServices[serviceId];
@@ -168,16 +170,26 @@ const getServiceAt = position => {
 };
 
 const removeAll = () => {
-  Object.values(services).forEach(view => view.webContents.destroy());
-  Object.keys(services).forEach(key => delete services[key]);
+  for (const view of Object.values(services)) {
+    view.webContents.destroy();
+  }
+  for (const key of Object.keys(services)) {
+    delete services[key];
+  }
 };
 
-const reload = () => Object.values(services).forEach(view => view.webContents.reload());
+const reload = () => {
+  for (const view of Object.values(services)) {
+    view.webContents.reload();
+  }
+};
 
-const stopFindInPage = () => Object.values(services).forEach(view => {
-  view.webContents.stopFindInPage('clearSelection');
-  view.webContents.removeAllListeners('found-in-page');
-});
+const stopFindInPage = () => {
+  for (const view of Object.values(services)) {
+    view.webContents.stopFindInPage('clearSelection');
+    view.webContents.removeAllListeners('found-in-page');
+  }
+};
 
 const canNotify = tabId => {
   const {tabs: tabsSettings, disableNotificationsGlobally} = loadSettings();
