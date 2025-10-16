@@ -34,21 +34,21 @@ electronim
 ## Features
 
 - ⚛ Multi-platform: ElectronIM is available for Linux 🐧, Mac 🍏 and Windows.
-- 🌍 Based on Chromium 140
+- 🌍 Based on Chromium 140.
 - 🔔 Desktop notifications: ElectronIM will notify you using your native system notifications.
 - 🧐 Spellchecker: ElectronIM contains spellchecker dictionaries for many languages,
   if your language is not supported, just [file an issue](https://github.com/manusa/electronim/issues/new).
-- 🕸 Supports any web based IM solution
-- 👋 Drag-and-drop tab reordering
-- 🔒 Configurable context for tabs (Isolated/sandboxed or shared). i.e. You can have multiple
-  tabs/instances of the same service/web application if the context is sandboxed.
-- 🔕 Notifications can be disabled for individual Applications
-- 💤 Notifications can be disabled globally (Do not disturb)
-- ⌨ Keyboard [shortcuts](docs/Keyboard-shortcuts.md)
-- 🖥️ Screen sharing
-- 🌗 Light and Dark themes with system override
+- 🕸 Supports any web based IM solution.
+- 👋 Drag-and-drop services/tab reordering.
+- 🔒 Configurable context for services (Isolated/sandboxed or shared). i.e. You can have multiple tabs/instances of the same service/web application if the context is sandboxed.
+- 🔕 Notifications can be disabled for individual Applications.
+- 💤 Notifications can be disabled globally (Do not disturb).
+- ⌨ Keyboard [shortcuts](docs/Keyboard-shortcuts.md).
+- 🖥️ Screen sharing: Share your screen securely with any web service that supports it (e.g. Google Meet, Microsoft Teams, Zoom, and so on).
+- 🌗 Light and Dark themes with system override.
 - 🗕 System Tray
 - 🔎 Find in page
+- 🚫 No tracking: ElectronIM respects your privacy, no account registration is needed and no telemetry, analytics, or tracking of any kind is performed.
 
 ## [Screenshot](docs/Screenshots.md)
 
