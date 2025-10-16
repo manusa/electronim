@@ -54,7 +54,9 @@ const fixUserDataLocation = () => {
 const resetMainWindow = () => {
   eventBus.emit(APP_EVENTS.findInPageClose);
   const currentViews = mainWindow.contentView.children;
-  currentViews.filter(isNotTabContainer).forEach(view => mainWindow.contentView.removeChildView(view));
+  for (const view of currentViews.filter(isNotTabContainer)) {
+    mainWindow.contentView.removeChildView(view);
+  }
   if (mainWindow.contentView.children.length === 0) {
     mainWindow.contentView.addChildView(tabContainer);
   }
@@ -84,25 +86,25 @@ const handleMainWindowResize = () => {
     if (appMenu?.setBounds ?? false) {
       appMenu.setBounds({x: 0, y: 0, width: contentWidth, height: contentHeight});
     }
-    mainWindow.contentView.children.filter(isFindInPage).forEach(view => {
+    for (const view of mainWindow.contentView.children.filter(isFindInPage)) {
       view.setBounds({
         x: contentWidth - FIND_IN_PAGE_WIDTH, y: 0, width: FIND_IN_PAGE_WIDTH, height: FIND_IN_PAGE_HEIGHT
       });
-    });
+    }
     let totalHeight = 0;
-    const isLast = (idx, array) => idx === array.length - 1;
-    mainWindow.contentView.children
+    const filteredViews = mainWindow.contentView.children
       .filter(isNotAppMenu)
-      .filter(isNotFindInPage)
-      .forEach((bv, idx, array) => {
-        const {x: currentX, y: currentY, height: currentHeight} = bv.getBounds();
-        let newHeight = currentHeight;
-        if (isLast(idx, array)) {
-          newHeight = contentHeight - totalHeight;
-        }
-        bv.setBounds({x: currentX, y: currentY, width: contentWidth, height: newHeight});
-        totalHeight += currentHeight;
-      });
+      .filter(isNotFindInPage);
+    const isLast = idx => idx === filteredViews.length - 1;
+    for (const [idx, bv] of filteredViews.entries()) {
+      const {x: currentX, y: currentY, height: currentHeight} = bv.getBounds();
+      let newHeight = currentHeight;
+      if (isLast(idx)) {
+        newHeight = contentHeight - totalHeight;
+      }
+      bv.setBounds({x: currentX, y: currentY, width: contentWidth, height: newHeight});
+      totalHeight += currentHeight;
+    }
     const dialogView = findDialog(mainWindow);
     if (dialogView) {
       dialogView.setBounds({x: 0, y: 0, width: contentWidth, height: contentHeight});
@@ -243,10 +245,10 @@ const saveSettings = (_event, settings) => {
   closeDialog();
   appMenuClose();
   findInPageClose();
-  mainWindow.contentView.children.forEach(view => {
+  for (const view of mainWindow.contentView.children) {
     mainWindow.contentView.removeChildView(view);
     view.webContents.destroy();
-  });
+  }
   serviceManager.removeAll();
   tabContainer = newTabContainer();
   eventBus.emit(APP_EVENTS.keyboardEventsInit);
@@ -318,8 +320,9 @@ const init = () => {
     mainWindow.show();
   }
   mainWindow.removeMenu();
-  ['resize', 'maximize', 'restore']
-    .forEach(event => mainWindow.on(event, handleMainWindowResize));
+  for (const event of ['resize', 'maximize', 'restore']) {
+    mainWindow.on(event, handleMainWindowResize);
+  }
   mainWindow.on('close', handleWindowClose);
   initTabListener();
   initDesktopCapturerHandler();
