@@ -82,7 +82,7 @@ export const reducer = (state, action) => {
     }
     case ACTIONS.SET_TAB_PROPERTY: {
       const newState = {...state, tabs: []};
-      state.tabs.forEach(tab => {
+      for (const tab of state.tabs) {
         const newTab = {...tab};
         if (newTab.id === action.payload.id) {
           newTab[action.payload.property] = action.payload.value;
@@ -93,7 +93,7 @@ export const reducer = (state, action) => {
           }
         }
         newState.tabs.push(newTab);
-      });
+      }
       return newState;
     }
     case ACTIONS.SET_PROPERTY: {
@@ -127,13 +127,13 @@ export const reducer = (state, action) => {
     }
     case ACTIONS.TOGGLE_TAB_PROPERTY: {
       const newState = {...state, tabs: []};
-      state.tabs.forEach(tab => {
+      for (const tab of state.tabs) {
         const newTab = {...tab};
         if (newTab.id === action.payload.id) {
           newTab[action.payload.property] = !newTab[action.payload.property];
         }
         newState.tabs.push(newTab);
-      });
+      }
       return newState;
     }
     case ACTIONS.UPDATE_NEW_TAB_VALUE: {
