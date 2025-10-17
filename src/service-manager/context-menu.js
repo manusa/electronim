@@ -69,7 +69,9 @@ const spellCheckContextMenu = async ({webContents, params}) => {
     spellingSuggestions = await contextMenuHandler(webContents, params);
   }
   if (spellingSuggestions && spellingSuggestions.length > 0) {
-    spellingSuggestions.forEach(mi => menu.append(mi));
+    for (const mi of spellingSuggestions) {
+      menu.append(mi);
+    }
   }
   return menu;
 };
@@ -77,14 +79,16 @@ const spellCheckContextMenu = async ({webContents, params}) => {
 const regularContextMenu = ({webContents, params}) => {
   const menu = new Menu();
   const isVisible = me => !Object.keys(me).includes('visible') || me.visible === true;
-  entries({webContents, params}).forEach((group, idx, arr) => {
+  const allEntries = entries({webContents, params});
+  for (let idx = 0; idx < allEntries.length; idx++) {
+    const group = allEntries[idx];
     for (const entry of group) {
       menu.append(new MenuItem({...entry}));
     }
-    if (group.filter(isVisible).length > 0 && idx < arr.length - 1) {
+    if (group.filter(isVisible).length > 0 && idx < allEntries.length - 1) {
       menu.append(new MenuItem({type: 'separator'}));
     }
-  });
+  }
   return menu;
 };
 
