@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {docs, metadata, close} = window.electron;
+const {docs, metadata, close} = globalThis.electron;
 
 import {ELECTRONIM_VERSION, html, render, Icon, TopAppBar} from '../components/index.mjs';
 
