@@ -96,7 +96,7 @@ describe('Service Manager context-menu test suite', () => {
         expect(mockMenu.entries[3].type).toBe('separator');
       });
       test('last item is not a separator', () => {
-        expect(mockMenu.entries[mockMenu.entries.length - 1].type).not.toBe('separator');
+        expect(mockMenu.entries.at(-1).type).not.toBe('separator');
       });
     });
     describe('Back', () => {
