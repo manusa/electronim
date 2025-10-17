@@ -30,29 +30,30 @@ window.getMisspelled = words => {
 
 window.getSuggestions = word => {
   const ret = new Set();
-  dictionaries.map(dictionary => dictionary.suggestSync(word))
-    .flatMap(suggestions => suggestions)
-    .forEach(suggestion => ret.add(suggestion));
+  const allSuggestions = dictionaries.map(dictionary => dictionary.suggestSync(word))
+    .flatMap(suggestions => suggestions);
+  for (const suggestion of allSuggestions) {
+    ret.add(suggestion);
+  }
   return Array.from(ret.values()).sort((w1, w2) => w1.localeCompare(w2)).slice(0, 10);
 };
 
 window.reloadDictionaries = () => {
   dictionaries.length = 0;
   const {enabledDictionaries} = loadSettings();
-  enabledDictionaries
-    .forEach(dictionaryKey => {
-      let dictionary;
-      try {
-        dictionary = require(`dictionary-${dictionaryKey.toLowerCase()}`);
-        // eslint-disable-next-line no-unused-vars
-      } catch (error) {
-        // Error is ignored
-      }
-      if (dictionary) {
-        dictionary((_err, {aff, dic}) => {
-          dictionaries.push(new Nodehun(aff, dic));
-        });
-      }
-    });
+  for (const dictionaryKey of enabledDictionaries) {
+    let dictionary;
+    try {
+      dictionary = require(`dictionary-${dictionaryKey.toLowerCase()}`);
+      // eslint-disable-next-line no-unused-vars
+    } catch (error) {
+      // Error is ignored
+    }
+    if (dictionary) {
+      dictionary((_err, {aff, dic}) => {
+        dictionaries.push(new Nodehun(aff, dic));
+      });
+    }
+  }
 };
 
