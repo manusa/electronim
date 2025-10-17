@@ -27,9 +27,9 @@ const quit = () => {
   const persistentSessions = loadSettings().tabs
     .filter(({sandboxed = false}) => sandboxed)
     .map(({id}) => session.fromPartition(`persist:${id}`));
-  [...persistentSessions, session.defaultSession].forEach(s => {
+  for (const s of [...persistentSessions, session.defaultSession]) {
     clearCache(s).catch(console.error);
-  });
+  }
 };
 
 module.exports = {quit};
