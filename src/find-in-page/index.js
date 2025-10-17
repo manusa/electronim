@@ -46,7 +46,7 @@ const isFindInPage = bv => bv.isFindInPage === true;
 const isNotFindInPage = bv => !isFindInPage(bv);
 
 const findInPageOpen = mainWindow => () => {
-  if (mainWindow.contentView.children.find(isFindInPage)) {
+  if (mainWindow.contentView.children.some(isFindInPage)) {
     return;
   }
   const findInPage = newFindInPage();
