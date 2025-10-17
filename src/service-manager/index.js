@@ -52,7 +52,7 @@ const handlePageFaviconUpdated = (view, ipcSender, serviceId) => async (_e, favi
     favicons = await extractFavicon(view);
   }
   if (favicons.length > 0) {
-    ipcSender.send(APP_EVENTS.setServiceFavicon, {id: serviceId, favicon: favicons[favicons.length - 1]});
+    ipcSender.send(APP_EVENTS.setServiceFavicon, {id: serviceId, favicon: favicons.at(-1)});
   }
 };
 
@@ -149,11 +149,11 @@ const traverseFunction = operation => () => {
   const serviceIds = Object.keys(services);
   const idx = operation(serviceIds.indexOf(getActiveService()));
   if (idx < 0) {
-    return serviceIds[serviceIds.length - 1];
+    return serviceIds.at(-1);
   } else if (idx >= serviceIds.length) {
-    return serviceIds[0];
+    return serviceIds.at(0);
   }
-  return serviceIds[idx];
+  return serviceIds.at(idx);
 };
 
 const getNextService = traverseFunction(idx => idx + 1);
@@ -162,11 +162,11 @@ const getServiceAt = position => {
   const serviceIds = Object.keys(services);
   const idx = position - 1;
   if (idx > 0 && idx < serviceIds.length) {
-    return serviceIds[idx];
+    return serviceIds.at(idx);
   } else if (idx < 1) {
-    return serviceIds[0];
+    return serviceIds.at(0);
   }
-  return serviceIds[serviceIds.length - 1];
+  return serviceIds.at(-1);
 };
 
 const removeAll = () => {
