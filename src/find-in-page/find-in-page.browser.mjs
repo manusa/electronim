@@ -15,7 +15,7 @@
  */
 import {createRef, html, render, useLayoutEffect, useState, Icon, IconButton, TextField} from '../components/index.mjs';
 
-const {close, findInPage, onFindInPage, onReady} = window.electron;
+const {close, findInPage, onFindInPage, onReady} = globalThis.electron;
 
 const getFindInPage = () => document.querySelector('.find-in-page');
 
