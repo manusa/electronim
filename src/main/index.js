@@ -203,7 +203,7 @@ const appMenuOpen = () => {
 };
 
 const appMenuClose = () => {
-  if (!mainWindow.contentView.children.find(view => view.isAppMenu)) {
+  if (!mainWindow.contentView.children.some(view => view.isAppMenu)) {
     return;
   }
   mainWindow.contentView.removeChildView(appMenu);
@@ -264,7 +264,7 @@ const initGlobalListeners = () => {
   eventBus.handle(APP_EVENTS.dictionaryGetAvailableNative, getAvailableNativeDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetEnabled, getEnabledDictionaries);
   eventBus.on(APP_EVENTS.escape, () => {
-    if (mainWindow.contentView.children.find(isFindInPage)) {
+    if (mainWindow.contentView.children.some(isFindInPage)) {
       eventBus.emit(APP_EVENTS.findInPageClose);
     } else {
       eventBus.emit(APP_EVENTS.appMenuClose);
