@@ -117,11 +117,11 @@ describe('Main :: Index module test suite', () => {
     });
     test('fixUserDataLocation, should set a location in lower-case (Electron <14 compatible)', async () => {
       // Given
-      electron.app.getPath.mockImplementation(() => 'ImMixed-Case/WithSome\\Separator$');
+      electron.app.getPath.mockImplementation(() => String.raw`ImMixed-Case/WithSome\Separator$`);
       // When
       await waitForTrayInit(main.init);
       // Then
-      expect(electron.app.setPath).toHaveBeenCalledWith('userData', 'immixed-case/withsome\\separator$');
+      expect(electron.app.setPath).toHaveBeenCalledWith('userData', String.raw`immixed-case/withsome\separator$`);
     });
     test('initDesktopCapturerHandler, should register desktopCapturer', async () => {
       // Given
