@@ -118,7 +118,7 @@ const loadDocs = () => {
   return {docs, metadata};
 };
 
-module.exports = () => {
+module.exports = function docsValLoader() {
   const {docs, metadata} = loadDocs();
   return {
     cacheable: true,
