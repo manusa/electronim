@@ -87,12 +87,12 @@ const loadDocs = () => {
   const docs = {};
   const metadata = [];
 
-  DOCUMENT_ORDER.forEach(fileName => {
+  for (const fileName of DOCUMENT_ORDER) {
     const filePath = path.resolve(DOCS_DIR, fileName);
 
     if (!fs.existsSync(filePath)) {
       console.warn(`Warning: Document ${fileName} not found`);
-      return;
+      continue;
     }
 
     const rawContent = fs.readFileSync(filePath, 'utf8');
@@ -113,7 +113,7 @@ const loadDocs = () => {
         headings: headings.filter(h => h.level === 2) // Only include H2 for sub-items
       });
     }
-  });
+  }
 
   return {docs, metadata};
 };
