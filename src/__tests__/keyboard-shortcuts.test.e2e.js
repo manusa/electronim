@@ -97,7 +97,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
       const firstTab = mainWindow.locator('.chrome-tab').first();
       await firstTab.click();
       await mainWindow.waitForTimeout(500);
-      
+
       let activeTab = mainWindow.locator('.chrome-tab[active]');
       let tabId = await activeTab.first().getAttribute('data-tab-id');
       expect(tabId).toBe('test-tab-1');
@@ -105,7 +105,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
       const secondTab = mainWindow.locator('.chrome-tab').nth(1);
       await secondTab.click();
       await mainWindow.waitForTimeout(500);
-      
+
       activeTab = mainWindow.locator('.chrome-tab[active]');
       tabId = await activeTab.first().getAttribute('data-tab-id');
       expect(tabId).toBe('test-tab-2');
@@ -113,7 +113,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
       const thirdTab = mainWindow.locator('.chrome-tab').nth(2);
       await thirdTab.click();
       await mainWindow.waitForTimeout(500);
-      
+
       activeTab = mainWindow.locator('.chrome-tab[active]');
       tabId = await activeTab.first().getAttribute('data-tab-id');
       expect(tabId).toBe('test-tab-3');
@@ -140,7 +140,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
     test('tab order supports sequential navigation', async () => {
       // Verify tabs maintain order which is essential for Ctrl+Tab traversal
       const tabs = mainWindow.locator('.chrome-tab');
-      
+
       // Click through tabs in sequence to verify navigation infrastructure
       await tabs.first().click();
       await mainWindow.waitForTimeout(300);
@@ -186,7 +186,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
     test('application loads with keyboard event handlers ready', async () => {
       // This test verifies the application infrastructure needed for keyboard shortcuts
       // is in place. The actual keyboard shortcut handling is tested in unit tests.
-      
+
       // Verify multiple tabs exist (needed for tab switching shortcuts)
       const tabs = mainWindow.locator('.chrome-tab');
       await expect(tabs).toHaveCount(3);
@@ -210,15 +210,15 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
       // Verify the tab activation mechanism works by clicking
       // This is the same mechanism triggered by keyboard shortcuts
       const tabs = mainWindow.locator('.chrome-tab');
-      
+
       // Activate each tab in sequence
       for (let i = 0; i < 3; i++) {
         await tabs.nth(i).click();
         await mainWindow.waitForTimeout(300);
-        
+
         const activeTab = mainWindow.locator('.chrome-tab[active]');
         await expect(activeTab).toHaveCount(1);
-        
+
         const activeTabId = await activeTab.first().getAttribute('data-tab-id');
         expect(activeTabId).toBe(`test-tab-${i + 1}`);
       }
