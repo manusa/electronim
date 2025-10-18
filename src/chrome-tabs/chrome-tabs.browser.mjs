@@ -19,7 +19,7 @@ import {
 } from '../components/index.mjs';
 import {
   initialState, reducer, activateService, addServices, moveTab, setNewVersionAvailable, setServiceFavicon,
-  setServiceTitle, sendActivateService
+  setServiceNotificationStatus, setServiceTitle, sendActivateService
 } from './chrome-tabs.reducer.browser.mjs';
 
 const shouldUseDarkColors = () => globalThis?.matchMedia?.('(prefers-color-scheme: dark)').matches;
@@ -193,6 +193,7 @@ const TabContainer = () => {
     ipcRenderer.on(APP_EVENTS.activateServiceInContainer, activateService({dispatch}));
     ipcRenderer.on(APP_EVENTS.electronimNewVersionAvailable, setNewVersionAvailable({dispatch}));
     ipcRenderer.on(APP_EVENTS.setServiceFavicon, setServiceFavicon({dispatch}));
+    ipcRenderer.on(APP_EVENTS.setServiceNotificationStatus, setServiceNotificationStatus({dispatch}));
     ipcRenderer.on(APP_EVENTS.setServiceTitle, setServiceTitle({dispatch}));
     sendServicesReady();
   }, []);

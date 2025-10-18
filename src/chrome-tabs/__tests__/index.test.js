@@ -19,9 +19,11 @@
 describe('Chrome Tabs Module module test suite', () => {
   let electron;
   let chromeTabs;
-  beforeEach(() => {
+  let settings;
+  beforeEach(async () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
+    settings = await require('../../__tests__').testSettings();
     jest.mock('../check-for-updates', () => ({
       getLatestRelease: () => Promise.resolve({})
     }));
@@ -76,14 +78,10 @@ describe('Chrome Tabs Module module test suite', () => {
       const params = {x: 100, y: 50};
       const tabId = 'test-tab-id';
       tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
-
-      // Mock settings with notifications enabled for this tab
-      jest.doMock('../../settings', () => ({
-        loadSettings: () => ({
-          disableNotificationsGlobally: false,
-          tabs: [{id: 'test-tab-id', disableNotifications: false}]
-        })
-      }));
+      settings.updateSettings({
+        disableNotificationsGlobally: false,
+        tabs: [{id: 'test-tab-id', disableNotifications: false}]
+      });
 
       // When
       await contextMenuListener(event, params);
@@ -99,14 +97,10 @@ describe('Chrome Tabs Module module test suite', () => {
       const params = {x: 100, y: 50};
       const tabId = 'test-tab-id';
       tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
-
-      // Mock settings with notifications disabled for this tab
-      jest.doMock('../../settings', () => ({
-        loadSettings: () => ({
-          disableNotificationsGlobally: false,
-          tabs: [{id: 'test-tab-id', disableNotifications: true}]
-        })
-      }));
+      settings.updateSettings({
+        disableNotificationsGlobally: false,
+        tabs: [{id: 'test-tab-id', disableNotifications: true}]
+      });
 
       // When
       await contextMenuListener(event, params);
@@ -122,14 +116,10 @@ describe('Chrome Tabs Module module test suite', () => {
       const params = {x: 100, y: 50};
       const tabId = 'test-tab-id';
       tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
-
-      // Mock settings with notifications disabled globally
-      jest.doMock('../../settings', () => ({
-        loadSettings: () => ({
-          disableNotificationsGlobally: true,
-          tabs: [{id: 'test-tab-id', disableNotifications: false}]
-        })
-      }));
+      settings.updateSettings({
+        disableNotificationsGlobally: true,
+        tabs: [{id: 'test-tab-id', disableNotifications: false}]
+      });
 
       // When
       await contextMenuListener(event, params);
@@ -146,14 +136,10 @@ describe('Chrome Tabs Module module test suite', () => {
       const params = {x: 100, y: 50};
       const tabId = 'test-tab-id';
       tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
-
-      // Mock settings with notifications enabled for this tab
-      jest.doMock('../../settings', () => ({
-        loadSettings: () => ({
-          disableNotificationsGlobally: false,
-          tabs: [{id: 'test-tab-id', disableNotifications: false}]
-        })
-      }));
+      settings.updateSettings({
+        disableNotificationsGlobally: false,
+        tabs: [{id: 'test-tab-id', disableNotifications: false}]
+      });
 
       // When
       await contextMenuListener(event, params);

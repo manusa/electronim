@@ -162,19 +162,24 @@ const handleServicesReorder = (_event, {tabIds: visibleTabIds}) => {
 
 const handleToggleTabNotifications = (_event, {tabId}) => {
   const currentSettings = loadSettings();
+  const currentTab = currentSettings.tabs.find(tab => tab.id === tabId);
+  if (!currentTab) {
+    return;
+  }
+  const newDisableNotifications = !currentTab.disableNotifications;
   const tabs = currentSettings.tabs.map(tab => {
     if (tab.id === tabId) {
-      return {...tab, disableNotifications: !tab.disableNotifications};
+      return {...tab, disableNotifications: newDisableNotifications};
     }
     return tab;
   });
   updateSettings({tabs});
 
-  // Refresh the tab container to update the notification icon
-  const updatedTabs = tabs
-    .filter(tab => !tab.disabled)
-    .map(tab => ({...tab, active: tab.id === currentSettings.activeTab}));
-  tabContainer.webContents.send(APP_EVENTS.addServices, updatedTabs);
+  // Send notification status update to the UI
+  tabContainer.webContents.send(APP_EVENTS.setServiceNotificationStatus, {
+    id: tabId,
+    disableNotifications: newDisableNotifications
+  });
 };
 
 const initTabListener = () => {

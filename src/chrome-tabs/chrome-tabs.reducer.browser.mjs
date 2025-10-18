@@ -96,6 +96,11 @@ export const setServiceFavicon = ({dispatch}) => (_event, {id, favicon}) => {
     id, property: 'favicon', value: favicon
   }});
 };
+export const setServiceNotificationStatus = ({dispatch}) => (_event, {id, disableNotifications}) => {
+  dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {
+    id, property: 'disableNotifications', value: disableNotifications
+  }});
+};
 export const setServiceTitle = ({dispatch}) => (_event, {id, title}) => {
   dispatch({type: ACTIONS.SET_TAB_PROPERTY, payload: {
     id, property: 'title', value: title

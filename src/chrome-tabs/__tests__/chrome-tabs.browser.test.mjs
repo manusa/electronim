@@ -150,6 +150,55 @@ describe('ChromeTabs in Browser test suite', () => {
         expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-title').innerHTML)
           .toBe('My Custom Tab'));
     });
+    test('addServices with disableNotifications: true, should display notification mute icon', async () => {
+      // Given
+      const tabsWithNotificationsDisabled = [
+        {id: 1, title: 'Tab 1', url: 'https://test1.com', disableNotifications: true},
+        {id: 2, title: 'Tab 2', url: 'https://test2.com', disableNotifications: false}
+      ];
+      // When
+      electron.ipcRenderer.emit('addServices', {}, tabsWithNotificationsDisabled);
+      // Then
+      await waitFor(() =>
+        expect($chromeTabs.querySelectorAll('.chrome-tab').length).toBe(2));
+      expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-notifications-mute'))
+        .not.toBeNull();
+      expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="2"] .chrome-tab-notifications-mute'))
+        .toBeNull();
+    });
+    test('setServiceNotificationStatus, should show notification mute icon when disabled', async () => {
+      // Given
+      const tabsToAdd = [
+        {id: 1, title: 'Tab 1', url: 'https://test1.com', disableNotifications: false}
+      ];
+      electron.ipcRenderer.emit('addServices', {}, tabsToAdd);
+      await waitFor(() =>
+        expect($chromeTabs.querySelectorAll('.chrome-tab').length).toBe(1));
+      expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-notifications-mute'))
+        .toBeNull();
+      // When
+      electron.ipcRenderer.emit('setServiceNotificationStatus', {}, {id: 1, disableNotifications: true});
+      // Then
+      await waitFor(() =>
+        expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-notifications-mute'))
+          .not.toBeNull());
+    });
+    test('setServiceNotificationStatus, should hide notification mute icon when enabled', async () => {
+      // Given
+      const tabsToAdd = [
+        {id: 1, title: 'Tab 1', url: 'https://test1.com', disableNotifications: true}
+      ];
+      electron.ipcRenderer.emit('addServices', {}, tabsToAdd);
+      await waitFor(() =>
+        expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-notifications-mute'))
+          .not.toBeNull());
+      // When
+      electron.ipcRenderer.emit('setServiceNotificationStatus', {}, {id: 1, disableNotifications: false});
+      // Then
+      await waitFor(() =>
+        expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-notifications-mute'))
+          .toBeNull());
+    });
   });
   describe('Tab events', () => {
     let tabs;

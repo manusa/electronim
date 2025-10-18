@@ -62,6 +62,7 @@ const APP_EVENTS = {
   settingsImport: 'settingsImport',
   settingsOpenFolder: 'settingsOpenFolder',
   setServiceFavicon: 'setServiceFavicon',
+  setServiceNotificationStatus: 'setServiceNotificationStatus',
   setServiceTitle: 'setServiceTitle',
   servicesReady: 'servicesReady',
   servicesReorder: 'servicesReorder',
