@@ -21,9 +21,9 @@ const {ipcRenderer} = require('electron');
 
 const NativeNotification = Notification;
 
-const bubbleNotification = () => ipcRenderer.send(APP_EVENTS.notificationClick, {tabId: window.tabId});
+const bubbleNotification = () => ipcRenderer.send(APP_EVENTS.notificationClick, {tabId: globalThis.tabId});
 
-const canNotify = () => ipcRenderer.sendSync(APP_EVENTS.canNotify, window.tabId);
+const canNotify = () => ipcRenderer.sendSync(APP_EVENTS.canNotify, globalThis.tabId);
 
 const setDelegateMinimumBehavior = delegate => {
   delegate.onclick = bubbleNotification;
