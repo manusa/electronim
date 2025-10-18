@@ -47,7 +47,7 @@ const getOrCreateRoot = () => {
   return $root;
 };
 
-const stream = async id => window.navigator.mediaDevices.getUserMedia({
+const stream = async id => globalThis.navigator.mediaDevices.getUserMedia({
   audio: false,
   video: {
     mandatory: {
@@ -174,6 +174,6 @@ const getDisplayMedia = async (resolve, reject) => {
 };
 
 // Some web applications break the mediaDevices capability
-if (window.navigator.mediaDevices) {
-  window.navigator.mediaDevices.getDisplayMedia = () => new Promise(getDisplayMedia);
+if (globalThis.navigator.mediaDevices) {
+  globalThis.navigator.mediaDevices.getDisplayMedia = () => new Promise(getDisplayMedia);
 }
