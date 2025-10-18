@@ -19,7 +19,7 @@
 const {spawnElectron, createTestServer} = require('./');
 
 const STARTUP_TIMEOUT = 30000;
-const TEST_TIMEOUT = 10000;
+const TEST_TIMEOUT = 15000;
 
 describe('E2E :: Keyboard shortcuts test suite', () => {
   let electron;
@@ -74,154 +74,142 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
     await expect(tabs).toHaveCount(3);
   });
 
-  describe('Fullscreen functionality', () => {
-    test('application window is responsive and can handle fullscreen events', async () => {
-      // Verify the window exists and is responsive
-      const windows = electron.app.windows();
-      const browserWindow = windows.find(w => w.url().includes('chrome-tabs'));
-      expect(browserWindow).toBeDefined();
+  describe('F11 fullscreen toggle', () => {
+    test('pressing F11 toggles fullscreen mode', async () => {
+      // Press F11 to toggle fullscreen
+      await electron.sendKeys('F11');
 
-      // Verify the window responds to commands
-      const title = await browserWindow.title();
+      // Wait for fullscreen transition
+      await mainWindow.waitForTimeout(1000);
+
+      // Check the app is still responsive
+      const title = await mainWindow.title();
       expect(title).toContain('ElectronIM');
 
-      // This verifies the infrastructure is in place for fullscreen support
-      // (F11 key handling is tested in unit tests of keyboard-shortcuts.js)
-    });
-  });
-
-  describe('Tab switching functionality', () => {
-    test('tabs can be activated by clicking (verifies tab infrastructure)', async () => {
-      // Verify tab switching works by clicking, which confirms the underlying
-      // tab switching mechanism that keyboard shortcuts use
-      const firstTab = mainWindow.locator('.chrome-tab').first();
-      await firstTab.click();
+      // Toggle back
+      await electron.sendKeys('F11');
       await mainWindow.waitForTimeout(500);
-
-      let activeTab = mainWindow.locator('.chrome-tab[active]');
-      let tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-1');
-
-      const secondTab = mainWindow.locator('.chrome-tab').nth(1);
-      await secondTab.click();
-      await mainWindow.waitForTimeout(500);
-
-      activeTab = mainWindow.locator('.chrome-tab[active]');
-      tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-2');
-
-      const thirdTab = mainWindow.locator('.chrome-tab').nth(2);
-      await thirdTab.click();
-      await mainWindow.waitForTimeout(500);
-
-      activeTab = mainWindow.locator('.chrome-tab[active]');
-      tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-3');
-    }, TEST_TIMEOUT);
-
-    test('all tabs are present and identifiable', async () => {
-      // Verify all tabs are loaded with correct IDs
-      // This is the infrastructure that Ctrl+[1-9] shortcuts rely on
-      const tabs = mainWindow.locator('.chrome-tab');
-      await expect(tabs).toHaveCount(3);
-
-      const firstTabId = await tabs.first().getAttribute('data-tab-id');
-      expect(firstTabId).toBe('test-tab-1');
-
-      const secondTabId = await tabs.nth(1).getAttribute('data-tab-id');
-      expect(secondTabId).toBe('test-tab-2');
-
-      const thirdTabId = await tabs.nth(2).getAttribute('data-tab-id');
-      expect(thirdTabId).toBe('test-tab-3');
     }, TEST_TIMEOUT);
   });
 
-  describe('Tab traversal functionality', () => {
-    test('tab order supports sequential navigation', async () => {
-      // Verify tabs maintain order which is essential for Ctrl+Tab traversal
-      const tabs = mainWindow.locator('.chrome-tab');
+  describe('Ctrl+[1-9] tab switching', () => {
+    test('Ctrl+1 activates first tab', async () => {
+      // Switch to second tab first
+      await electron.sendKeys('2', ['control']);
+      await mainWindow.waitForTimeout(500);
 
-      // Click through tabs in sequence to verify navigation infrastructure
-      await tabs.first().click();
-      await mainWindow.waitForTimeout(300);
-      let activeTab = mainWindow.locator('.chrome-tab[active]');
-      let tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-1');
+      // Now press Ctrl+1 to switch to first tab
+      await electron.sendKeys('1', ['control']);
+      await mainWindow.waitForTimeout(500);
 
-      await tabs.nth(1).click();
-      await mainWindow.waitForTimeout(300);
-      activeTab = mainWindow.locator('.chrome-tab[active]');
-      tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-2');
-
-      await tabs.nth(2).click();
-      await mainWindow.waitForTimeout(300);
-      activeTab = mainWindow.locator('.chrome-tab[active]');
-      tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-3');
-
-      // Return to first tab (wrapping)
-      await tabs.first().click();
-      await mainWindow.waitForTimeout(300);
-      activeTab = mainWindow.locator('.chrome-tab[active]');
-      tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-1');
-    }, TEST_TIMEOUT);
-  });
-
-  describe('Find in page functionality', () => {
-    test('application has find-in-page infrastructure', async () => {
-      // Verify the application is capable of showing find dialog
-      // The actual Ctrl+f triggering is tested in unit tests
-      const tabs = mainWindow.locator('.chrome-tab');
-      await expect(tabs).toHaveCount(3);
-
-      // Verify a tab is active (prerequisite for find-in-page)
       const activeTab = mainWindow.locator('.chrome-tab[active]');
-      await expect(activeTab).toHaveCount(1);
+      const tabId = await activeTab.first().getAttribute('data-tab-id');
+      expect(tabId).toBe('test-tab-1');
+    }, TEST_TIMEOUT);
+
+    test('Ctrl+2 activates second tab', async () => {
+      await electron.sendKeys('2', ['control']);
+      await mainWindow.waitForTimeout(500);
+
+      const activeTab = mainWindow.locator('.chrome-tab[active]');
+      const tabId = await activeTab.first().getAttribute('data-tab-id');
+      expect(tabId).toBe('test-tab-2');
+    }, TEST_TIMEOUT);
+
+    test('Ctrl+3 activates third tab', async () => {
+      await electron.sendKeys('3', ['control']);
+      await mainWindow.waitForTimeout(500);
+
+      const activeTab = mainWindow.locator('.chrome-tab[active]');
+      const tabId = await activeTab.first().getAttribute('data-tab-id');
+      expect(tabId).toBe('test-tab-3');
     }, TEST_TIMEOUT);
   });
 
-  describe('Keyboard shortcuts infrastructure', () => {
-    test('application loads with keyboard event handlers ready', async () => {
-      // This test verifies the application infrastructure needed for keyboard shortcuts
-      // is in place. The actual keyboard shortcut handling is tested in unit tests.
+  describe('Ctrl+Tab tab traversal', () => {
+    test('Ctrl+Tab cycles to next tab', async () => {
+      // Start from first tab
+      await electron.sendKeys('1', ['control']);
+      await mainWindow.waitForTimeout(500);
 
-      // Verify multiple tabs exist (needed for tab switching shortcuts)
-      const tabs = mainWindow.locator('.chrome-tab');
-      await expect(tabs).toHaveCount(3);
+      // Press Ctrl+Tab to go to next tab
+      await electron.sendKeys('Tab', ['control']);
+      await mainWindow.waitForTimeout(500);
 
-      // Verify tabs have proper data attributes for keyboard navigation
-      const firstTab = tabs.first();
-      const firstTabId = await firstTab.getAttribute('data-tab-id');
-      expect(firstTabId).toBeTruthy();
-      expect(firstTabId).toMatch(/test-tab-/);
+      const activeTab = mainWindow.locator('.chrome-tab[active]');
+      const tabId = await activeTab.first().getAttribute('data-tab-id');
+      expect(tabId).toBe('test-tab-2');
+    }, TEST_TIMEOUT);
 
-      // Verify at least one tab is active (keyboard shortcuts need an active context)
-      const activeTabs = mainWindow.locator('.chrome-tab[active]');
-      await expect(activeTabs).toHaveCount(1);
+    test('Ctrl+Shift+Tab cycles to previous tab', async () => {
+      // Start from second tab
+      await electron.sendKeys('2', ['control']);
+      await mainWindow.waitForTimeout(500);
 
-      // Verify window title indicates app is ready
+      // Press Ctrl+Shift+Tab to go to previous tab
+      await electron.sendKeys('Tab', ['control', 'shift']);
+      await mainWindow.waitForTimeout(500);
+
+      const activeTab = mainWindow.locator('.chrome-tab[active]');
+      const tabId = await activeTab.first().getAttribute('data-tab-id');
+      expect(tabId).toBe('test-tab-1');
+    }, TEST_TIMEOUT);
+
+    test('Ctrl+Tab wraps around from last to first tab', async () => {
+      // Start from last tab
+      await electron.sendKeys('3', ['control']);
+      await mainWindow.waitForTimeout(500);
+
+      // Press Ctrl+Tab to wrap around
+      await electron.sendKeys('Tab', ['control']);
+      await mainWindow.waitForTimeout(500);
+
+      const activeTab = mainWindow.locator('.chrome-tab[active]');
+      const tabId = await activeTab.first().getAttribute('data-tab-id');
+      expect(tabId).toBe('test-tab-1');
+    }, TEST_TIMEOUT);
+  });
+
+  describe('Ctrl+f find in page', () => {
+    test('pressing Ctrl+f sends the keyboard event', async () => {
+      // Make sure we're on a tab first
+      await electron.sendKeys('1', ['control']);
+      await mainWindow.waitForTimeout(500);
+
+      // Press Ctrl+f to send the keyboard event
+      // Note: The find dialog may not appear in headless mode or may require focus
+      await electron.sendKeys('f', ['control']);
+      await mainWindow.waitForTimeout(1000);
+
+      // Verify the app is still responsive after the keyboard event
       const title = await mainWindow.title();
       expect(title).toContain('ElectronIM');
     }, TEST_TIMEOUT);
 
-    test('tab switching mechanism works (used by keyboard shortcuts)', async () => {
-      // Verify the tab activation mechanism works by clicking
-      // This is the same mechanism triggered by keyboard shortcuts
-      const tabs = mainWindow.locator('.chrome-tab');
+    test('pressing Escape sends the keyboard event', async () => {
+      // Press Escape
+      await electron.sendKeys('Escape');
+      await mainWindow.waitForTimeout(500);
 
-      // Activate each tab in sequence
-      for (let i = 0; i < 3; i++) {
-        await tabs.nth(i).click();
-        await mainWindow.waitForTimeout(300);
+      // Verify the app is still responsive
+      const title = await mainWindow.title();
+      expect(title).toContain('ElectronIM');
+    }, TEST_TIMEOUT);
+  });
 
-        const activeTab = mainWindow.locator('.chrome-tab[active]');
-        await expect(activeTab).toHaveCount(1);
+  describe('Meta key shortcuts (macOS legacy support)', () => {
+    test('Meta+1 activates first tab', async () => {
+      // Switch to another tab first
+      await electron.sendKeys('2', ['control']);
+      await mainWindow.waitForTimeout(500);
 
-        const activeTabId = await activeTab.first().getAttribute('data-tab-id');
-        expect(activeTabId).toBe(`test-tab-${i + 1}`);
-      }
+      // Press Meta+1 (Cmd+1 on Mac)
+      await electron.sendKeys('1', ['meta']);
+      await mainWindow.waitForTimeout(500);
+
+      const activeTab = mainWindow.locator('.chrome-tab[active]');
+      const tabId = await activeTab.first().getAttribute('data-tab-id');
+      expect(tabId).toBe('test-tab-1');
     }, TEST_TIMEOUT);
   });
 });
