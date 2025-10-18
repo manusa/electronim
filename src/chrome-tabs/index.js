@@ -50,13 +50,12 @@ const handleContextMenu = viewOrWindow => async (event, params) => {
   `).catch(() => null);
 
   if (tabId) {
-    const settings = loadSettings();
-    const {disableNotificationsGlobally} = settings;
+    const {disableNotificationsGlobally, tabs: services} = loadSettings();
 
-    // Only show notification menu if notifications are not disabled globally
+    // Only show service-specific notification menu if notifications are not disabled globally
     if (!disableNotificationsGlobally) {
-      const currentTab = settings.tabs.find(tab => tab.id === tabId);
-      const notificationsDisabled = currentTab?.disableNotifications || false;
+      const currentService = services.find(service => service.id === tabId);
+      const notificationsDisabled = currentService?.disableNotifications || false;
 
       menu.append(new MenuItem({
         label: notificationsDisabled ? 'Enable notifications' : 'Disable notifications',
