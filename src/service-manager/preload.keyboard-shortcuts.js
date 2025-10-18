@@ -31,14 +31,14 @@ EVENTS.set(eventKey({key: '-', ctrlKey: true}), () => ipcRenderer.send(APP_EVENT
 EVENTS.set(eventKey({key: '0', ctrlKey: true}), () => ipcRenderer.send(APP_EVENTS.zoomReset));
 
 const initKeyboardShortcuts = () => {
-  window.addEventListener('keyup', event => {
+  globalThis.addEventListener('keyup', event => {
     const func = EVENTS.get(eventKey(event));
     if (func) {
       event.preventDefault();
       func();
     }
   });
-  window.addEventListener('load', () => {
+  globalThis.addEventListener('load', () => {
     document.addEventListener('wheel', event => {
       const ctrlOrCommand = event.ctrlKey || event.metaKey;
       if (ctrlOrCommand && event.deltaY < 0) {
