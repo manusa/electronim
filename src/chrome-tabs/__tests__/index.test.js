@@ -19,9 +19,11 @@
 describe('Chrome Tabs Module module test suite', () => {
   let electron;
   let chromeTabs;
-  beforeEach(() => {
+  let settings;
+  beforeEach(async () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
+    settings = await require('../../__tests__').testSettings();
     jest.mock('../check-for-updates', () => ({
       getLatestRelease: () => Promise.resolve({})
     }));
@@ -30,17 +32,19 @@ describe('Chrome Tabs Module module test suite', () => {
   describe('handleContextMenu', () => {
     let tabContainer;
     let contextMenuListener;
+    let event;
+    let eventParams;
     beforeEach(() => {
       tabContainer = chromeTabs.newTabContainer();
       contextMenuListener = tabContainer.webContents.listeners('context-menu');
+      event = {};
+      eventParams = {x: 100, y: 50};
     });
     test('should show Reload option when right-clicking on a tab', async () => {
       // Given
-      const event = {};
-      const params = {x: 100, y: 50};
       tabContainer.webContents.executeJavaScript.mockResolvedValue('test-tab-id');
       // When
-      await contextMenuListener(event, params);
+      await contextMenuListener(event, eventParams);
       // Then
       expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
         label: 'Reload'
@@ -48,35 +52,93 @@ describe('Chrome Tabs Module module test suite', () => {
     });
     test('should not show Reload option when not clicking on a tab', async () => {
       // Given
-      const event = {};
-      const params = {x: 100, y: 50};
       tabContainer.webContents.executeJavaScript.mockResolvedValue(null);
       // When
-      await contextMenuListener(event, params);
+      await contextMenuListener(event, eventParams);
       // Then
       const reloadMenuItem = electron.MenuItem.mock.calls.find(call => call[0].label === 'Reload');
       expect(reloadMenuItem).toBeUndefined();
     });
     test('should emit reloadTab event when Reload is clicked', async () => {
       // Given
-      const event = {};
-      const params = {x: 100, y: 50};
       const tabId = 'test-tab-id';
       tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
       // When
-      await contextMenuListener(event, params);
+      await contextMenuListener(event, eventParams);
       const reloadMenuItem = electron.MenuItem.mock.calls.find(call => call[0].label === 'Reload')[0];
       reloadMenuItem.click();
       // Then
       expect(electron.ipcMain.emit).toHaveBeenCalledWith('reloadTab', event, {tabId});
     });
+    test('should show "Disable notifications" when notifications are enabled for tab', async () => {
+      // Given
+      const tabId = 'test-tab-id';
+      tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
+      settings.updateSettings({
+        disableNotificationsGlobally: false,
+        tabs: [{id: 'test-tab-id', disableNotifications: false}]
+      });
+      // When
+      await contextMenuListener(event, eventParams);
+      // Then
+      expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+        label: 'Disable notifications'
+      }));
+    });
+    test('should show "Enable notifications" when notifications are disabled for tab', async () => {
+      // Given
+      const tabId = 'test-tab-id';
+      tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
+      settings.updateSettings({
+        disableNotificationsGlobally: false,
+        tabs: [{id: 'test-tab-id', disableNotifications: true}]
+      });
+      // When
+      await contextMenuListener(event, eventParams);
+      // Then
+      expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+        label: 'Enable notifications'
+      }));
+    });
+    test('should not show notification menu when notifications are disabled globally', async () => {
+      // Given
+      const tabId = 'test-tab-id';
+      tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
+      settings.updateSettings({
+        disableNotificationsGlobally: true,
+        tabs: [{id: 'test-tab-id', disableNotifications: false}]
+      });
+      // When
+      await contextMenuListener(event, eventParams);
+      // Then
+      const notificationMenuItem = electron.MenuItem.mock.calls.find(call =>
+        call[0].label === 'Disable notifications' || call[0].label === 'Enable notifications'
+      );
+      expect(notificationMenuItem).toBeUndefined();
+    });
+    test('should emit setServiceDisableNotifications event when notification toggle is clicked', async () => {
+      // Given
+      const tabId = 'test-tab-id';
+      tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
+      settings.updateSettings({
+        disableNotificationsGlobally: false,
+        tabs: [{id: 'test-tab-id', disableNotifications: false}]
+      });
+      // When
+      await contextMenuListener(event, eventParams);
+      const notificationMenuItem = electron.MenuItem.mock.calls.find(call => call[0].label === 'Disable notifications')[0];
+      notificationMenuItem.click();
+      // Then
+      expect(electron.ipcMain.emit).toHaveBeenCalledWith('setServiceDisableNotifications', event, {
+        id: tabId,
+        disableNotifications: true
+      });
+    });
     test('should always show Settings, Help, and DevTools options', async () => {
       // Given
-      const event = {};
-      const params = {x: 100, y: 50};
       tabContainer.webContents.executeJavaScript.mockResolvedValue(null);
       // When
-      await contextMenuListener(event, params);
+      await contextMenuListener(event, eventParams);
       // Then
       expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'Settings'}));
       expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'Help'}));

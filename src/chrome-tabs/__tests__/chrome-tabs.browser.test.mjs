@@ -150,6 +150,62 @@ describe('ChromeTabs in Browser test suite', () => {
         expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-title').innerHTML)
           .toBe('My Custom Tab'));
     });
+    describe('addServices with disableNotifications', () => {
+      beforeEach(() => {
+        const tabsWithNotificationsDisabled = [
+          {id: 1, title: 'Tab 1', url: 'https://test1.com', disableNotifications: true},
+          {id: 2, title: 'Tab 2', url: 'https://test2.com', disableNotifications: false}
+        ];
+        electron.ipcRenderer.emit('addServices', {}, tabsWithNotificationsDisabled);
+      });
+      test('should display notification mute icon for tab with disableNotifications: true', async () => {
+        // Then
+        await waitFor(() =>
+          expect($chromeTabs.querySelectorAll('.chrome-tab').length).toBe(2));
+        expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-notifications-mute'))
+          .not.toBeNull();
+      });
+      test('should not display notification mute icon for tab with disableNotifications: false', async () => {
+        // Then
+        await waitFor(() =>
+          expect($chromeTabs.querySelectorAll('.chrome-tab').length).toBe(2));
+        expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="2"] .chrome-tab-notifications-mute'))
+          .toBeNull();
+      });
+    });
+    test('setServiceDisableNotifications, should show notification mute icon when disabled', async () => {
+      // Given
+      const tabsToAdd = [
+        {id: 1, title: 'Tab 1', url: 'https://test1.com', disableNotifications: false}
+      ];
+      electron.ipcRenderer.emit('addServices', {}, tabsToAdd);
+      await waitFor(() =>
+        expect($chromeTabs.querySelectorAll('.chrome-tab').length).toBe(1));
+      expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-notifications-mute'))
+        .toBeNull();
+      // When
+      electron.ipcRenderer.emit('setServiceDisableNotifications', {}, {id: 1, disableNotifications: true});
+      // Then
+      await waitFor(() =>
+        expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-notifications-mute'))
+          .not.toBeNull());
+    });
+    test('setServiceDisableNotifications, should hide notification mute icon when enabled', async () => {
+      // Given
+      const tabsToAdd = [
+        {id: 1, title: 'Tab 1', url: 'https://test1.com', disableNotifications: true}
+      ];
+      electron.ipcRenderer.emit('addServices', {}, tabsToAdd);
+      await waitFor(() =>
+        expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-notifications-mute'))
+          .not.toBeNull());
+      // When
+      electron.ipcRenderer.emit('setServiceDisableNotifications', {}, {id: 1, disableNotifications: false});
+      // Then
+      await waitFor(() =>
+        expect($chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-notifications-mute'))
+          .toBeNull());
+    });
   });
   describe('Tab events', () => {
     let tabs;
