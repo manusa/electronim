@@ -23,7 +23,7 @@ import {
 } from './settings.reducer.browser.mjs';
 import {SettingsOption, SettingsRow} from './settings.common.browser.mjs';
 
-const {ipcRenderer} = window;
+const {ipcRenderer} = globalThis;
 
 export const OtherPane = ({dispatch, state}) => {
   const dispatchSetProperty = setProperty({dispatch});
