@@ -165,7 +165,7 @@ const actionHandlers = {
 
 export const reducer = (state, action) => {
   const handler = actionHandlers[action.type];
-  return handler ? handler(state, action) : {...state};
+  return handler ? handler(state, action) : state;
 };
 
 // Action creators
