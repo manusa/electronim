@@ -140,7 +140,7 @@ describe('Main :: Index module test suite', () => {
     let baseWindowGetContentBounds;
 
     beforeEach(async () => {
-      jest.spyOn(global, 'setTimeout');
+      jest.spyOn(globalThis, 'setTimeout');
       views = [];
       await waitForTrayInit(main.init);
       baseWindow = electron.BaseWindow.getAllWindows()[0];
