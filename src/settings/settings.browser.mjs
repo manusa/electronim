@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {ipcRenderer} = window;
+const {ipcRenderer} = globalThis;
 
 import {
   APP_EVENTS, html, render, useReducer, Icon, IconButton, NavigationRail, TopAppBar
