@@ -160,25 +160,20 @@ const handleServicesReorder = (_event, {tabIds: visibleTabIds}) => {
   updateSettings({tabs});
 };
 
-const handleToggleTabNotifications = (_event, {tabId}) => {
+const handleSetServiceDisableNotifications = (_event, {id, disableNotifications}) => {
   const currentSettings = loadSettings();
-  const currentTab = currentSettings.tabs.find(tab => tab.id === tabId);
-  if (!currentTab) {
-    return;
-  }
-  const newDisableNotifications = !currentTab.disableNotifications;
   const tabs = currentSettings.tabs.map(tab => {
-    if (tab.id === tabId) {
-      return {...tab, disableNotifications: newDisableNotifications};
+    if (tab.id === id) {
+      return {...tab, disableNotifications};
     }
     return tab;
   });
   updateSettings({tabs});
 
-  // Send notification status update to the UI
-  tabContainer.webContents.send(APP_EVENTS.setServiceNotificationStatus, {
-    id: tabId,
-    disableNotifications: newDisableNotifications
+  // Relay the event to the UI
+  tabContainer.webContents.send(APP_EVENTS.setServiceDisableNotifications, {
+    id,
+    disableNotifications
   });
 };
 
@@ -209,7 +204,7 @@ const initTabListener = () => {
   eventBus.on(APP_EVENTS.reload, handleTabReload);
   eventBus.on(APP_EVENTS.reloadTab, handleSpecificTabReload);
   eventBus.on(APP_EVENTS.servicesReorder, handleServicesReorder);
-  eventBus.on(APP_EVENTS.toggleTabNotifications, handleToggleTabNotifications);
+  eventBus.on(APP_EVENTS.setServiceDisableNotifications, handleSetServiceDisableNotifications);
   eventBus.on(APP_EVENTS.zoomIn, handleZoomIn);
   eventBus.on(APP_EVENTS.zoomOut, handleZoomOut);
   eventBus.on(APP_EVENTS.zoomReset, handleZoomReset);

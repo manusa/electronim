@@ -130,7 +130,7 @@ describe('Chrome Tabs Module module test suite', () => {
       );
       expect(notificationMenuItem).toBeUndefined();
     });
-    test('should emit toggleTabNotifications event when notification toggle is clicked', async () => {
+    test('should emit setServiceDisableNotifications event when notification toggle is clicked', async () => {
       // Given
       const event = {};
       const params = {x: 100, y: 50};
@@ -147,7 +147,10 @@ describe('Chrome Tabs Module module test suite', () => {
       notificationMenuItem.click();
 
       // Then
-      expect(electron.ipcMain.emit).toHaveBeenCalledWith('toggleTabNotifications', event, {tabId});
+      expect(electron.ipcMain.emit).toHaveBeenCalledWith('setServiceDisableNotifications', event, {
+        id: tabId,
+        disableNotifications: true
+      });
     });
     test('should always show Settings, Help, and DevTools options', async () => {
       // Given
