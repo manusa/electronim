@@ -62,10 +62,10 @@ const findInPageOpen = mainWindow => () => {
 
 const findInPageClose = mainWindow => () => {
   serviceManager.stopFindInPage();
-  mainWindow.contentView.children.forEach(cv => {
+  for (const cv of mainWindow.contentView.children) {
     cv.webContents.stopFindInPage('clearSelection');
     cv.webContents.removeAllListeners('found-in-page');
-  });
+  }
   const view = mainWindow.contentView.children.find(isFindInPage);
   if (!view) {
     return;
