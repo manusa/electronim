@@ -51,100 +51,121 @@ export const dictionaries = state => {
   return dictionariesAvailable(state);
 };
 
-export const reducer = (state, action) => {
-  switch (action.type) {
-    case ACTIONS.ACTIVATE_PANE: {
-      return {...state, activePane: action.payload};
-    }
-    case ACTIONS.ADD: {
-      if (!validateUrl(state.newTabValue)) {
-        return {...state};
-      }
-      return {...state,
-        newTabValid: false,
-        newTabValue: '',
-        tabs: [...state.tabs, {
-          id: newId(),
-          disabled: false,
-          sandboxed: false,
-          openUrlsInApp: false,
-          disableNotifications: false,
-          url: prependProtocol(state.newTabValue)
-        }],
-        canSave: true
-      };
-    }
-    case ACTIONS.REMOVE: {
-      return {...state,
-        tabs: state.tabs.filter(tab => tab.id !== action.payload.id),
-        canSave: state.tabs.filter(tab => tab.id !== action.payload.id).length > 0
-      };
-    }
-    case ACTIONS.SET_TAB_PROPERTY: {
-      const newState = {...state, tabs: []};
-      for (const tab of state.tabs) {
-        const newTab = {...tab};
-        if (newTab.id === action.payload.id) {
-          newTab[action.payload.property] = action.payload.value;
-          if (!validateUrl(newTab.url, false)) {
-            newState.invalidTabs.add(newTab.id);
-          } else {
-            newState.invalidTabs.delete(newTab.id);
-          }
-        }
-        newState.tabs.push(newTab);
-      }
-      return newState;
-    }
-    case ACTIONS.SET_PROPERTY: {
-      const newState = {...state};
-      newState[action.payload.property] = action.payload.value;
-      return newState;
-    }
-    case ACTIONS.TOGGLE_DICTIONARY: {
-      const newState = {...state};
-      if (dictionariesEnabled(newState).includes(action.payload)) {
-        newState.dictionaries.enabled = [...dictionariesEnabled(newState)
-          .filter(key => key !== action.payload)];
-      } else {
-        newState.dictionaries.enabled = [...dictionariesEnabled(newState), action.payload];
-      }
-      return newState;
-    }
-    case ACTIONS.TOGGLE_PROPERTY: {
-      const newState = {...state};
-      newState[action.payload.property] = !newState[action.payload.property];
-      return newState;
-    }
-    case ACTIONS.TOGGLE_TAB_EXPANDED: {
-      if (state.expandedTabs.includes(action.payload)) {
-        return {...state,
-          expandedTabs: state.expandedTabs.filter(id => id !== action.payload)};
-      }
-      return {...state,
-        expandedTabs: [...state.expandedTabs, action.payload]
-      };
-    }
-    case ACTIONS.TOGGLE_TAB_PROPERTY: {
-      const newState = {...state, tabs: []};
-      for (const tab of state.tabs) {
-        const newTab = {...tab};
-        if (newTab.id === action.payload.id) {
-          newTab[action.payload.property] = !newTab[action.payload.property];
-        }
-        newState.tabs.push(newTab);
-      }
-      return newState;
-    }
-    case ACTIONS.UPDATE_NEW_TAB_VALUE: {
-      return {...state,
-        newTabValid: validateUrl(action.payload),
-        newTabValue: action.payload,
-        canSave: action.payload.length === 0 && state.tabs.length > 0
-      };
-    }
-    default: return {...state};
+// Action handlers
+const handleActivatePane = (state, action) => ({...state, activePane: action.payload});
+
+const handleAdd = state => {
+  if (!validateUrl(state.newTabValue)) {
+    return {...state};
   }
+  return {...state,
+    newTabValid: false,
+    newTabValue: '',
+    tabs: [...state.tabs, {
+      id: newId(),
+      disabled: false,
+      sandboxed: false,
+      openUrlsInApp: false,
+      disableNotifications: false,
+      url: prependProtocol(state.newTabValue)
+    }],
+    canSave: true
+  };
+};
+
+const handleRemove = (state, action) => {
+  const filteredTabs = state.tabs.filter(tab => tab.id !== action.payload.id);
+  return {...state,
+    tabs: filteredTabs,
+    canSave: filteredTabs.length > 0
+  };
+};
+
+const handleSetTabProperty = (state, action) => {
+  const newState = {...state, tabs: []};
+  for (const tab of state.tabs) {
+    const newTab = {...tab};
+    if (newTab.id === action.payload.id) {
+      newTab[action.payload.property] = action.payload.value;
+      if (!validateUrl(newTab.url, false)) {
+        newState.invalidTabs.add(newTab.id);
+      } else {
+        newState.invalidTabs.delete(newTab.id);
+      }
+    }
+    newState.tabs.push(newTab);
+  }
+  return newState;
+};
+
+const handleSetProperty = (state, action) => ({
+  ...state,
+  [action.payload.property]: action.payload.value
+});
+
+const handleToggleDictionary = (state, action) => {
+  const enabled = dictionariesEnabled(state);
+  const newEnabled = enabled.includes(action.payload)
+    ? enabled.filter(key => key !== action.payload)
+    : [...enabled, action.payload];
+
+  return {
+    ...state,
+    dictionaries: {
+      ...state.dictionaries,
+      enabled: newEnabled
+    }
+  };
+};
+
+const handleToggleProperty = (state, action) => ({
+  ...state,
+  [action.payload.property]: !state[action.payload.property]
+});
+
+const handleToggleTabExpanded = (state, action) => {
+  const expandedTabs = state.expandedTabs.includes(action.payload)
+    ? state.expandedTabs.filter(id => id !== action.payload)
+    : [...state.expandedTabs, action.payload];
+
+  return {...state, expandedTabs};
+};
+
+const handleToggleTabProperty = (state, action) => {
+  const tabs = state.tabs.map(tab => {
+    if (tab.id === action.payload.id) {
+      return {...tab, [action.payload.property]: !tab[action.payload.property]};
+    }
+    return tab;
+  });
+
+  return {...state, tabs};
+};
+
+const handleUpdateNewTabValue = (state, action) => ({
+  ...state,
+  newTabValid: validateUrl(action.payload),
+  newTabValue: action.payload,
+  canSave: action.payload.length === 0 && state.tabs.length > 0
+});
+
+// Action handlers map
+const actionHandlers = {
+  [ACTIONS.ACTIVATE_PANE]: handleActivatePane,
+  [ACTIONS.ADD]: handleAdd,
+  [ACTIONS.REMOVE]: handleRemove,
+  [ACTIONS.SET_TAB_PROPERTY]: handleSetTabProperty,
+  [ACTIONS.SET_PROPERTY]: handleSetProperty,
+  [ACTIONS.TOGGLE_DICTIONARY]: handleToggleDictionary,
+  [ACTIONS.TOGGLE_PROPERTY]: handleToggleProperty,
+  [ACTIONS.TOGGLE_TAB_EXPANDED]: handleToggleTabExpanded,
+  [ACTIONS.TOGGLE_TAB_PROPERTY]: handleToggleTabProperty,
+  [ACTIONS.UPDATE_NEW_TAB_VALUE]: handleUpdateNewTabValue
+};
+
+export const reducer = (state, action) => {
+  const handler = actionHandlers[action.type];
+  return handler ? handler(state, action) : {...state};
 };
 
 // Action creators
