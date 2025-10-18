@@ -21,14 +21,14 @@ const dictionaries = [];
 const isMisspelled = word =>
   dictionaries.every(dictionary => !dictionary.spellSync(word));
 
-window.getMisspelled = words => {
+globalThis.getMisspelled = words => {
   if (dictionaries.length === 0) {
     return [];
   }
   return words.filter(isMisspelled);
 };
 
-window.getSuggestions = word => {
+globalThis.getSuggestions = word => {
   const ret = new Set();
   const allSuggestions = dictionaries.map(dictionary => dictionary.suggestSync(word))
     .flatMap(suggestions => suggestions);
@@ -38,7 +38,7 @@ window.getSuggestions = word => {
   return Array.from(ret.values()).sort((w1, w2) => w1.localeCompare(w2)).slice(0, 10);
 };
 
-window.reloadDictionaries = () => {
+globalThis.reloadDictionaries = () => {
   dictionaries.length = 0;
   const {enabledDictionaries} = loadSettings();
   for (const dictionaryKey of enabledDictionaries) {
