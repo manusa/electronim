@@ -124,6 +124,7 @@ describe('Settings module test suite', () => {
         theme: 'system',
         trayEnabled: false,
         startMinimized: false,
+        alwaysOnTop: false,
         closeButtonBehavior: 'quit',
         keyboardShortcuts: {
           tabSwitchModifier: 'Ctrl',
@@ -145,6 +146,7 @@ describe('Settings module test suite', () => {
         theme: 'system',
         trayEnabled: false,
         startMinimized: false,
+        alwaysOnTop: false,
         closeButtonBehavior: 'quit',
         keyboardShortcuts: {
           tabSwitchModifier: 'Ctrl',
@@ -168,6 +170,7 @@ describe('Settings module test suite', () => {
         theme: 'system',
         trayEnabled: false,
         startMinimized: false,
+        alwaysOnTop: false,
         closeButtonBehavior: 'quit',
         keyboardShortcuts: {
           tabSwitchModifier: 'Ctrl',
