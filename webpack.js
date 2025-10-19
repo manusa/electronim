@@ -26,6 +26,7 @@ const BUNDLES_DIR = 'bundles';
 const PRELOAD_ENTRIES = [
   'about',
   'app-menu',
+  'chrome-extensions',
   'chrome-tabs',
   'find-in-page',
   'help',

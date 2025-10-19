@@ -21,6 +21,7 @@ const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS} = require('../constants');
 const {openAboutDialog} = require('../about');
 const {newAppMenu, isNotAppMenu} = require('../app-menu');
 const {findDialog, initKeyboardEvents} = require('../base-window');
+const {openChromeWebStore} = require('../chrome-extensions');
 const {TABS_CONTAINER_HEIGHT, newTabContainer, isNotTabContainer} = require('../chrome-tabs');
 const {
   FIND_IN_PAGE_HEIGHT, FIND_IN_PAGE_WIDTH, isFindInPage, isNotFindInPage, findInPage, findInPageOpen, findInPageClose
@@ -277,6 +278,7 @@ const initGlobalListeners = () => {
   eventBus.on(APP_EVENTS.aboutOpenDialog, openAboutDialog(mainWindow));
   eventBus.on(APP_EVENTS.appMenuOpen, appMenuOpen);
   eventBus.on(APP_EVENTS.appMenuClose, appMenuClose);
+  eventBus.on(APP_EVENTS.chromeWebStoreOpenDialog, openChromeWebStore(mainWindow));
   eventBus.on(APP_EVENTS.closeDialog, closeDialog);
   eventBus.handle(APP_EVENTS.dictionaryGetAvailable, getAvailableDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetAvailableNative, getAvailableNativeDictionaries);

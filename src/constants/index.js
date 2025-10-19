@@ -32,6 +32,7 @@ const APP_EVENTS = {
   appMenuOpen: 'appMenuOpen',
   appMenuClose: 'appMenuClose',
   canNotify: 'canNotify',
+  chromeWebStoreOpenDialog: 'chromeWebStoreOpenDialog',
   closeDialog: 'closeDialog',
   desktopCapturerGetSources: 'desktopCapturerGetSources',
   escape: 'escape',
