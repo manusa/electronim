@@ -116,7 +116,7 @@ describe('Chrome Tabs Module module test suite', () => {
       );
       expect(notificationMenuItem).toBeUndefined();
     });
-    test('should emit setServiceDisableNotifications event when notification toggle is clicked', async () => {
+    test('should emit setServiceDisableNotifications event when "Disable notifications" is clicked', async () => {
       // Given
       const tabId = 'test-tab-id';
       tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
@@ -132,6 +132,24 @@ describe('Chrome Tabs Module module test suite', () => {
       expect(electron.ipcMain.emit).toHaveBeenCalledWith('setServiceDisableNotifications', event, {
         id: tabId,
         disableNotifications: true
+      });
+    });
+    test('should emit setServiceDisableNotifications event when "Enable notifications" is clicked', async () => {
+      // Given
+      const tabId = 'test-tab-id';
+      tabContainer.webContents.executeJavaScript.mockResolvedValue(tabId);
+      settings.updateSettings({
+        disableNotificationsGlobally: false,
+        tabs: [{id: 'test-tab-id', disableNotifications: true}]
+      });
+      // When
+      await contextMenuListener(event, eventParams);
+      const notificationMenuItem = electron.MenuItem.mock.calls.find(call => call[0].label === 'Enable notifications')[0];
+      notificationMenuItem.click();
+      // Then
+      expect(electron.ipcMain.emit).toHaveBeenCalledWith('setServiceDisableNotifications', event, {
+        id: tabId,
+        disableNotifications: false
       });
     });
     test('should always show Settings, Help, and DevTools options', async () => {
