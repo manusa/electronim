@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {WebContentsView} = require('electron');
+const {Menu, MenuItem, WebContentsView} = require('electron');
 const path = require('node:path');
 const {showDialog} = require('../base-window');
 const {handleRedirect, windowOpenHandler} = require('../service-manager/redirect');
@@ -25,10 +25,22 @@ const webPreferences = {
   preload: path.resolve(__dirname, '..', '..', 'bundles', 'chrome-extensions.preload.js')
 };
 
+const handleContextMenu = viewOrWindow => (_event, params) => {
+  const {webContents} = viewOrWindow;
+  const menu = new Menu();
+  menu.append(new MenuItem({
+    label: 'DevTools',
+    click: () => webContents.openDevTools()
+  }));
+  const {x, y} = params;
+  menu.popup({x: x + 1, y: y + 1});
+};
+
 const openChromeWebStore = baseWindow => () => {
   const chromeWebStoreView = new WebContentsView({webPreferences});
   chromeWebStoreView.webContents.loadURL('https://chromewebstore.google.com/');
   chromeWebStoreView.webContents.on('will-navigate', handleRedirect(chromeWebStoreView));
+  chromeWebStoreView.webContents.on('context-menu', handleContextMenu(chromeWebStoreView));
   chromeWebStoreView.webContents.setWindowOpenHandler(windowOpenHandler(chromeWebStoreView));
   showDialog(baseWindow, chromeWebStoreView);
 };
