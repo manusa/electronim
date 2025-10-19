@@ -27,6 +27,7 @@ describe('App Menu Module preload test suite', () => {
     test('creates an API', () => {
       expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
         aboutOpenDialog: expect.toBeFunction(),
+        chromeWebStoreOpenDialog: expect.toBeFunction(),
         close: expect.toBeFunction(),
         helpOpenDialog: expect.toBeFunction(),
         quit: expect.toBeFunction(),
@@ -40,6 +41,7 @@ describe('App Menu Module preload test suite', () => {
       });
       test.each([
         ['aboutOpenDialog', 'aboutOpenDialog'],
+        ['chromeWebStoreOpenDialog', 'chromeWebStoreOpenDialog'],
         ['close', 'appMenuClose'],
         ['helpOpenDialog', 'helpOpenDialog'],
         ['quit', 'quit'],
@@ -57,6 +59,7 @@ describe('App Menu Module preload test suite', () => {
     test('creates an API', () => {
       expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
         aboutOpenDialog: expect.toBeFunction(),
+        chromeWebStoreOpenDialog: expect.toBeFunction(),
         close: expect.toBeFunction(),
         helpOpenDialog: expect.toBeFunction(),
         quit: expect.toBeFunction(),
