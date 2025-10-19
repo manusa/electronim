@@ -85,7 +85,7 @@ const regularContextMenu = ({webContents, params}) => {
     for (const entry of group) {
       menu.append(new MenuItem({...entry}));
     }
-    if (group.filter(isVisible).length > 0 && idx < allEntries.length - 1) {
+    if (group.some(isVisible) && idx < allEntries.length - 1) {
       menu.append(new MenuItem({type: 'separator'}));
     }
   }
