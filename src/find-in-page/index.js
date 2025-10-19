@@ -73,7 +73,7 @@ const findInPageClose = mainWindow => () => {
   mainWindow.contentView.removeChildView(view);
   view.webContents.destroy();
   if (mainWindow.contentView.children.length > 0) {
-    mainWindow.contentView.children.slice(-1)[0].webContents.focus();
+    mainWindow.contentView.children.at(-1).webContents.focus();
   }
 };
 
