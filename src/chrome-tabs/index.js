@@ -16,6 +16,7 @@
 const {WebContentsView, Menu, MenuItem, ipcMain: eventBus} = require('electron');
 const path = require('node:path');
 const {APP_EVENTS} = require('../constants');
+const {loadSettings} = require('../settings');
 const {getLatestRelease} = require('./check-for-updates');
 
 const TABS_CONTAINER_HEIGHT = 46;
@@ -39,8 +40,8 @@ const checkForUpdates = webContents => {
 const handleContextMenu = viewOrWindow => async (event, params) => {
   const menu = new Menu();
 
-  // Try to find the tab ID at the clicked position
-  const tabId = await viewOrWindow.webContents.executeJavaScript(`
+  // Try to find the service ID at the clicked position
+  const serviceId = await viewOrWindow.webContents.executeJavaScript(`
     (function() {
       const element = document.elementFromPoint(${params.x}, ${params.y});
       const tabElement = element?.closest('.chrome-tab');
@@ -48,10 +49,26 @@ const handleContextMenu = viewOrWindow => async (event, params) => {
     })();
   `).catch(() => null);
 
-  if (tabId) {
+  if (serviceId) {
+    const {disableNotificationsGlobally, tabs: services} = loadSettings();
+
+    // Only show service-specific notification menu if notifications are not disabled globally
+    if (!disableNotificationsGlobally) {
+      const currentService = services.find(service => service.id === serviceId);
+      const currentServiceHasNotificationsDisabled = currentService?.disableNotifications === true;
+      menu.append(new MenuItem({
+        label: currentServiceHasNotificationsDisabled ? 'Enable notifications' : 'Disable notifications',
+        click: () => eventBus.emit(APP_EVENTS.setServiceDisableNotifications, event, {
+          id: serviceId,
+          disableNotifications: !currentServiceHasNotificationsDisabled
+        })
+      }));
+      menu.append(new MenuItem({type: 'separator'}));
+    }
+
     menu.append(new MenuItem({
       label: 'Reload',
-      click: () => eventBus.emit(APP_EVENTS.reloadTab, event, {tabId})
+      click: () => eventBus.emit(APP_EVENTS.reloadTab, event, {tabId: serviceId})
     }));
     menu.append(new MenuItem({type: 'separator'}));
   }
