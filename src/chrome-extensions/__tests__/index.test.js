@@ -71,6 +71,33 @@ describe('Chrome Extensions module test suite', () => {
       expect(electron.webContentsViewInstance.webContents.loadURL)
         .toHaveBeenCalledWith('https://chromewebstore.google.com/');
       expect(electron.webContentsViewInstance.webContents.on).toHaveBeenCalledWith('will-navigate', expect.any(Function));
+      expect(electron.webContentsViewInstance.webContents.on).toHaveBeenCalledWith('context-menu', expect.any(Function));
+    });
+    test('context menu should have DevTools entry', () => {
+      // Given
+      openChromeWebStore();
+      const contextMenuHandler = electron.webContentsViewInstance.webContents.on.mock.calls
+        .find(call => call[0] === 'context-menu')[1];
+      // When
+      contextMenuHandler({}, {x: 10, y: 20});
+      // Then
+      expect(electron.Menu).toHaveBeenCalledTimes(1);
+      expect(electron.MenuItem).toHaveBeenCalledWith({
+        label: 'DevTools',
+        click: expect.any(Function)
+      });
+    });
+    test('context menu DevTools click should open dev tools', () => {
+      // Given
+      openChromeWebStore();
+      const contextMenuHandler = electron.webContentsViewInstance.webContents.on.mock.calls
+        .find(call => call[0] === 'context-menu')[1];
+      contextMenuHandler({}, {x: 10, y: 20});
+      const devToolsMenuItem = electron.MenuItem.mock.calls[0][0];
+      // When
+      devToolsMenuItem.click();
+      // Then
+      expect(electron.webContentsViewInstance.webContents.openDevTools).toHaveBeenCalledTimes(1);
     });
   });
 });
