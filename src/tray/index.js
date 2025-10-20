@@ -40,16 +40,21 @@ const createContextMenu = () => {
 };
 
 const initTray = () => {
-  if (tray?.destroy) {
+  const {trayEnabled} = loadSettings();
+  const trayExists = tray?.destroy;
+
+  // Only destroy and recreate if tray state is changing
+  if (trayExists && !trayEnabled) {
+    // Tray is enabled but should be disabled
     tray.destroy();
     tray = null;
-  }
-  const {trayEnabled} = loadSettings();
-  if (trayEnabled) {
+  } else if (!trayExists && trayEnabled) {
+    // Tray is disabled but should be enabled
     tray = new Tray(path.resolve(__dirname, '..', 'assets', images[getPlatform()] || images.win32));
     tray.on('click', () => eventBus.emit(APP_EVENTS.restore));
     tray.setContextMenu(createContextMenu());
   }
+  // If tray state hasn't changed, do nothing to avoid creating duplicates
   return tray;
 };
 

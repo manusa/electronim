@@ -54,10 +54,20 @@ describe('Tray module test suite', () => {
         // Then
         expect(electron.Tray).toHaveBeenCalledTimes(1);
       });
-      test('destroy previous tray', () => {
+      test('does not destroy tray when tray remains enabled', () => {
         // Given
         settings.updateSettings({trayEnabled: true});
         const previousTray = tray.initTray();
+        // When
+        tray.initTray();
+        // Then
+        expect(previousTray.destroy).toHaveBeenCalledTimes(0);
+      });
+      test('destroy tray when disabling', () => {
+        // Given
+        settings.updateSettings({trayEnabled: true});
+        const previousTray = tray.initTray();
+        settings.updateSettings({trayEnabled: false});
         // When
         tray.initTray();
         // Then
