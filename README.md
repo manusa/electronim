@@ -46,8 +46,9 @@ electronim
 - ⌨ Keyboard [shortcuts](docs/Keyboard-shortcuts.md).
 - 🖥️ Screen sharing: Share your screen securely with any web service that supports it (e.g. Google Meet, Microsoft Teams, Zoom, and so on).
 - 🌗 Light and Dark themes with system override.
-- 🗕 System Tray
-- 🔎 Find in page
+- 🗕 System Tray.
+- 📌 Always on top: Keep ElectronIM window on top of other applications.
+- 🔎 Find in page.
 - 🚫 No tracking: ElectronIM respects your privacy, no account registration is needed and no telemetry, analytics, or tracking of any kind is performed.
 
 ## [Screenshot](docs/Screenshots.md)
