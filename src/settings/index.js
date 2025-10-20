@@ -39,7 +39,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const webPreferences = {
-  contextIsolation: false,
+  contextIsolation: true,
   nativeWindowOpen: true,
   nodeIntegration: false,
   sandbox: true,

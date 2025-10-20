@@ -13,6 +13,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {ipcRenderer} = require('electron');
+/* eslint-disable no-undef */
+const {contextBridge, ipcRenderer} = require('electron');
 
-window.ipcRenderer = ipcRenderer;
+contextBridge.exposeInMainWorld('electron', {
+  closeDialog: () => ipcRenderer.send(APP_EVENTS.closeDialog),
+  settingsSave: settings => ipcRenderer.send(APP_EVENTS.settingsSave, settings),
+  settingsLoad: () => ipcRenderer.invoke(APP_EVENTS.settingsLoad),
+  settingsExport: () => ipcRenderer.invoke(APP_EVENTS.settingsExport),
+  settingsImport: () => ipcRenderer.invoke(APP_EVENTS.settingsImport),
+  settingsOpenFolder: () => ipcRenderer.invoke(APP_EVENTS.settingsOpenFolder),
+  dictionaryGetAvailable: () => ipcRenderer.invoke(APP_EVENTS.dictionaryGetAvailable),
+  dictionaryGetAvailableNative: () => ipcRenderer.invoke(APP_EVENTS.dictionaryGetAvailableNative),
+  dictionaryGetEnabled: () => ipcRenderer.invoke(APP_EVENTS.dictionaryGetEnabled)
+});

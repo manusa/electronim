@@ -18,16 +18,19 @@ import {testElectron, testSettings} from '../../__tests__/index.mjs';
 export const testEnvironment = async () => {
   const electron = await testElectron();
   const settings = await testSettings();
-  electron.ipcMain.on('settingsLoad', settings.loadSettings);
+  electron.ipcMain.handle('settingsLoad', settings.loadSettings);
   electron.ipcMain.on('settingsSave', updatedSettings => {
     settings.updateSettings(updatedSettings);
   });
-  electron.ipcMain.on('dictionaryGetAvailable', () => ({
+  electron.ipcMain.handle('dictionaryGetAvailable', () => ({
     en: {name: 'English'},
     es: {name: 'Spanish'}
   }));
-  electron.ipcMain.on('dictionaryGetAvailableNative', () => (['en']));
-  electron.ipcMain.on('dictionaryGetEnabled', () => settings.loadSettings().enabledDictionaries);
+  electron.ipcMain.handle('dictionaryGetAvailableNative', () => (['en']));
+  electron.ipcMain.handle('dictionaryGetEnabled', () => settings.loadSettings().enabledDictionaries);
+  electron.ipcMain.handle('settingsExport', async () => {});
+  electron.ipcMain.handle('settingsImport', async () => {});
+  electron.ipcMain.handle('settingsOpenFolder', async () => {});
   settings.updateSettings({
     useNativeSpellChecker: false,
     disableNotificationsGlobally: false,
