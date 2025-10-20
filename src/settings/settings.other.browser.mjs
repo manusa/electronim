@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, html, Button, Card, Icon, Select} from '../components/index.mjs';
+import {CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, html, Button, Card, Icon, Select} from '../components/index.mjs';
 import {
   isPaneActive,
   closeButtonBehavior,
@@ -23,15 +23,13 @@ import {
 } from './settings.reducer.browser.mjs';
 import {SettingsOption, SettingsRow} from './settings.common.browser.mjs';
 
-const {ipcRenderer} = globalThis;
-
 export const OtherPane = ({dispatch, state}) => {
+  const onSettingsExport = () => globalThis.electron.settingsExport();
+  const onSettingsImport = () => globalThis.electron.settingsImport();
+  const onSettingsOpenFolder = () => globalThis.electron.settingsOpenFolder();
   const dispatchSetProperty = setProperty({dispatch});
   const setTheme = e => dispatchSetProperty({property: 'theme', value: e.target.value});
   const setCloseButtonBehavior = e => dispatchSetProperty({property: 'closeButtonBehavior', value: e.target.value});
-  const settingsExport = () => ipcRenderer.invoke(APP_EVENTS.settingsExport);
-  const settingsImport = () => ipcRenderer.invoke(APP_EVENTS.settingsImport);
-  const settingsOpenFolder = () => ipcRenderer.invoke(APP_EVENTS.settingsOpenFolder);
   return isPaneActive(state)(OtherPane.id) && html`
     <h2 class='title'><${Icon}>${Icon.more}</${Icon}>Other</h2>
     <${Card} className='settings__other'>
@@ -92,7 +90,7 @@ export const OtherPane = ({dispatch, state}) => {
               className='settings__export'
               icon=${Icon.fileSave}
               title='Export settings to file'
-              onClick=${settingsExport}
+              onClick=${onSettingsExport}
           >
             Export
           </${Button}>
@@ -100,7 +98,7 @@ export const OtherPane = ({dispatch, state}) => {
               className='settings__import'
               icon=${Icon.fileOpen}
               title='Import settings from file'
-              onClick=${settingsImport}
+              onClick=${onSettingsImport}
           >
             Import
           </${Button}>
@@ -108,7 +106,7 @@ export const OtherPane = ({dispatch, state}) => {
               className='settings__open-folder'
               icon=${Icon.preview}
               title='Open ElectronIM folder'
-              onClick=${settingsOpenFolder}
+              onClick=${onSettingsOpenFolder}
           >
             Open Folder
           </${Button}>

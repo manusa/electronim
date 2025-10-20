@@ -13,10 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {ipcRenderer} = globalThis;
+const {
+  closeDialog, dictionaryGetAvailable, dictionaryGetAvailableNative, dictionaryGetEnabled,
+  settingsLoad, settingsSave
+} = globalThis.electron;
 
 import {
-  APP_EVENTS, html, render, useReducer, Icon, IconButton, NavigationRail, TopAppBar
+  html, render, useReducer, Icon, IconButton, NavigationRail, TopAppBar
 } from '../components/index.mjs';
 import {
   reducer, activatePane, canCancel, canSave, dictionariesEnabled, isPaneActive
@@ -40,7 +43,7 @@ const Settings = ({initialState}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const enabledDictionaries = dictionariesEnabled(state);
   const onActivatePane = activatePane({dispatch});
-  const save = () => ipcRenderer.send(APP_EVENTS.settingsSave, {
+  const save = () => settingsSave({
     tabs: state.tabs,
     useNativeSpellChecker: state.useNativeSpellChecker,
     enabledDictionaries,
@@ -52,7 +55,7 @@ const Settings = ({initialState}) => {
     closeButtonBehavior: state.closeButtonBehavior,
     keyboardShortcuts: state.keyboardShortcuts
   });
-  const cancel = () => ipcRenderer.send(APP_EVENTS.closeDialog);
+  const cancel = () => closeDialog();
   return html`
     <${TopAppBar} headline='Settings' icon=${Icon.arrowBack} iconClick=${cancel} iconDisabled=${!canCancel(state)}
       trailingIcon=${html`<${IconButton}
@@ -79,10 +82,10 @@ const Settings = ({initialState}) => {
 };
 
 Promise.all([
-  ipcRenderer.invoke(APP_EVENTS.settingsLoad),
-  ipcRenderer.invoke(APP_EVENTS.dictionaryGetAvailable),
-  ipcRenderer.invoke(APP_EVENTS.dictionaryGetAvailableNative),
-  ipcRenderer.invoke(APP_EVENTS.dictionaryGetEnabled)
+  settingsLoad(),
+  dictionaryGetAvailable(),
+  dictionaryGetAvailableNative(),
+  dictionaryGetEnabled()
 ]).then(
   (
     [currentSettings, availableDictionaries, availableNativeDictionaries, enabledDictionaries]

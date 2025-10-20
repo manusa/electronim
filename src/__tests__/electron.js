@@ -123,8 +123,8 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
   // ipcRenderer
   const ipcRenderer = new events.EventEmitter();
   ipcRenderer.invoke = async (channel, ...args) => {
-    if (ipcMain.rawListeners(channel)?.[0]) {
-      return ipcMain.rawListeners(channel)[0](...args);
+    if (ipcMain.rawListeners(channel)?.at(-1)) {
+      return ipcMain.rawListeners(channel).at(-1)(...args);
     }
     throw new Error(`No handler for channel ${channel}`);
   };
