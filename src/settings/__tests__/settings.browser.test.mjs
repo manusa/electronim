@@ -70,6 +70,7 @@ describe('Settings in Browser test suite', () => {
           theme: 'dark',
           trayEnabled: true,
           startMinimized: false,
+          alwaysOnTop: false,
           closeButtonBehavior: 'quit',
           keyboardShortcuts: {}
         });

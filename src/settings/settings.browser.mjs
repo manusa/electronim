@@ -48,6 +48,7 @@ const Settings = ({initialState}) => {
     theme: state.theme,
     trayEnabled: state.trayEnabled,
     startMinimized: state.startMinimized,
+    alwaysOnTop: state.alwaysOnTop,
     closeButtonBehavior: state.closeButtonBehavior,
     keyboardShortcuts: state.keyboardShortcuts
   });
@@ -105,6 +106,7 @@ Promise.all([
       theme: currentSettings.theme,
       trayEnabled: currentSettings.trayEnabled,
       startMinimized: currentSettings.startMinimized,
+      alwaysOnTop: currentSettings.alwaysOnTop,
       closeButtonBehavior: currentSettings.closeButtonBehavior,
       keyboardShortcuts: currentSettings.keyboardShortcuts
     };

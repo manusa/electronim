@@ -30,6 +30,7 @@ const DEFAULT_SETTINGS = {
   theme: 'system',
   trayEnabled: false,
   startMinimized: false,
+  alwaysOnTop: false,
   closeButtonBehavior: CLOSE_BUTTON_BEHAVIORS.quit,
   keyboardShortcuts: {
     tabSwitchModifier: KEYBOARD_SHORTCUTS.tabSwitchModifier,

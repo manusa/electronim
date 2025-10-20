@@ -136,6 +136,30 @@ describe('Settings (Other) in Browser test suite', () => {
       await waitFor(() => expect($startMinimizedSwitch.checked).toBe(true));
     });
   });
+  describe('Toggle Always On Top click', () => {
+    let $alwaysOnTopSwitch;
+    beforeEach(() => {
+      // In tests, always on top is disabled by default
+      $alwaysOnTopSwitch = document.querySelector('.settings__always-on-top .switch input');
+    });
+    test('when always on top disabled, should check input', async () => {
+      // Given
+      expect($alwaysOnTopSwitch.checked).toBe(false);
+      // When
+      fireEvent.click($alwaysOnTopSwitch);
+      // Then
+      await waitFor(() => expect($alwaysOnTopSwitch.checked).toBe(true));
+    });
+    test('when always on top enabled, should uncheck input', async () => {
+      // Given
+      fireEvent.click($alwaysOnTopSwitch);
+      await waitFor(() => expect($alwaysOnTopSwitch.checked).toBe(true));
+      // When
+      fireEvent.click($alwaysOnTopSwitch);
+      // Then
+      await waitFor(() => expect($alwaysOnTopSwitch.checked).toBe(false));
+    });
+  });
   describe('Settings Export/Import and Directory', () => {
     let $exportButton;
     let $importButton;

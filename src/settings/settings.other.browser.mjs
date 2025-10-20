@@ -78,6 +78,13 @@ export const OtherPane = ({dispatch, state}) => {
           checked=${state.startMinimized}
           onClick=${toggleProperty({dispatch, property: 'startMinimized'})}
       />
+      <${SettingsOption}
+          className='settings__always-on-top'
+          label='Always on top'
+          icon=${Icon.keep}
+          checked=${state.alwaysOnTop}
+          onClick=${toggleProperty({dispatch, property: 'alwaysOnTop'})}
+      />
       <${Card.Divider} />
       <${SettingsRow}>
         <div class='settings__import-export'>

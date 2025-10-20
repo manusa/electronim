@@ -260,6 +260,7 @@ const saveSettings = (_event, settings) => {
   updateSettings(settings);
   loadDictionaries();
   nativeTheme.themeSource = settings.theme;
+  mainWindow.setAlwaysOnTop(settings.alwaysOnTop);
   closeDialog();
   appMenuClose();
   findInPageClose();
@@ -323,10 +324,11 @@ const browserVersionsReady = () => {
 const init = () => {
   fixUserDataLocation();
   loadDictionaries();
-  const {width = 800, height = 600, startMinimized, theme} = loadSettings();
+  const {width = 800, height = 600, startMinimized, alwaysOnTop, theme} = loadSettings();
   nativeTheme.themeSource = theme;
   mainWindow = new BaseWindow({
     width, height, resizable: true, maximizable: true,
+    alwaysOnTop,
     icon: path.resolve(__dirname, '..', 'assets', getPlatform() === 'linux' ? 'icon.png' : 'icon.ico'),
     show: false, paintWhenInitiallyHidden: false,
     webPreferences

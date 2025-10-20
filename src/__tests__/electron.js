@@ -81,6 +81,7 @@ const newBaseWindowInstance = () => {
   instance.minimize = jest.fn();
   instance.on = jest.fn(instance.on);
   instance.removeMenu = jest.fn();
+  instance.setAlwaysOnTop = jest.fn();
   instance.setBounds = jest.fn(bounds => {
     instance.bounds = {...instance.bounds, ...bounds};
   });
