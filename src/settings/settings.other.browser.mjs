@@ -81,7 +81,7 @@ export const OtherPane = ({dispatch, state}) => {
       <${SettingsOption}
           className='settings__always-on-top'
           label='Always on top'
-          icon=${Icon.pinDrop}
+          icon=${Icon.keep}
           checked=${state.alwaysOnTop}
           onClick=${toggleProperty({dispatch, property: 'alwaysOnTop'})}
       />

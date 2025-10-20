@@ -260,7 +260,7 @@ const saveSettings = (_event, settings) => {
   updateSettings(settings);
   loadDictionaries();
   nativeTheme.themeSource = settings.theme;
-  mainWindow.setAlwaysOnTop(settings.alwaysOnTop ?? false);
+  mainWindow.setAlwaysOnTop(settings.alwaysOnTop);
   closeDialog();
   appMenuClose();
   findInPageClose();
@@ -324,7 +324,7 @@ const browserVersionsReady = () => {
 const init = () => {
   fixUserDataLocation();
   loadDictionaries();
-  const {width = 800, height = 600, startMinimized, alwaysOnTop = false, theme} = loadSettings();
+  const {width = 800, height = 600, startMinimized, alwaysOnTop, theme} = loadSettings();
   nativeTheme.themeSource = theme;
   mainWindow = new BaseWindow({
     width, height, resizable: true, maximizable: true,
