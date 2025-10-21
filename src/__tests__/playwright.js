@@ -38,7 +38,7 @@ function toVirtualKeyCode(key) {
     F: 70,
     f: 70
   };
-  return keyCodes[key] || key.charCodeAt(0);
+  return keyCodes[key] || key.codePointAt(0);
 }
 
 const spawnElectron = async ({extraArgs = [], settings} = {}) => {
