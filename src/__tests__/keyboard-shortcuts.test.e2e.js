@@ -41,17 +41,17 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
           {
             id: 'test-service-1',
             url: testServer1.url,
-            name: 'Test Service 1'
+            customName: 'Test Service 1'
           },
           {
             id: 'test-service-2',
             url: testServer2.url,
-            name: 'Test Service 2'
+            customName: 'Test Service 2'
           },
           {
             id: 'test-service-3',
             url: testServer3.url,
-            name: 'Test Service 3'
+            customName: 'Test Service 3'
           }
         ]
       }
