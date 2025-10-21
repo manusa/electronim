@@ -37,9 +37,7 @@ jobs:
         run: npm install
       - name: Pretest
         run: npm run pretest
-      - name: Test
-        run: npm test
-      - name: E2E Tests
+      - name: Playwright requirements
         run: |
           # Start virtual display for headless Electron
           sudo apt-get update
@@ -48,8 +46,10 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
           # Wait for display to be ready
           sleep 3
-          # Run E2E tests
-          npm run test:e2e
+      - name: Test
+        run: npm test
+      - name: E2E Tests
+        run: npm run test:e2e
       - name: SonarCloud
         run: |
           ./node_modules/.bin/sonar
