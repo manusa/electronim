@@ -127,4 +127,9 @@ jobs:
         with:
           name: electronim-win-x64.exe
           path: dist/electronim-win-x64.exe
+      - name: CI Artifact for msi
+        uses: actions/upload-artifact@v4
+        with:
+          name: electronim-win-x64.msi
+          path: dist/electronim-win-x64.msi
 

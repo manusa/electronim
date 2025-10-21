@@ -165,7 +165,8 @@
       "icon": "icon.ico",
       "target": [
         "zip",
-        "portable"
+        "portable",
+        "msi"
       ]
     }
   },
