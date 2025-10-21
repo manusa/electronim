@@ -230,7 +230,9 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
      * @param {Object} window - The Playwright window object
      */
     getActiveTabId: async window => {
+      // Wait for the active tab to exist before trying to get its ID
       const activeTab = window.locator('.chrome-tab[active]');
+      await activeTab.first().waitFor({state: 'attached', timeout: 5000});
       return await activeTab.first().getAttribute('data-tab-id');
     },
     /**
