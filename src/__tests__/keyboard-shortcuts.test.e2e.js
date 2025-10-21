@@ -39,17 +39,17 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
       settings: {
         tabs: [
           {
-            id: 'test-tab-1',
+            id: 'test-service-1',
             url: testServer1.url,
             name: 'Test Tab 1'
           },
           {
-            id: 'test-tab-2',
+            id: 'test-service-2',
             url: testServer2.url,
             name: 'Test Tab 2'
           },
           {
-            id: 'test-tab-3',
+            id: 'test-service-3',
             url: testServer3.url,
             name: 'Test Tab 3'
           }
@@ -76,23 +76,36 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
 
   describe('F11 fullscreen toggle', () => {
     test('pressing F11 toggles fullscreen mode', async () => {
+      // Get initial fullscreen state
+      const initialFullScreen = await electron.isFullScreen();
+
       // Press F11 to toggle fullscreen
       await electron.sendKeys('F11');
 
       // Wait for fullscreen transition
       await mainWindow.waitForTimeout(1000);
 
-      // Check the app is still responsive
-      const title = await mainWindow.title();
-      expect(title).toContain('ElectronIM');
+      // Verify fullscreen state changed
+      const afterToggle = await electron.isFullScreen();
+      expect(afterToggle).toBe(!initialFullScreen);
 
       // Toggle back
       await electron.sendKeys('F11');
       await mainWindow.waitForTimeout(500);
+
+      // Verify we're back to initial state
+      const afterSecondToggle = await electron.isFullScreen();
+      expect(afterSecondToggle).toBe(initialFullScreen);
     }, TEST_TIMEOUT);
   });
 
   describe('Ctrl+[1-9] tab switching', () => {
+    beforeEach(async () => {
+      // Start from first tab for consistency
+      await electron.sendKeys('1', ['control']);
+      await mainWindow.waitForTimeout(500);
+    });
+
     test('Ctrl+1 activates first tab', async () => {
       // Switch to second tab first
       await electron.sendKeys('2', ['control']);
@@ -104,7 +117,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
 
       const activeTab = mainWindow.locator('.chrome-tab[active]');
       const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-1');
+      expect(tabId).toBe('test-service-1');
     }, TEST_TIMEOUT);
 
     test('Ctrl+2 activates second tab', async () => {
@@ -113,7 +126,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
 
       const activeTab = mainWindow.locator('.chrome-tab[active]');
       const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-2');
+      expect(tabId).toBe('test-service-2');
     }, TEST_TIMEOUT);
 
     test('Ctrl+3 activates third tab', async () => {
@@ -122,7 +135,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
 
       const activeTab = mainWindow.locator('.chrome-tab[active]');
       const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-3');
+      expect(tabId).toBe('test-service-3');
     }, TEST_TIMEOUT);
   });
 
@@ -138,7 +151,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
 
       const activeTab = mainWindow.locator('.chrome-tab[active]');
       const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-2');
+      expect(tabId).toBe('test-service-2');
     }, TEST_TIMEOUT);
 
     test('Ctrl+Shift+Tab cycles to previous tab', async () => {
@@ -152,7 +165,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
 
       const activeTab = mainWindow.locator('.chrome-tab[active]');
       const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-1');
+      expect(tabId).toBe('test-service-1');
     }, TEST_TIMEOUT);
 
     test('Ctrl+Tab wraps around from last to first tab', async () => {
@@ -166,38 +179,53 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
 
       const activeTab = mainWindow.locator('.chrome-tab[active]');
       const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-1');
+      expect(tabId).toBe('test-service-1');
     }, TEST_TIMEOUT);
   });
 
   describe('Ctrl+f find in page', () => {
-    test('pressing Ctrl+f sends the keyboard event', async () => {
+    test('pressing Ctrl+f opens find-in-page dialog', async () => {
       // Make sure we're on a tab first
       await electron.sendKeys('1', ['control']);
       await mainWindow.waitForTimeout(500);
 
-      // Press Ctrl+f to send the keyboard event
-      // Note: The find dialog may not appear in headless mode or may require focus
+      // Verify find-in-page is not open initially
+      expect(await electron.isFindInPageOpen()).toBe(false);
+
+      // Press Ctrl+f to open find dialog
       await electron.sendKeys('f', ['control']);
       await mainWindow.waitForTimeout(1000);
 
-      // Verify the app is still responsive after the keyboard event
-      const title = await mainWindow.title();
-      expect(title).toContain('ElectronIM');
+      // Verify find-in-page dialog is now open
+      expect(await electron.isFindInPageOpen()).toBe(true);
     }, TEST_TIMEOUT);
 
-    test('pressing Escape sends the keyboard event', async () => {
-      // Press Escape
+    test('pressing Escape closes find-in-page dialog', async () => {
+      // Ensure find-in-page is open (from previous test or open it)
+      if (!(await electron.isFindInPageOpen())) {
+        await electron.sendKeys('f', ['control']);
+        await mainWindow.waitForTimeout(1000);
+      }
+
+      // Verify find-in-page is open
+      expect(await electron.isFindInPageOpen()).toBe(true);
+
+      // Press Escape to close
       await electron.sendKeys('Escape');
       await mainWindow.waitForTimeout(500);
 
-      // Verify the app is still responsive
-      const title = await mainWindow.title();
-      expect(title).toContain('ElectronIM');
+      // Verify find-in-page is now closed
+      expect(await electron.isFindInPageOpen()).toBe(false);
     }, TEST_TIMEOUT);
   });
 
   describe('Meta key shortcuts (macOS legacy support)', () => {
+    beforeEach(async () => {
+      // Start from first tab for consistency
+      await electron.sendKeys('1', ['control']);
+      await mainWindow.waitForTimeout(500);
+    });
+
     test('Meta+1 activates first tab', async () => {
       // Switch to another tab first
       await electron.sendKeys('2', ['control']);
@@ -209,7 +237,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
 
       const activeTab = mainWindow.locator('.chrome-tab[active]');
       const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-tab-1');
+      expect(tabId).toBe('test-service-1');
     }, TEST_TIMEOUT);
   });
 });
