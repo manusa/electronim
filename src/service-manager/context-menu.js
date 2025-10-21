@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {Menu, MenuItem, clipboard, ipcMain: eventBus} = require('electron');
+const {Menu, MenuItem, clipboard, ipcMain: eventBus, shell} = require('electron');
 const {contextMenuHandler, contextMenuNativeHandler} = require('../spell-check');
 const {APP_EVENTS} = require('../constants');
 
@@ -53,6 +53,10 @@ const entries = ({webContents, params}) => {
       label: 'Copy link text',
       visible: !!params.linkURL && !!params.linkText,
       click: () => clipboard.writeText(params.linkText)
+    }, {
+      label: 'Open link in external browser',
+      visible: !!params.linkURL,
+      click: () => shell.openExternal(params.linkURL)
     }], [{
       label: 'DevTools',
       click: () => webContents.openDevTools()
