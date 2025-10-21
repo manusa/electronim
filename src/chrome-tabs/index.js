@@ -22,7 +22,7 @@ const {getLatestRelease} = require('./check-for-updates');
 const TABS_CONTAINER_HEIGHT = 46;
 
 const webPreferences = {
-  contextIsolation: false,
+  contextIsolation: true,
   nodeIntegration: false,
   sandbox: true,
   preload: path.resolve(__dirname, '..', '..', 'bundles', 'chrome-tabs.preload.js'),
