@@ -31,7 +31,7 @@ globalThis.getMisspelled = words => {
 globalThis.getSuggestions = word => {
   const ret = new Set();
   const allSuggestions = dictionaries.map(dictionary => dictionary.suggestSync(word))
-    .flatMap(suggestions => suggestions);
+    .flat();
   for (const suggestion of allSuggestions) {
     ret.add(suggestion);
   }
