@@ -17,23 +17,53 @@ describe('Chrome Tabs Module preload test suite', () => {
   beforeEach(() => {
     jest.resetModules();
     require('../../__tests__').testElectron();
+    globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
   });
   describe('preload (just for coverage and sanity, see bundle tests)', () => {
     beforeEach(() => {
-      globalThis.APP_EVENTS = {};
-      globalThis.ELECTRONIM_VERSION = '1.33.7';
       require('../preload');
     });
-    test('adds required libraries', () => {
-      expect(globalThis.ipcRenderer.send).toBeDefined();
+    describe('creates an API', () => {
+      test('appMenuOpen', () => {
+        expect(globalThis.electron.appMenuOpen).toBeDefined();
+      });
+      test('servicesReady', () => {
+        expect(globalThis.electron.servicesReady).toBeDefined();
+      });
+      test('activateService', () => {
+        expect(globalThis.electron.activateService).toBeDefined();
+      });
+      test('servicesReorder', () => {
+        expect(globalThis.electron.servicesReorder).toBeDefined();
+      });
+      test('onAddServices', () => {
+        expect(globalThis.electron.onAddServices).toBeDefined();
+      });
+      test('onActivateServiceInContainer', () => {
+        expect(globalThis.electron.onActivateServiceInContainer).toBeDefined();
+      });
+      test('onElectronimNewVersionAvailable', () => {
+        expect(globalThis.electron.onElectronimNewVersionAvailable).toBeDefined();
+      });
+      test('onSetServiceDisableNotifications', () => {
+        expect(globalThis.electron.onSetServiceDisableNotifications).toBeDefined();
+      });
+      test('onSetServiceFavicon', () => {
+        expect(globalThis.electron.onSetServiceFavicon).toBeDefined();
+      });
+      test('onSetServiceTitle', () => {
+        expect(globalThis.electron.onSetServiceTitle).toBeDefined();
+      });
     });
   });
   describe('preload.bundle', () => {
     beforeEach(() => {
       require('../../../bundles/chrome-tabs.preload');
     });
-    test('adds required variables', async () => {
-      expect(globalThis.ipcRenderer.send).toBeDefined();
+    test('creates electron API', async () => {
+      expect(globalThis.electron).toBeDefined();
+      expect(globalThis.electron.appMenuOpen).toBeDefined();
+      expect(globalThis.electron.servicesReady).toBeDefined();
     });
   });
 });

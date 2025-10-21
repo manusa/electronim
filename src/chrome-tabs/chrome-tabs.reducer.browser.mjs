@@ -13,13 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-/* eslint-disable no-undef */
-import {APP_EVENTS} from '../components/index.mjs';
 export const sendActivateService = ({id, restoreWindow = true}) => {
-  ipcRenderer.send(APP_EVENTS.activateService, {id, restoreWindow});
+  globalThis.electron.activateService({id, restoreWindow});
 };
 const sendReorderServices = tabs =>
-  ipcRenderer.send(APP_EVENTS.servicesReorder, {tabIds: tabs.map(({id}) => id)});
+  globalThis.electron.servicesReorder({tabIds: tabs.map(({id}) => id)});
 
 export const initialState = {
   tabs: [],

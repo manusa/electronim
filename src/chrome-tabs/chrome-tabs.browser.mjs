@@ -13,9 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-/* eslint-disable no-undef */
 import {
-  APP_EVENTS, html, render, useLayoutEffect, useReducer, useState, Icon, IconButton
+  html, render, useLayoutEffect, useReducer, useState, Icon, IconButton
 } from '../components/index.mjs';
 import {
   initialState, reducer, activateService, addServices, moveTab, setNewVersionAvailable,
@@ -28,9 +27,9 @@ const getChromeTabs = () => getTabContainer().querySelector('.chrome-tabs');
 
 const openMenu = event => {
   event.preventDefault();
-  ipcRenderer.send(APP_EVENTS.appMenuOpen);
+  globalThis.electron.appMenuOpen();
 };
-const sendServicesReady = () => ipcRenderer.send(APP_EVENTS.servicesReady, {});
+const sendServicesReady = () => globalThis.electron.servicesReady();
 
 const TRANSPARENT_GIF = new Image();
 TRANSPARENT_GIF.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
@@ -189,12 +188,14 @@ const Menu = ({state: {newVersionAvailable}}) => {
 const TabContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   useLayoutEffect(() => {
-    ipcRenderer.on(APP_EVENTS.addServices, addServices({dispatch}));
-    ipcRenderer.on(APP_EVENTS.activateServiceInContainer, activateService({dispatch}));
-    ipcRenderer.on(APP_EVENTS.electronimNewVersionAvailable, setNewVersionAvailable({dispatch}));
-    ipcRenderer.on(APP_EVENTS.setServiceDisableNotifications, setServiceDisableNotifications({dispatch}));
-    ipcRenderer.on(APP_EVENTS.setServiceFavicon, setServiceFavicon({dispatch}));
-    ipcRenderer.on(APP_EVENTS.setServiceTitle, setServiceTitle({dispatch}));
+    globalThis.electron.onAddServices(tabs => addServices({dispatch})(null, tabs));
+    globalThis.electron.onActivateServiceInContainer(data => activateService({dispatch})(null, data));
+    globalThis.electron.onElectronimNewVersionAvailable(
+      data => setNewVersionAvailable({dispatch})(null, data));
+    globalThis.electron.onSetServiceDisableNotifications(
+      data => setServiceDisableNotifications({dispatch})(null, data));
+    globalThis.electron.onSetServiceFavicon(data => setServiceFavicon({dispatch})(null, data));
+    globalThis.electron.onSetServiceTitle(data => setServiceTitle({dispatch})(null, data));
     sendServicesReady();
   }, []);
   return html`
