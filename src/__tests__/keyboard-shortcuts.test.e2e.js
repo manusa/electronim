@@ -82,20 +82,26 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
       // Press F11 to toggle fullscreen
       await electron.sendKeys('F11');
 
-      // Wait for fullscreen transition
-      await mainWindow.waitForTimeout(1000);
+      // Wait for fullscreen state to change
+      await electron.waitForCondition(
+        async () => (await electron.isFullScreen()) === !initialFullScreen,
+        {message: 'Fullscreen state did not toggle'}
+      );
 
       // Verify fullscreen state changed
-      const afterToggle = await electron.isFullScreen();
-      expect(afterToggle).toBe(!initialFullScreen);
+      expect(await electron.isFullScreen()).toBe(!initialFullScreen);
 
       // Toggle back
       await electron.sendKeys('F11');
-      await mainWindow.waitForTimeout(500);
+
+      // Wait for fullscreen state to return to initial
+      await electron.waitForCondition(
+        async () => (await electron.isFullScreen()) === initialFullScreen,
+        {message: 'Fullscreen state did not toggle back'}
+      );
 
       // Verify we're back to initial state
-      const afterSecondToggle = await electron.isFullScreen();
-      expect(afterSecondToggle).toBe(initialFullScreen);
+      expect(await electron.isFullScreen()).toBe(initialFullScreen);
     }, TEST_TIMEOUT);
   });
 
@@ -103,39 +109,33 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
     beforeEach(async () => {
       // Start from first tab for consistency
       await electron.sendKeys('1', ['control']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-1');
     });
 
     test('Ctrl+1 activates first tab', async () => {
       // Switch to second tab first
       await electron.sendKeys('2', ['control']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-2');
 
       // Now press Ctrl+1 to switch to first tab
       await electron.sendKeys('1', ['control']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-1');
 
-      const activeTab = mainWindow.locator('.chrome-tab[active]');
-      const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-service-1');
+      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-1');
     }, TEST_TIMEOUT);
 
     test('Ctrl+2 activates second tab', async () => {
       await electron.sendKeys('2', ['control']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-2');
 
-      const activeTab = mainWindow.locator('.chrome-tab[active]');
-      const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-service-2');
+      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-2');
     }, TEST_TIMEOUT);
 
     test('Ctrl+3 activates third tab', async () => {
       await electron.sendKeys('3', ['control']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-3');
 
-      const activeTab = mainWindow.locator('.chrome-tab[active]');
-      const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-service-3');
+      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-3');
     }, TEST_TIMEOUT);
   });
 
@@ -143,43 +143,37 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
     test('Ctrl+Tab cycles to next tab', async () => {
       // Start from first tab
       await electron.sendKeys('1', ['control']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-1');
 
       // Press Ctrl+Tab to go to next tab
       await electron.sendKeys('Tab', ['control']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-2');
 
-      const activeTab = mainWindow.locator('.chrome-tab[active]');
-      const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-service-2');
+      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-2');
     }, TEST_TIMEOUT);
 
     test('Ctrl+Shift+Tab cycles to previous tab', async () => {
       // Start from second tab
       await electron.sendKeys('2', ['control']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-2');
 
       // Press Ctrl+Shift+Tab to go to previous tab
       await electron.sendKeys('Tab', ['control', 'shift']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-1');
 
-      const activeTab = mainWindow.locator('.chrome-tab[active]');
-      const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-service-1');
+      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-1');
     }, TEST_TIMEOUT);
 
     test('Ctrl+Tab wraps around from last to first tab', async () => {
       // Start from last tab
       await electron.sendKeys('3', ['control']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-3');
 
       // Press Ctrl+Tab to wrap around
       await electron.sendKeys('Tab', ['control']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-1');
 
-      const activeTab = mainWindow.locator('.chrome-tab[active]');
-      const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-service-1');
+      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-1');
     }, TEST_TIMEOUT);
   });
 
@@ -187,14 +181,19 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
     test('pressing Ctrl+f opens find-in-page dialog', async () => {
       // Make sure we're on a tab first
       await electron.sendKeys('1', ['control']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-1');
 
       // Verify find-in-page is not open initially
       expect(await electron.isFindInPageOpen()).toBe(false);
 
       // Press Ctrl+f to open find dialog
       await electron.sendKeys('f', ['control']);
-      await mainWindow.waitForTimeout(1000);
+
+      // Wait for find-in-page dialog to open
+      await electron.waitForCondition(
+        async () => await electron.isFindInPageOpen(),
+        {message: 'Find-in-page dialog did not open'}
+      );
 
       // Verify find-in-page dialog is now open
       expect(await electron.isFindInPageOpen()).toBe(true);
@@ -204,7 +203,10 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
       // Ensure find-in-page is open (from previous test or open it)
       if (!(await electron.isFindInPageOpen())) {
         await electron.sendKeys('f', ['control']);
-        await mainWindow.waitForTimeout(1000);
+        await electron.waitForCondition(
+          async () => await electron.isFindInPageOpen(),
+          {message: 'Find-in-page dialog did not open'}
+        );
       }
 
       // Verify find-in-page is open
@@ -212,7 +214,12 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
 
       // Press Escape to close
       await electron.sendKeys('Escape');
-      await mainWindow.waitForTimeout(500);
+
+      // Wait for find-in-page dialog to close
+      await electron.waitForCondition(
+        async () => !(await electron.isFindInPageOpen()),
+        {message: 'Find-in-page dialog did not close'}
+      );
 
       // Verify find-in-page is now closed
       expect(await electron.isFindInPageOpen()).toBe(false);
@@ -223,21 +230,19 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
     beforeEach(async () => {
       // Start from first tab for consistency
       await electron.sendKeys('1', ['control']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-1');
     });
 
     test('Meta+1 activates first tab', async () => {
       // Switch to another tab first
       await electron.sendKeys('2', ['control']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-2');
 
       // Press Meta+1 (Cmd+1 on Mac)
       await electron.sendKeys('1', ['meta']);
-      await mainWindow.waitForTimeout(500);
+      await electron.waitForActiveTab(mainWindow, 'test-service-1');
 
-      const activeTab = mainWindow.locator('.chrome-tab[active]');
-      const tabId = await activeTab.first().getAttribute('data-tab-id');
-      expect(tabId).toBe('test-service-1');
+      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-1');
     }, TEST_TIMEOUT);
   });
 });

@@ -15,10 +15,10 @@
  */
 
 /**
- * Get virtual key code for common keys
+ * Convert key string to virtual key code for CDP Input.dispatchKeyEvent
  * https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
  */
-function getVirtualKeyCode(key) {
+function toVirtualKeyCode(key) {
   const keyCodes = {
     F11: 122,
     F12: 123,
@@ -150,8 +150,8 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
         key: key,
         code: keyCode,
         text: text,
-        windowsVirtualKeyCode: getVirtualKeyCode(key),
-        nativeVirtualKeyCode: getVirtualKeyCode(key),
+        windowsVirtualKeyCode: toVirtualKeyCode(key),
+        nativeVirtualKeyCode: toVirtualKeyCode(key),
         modifiers: modifierBits
       });
 
@@ -163,8 +163,8 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
         type: 'keyUp',
         key: key,
         code: keyCode,
-        windowsVirtualKeyCode: getVirtualKeyCode(key),
-        nativeVirtualKeyCode: getVirtualKeyCode(key),
+        windowsVirtualKeyCode: toVirtualKeyCode(key),
+        nativeVirtualKeyCode: toVirtualKeyCode(key),
         modifiers: modifierBits
       });
 
@@ -172,6 +172,77 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
 
       // Wait for event to be processed
       await new Promise(resolve => setTimeout(resolve, 300));
+    },
+    /**
+     * Get the first window's fullscreen state
+     */
+    isFullScreen: async () => {
+      const windows = electronApp.windows();
+      if (windows.length === 0) {
+        throw new Error('No windows available');
+      }
+      // Use evaluate to check the window's fullscreen state
+      // BaseWindow.getAllWindows() returns all BaseWindow instances
+      return await electronApp.evaluate(async ({BaseWindow}) => {
+        const window = BaseWindow.getAllWindows()[0];
+        return window ? window.isFullScreen() : false;
+      });
+    },
+    /**
+     * Check if find-in-page dialog is currently open
+     */
+    isFindInPageOpen: async () => {
+      return await electronApp.evaluate(async ({BaseWindow}) => {
+        const window = BaseWindow.getAllWindows()[0];
+        if (!window) {
+          return false;
+        }
+        // Access the BaseWindow's contentView to check for find-in-page dialog
+        // The contentView property exists on BaseWindow instances
+        const contentView = window.contentView;
+        if (!contentView || !contentView.children) {
+          return false;
+        }
+        // Check if any child view has the isFindInPage property
+        return contentView.children.some(child => child.isFindInPage === true);
+      });
+    },
+    /**
+     * Wait for a condition to be true with polling
+     * @param {Function} conditionFn - Async function that returns true when condition is met
+     * @param {Object} options - Options for waiting
+     * @param {number} options.timeout - Maximum time to wait in ms (default: 5000)
+     * @param {number} options.interval - Polling interval in ms (default: 100)
+     * @param {string} options.message - Error message if timeout is reached
+     */
+    waitForCondition: async (conditionFn, {timeout = 5000, interval = 100, message = 'Condition not met'} = {}) => {
+      const startTime = Date.now();
+      while (Date.now() - startTime < timeout) {
+        if (await conditionFn()) {
+          return true;
+        }
+        await new Promise(resolve => setTimeout(resolve, interval));
+      }
+      throw new Error(`${message} (timeout after ${timeout}ms)`);
+    },
+    /**
+     * Get the currently active tab's data-tab-id attribute
+     * @param {Object} window - The Playwright window object
+     */
+    getActiveTabId: async window => {
+      const activeTab = window.locator('.chrome-tab[active]');
+      return await activeTab.first().getAttribute('data-tab-id');
+    },
+    /**
+     * Wait for the active tab to change to a specific tab ID
+     * @param {Object} window - The Playwright window object
+     * @param {string} expectedTabId - The expected tab ID
+     */
+    waitForActiveTab: async (window, expectedTabId) => {
+      await instance.waitForCondition(
+        async () => (await instance.getActiveTabId(window)) === expectedTabId,
+        {message: `Active tab did not change to ${expectedTabId}`}
+      );
     }
   };
 
