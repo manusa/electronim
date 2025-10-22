@@ -36,6 +36,9 @@ const mockWebContentsViewInstance = () => {
       // contents.findInPage(text[, options])
       findInPage: jest.fn(),
       focus: jest.fn(),
+      forcefullyCrashRenderer: jest.fn(),
+      getProcessId: jest.fn(() => 1000),
+      getTitle: jest.fn(() => ''),
       getURL: jest.fn(),
       // https://nodejs.org/api/events.html#emitterlistenerseventname
       listeners: jest.fn(eventName => instance.listeners[eventName] || []),
@@ -133,6 +136,13 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
       ipcMain.rawListeners(channel)[0](...args);
     }
   });
+  ipcRenderer.sendSync = jest.fn((channel, ...args) => {
+    const event = {returnValue: undefined};
+    if (ipcMain.rawListeners(channel)?.[0]) {
+      ipcMain.rawListeners(channel)[0](event, ...args);
+    }
+    return event.returnValue;
+  });
   // Menu
   const Menu = jest.fn(() => {
     const menuInstance = {
@@ -175,6 +185,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
       commandLine: {
         appendSwitch: jest.fn()
       },
+      getAppMetrics: jest.fn(() => []),
       getPath: jest.fn(),
       on: jest.fn(),
       exit: jest.fn(),

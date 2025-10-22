@@ -152,15 +152,26 @@ describe('Chrome Tabs Module module test suite', () => {
         disableNotifications: false
       });
     });
-    test('should always show Settings, Help, and DevTools options', async () => {
+    test('should always show Task Manager, Settings, Help, and DevTools options', async () => {
       // Given
       tabContainer.webContents.executeJavaScript.mockResolvedValue(null);
       // When
       await contextMenuListener(event, eventParams);
       // Then
+      expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'Task Manager'}));
       expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'Settings'}));
       expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'Help'}));
       expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label: 'DevTools'}));
+    });
+    test('should emit taskManagerOpenDialog event when Task Manager is clicked', async () => {
+      // Given
+      tabContainer.webContents.executeJavaScript.mockResolvedValue(null);
+      // When
+      await contextMenuListener(event, eventParams);
+      const taskManagerMenuItem = electron.MenuItem.mock.calls.find(call => call[0].label === 'Task Manager')[0];
+      taskManagerMenuItem.click();
+      // Then
+      expect(electron.ipcMain.emit).toHaveBeenCalledWith('taskManagerOpenDialog', event, eventParams);
     });
   });
   describe('newTabContainer', () => {
@@ -219,17 +230,20 @@ describe('Chrome Tabs Module module test suite', () => {
         contextMenuHandler({}, {x: 100, y: 200});
         menu = electron.Menu.mock.results.at(-1).value;
       });
-      test('should create menu with three items', () => {
-        expect(menu.entries).toHaveLength(3);
+      test('should create menu with five items', () => {
+        expect(menu.entries).toHaveLength(5);
+      });
+      test('should have Task Manager menu item', () => {
+        expect(menu.entries[0]).toEqual(expect.objectContaining({label: 'Task Manager'}));
       });
       test('should have Settings menu item', () => {
-        expect(menu.entries[0]).toEqual(expect.objectContaining({label: 'Settings'}));
+        expect(menu.entries[2]).toEqual(expect.objectContaining({label: 'Settings'}));
       });
       test('should have Help menu item', () => {
-        expect(menu.entries[1]).toEqual(expect.objectContaining({label: 'Help'}));
+        expect(menu.entries[3]).toEqual(expect.objectContaining({label: 'Help'}));
       });
       test('should have DevTools menu item', () => {
-        expect(menu.entries[2]).toEqual(expect.objectContaining({label: 'DevTools'}));
+        expect(menu.entries[4]).toEqual(expect.objectContaining({label: 'DevTools'}));
       });
       test('should popup menu at cursor position', () => {
         expect(menu.popup).toHaveBeenCalledWith({x: 100, y: 200});
@@ -252,19 +266,19 @@ describe('Chrome Tabs Module module test suite', () => {
       });
       test('Settings click should emit settingsOpenDialog event', () => {
         // When
-        menu.entries[0].click();
+        menu.entries[2].click();
         // Then
         expect(settingsListener).toHaveBeenCalledWith(expect.anything(), expect.anything());
       });
       test('Help click should emit helpOpenDialog event', () => {
         // When
-        menu.entries[1].click();
+        menu.entries[3].click();
         // Then
         expect(helpListener).toHaveBeenCalledWith(expect.anything(), expect.anything());
       });
       test('DevTools click should open DevTools in detached mode', () => {
         // When
-        menu.entries[2].click();
+        menu.entries[4].click();
         // Then
         expect(tabContainer.webContents.openDevTools).toHaveBeenCalledWith({mode: 'detach', activate: true});
       });
