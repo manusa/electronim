@@ -1,0 +1,115 @@
+/*
+   Copyright 2025 Marc Nuri San Felix
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
+.task-manager-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+}
+
+.task-manager-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.task-manager-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  flex: 1;
+  overflow-y: auto;
+  display: block;
+}
+
+.task-manager-table thead {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  background-color: var(--md-sys-color-surface-container);
+}
+
+.task-manager-table tbody {
+  display: block;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+}
+
+.task-manager-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.task-manager-table th,
+.task-manager-table td {
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.task-manager-table th {
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant);
+  position: sticky;
+  top: 0;
+  background-color: var(--md-sys-color-surface-container);
+}
+
+.task-manager-table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.task-manager-table tbody tr:hover {
+  background-color: var(--md-sys-color-surface-container-low);
+}
+
+.task-manager-table tbody tr.selected {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.task-column {
+  width: 40%;
+}
+
+.memory-column {
+  width: 20%;
+}
+
+.cpu-column {
+  width: 15%;
+}
+
+.network-column {
+  width: 15%;
+}
+
+.pid-column {
+  width: 10%;
+}
+
+.task-manager-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 0;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+}
