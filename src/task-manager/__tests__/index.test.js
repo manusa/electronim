@@ -31,7 +31,7 @@ describe('Task Manager module test suite', () => {
     };
     serviceManagerModule = {
       getServices: jest.fn(() => ({
-        '1': {
+        1: {
           webContents: {
             getTitle: jest.fn(() => 'Service 1'),
             getProcessId: jest.fn(() => 100),
@@ -39,7 +39,7 @@ describe('Task Manager module test suite', () => {
             reload: jest.fn()
           }
         },
-        '2': {
+        2: {
           webContents: {
             getTitle: jest.fn(() => 'Service 2'),
             getProcessId: jest.fn(() => 200),
@@ -169,7 +169,7 @@ describe('Task Manager module test suite', () => {
 
     test('uses service ID as name when title is falsy', () => {
       serviceManagerModule.getServices = jest.fn(() => ({
-        '1': {
+        1: {
           webContents: {
             getTitle: jest.fn(() => null),
             getProcessId: jest.fn(() => 100)

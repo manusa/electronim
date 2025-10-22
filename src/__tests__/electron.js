@@ -137,7 +137,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     }
   });
   ipcRenderer.sendSync = jest.fn((channel, ...args) => {
-    const event = {returnValue: undefined};
+    const event = {returnValue: null};
     if (ipcMain.rawListeners(channel)?.[0]) {
       ipcMain.rawListeners(channel)[0](event, ...args);
     }

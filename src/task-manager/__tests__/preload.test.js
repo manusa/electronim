@@ -59,7 +59,7 @@ describe('Task Manager Module preload test suite', () => {
 
   describe('preload.bundle', () => {
     beforeEach(() => {
-      globalThis.electron = undefined;
+      delete globalThis.electron;
     });
 
     test('creates an API', () => {

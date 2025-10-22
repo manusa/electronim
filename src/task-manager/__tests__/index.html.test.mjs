@@ -54,6 +54,6 @@ describe('Task Manager index.html test suite', () => {
     const cspMeta = doc.querySelector('meta[http-equiv="Content-Security-Policy"]');
 
     expect(cspMeta).toBeTruthy();
-    expect(cspMeta.content).toContain("script-src 'self'");
+    expect(cspMeta.content).toContain('script-src \'self\'');
   });
 });
