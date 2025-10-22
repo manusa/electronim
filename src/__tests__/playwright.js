@@ -230,10 +230,18 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
      * @param {Object} window - The Playwright window object
      */
     getActiveTabId: async window => {
-      // Wait for the active tab to exist before trying to get its ID
       const activeTab = window.locator('.chrome-tab[active]');
-      await activeTab.first().waitFor({state: 'attached', timeout: 10000});
-      return await activeTab.first().getAttribute('data-tab-id');
+      let tabId;
+      try {
+        tabId = await activeTab.first().getAttribute('data-tab-id', {timeout: 1000});
+      } catch {
+        // Ignore error and fallback
+      }
+      if (!tabId) {
+        await activeTab.first().waitFor({state: 'attached', timeout: 10000});
+        tabId = await activeTab.first().getAttribute('data-tab-id');
+      }
+      return tabId;
     },
     /**
      * Wait for the active tab to change to a specific tab ID
@@ -243,7 +251,7 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
     waitForActiveTab: async (window, expectedTabId) => {
       await instance.waitForCondition(
         async () => (await instance.getActiveTabId(window)) === expectedTabId,
-        {message: `Active tab did not change to ${expectedTabId}`}
+        {timeout: 15000, message: `Active tab did not change to ${expectedTabId}`}
       );
     }
   };
