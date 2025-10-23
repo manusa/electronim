@@ -15,8 +15,6 @@
  */
 import {html, render, useState, useLayoutEffect, Button, Icon, TopAppBar} from '../components/index.mjs';
 
-const {close, getMetrics, killProcess} = globalThis.electron;
-
 const getTaskManagerRoot = () => document.querySelector('.task-manager-root');
 
 const formatBytes = bytes => {
@@ -69,7 +67,7 @@ const TaskManagerContent = () => {
   const [selectedTaskId, setSelectedTaskId] = useState(null);
 
   const refreshMetrics = () => {
-    const metrics = getMetrics();
+    const metrics = globalThis.electron.getMetrics();
     setTasks(metrics);
   };
 
@@ -81,14 +79,14 @@ const TaskManagerContent = () => {
 
   const handleEndTask = () => {
     if (selectedTaskId) {
-      killProcess(selectedTaskId);
+      globalThis.electron.killProcess(selectedTaskId);
       setSelectedTaskId(null);
       setTimeout(refreshMetrics, 500);
     }
   };
 
   return html`
-    <${TopAppBar} icon=${Icon.arrowBack} iconClick=${() => close()} headline='Task Manager'/>
+    <${TopAppBar} icon=${Icon.arrowBack} iconClick=${() => globalThis.electron.close()} headline='Task Manager'/>
     <div class="task-manager-content">
       <table class="task-manager-table">
         <${TableHeader} />

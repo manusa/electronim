@@ -15,40 +15,43 @@
  */
 describe('Task Manager Module preload test suite', () => {
   let electron;
-  let api;
-
   beforeEach(() => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
-    api = require('../preload').api;
+    globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
   });
-
   describe('preload (just for coverage and sanity, see bundle tests)', () => {
+    beforeEach(() => {
+      require('../preload');
+    });
     describe('creates an API', () => {
       test('with entries', () => {
-        expect(Object.keys(api)).toHaveLength(3);
+        expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
+          close: expect.toBeFunction(),
+          getMetrics: expect.toBeFunction(),
+          killProcess: expect.toBeFunction()
+        });
       });
-
-      test('with close function', () => {
+    });
+    describe('API', () => {
+      let api;
+      beforeEach(() => {
+        api = electron.contextBridge.exposeInMainWorld.mock.calls[0][1];
+      });
+      test('close sends closeDialog event', () => {
         api.close();
-
         expect(electron.ipcRenderer.sendSync).toHaveBeenCalledWith('closeDialog');
       });
-
-      test('with getMetrics function', () => {
+      test('getMetrics sends taskManagerGetMetrics event', () => {
         electron.ipcRenderer.sendSync.mockReturnValue([
           {id: '1', name: 'Service 1', pid: 100, memory: {}, cpu: {}}
         ]);
-
         const result = api.getMetrics();
-
         expect(electron.ipcRenderer.sendSync).toHaveBeenCalledWith('taskManagerGetMetrics');
         expect(result).toHaveLength(1);
       });
-
-      test('with killProcess function', () => {
+      test('killProcess sends taskManagerKillProcess event', () => {
         api.killProcess('test-id');
-
         expect(electron.ipcRenderer.send).toHaveBeenCalledWith(
           'taskManagerKillProcess',
           {id: 'test-id'}
@@ -56,23 +59,16 @@ describe('Task Manager Module preload test suite', () => {
       });
     });
   });
-
   describe('preload.bundle', () => {
     beforeEach(() => {
-      delete globalThis.electron;
-    });
-
-    test('creates an API', () => {
       require('../../../bundles/task-manager.preload');
-
-      expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith(
-        'electron',
-        expect.objectContaining({
-          close: expect.any(Function),
-          getMetrics: expect.any(Function),
-          killProcess: expect.any(Function)
-        })
-      );
+    });
+    test('creates an API', () => {
+      expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
+        close: expect.toBeFunction(),
+        getMetrics: expect.toBeFunction(),
+        killProcess: expect.toBeFunction()
+      });
     });
   });
 });

@@ -13,15 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+/* eslint-disable no-undef */
 const {contextBridge, ipcRenderer} = require('electron');
-const {APP_EVENTS} = require('../constants');
 
-const api = {
+contextBridge.exposeInMainWorld('electron', {
   close: () => ipcRenderer.sendSync(APP_EVENTS.closeDialog),
   getMetrics: () => ipcRenderer.sendSync(APP_EVENTS.taskManagerGetMetrics),
   killProcess: id => ipcRenderer.send(APP_EVENTS.taskManagerKillProcess, {id})
-};
-
-contextBridge.exposeInMainWorld('electron', api);
-
-module.exports = {api};
+});
