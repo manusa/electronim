@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+@import '../styles/main.css';
 
 .task-manager-root {
   display: flex;
@@ -43,7 +44,7 @@
   display: table;
   width: 100%;
   table-layout: fixed;
-  background-color: var(--md-sys-color-surface-container);
+  background-color: var(--md-sys-color-surface-variant);
 }
 
 .task-manager-table tbody {
@@ -70,7 +71,7 @@
   color: var(--md-sys-color-on-surface-variant);
   position: sticky;
   top: 0;
-  background-color: var(--md-sys-color-surface-container);
+  background-color: var(--md-sys-color-surface-variant);
 }
 
 .task-manager-table tbody tr {
@@ -79,7 +80,7 @@
 }
 
 .task-manager-table tbody tr:hover {
-  background-color: var(--md-sys-color-surface-container-low);
+  background-color: var(--md-sys-color-surface-variant);
 }
 
 .task-manager-table tbody tr.selected {
