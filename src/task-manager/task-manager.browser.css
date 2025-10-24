@@ -100,8 +100,13 @@
   color: var(--md-sys-color-on-primary-container);
 }
 
+.checkbox-column {
+  width: 48px;
+  text-align: center;
+}
+
 .task-column {
-  width: 40%;
+  width: calc(40% - 48px);
 }
 
 .memory-column {

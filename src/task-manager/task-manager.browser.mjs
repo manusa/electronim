@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {html, render, useState, useLayoutEffect, Button, Icon, TopAppBar} from '../components/index.mjs';
+import {html, render, useState, useLayoutEffect, Button, Checkbox, Icon, TopAppBar} from '../components/index.mjs';
 
 const getTaskManagerRoot = () => document.querySelector('.task-manager-root');
 
@@ -35,6 +35,7 @@ const formatCpu = cpu => {
 const TableHeader = () => html`
   <thead>
     <tr>
+      <th class="checkbox-column"></th>
       <th class="task-column">Task</th>
       <th class="memory-column">Memory Footprint</th>
       <th class="cpu-column">CPU</th>
@@ -44,15 +45,21 @@ const TableHeader = () => html`
   </thead>
 `;
 
-const TableRow = ({task, isSelected, onSelect}) => {
-  const handleClick = () => onSelect(task.id);
+const TableRow = ({task, isSelected, onToggle}) => {
+  const handleRowClick = () => onToggle(task.id);
 
   return html`
     <tr
       class=${isSelected ? 'selected' : ''}
-      onClick=${handleClick}
+      onClick=${handleRowClick}
       data-task-id=${task.id}
     >
+      <td class="checkbox-column">
+        <${Checkbox}
+          checked=${isSelected}
+          onClick=${handleRowClick}
+        />
+      </td>
       <td class="task-column">${task.name}</td>
       <td class="memory-column">${formatBytes(task.memory.workingSetSize)}</td>
       <td class="cpu-column">${formatCpu(task.cpu)}</td>
@@ -64,7 +71,7 @@ const TableRow = ({task, isSelected, onSelect}) => {
 
 const TaskManagerContent = () => {
   const [tasks, setTasks] = useState([]);
-  const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const [selectedTaskIds, setSelectedTaskIds] = useState([]);
 
   const refreshMetrics = () => {
     const metrics = globalThis.electron.getMetrics();
@@ -77,10 +84,21 @@ const TaskManagerContent = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const handleToggleTask = taskId => {
+    setSelectedTaskIds(prevSelected => {
+      if (prevSelected.includes(taskId)) {
+        return prevSelected.filter(id => id !== taskId);
+      }
+      return [...prevSelected, taskId];
+    });
+  };
+
   const handleEndTask = () => {
-    if (selectedTaskId) {
-      globalThis.electron.killProcess(selectedTaskId);
-      setSelectedTaskId(null);
+    if (selectedTaskIds.length > 0) {
+      selectedTaskIds.forEach(taskId => {
+        globalThis.electron.killProcess(taskId);
+      });
+      setSelectedTaskIds([]);
       setTimeout(refreshMetrics, 500);
     }
   };
@@ -95,8 +113,8 @@ const TaskManagerContent = () => {
             <${TableRow}
               key=${task.id}
               task=${task}
-              isSelected=${task.id === selectedTaskId}
-              onSelect=${setSelectedTaskId}
+              isSelected=${selectedTaskIds.includes(task.id)}
+              onToggle=${handleToggleTask}
             />
           `)}
         </tbody>
@@ -104,10 +122,10 @@ const TaskManagerContent = () => {
       <div class="task-manager-actions">
         <${Button}
           onClick=${handleEndTask}
-          disabled=${!selectedTaskId}
+          disabled=${selectedTaskIds.length === 0}
           type=${Button.types.outlined}
         >
-          End Task
+          End Task${selectedTaskIds.length > 1 ? 's' : ''}
         </${Button}>
       </div>
     </div>

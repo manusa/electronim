@@ -146,7 +146,7 @@ describe('Task Manager in Browser test suite', () => {
       expect(firstRow.classList.contains('selected')).toBe(true);
     });
 
-    test('selecting a different row changes selection', async () => {
+    test('selecting multiple rows keeps all selected', async () => {
       const firstRow = screen.getByText('WhatsApp Web').closest('tr');
       const secondRow = screen.getByText('Telegram Web').closest('tr');
 
@@ -156,8 +156,20 @@ describe('Task Manager in Browser test suite', () => {
       secondRow.click();
       await waitFor(() => secondRow.classList.contains('selected'));
 
-      expect(firstRow.classList.contains('selected')).toBe(false);
+      expect(firstRow.classList.contains('selected')).toBe(true);
       expect(secondRow.classList.contains('selected')).toBe(true);
+    });
+
+    test('clicking a selected row deselects it', async () => {
+      const firstRow = screen.getByText('WhatsApp Web').closest('tr');
+
+      firstRow.click();
+      await waitFor(() => firstRow.classList.contains('selected'));
+
+      firstRow.click();
+      await waitFor(() => !firstRow.classList.contains('selected'));
+
+      expect(firstRow.classList.contains('selected')).toBe(false);
     });
   });
 
@@ -199,6 +211,40 @@ describe('Task Manager in Browser test suite', () => {
       });
 
       expect(endTaskButton.disabled).toBe(true);
+    });
+
+    test('End Tasks button text pluralizes with multiple selections', async () => {
+      const firstRow = screen.getByText('WhatsApp Web').closest('tr');
+      const secondRow = screen.getByText('Telegram Web').closest('tr');
+
+      firstRow.click();
+      await waitFor(() => screen.getByText('End Task'));
+
+      secondRow.click();
+      await waitFor(() => screen.getByText('End Tasks'));
+
+      expect(screen.getByText('End Tasks')).toBeTruthy();
+    });
+
+    test('clicking End Tasks calls killProcess for all selected', async () => {
+      const firstRow = screen.getByText('WhatsApp Web').closest('tr');
+      const secondRow = screen.getByText('Telegram Web').closest('tr');
+
+      firstRow.click();
+      secondRow.click();
+
+      await waitFor(() => {
+        const endTaskButton = screen.getByText('End Tasks').closest('button');
+        return !endTaskButton.disabled;
+      });
+
+      const endTaskButton = screen.getByText('End Tasks').closest('button');
+      endTaskButton.click();
+
+      await waitFor(() => {
+        expect(electron.killProcess).toHaveBeenCalledWith('service-1');
+        expect(electron.killProcess).toHaveBeenCalledWith('service-2');
+      });
     });
   });
 
