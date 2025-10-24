@@ -23,7 +23,7 @@
     "pretest": "eslint -c eslint.config.mjs . && node webpack.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "test:e2e": "NODE_OPTIONS=--experimental-vm-modules jest --testMatch='**/?(*.)+(spec|test).e2e.?([mc])[jt]s?(x)' --verbose",
-    "prestart": "node webpack.js --no-lib",
+    "prestart": "node webpack.js",
     "start": "electron .",
     "prepack": "node webpack.js",
     "prepublish": "node webpack.js",
