@@ -20,12 +20,18 @@ if (process.platform === 'linux') {
   app.commandLine.appendSwitch('gtk-version', '3');
 }
 const {registerAppShortcuts} = require('./base-window');
-const {parseSettingsPath} = require('./cli');
+const {parseSettingsPath, parseUserData} = require('./cli');
 const {init, quit} = require('./main');
 const {setSettingsPath} = require('./settings');
 
-// Parse command line arguments for custom settings path
 const args = process.argv.slice(process.defaultApp ? 2 : 1);
+// Parse command line arguments for custom user data directory
+const customUserData = parseUserData(args);
+if (customUserData) {
+  app.setPath('userData', customUserData);
+}
+
+// Parse command line arguments for custom settings path
 const customSettingsPath = parseSettingsPath(args);
 if (customSettingsPath) {
   setSettingsPath(customSettingsPath);

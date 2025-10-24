@@ -119,4 +119,54 @@ describe('Entrypoint test suite', () => {
       });
     });
   });
+  describe('Custom user data path', () => {
+    let originalArgv;
+    let customUserDataPath;
+    beforeEach(() => {
+      originalArgv = process.argv;
+      jest.resetModules();
+      app = require('../__tests__').testElectron().app;
+      customUserDataPath = '/custom/user/data/path';
+    });
+    afterEach(() => {
+      process.argv = originalArgv;
+    });
+    describe('when --user-data flag is provided with valid path', () => {
+      beforeEach(() => {
+        process.argv = ['node', 'electron', '--user-data', customUserDataPath];
+        require('../');
+      });
+      test('sets user data path before app initialization', () => {
+        expect(app.setPath).toHaveBeenCalledWith('userData', customUserDataPath);
+      });
+    });
+    describe('when --user-data flag is not provided', () => {
+      beforeEach(() => {
+        process.argv = ['node', 'electron'];
+        require('../');
+      });
+      test('does not set custom user data path', () => {
+        expect(app.setPath).not.toHaveBeenCalledWith('userData', expect.anything());
+      });
+    });
+    describe('when running as packaged app (without defaultApp)', () => {
+      beforeEach(() => {
+        process.defaultApp = false;
+        process.argv = ['electron', '--user-data', customUserDataPath];
+        require('../');
+      });
+      test('sets user data path from argv[1] onwards', () => {
+        expect(app.setPath).toHaveBeenCalledWith('userData', customUserDataPath);
+      });
+    });
+    describe('when both --user-data and --settings-path are provided', () => {
+      beforeEach(() => {
+        process.argv = ['node', 'electron', '--user-data', customUserDataPath, '--settings-path', '/custom/settings.json'];
+        require('../');
+      });
+      test('sets both paths correctly', () => {
+        expect(app.setPath).toHaveBeenCalledWith('userData', customUserDataPath);
+      });
+    });
+  });
 });
