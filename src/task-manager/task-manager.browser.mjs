@@ -21,7 +21,7 @@ const formatBytes = bytes => {
   if (!bytes || bytes === 0) {
     return '0 MB';
   }
-  const mb = bytes / (1024 * 1024);
+  const mb = bytes / 1024 / 1024;
   return `${mb.toFixed(1)} MB`;
 };
 
@@ -48,6 +48,8 @@ const TableHeader = () => html`
 const TableRow = ({task, isSelected, onToggle}) => {
   const handleRowClick = () => onToggle(task.id);
 
+  // workingSetSize is in KB
+  const memoryUsageInBytes = (task.memory?.workingSetSize || 0) * 1024;
   return html`
     <tr
       class=${isSelected ? 'selected' : ''}
@@ -61,7 +63,7 @@ const TableRow = ({task, isSelected, onToggle}) => {
         />
       </td>
       <td class="task-column">${task.name}</td>
-      <td class="memory-column">${formatBytes(task.memory.workingSetSize)}</td>
+      <td class="memory-column">${formatBytes(memoryUsageInBytes)}</td>
       <td class="cpu-column">${formatCpu(task.cpu)}</td>
       <td class="network-column">0</td>
       <td class="pid-column">${task.pid}</td>

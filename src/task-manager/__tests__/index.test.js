@@ -34,7 +34,8 @@ describe('Task Manager module test suite', () => {
         1: {
           webContents: {
             getTitle: jest.fn(() => 'Service 1'),
-            getOSProcessId: jest.fn(() => 100),
+            getProcessId: jest.fn(() => 100),
+            getOSProcessId: jest.fn(() => 1000),
             forcefullyCrashRenderer: jest.fn(),
             reload: jest.fn()
           }
@@ -42,7 +43,8 @@ describe('Task Manager module test suite', () => {
         2: {
           webContents: {
             getTitle: jest.fn(() => 'Service 2'),
-            getOSProcessId: jest.fn(() => 200),
+            getProcessId: jest.fn(() => 200),
+            getOSProcessId: jest.fn(() => 2000),
             forcefullyCrashRenderer: jest.fn(),
             reload: jest.fn()
           }
@@ -56,12 +58,12 @@ describe('Task Manager module test suite', () => {
     electron.app.getAppMetrics.mockReturnValue([
       {
         pid: 100,
-        memory: {workingSetSize: 52428800},
+        memory: {workingSetSize: 51200}, // 50 MB in KB
         cpu: {percentCPUUsage: 5.5}
       },
       {
         pid: 200,
-        memory: {workingSetSize: 104857600},
+        memory: {workingSetSize: 102400}, // 100 MB in KB
         cpu: {percentCPUUsage: 10.2}
       }
     ]);
@@ -190,20 +192,20 @@ describe('Task Manager module test suite', () => {
       expect(result[0]).toMatchObject({
         id: '1',
         name: 'Service 1',
-        pid: 100
+        pid: 1000
       });
       expect(result[1]).toMatchObject({
         id: '2',
         name: 'Service 2',
-        pid: 200
+        pid: 2000
       });
     });
 
     test('includes memory metrics from app metrics', () => {
       const result = taskManagerModule.getMetrics(serviceManagerModule)();
 
-      expect(result[0].memory).toEqual({workingSetSize: 52428800});
-      expect(result[1].memory).toEqual({workingSetSize: 104857600});
+      expect(result[0].memory).toEqual({workingSetSize: 51200});
+      expect(result[1].memory).toEqual({workingSetSize: 102400});
     });
 
     test('includes CPU metrics from app metrics', () => {
@@ -218,7 +220,8 @@ describe('Task Manager module test suite', () => {
         1: {
           webContents: {
             getTitle: jest.fn(() => null),
-            getOSProcessId: jest.fn(() => 100)
+            getProcessId: jest.fn(() => 100),
+            getOSProcessId: jest.fn(() => 1000)
           }
         }
       }));

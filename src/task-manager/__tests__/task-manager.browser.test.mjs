@@ -29,14 +29,14 @@ describe('Task Manager in Browser test suite', () => {
           id: 'service-1',
           name: 'WhatsApp Web',
           pid: 12345,
-          memory: {workingSetSize: 104857600},
+          memory: {workingSetSize: 102400}, // 100 MB in KB
           cpu: {percentCPUUsage: 5.5}
         },
         {
           id: 'service-2',
           name: 'Telegram Web',
           pid: 12346,
-          memory: {workingSetSize: 52428800},
+          memory: {workingSetSize: 51200}, // 50 MB in KB
           cpu: {percentCPUUsage: 2.3}
         }
       ]),

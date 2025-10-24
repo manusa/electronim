@@ -32,13 +32,13 @@ const getMetrics = serviceManagerModule => () => {
   const services = serviceManagerModule.getServices ? serviceManagerModule.getServices() : {};
 
   return Object.entries(services).map(([id, service]) => {
-    const pid = service.webContents.getOSProcessId();
-    const processMetrics = appMetrics.find(m => m.pid === pid);
+    const osPid = service.webContents.getOSProcessId();
+    const processMetrics = appMetrics.find(m => m.pid === osPid);
 
     return {
       id,
       name: service.webContents.getTitle() || id,
-      pid,
+      pid: osPid,
       memory: processMetrics ? processMetrics.memory : {},
       cpu: processMetrics ? processMetrics.cpu : {}
     };
