@@ -34,7 +34,7 @@ describe('Task Manager module test suite', () => {
         1: {
           webContents: {
             getTitle: jest.fn(() => 'Service 1'),
-            getProcessId: jest.fn(() => 100),
+            getOSProcessId: jest.fn(() => 100),
             forcefullyCrashRenderer: jest.fn(),
             reload: jest.fn()
           }
@@ -42,7 +42,7 @@ describe('Task Manager module test suite', () => {
         2: {
           webContents: {
             getTitle: jest.fn(() => 'Service 2'),
-            getProcessId: jest.fn(() => 200),
+            getOSProcessId: jest.fn(() => 200),
             forcefullyCrashRenderer: jest.fn(),
             reload: jest.fn()
           }
@@ -126,6 +126,52 @@ describe('Task Manager module test suite', () => {
         expect(webPreferences.contextIsolation).toBe(true);
       });
     });
+
+    describe('event listeners', () => {
+      test('registers taskManagerGetMetrics listener', () => {
+        const onSpy = jest.spyOn(electron.ipcMain, 'on');
+        openDialog();
+
+        expect(onSpy).toHaveBeenCalledWith(
+          'taskManagerGetMetrics',
+          expect.any(Function)
+        );
+        onSpy.mockRestore();
+      });
+
+      test('registers taskManagerKillProcess listener', () => {
+        const onSpy = jest.spyOn(electron.ipcMain, 'on');
+        openDialog();
+
+        expect(onSpy).toHaveBeenCalledWith(
+          'taskManagerKillProcess',
+          expect.any(Function)
+        );
+        onSpy.mockRestore();
+      });
+
+      test('removes event listeners when webContents is destroyed', () => {
+        const removeListenerSpy = jest.spyOn(electron.ipcMain, 'removeListener');
+        openDialog();
+
+        const view = electron.WebContentsView.mock.results[0].value;
+        const destroyedCallback = view.webContents.on.mock.calls.find(
+          call => call[0] === 'destroyed'
+        )[1];
+
+        destroyedCallback();
+
+        expect(removeListenerSpy).toHaveBeenCalledWith(
+          'taskManagerGetMetrics',
+          expect.any(Function)
+        );
+        expect(removeListenerSpy).toHaveBeenCalledWith(
+          'taskManagerKillProcess',
+          expect.any(Function)
+        );
+        removeListenerSpy.mockRestore();
+      });
+    });
   });
 
   describe('getMetrics', () => {
@@ -172,7 +218,7 @@ describe('Task Manager module test suite', () => {
         1: {
           webContents: {
             getTitle: jest.fn(() => null),
-            getProcessId: jest.fn(() => 100)
+            getOSProcessId: jest.fn(() => 100)
           }
         }
       }));
