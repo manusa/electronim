@@ -67,7 +67,6 @@ describe('Task Manager in Browser test suite', () => {
       expect(screen.getByText('Task')).toBeTruthy();
       expect(screen.getByText('Memory Footprint')).toBeTruthy();
       expect(screen.getByText('CPU')).toBeTruthy();
-      expect(screen.getByText('Network')).toBeTruthy();
       expect(screen.getByText('Process ID')).toBeTruthy();
     });
 
@@ -101,15 +100,6 @@ describe('Task Manager in Browser test suite', () => {
     test('displays process IDs', () => {
       expect(screen.getByText('12345')).toBeTruthy();
       expect(screen.getByText('12346')).toBeTruthy();
-    });
-
-    test('displays network as 0', () => {
-      const networkCells = document.querySelectorAll('.network-column');
-      const dataNetworkCells = Array.from(networkCells).filter(
-        cell => cell.tagName === 'TD'
-      );
-
-      expect(dataNetworkCells.every(cell => cell.textContent === '0')).toBe(true);
     });
   });
 

@@ -44,7 +44,6 @@ const TableHeader = ({allSelected, onToggleAll}) => html`
       <th class="task-column">Task</th>
       <th class="memory-column">Memory Footprint</th>
       <th class="cpu-column">CPU</th>
-      <th class="network-column">Network</th>
       <th class="pid-column">Process ID</th>
     </tr>
   </thead>
@@ -70,7 +69,6 @@ const TableRow = ({task, isSelected, onToggle}) => {
       <td class="task-column">${task.name}</td>
       <td class="memory-column">${formatBytes(memoryUsageInBytes)}</td>
       <td class="cpu-column">${formatCpu(task.cpu)}</td>
-      <td class="network-column">0</td>
       <td class="pid-column">${task.pid}</td>
     </tr>
   `;
