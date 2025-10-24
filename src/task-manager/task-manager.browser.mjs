@@ -26,7 +26,7 @@ const formatBytes = bytes => {
 };
 
 const formatCpu = cpu => {
-  if (!cpu || !cpu.percentCPUUsage) {
+  if (!cpu?.percentCPUUsage) {
     return '0.0';
   }
   return cpu.percentCPUUsage.toFixed(1);
@@ -93,7 +93,7 @@ const TaskManagerContent = () => {
       const inner = document.createElement('div');
       outer.appendChild(inner);
       const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
-      outer.parentNode.removeChild(outer);
+      outer.remove();
       document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
     };
 
@@ -122,9 +122,9 @@ const TaskManagerContent = () => {
 
   const handleEndTask = () => {
     if (selectedTaskIds.length > 0) {
-      selectedTaskIds.forEach(taskId => {
+      for (const taskId of selectedTaskIds) {
         globalThis.electron.killProcess(taskId);
-      });
+      }
       setSelectedTaskIds([]);
       setTimeout(refreshMetrics, 500);
     }
