@@ -39,6 +39,7 @@ Improve your productivity by combining all your instant messaging applications (
 - 🗕 System Tray.
 - 📌 Always on top: Keep ElectronIM window on top of other applications.
 - 🔎 Find in page.
+- 📊 Task Manager: Monitor and manage application processes with memory and CPU usage metrics.
 - 🚫 No tracking: ElectronIM respects your privacy, no account registration is needed and no telemetry, analytics, or tracking of any kind is performed.
 
 Check the GitHub repository (https://github.com/manusa/electronim) for documentation and source code.

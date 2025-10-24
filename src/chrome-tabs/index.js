@@ -74,6 +74,11 @@ const handleContextMenu = viewOrWindow => async (event, params) => {
   }
 
   menu.append(new MenuItem({
+    label: 'Task Manager',
+    click: () => eventBus.emit(APP_EVENTS.taskManagerOpenDialog, event, params)
+  }));
+  menu.append(new MenuItem({type: 'separator'}));
+  menu.append(new MenuItem({
     label: 'Settings',
     click: () => eventBus.emit(APP_EVENTS.settingsOpenDialog, event, params)
   }));

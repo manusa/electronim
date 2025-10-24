@@ -200,10 +200,13 @@ const canNotify = tabId => {
   return currentTab ? !currentTab.disableNotifications : true;
 };
 
+const getServices = () => services;
+
 module.exports = {
   addServices,
   sortServices,
   getService,
+  getServices,
   getServiceAt,
   getActiveService,
   setActiveService,

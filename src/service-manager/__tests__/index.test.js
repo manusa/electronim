@@ -51,6 +51,27 @@ describe('Service Manager module test suite', () => {
       expect(result).toBeNull();
     });
   });
+  describe('getServices', () => {
+    test('returns all services as object', () => {
+      // Given
+      serviceManager.addServices({send: jest.fn()})([
+        {id: 'service1', url: 'https://service1.com'},
+        {id: 'service2', url: 'https://service2.com'}
+      ]);
+      // When
+      const result = serviceManager.getServices();
+      // Then
+      expect(Object.keys(result)).toHaveLength(2);
+      expect(result.service1).toBeDefined();
+      expect(result.service2).toBeDefined();
+    });
+    test('returns empty object when no services', () => {
+      // When
+      const result = serviceManager.getServices();
+      // Then
+      expect(result).toEqual({});
+    });
+  });
   describe('Service traversal functions', () => {
     beforeEach(() => {
       serviceManager.addServices({send: jest.fn()})([

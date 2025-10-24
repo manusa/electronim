@@ -31,6 +31,7 @@ const {
   getAvailableDictionaries, getAvailableNativeDictionaries, loadDictionaries, getEnabledDictionaries
 } = require('../spell-check');
 const serviceManager = require('../service-manager');
+const {openTaskManagerDialog} = require('../task-manager');
 const {initTray} = require('../tray');
 const {initBrowserVersions, userAgentForWebContents} = require('../user-agent');
 
@@ -310,6 +311,7 @@ const initGlobalListeners = () => {
   eventBus.on(APP_EVENTS.tabSwitchToPosition, handleTabSwitchToPosition);
   eventBus.on(APP_EVENTS.tabTraverseNext, handleTabTraverse(serviceManager.getNextService));
   eventBus.on(APP_EVENTS.tabTraversePrevious, handleTabTraverse(serviceManager.getPreviousService));
+  eventBus.on(APP_EVENTS.taskManagerOpenDialog, openTaskManagerDialog(mainWindow, serviceManager));
   eventBus.on(APP_EVENTS.trayInit, initTray);
 };
 

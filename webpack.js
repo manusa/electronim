@@ -30,7 +30,8 @@ const PRELOAD_ENTRIES = [
   'find-in-page',
   'help',
   'settings',
-  'service-manager'
+  'service-manager',
+  'task-manager'
 ];
 
 const ESM_ENTRIES = {
