@@ -32,10 +32,13 @@ npm install  # Install dependencies - takes ~55 seconds
 
 ### Running the Application
 - `npm run prestart && npm start` - Build and run the Electron application locally
+- `npm start -- --user-data /path/to/userdata` - Run with a custom application data directory (useful for running multiple instances)
 - `npm start -- --settings-path /path/to/settings.json` - Run with a custom settings file location (useful for testing or multiple profiles)
+- `npm start -- --user-data /path/to/instance1 --settings-path /path/to/instance1/settings.json` - Run with both custom user data and settings paths
 - In CI/headless environments: `DISPLAY=:99 ./node_modules/.bin/electron . --no-sandbox`
 - The application requires X11 display and may need sandbox disabled in CI environments
 - **Global NPX usage**: `npx electronim` - Installs and runs the latest published version from npm registry
+- **Multiple instances**: Use `--user-data` to run multiple instances with separate application data (profiles, cache, sessions, etc.)
 
 ### Building Platform Packages
 - `npm run build:linux` - Build Linux packages (AppImage, snap, tar.gz). NEVER CANCEL - May take 30+ minutes. Set timeout to 60+ minutes.
@@ -142,6 +145,7 @@ The settings system uses Preact components with Material Design 3 styling:
 - Settings UI is at `src/settings/`
 - Browser tests cover URL validation and settings persistence
 - Settings include service tabs, spell check languages, and other configuration
+- Custom application data directory can be specified via `--user-data` command-line argument to run multiple instances or isolate application data
 - Custom settings path can be specified via `--settings-path` command-line argument for testing or multi-profile support
 - The `setSettingsPath()` function in `src/settings/index.js` allows programmatic override of the default settings location
 

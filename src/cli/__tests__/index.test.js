@@ -16,12 +16,13 @@
 
 describe('CLI module test suite', () => {
   let parseSettingsPath;
+  let parseUserData;
   let consoleErrorSpy;
 
   beforeEach(() => {
     jest.resetModules();
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    ({parseSettingsPath} = require('../'));
+    ({parseSettingsPath, parseUserData} = require('../'));
   });
 
   afterEach(() => {
@@ -136,6 +137,118 @@ describe('CLI module test suite', () => {
       const result = parseSettingsPath(args);
       // Then
       expect(result).toBe('/path/with-special_chars.123/settings.json');
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('parseUserData', () => {
+    test('with no --user-data flag, should return null', () => {
+      // Given
+      const args = ['--some-other-flag', 'value'];
+      // When
+      const result = parseUserData(args);
+      // Then
+      expect(result).toBeNull();
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+
+    test('with valid --user-data, should return the path', () => {
+      // Given
+      const args = ['--user-data', '/path/to/userdata'];
+      // When
+      const result = parseUserData(args);
+      // Then
+      expect(result).toBe('/path/to/userdata');
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+
+    test('with relative --user-data, should return the path', () => {
+      // Given
+      const args = ['--user-data', './userdata'];
+      // When
+      const result = parseUserData(args);
+      // Then
+      expect(result).toBe('./userdata');
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+
+    test('with --user-data and other flags, should return the path', () => {
+      // Given
+      const args = ['--no-sandbox', '--user-data', '/custom/userdata', '--disable-gpu'];
+      // When
+      const result = parseUserData(args);
+      // Then
+      expect(result).toBe('/custom/userdata');
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+
+    test('with --user-data but no value, should return null and log error', () => {
+      // Given
+      const args = ['--user-data'];
+      // When
+      const result = parseUserData(args);
+      // Then
+      expect(result).toBeNull();
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Error: --user-data requires a valid directory path argument');
+    });
+
+    test('with --user-data followed by another flag, should return null and log error', () => {
+      // Given
+      const args = ['--user-data', '--no-sandbox'];
+      // When
+      const result = parseUserData(args);
+      // Then
+      expect(result).toBeNull();
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Error: --user-data requires a valid directory path argument');
+    });
+
+    test('with --user-data containing null byte, should return null and log error', () => {
+      // Given
+      const args = ['--user-data', '/path/to/\0userdata'];
+      // When
+      const result = parseUserData(args);
+      // Then
+      expect(result).toBeNull();
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Error: --user-data contains invalid characters');
+    });
+
+    test('with empty string after --user-data, should return null and log error', () => {
+      // Given
+      const args = ['--user-data', ''];
+      // When
+      const result = parseUserData(args);
+      // Then
+      expect(result).toBeNull();
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Error: --user-data requires a valid directory path argument');
+    });
+
+    test('with --user-data at end of args, should return null and log error', () => {
+      // Given
+      const args = ['--no-sandbox', '--user-data'];
+      // When
+      const result = parseUserData(args);
+      // Then
+      expect(result).toBeNull();
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Error: --user-data requires a valid directory path argument');
+    });
+
+    test('with path containing spaces, should return the path', () => {
+      // Given
+      const args = ['--user-data', '/path with spaces/userdata'];
+      // When
+      const result = parseUserData(args);
+      // Then
+      expect(result).toBe('/path with spaces/userdata');
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+
+    test('with path containing special characters, should return the path', () => {
+      // Given
+      const args = ['--user-data', '/path/with-special_chars.123/userdata'];
+      // When
+      const result = parseUserData(args);
+      // Then
+      expect(result).toBe('/path/with-special_chars.123/userdata');
       expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
   });

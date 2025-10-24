@@ -44,4 +44,34 @@ const parseSettingsPath = args => {
   return settingsPathValue;
 };
 
-module.exports = {parseSettingsPath};
+/**
+ * Parses command line arguments to extract the custom user data directory path.
+ * Validates that the value after --user-data is a valid path and not another flag.
+ *
+ * @param {string[]} args - Command line arguments array
+ * @returns {string|null} The user data path if valid, null otherwise
+ */
+const parseUserData = args => {
+  const userDataIndex = args.indexOf('--user-data');
+  if (userDataIndex === -1) {
+    return null;
+  }
+
+  const userDataValue = args[userDataIndex + 1];
+
+  // Validate that there is a value and it's not another flag
+  if (!userDataValue || userDataValue.startsWith('--')) {
+    console.error('Error: --user-data requires a valid directory path argument');
+    return null;
+  }
+
+  // Basic validation: path should not contain null bytes (security)
+  if (userDataValue.includes('\0')) {
+    console.error('Error: --user-data contains invalid characters');
+    return null;
+  }
+
+  return userDataValue;
+};
+
+module.exports = {parseSettingsPath, parseUserData};
