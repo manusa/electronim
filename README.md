@@ -49,6 +49,7 @@ electronim
 - 🗕 System Tray.
 - 📌 Always on top: Keep ElectronIM window on top of other applications.
 - 🔎 Find in page.
+- 📊 Task Manager: Monitor and manage application processes with memory and CPU usage metrics.
 - 🚫 No tracking: ElectronIM respects your privacy, no account registration is needed and no telemetry, analytics, or tracking of any kind is performed.
 
 ## [Screenshot](docs/Screenshots.md)
