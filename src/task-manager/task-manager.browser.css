@@ -15,28 +15,40 @@
  */
 @import '../styles/main.css';
 
+:root {
+  overflow: hidden;
+}
+
 .task-manager-root {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: var(--md-sys-color-surface);
-  color: var(--md-sys-color-on-surface);
+  position: fixed;
+  top: var(--material3-top-app-bar-height);
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  z-index: 0;
 }
 
 .task-manager-content {
+  position: absolute;
+  padding: calc(var(--default-spacing) * 2);
+  overflow: hidden;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 16px;
-  overflow: hidden;
+  gap: calc(var(--default-spacing) * 2);
 }
 
 .task-manager-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 16px;
   flex: 1;
-  overflow-y: auto;
   display: block;
 }
 
@@ -111,6 +123,4 @@
 .task-manager-actions {
   display: flex;
   justify-content: flex-end;
-  padding: 16px 0;
-  border-top: 1px solid var(--md-sys-color-outline-variant);
 }

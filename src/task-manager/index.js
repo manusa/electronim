@@ -18,6 +18,7 @@ const path = require('node:path');
 const {APP_EVENTS} = require('../constants');
 const {showDialog} = require('../base-window');
 const {handleRedirect, windowOpenHandler} = require('../service-manager/redirect');
+const {handleContextMenu} = require('../service-manager/context-menu');
 
 const webPreferences = {
   contextIsolation: true,
@@ -63,6 +64,7 @@ const openTaskManagerDialog = (baseWindow, serviceManagerModule) => () => {
   taskManagerView.webContents.loadURL(`file://${__dirname}/index.html`);
   taskManagerView.webContents.on('will-navigate', handleRedirect(taskManagerView));
   taskManagerView.webContents.setWindowOpenHandler(windowOpenHandler(taskManagerView));
+  taskManagerView.webContents.on('context-menu', handleContextMenu(taskManagerView));
 
   eventBus.on(APP_EVENTS.taskManagerGetMetrics, event => {
     event.returnValue = getMetrics(serviceManagerModule)();
