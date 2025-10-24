@@ -57,12 +57,12 @@ describe('Task Manager module test suite', () => {
     };
     electron.app.getAppMetrics.mockReturnValue([
       {
-        pid: 100,
+        pid: 1000, // Use OS PIDs to match getOSProcessId()
         memory: {workingSetSize: 51200}, // 50 MB in KB
         cpu: {percentCPUUsage: 5.5}
       },
       {
-        pid: 200,
+        pid: 2000, // Use OS PIDs to match getOSProcessId()
         memory: {workingSetSize: 102400}, // 100 MB in KB
         cpu: {percentCPUUsage: 10.2}
       }
