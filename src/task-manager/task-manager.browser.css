@@ -51,14 +51,19 @@
 
   .task-manager-table {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
 
-    font-family: var(--md-sys-typescale-body-medium-font);
+    font-family: var(--md-sys-typescale-body-medium-font), sans-serif;
     font-weight: var(--md-sys-typescale-body-medium-weight);
     font-size: var(--md-sys-typescale-body-medium-size);
     font-style: var(--md-sys-typescale-body-medium-font-style);
 
     table {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
       border-collapse: collapse;
     }
 
@@ -79,6 +84,11 @@
       width: 3rem;
     }
 
+    .task-column {
+      flex: 1;
+      min-width: 0;
+    }
+
     .memory-column {
       width: 10rem;
       text-align: right;
@@ -90,32 +100,38 @@
     }
 
     .network-column {
-      width: 15%;
+      width: 10rem;
       text-align: right;
     }
 
     .pid-column {
-      width: 10%;
+      width: 8rem;
       text-align: right;
     }
 
     thead {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
       background-color: var(--md-sys-color-surface-variant);
-      /* Reserve space for scrollbar to match tbody width */
-      scrollbar-gutter: stable;
+
       th {
         font-weight: 500;
         color: var(--md-sys-color-on-surface-variant);
-        position: sticky;
-        top: 0;
         background-color: var(--md-sys-color-surface-variant);
       }
     }
 
     tbody {
+      display: block;
+      flex: 1;
       overflow-y: auto;
+      overflow-x: hidden;
 
       tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
         cursor: pointer;
         transition: background-color 0.2s;
       }
@@ -131,6 +147,9 @@
     }
 
     tfoot {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
       min-height: var(--default-spacing);
     }
   }
