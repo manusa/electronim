@@ -123,20 +123,22 @@ const TaskManagerContent = () => {
   return html`
     <${TopAppBar} icon=${Icon.arrowBack} iconClick=${() => globalThis.electron.close()} headline='Task Manager'/>
     <div class="task-manager-content">
-      <table class="task-manager-table">
-        <${TableHeader} allSelected=${allSelected} onToggleAll=${handleToggleAll} />
-        <tbody>
-          ${tasks.map(task => html`
-            <${TableRow}
-              key=${task.id}
-              task=${task}
-              isSelected=${selectedTaskIds.includes(task.id)}
-              onToggle=${handleToggleTask}
-            />
-          `)}
-        </tbody>
-        <tfoot />
-      </table>
+      <div class="task-manager-table">
+        <table>
+          <${TableHeader} allSelected=${allSelected} onToggleAll=${handleToggleAll} />
+          <tbody>
+            ${tasks.map(task => html`
+              <${TableRow}
+                key=${task.id}
+                task=${task}
+                isSelected=${selectedTaskIds.includes(task.id)}
+                onToggle=${handleToggleTask}
+              />
+            `)}
+          </tbody>
+          <tfoot />
+        </table>
+      </div>
       <div class="task-manager-actions">
         <${Button}
           onClick=${handleEndTask}
