@@ -75,6 +75,8 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
       '--disable-web-security',
       '--settings-path',
       settingsPath,
+      '--user-data',
+      tempDir,
       ...extraArgs
     ],
     env: {...process.env}
@@ -84,10 +86,7 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
     tempDir,
     app: electronApp,
     kill: async () => {
-      // Clean up temporary settings directory if it was created
-      if (instance.tempDir && fs.existsSync(instance.tempDir)) {
-        fs.rmSync(tempDir, {recursive: true});
-      }
+      // First kill the electron process to release any file locks
       if (electronApp?.process()?.pid) {
         try {
           // eslint-disable-next-line no-warning-comments
@@ -96,8 +95,18 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
           // flag to disable tray in E2E tests for proper graceful shutdown testing.
           // await electronApp.close();
           process.kill(electronApp?.process()?.pid, 'SIGKILL');
+          // Wait a bit for process to fully terminate and release file handles
+          await new Promise(resolve => setTimeout(resolve, 100));
         } catch {
           // Process already dead
+        }
+      }
+      // Clean up temporary directory
+      if (instance.tempDir && fs.existsSync(instance.tempDir)) {
+        try {
+          fs.rmSync(instance.tempDir, {recursive: true, force: true});
+        } catch {
+          // Ignore cleanup errors
         }
       }
     },
@@ -231,18 +240,24 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
      * @param {Object} window - The Playwright window object
      */
     getActiveTabId: async window => {
-      const activeTab = window.locator('.chrome-tab[active]');
-      let tabId;
-      try {
-        tabId = await activeTab.first().getAttribute('data-tab-id', {timeout: 1000});
-      } catch {
-        // Ignore error and fallback
-      }
-      if (!tabId) {
-        await activeTab.first().waitFor({state: 'attached', timeout: 10000});
-        tabId = await activeTab.first().getAttribute('data-tab-id');
-      }
-      return tabId;
+      // Use evaluate to directly access DOM in the renderer process
+      const deb = await window.evaluate(() => {
+        const activeTab = document.querySelector('.chrome-tab[active]');
+        return activeTab ? activeTab.getAttribute('data-tab-id') : null;
+      });
+      return deb;
+      // const activeTab = window.locator('.chrome-tab[active]');
+      // let tabId;
+      // try {
+      //   tabId = await activeTab.first().getAttribute('data-tab-id', {timeout: 1000});
+      // } catch {
+      //   // Ignore error and fallback
+      // }
+      // if (!tabId) {
+      //   await activeTab.first().waitFor({state: 'attached', timeout: 10000});
+      //   tabId = await activeTab.first().getAttribute('data-tab-id');
+      // }
+      // return tabId;
     },
     /**
      * Wait for the active tab to change to a specific tab ID
