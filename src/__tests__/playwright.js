@@ -56,14 +56,13 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
   process.env.ELECTRON_IS_DEV = '0';
   process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 
-  // Set up temporary settings file if settings object is provided
-  let tempDir;
-  let settingsPath;
+  // Set up temporary settings directory for test isolation
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'electronim-test-'));
+  const settingsPath = path.join(tempDir, 'settings.json');
+
+  // Only create settings file if settings object is provided
   if (settings) {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'electronim-test-'));
-    settingsPath = path.join(tempDir, 'settings.json');
     fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
-    extraArgs = [...extraArgs, '--settings-path', settingsPath];
   }
 
   const appPath = path.join(__dirname, '..', 'index.js');
@@ -74,6 +73,8 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
       '--disable-gpu',
       '--disable-dev-shm-usage',
       '--disable-web-security',
+      '--settings-path',
+      settingsPath,
       ...extraArgs
     ],
     env: {...process.env}
