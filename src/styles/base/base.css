@@ -76,26 +76,41 @@ html.electronim {
 
 .electronim table {
   border-spacing: 0;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-radius: var(--md-sys-shape-corner-medium-default-size, 12px);
+  overflow: hidden;
+  background-color: var(--md-sys-color-surface-variant);
+  width: 100%;
 }
 
 .electronim table th,
 .electronim table td {
-  border: 1px solid var(--color-border-default);
-  color: var(--color-fg-default);
-  padding: 6px 13px;
+  border: none;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface);
+  padding: 12px 16px;
+  text-align: left;
 }
 
 .electronim table th {
-  font-weight: 600;
-  text-align: center;
+  background-color: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.1px;
+  text-transform: none;
+  border-bottom: 2px solid var(--md-sys-color-outline);
 }
 
-.electronim table tr {
-  background-color: var(--color-canvas-default);
-  border-top: 1px solid var(--color-border-muted);
+.electronim table tbody tr {
+  background-color: var(--md-sys-color-surface);
+  transition: background-color 0.2s ease;
 }
 
-.electronim table tr:nth-child(2n) {
-  background-color: var(--color-canvas-subtle);
+.electronim table tbody tr:hover {
+  background-color: rgba(var(--md-sys-color-primary), 0.08);
+}
+
+.electronim table tbody tr:last-child td {
+  border-bottom: none;
 }
