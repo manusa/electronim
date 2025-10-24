@@ -31,8 +31,8 @@ const getMetrics = serviceManagerModule => () => {
   const appMetrics = app.getAppMetrics();
   const services = serviceManagerModule.getServices ? serviceManagerModule.getServices() : {};
 
-  const metrics = Object.entries(services).map(([id, service]) => {
-    const pid = service.webContents.getProcessId();
+  return Object.entries(services).map(([id, service]) => {
+    const pid = service.webContents.getOSProcessId();
     const processMetrics = appMetrics.find(m => m.pid === pid);
 
     return {
@@ -43,8 +43,6 @@ const getMetrics = serviceManagerModule => () => {
       cpu: processMetrics ? processMetrics.cpu : {}
     };
   });
-
-  return metrics;
 };
 
 const killProcess = serviceManagerModule => (_event, {id}) => {
@@ -66,11 +64,19 @@ const openTaskManagerDialog = (baseWindow, serviceManagerModule) => () => {
   taskManagerView.webContents.setWindowOpenHandler(windowOpenHandler(taskManagerView));
   taskManagerView.webContents.on('context-menu', handleContextMenu(taskManagerView));
 
-  eventBus.on(APP_EVENTS.taskManagerGetMetrics, event => {
+  const getMetricsHandler = event => {
     event.returnValue = getMetrics(serviceManagerModule)();
-  });
+  };
 
-  eventBus.on(APP_EVENTS.taskManagerKillProcess, killProcess(serviceManagerModule));
+  const killProcessHandler = killProcess(serviceManagerModule);
+
+  eventBus.on(APP_EVENTS.taskManagerGetMetrics, getMetricsHandler);
+  eventBus.on(APP_EVENTS.taskManagerKillProcess, killProcessHandler);
+
+  taskManagerView.webContents.on('destroyed', () => {
+    eventBus.removeListener(APP_EVENTS.taskManagerGetMetrics, getMetricsHandler);
+    eventBus.removeListener(APP_EVENTS.taskManagerKillProcess, killProcessHandler);
+  });
 
   showDialog(baseWindow, taskManagerView);
 };
