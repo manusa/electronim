@@ -110,10 +110,15 @@
     }
 
     thead {
-      display: table;
-      width: 100%;
-      table-layout: fixed;
+      display: block;
+      width: calc(100% - var(--scrollbar-width, 0px));
       background-color: var(--md-sys-color-surface-variant);
+
+      tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+      }
 
       th {
         font-weight: 500;
@@ -125,6 +130,7 @@
     tbody {
       display: block;
       flex: 1;
+      width: 100%;
       overflow-y: auto;
       overflow-x: hidden;
 
@@ -147,9 +153,8 @@
     }
 
     tfoot {
-      display: table;
-      width: 100%;
-      table-layout: fixed;
+      display: block;
+      width: calc(100% - var(--scrollbar-width, 0px));
       min-height: var(--default-spacing);
     }
   }
