@@ -32,10 +32,15 @@ const formatCpu = cpu => {
   return cpu.percentCPUUsage.toFixed(1);
 };
 
-const TableHeader = () => html`
+const TableHeader = ({allSelected, onToggleAll}) => html`
   <thead>
     <tr>
-      <th class="checkbox-column"></th>
+      <th class="checkbox-column">
+        <${Checkbox}
+          checked=${allSelected}
+          onClick=${onToggleAll}
+        />
+      </th>
       <th class="task-column">Task</th>
       <th class="memory-column">Memory Footprint</th>
       <th class="cpu-column">CPU</th>
@@ -95,6 +100,14 @@ const TaskManagerContent = () => {
     });
   };
 
+  const handleToggleAll = () => {
+    if (selectedTaskIds.length === tasks.length) {
+      setSelectedTaskIds([]);
+    } else {
+      setSelectedTaskIds(tasks.map(task => task.id));
+    }
+  };
+
   const handleEndTask = () => {
     if (selectedTaskIds.length > 0) {
       selectedTaskIds.forEach(taskId => {
@@ -105,11 +118,13 @@ const TaskManagerContent = () => {
     }
   };
 
+  const allSelected = tasks.length > 0 && selectedTaskIds.length === tasks.length;
+
   return html`
     <${TopAppBar} icon=${Icon.arrowBack} iconClick=${() => globalThis.electron.close()} headline='Task Manager'/>
     <div class="task-manager-content">
       <table class="task-manager-table">
-        <${TableHeader} />
+        <${TableHeader} allSelected=${allSelected} onToggleAll=${handleToggleAll} />
         <tbody>
           ${tasks.map(task => html`
             <${TableRow}
@@ -120,6 +135,7 @@ const TaskManagerContent = () => {
             />
           `)}
         </tbody>
+        <tfoot />
       </table>
       <div class="task-manager-actions">
         <${Button}

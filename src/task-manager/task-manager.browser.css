@@ -19,113 +19,127 @@
   overflow: hidden;
 }
 
-.task-manager-root {
-  position: fixed;
-  top: var(--material3-top-app-bar-height);
-  left: 0;
-  bottom: 0;
-  right: 0;
-  margin: 0;
-  z-index: 0;
-}
 
-.task-manager-content {
-  position: absolute;
-  padding: calc(var(--default-spacing) * 2);
-  overflow: hidden;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
+.electronim {
 
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  gap: calc(var(--default-spacing) * 2);
-}
+  .task-manager-root {
+    position: fixed;
+    top: var(--material3-top-app-bar-height);
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+    z-index: 0;
+  }
 
-.task-manager-table {
-  width: 100%;
-  border-collapse: collapse;
-  flex: 1;
-  display: block;
-}
+  .task-manager-content {
+    position: absolute;
+    padding: calc(var(--default-spacing) * 2);
+    overflow: hidden;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
 
-.task-manager-table thead {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-  background-color: var(--md-sys-color-surface-variant);
-}
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: stretch;
+    gap: calc(var(--default-spacing) * 2);
+  }
 
-.task-manager-table tbody {
-  display: block;
-  overflow-y: auto;
-  max-height: calc(100vh - 200px);
-}
+  .task-manager-table {
+    border-collapse: collapse;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-weight: var(--md-sys-typescale-body-medium-weight);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    font-style: var(--md-sys-typescale-body-medium-font-style);
 
-.task-manager-table tbody tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-}
+    th, td {
+      padding: calc(var(--default-spacing) * 2) calc(var(--default-spacing) * 2);
+      text-align: left;
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
 
-.task-manager-table th,
-.task-manager-table td {
-  padding: 12px 8px;
-  text-align: left;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
-}
+      &:first-child {
+        padding-left: calc(var(--default-spacing) * 4);
+      }
+      &:last-child {
+        padding-right: calc(var(--default-spacing) * 4);
+      }
+    }
 
-.task-manager-table th {
-  font-weight: 500;
-  color: var(--md-sys-color-on-surface-variant);
-  position: sticky;
-  top: 0;
-  background-color: var(--md-sys-color-surface-variant);
-}
+    .checkbox-column {
+      width: 3rem;
+    }
 
-.task-manager-table tbody tr {
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
+    .memory-column {
+      width: 10rem;
+      text-align: right;
+    }
 
-.task-manager-table tbody tr:hover {
-  background-color: var(--md-sys-color-surface-variant);
-}
+    .cpu-column {
+      width: 10rem;
+      text-align: right;
+    }
 
-.task-manager-table tbody tr.selected {
-  background-color: var(--md-sys-color-primary-container);
-  color: var(--md-sys-color-on-primary-container);
-}
+    .network-column {
+      width: 15%;
+      text-align: right;
+    }
 
-.checkbox-column {
-  width: 48px;
-  text-align: center;
-}
+    .pid-column {
+      width: 10%;
+      text-align: right;
+    }
 
-.task-column {
-  width: calc(40% - 48px);
-}
+    thead {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+      background-color: var(--md-sys-color-surface-variant);
+      th {
+        font-weight: 500;
+        color: var(--md-sys-color-on-surface-variant);
+        position: sticky;
+        top: 0;
+        background-color: var(--md-sys-color-surface-variant);
+      }
+    }
 
-.memory-column {
-  width: 20%;
-}
+    tbody {
+      overflow-y: auto;
+      flex: 1;
 
-.cpu-column {
-  width: 15%;
-}
+      tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
 
-.network-column {
-  width: 15%;
-}
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
 
-.pid-column {
-  width: 10%;
-}
+      tr:hover {
+        background-color: var(--md-sys-color-surface-variant);
+      }
 
-.task-manager-actions {
-  display: flex;
-  justify-content: flex-end;
+      tr.selected {
+        background-color: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+      }
+    }
+
+    tfoot {
+      min-height: var(--default-spacing);
+    }
+  }
+
+  .task-manager-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
