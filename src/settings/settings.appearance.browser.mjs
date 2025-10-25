@@ -13,13 +13,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {html, Card, Icon, Select} from '../components/index.mjs';
-import {isPaneActive, setProperty, theme} from './settings.reducer.browser.mjs';
+import {html, Card, Icon, Select, TextField} from '../components/index.mjs';
+import {isPaneActive, setProperty, theme, applicationTitle} from './settings.reducer.browser.mjs';
 import {SettingsRow} from './settings.common.browser.mjs';
 
 export const AppearancePane = ({dispatch, state}) => {
   const dispatchSetProperty = setProperty({dispatch});
   const setTheme = e => dispatchSetProperty({property: 'theme', value: e.target.value});
+  const setApplicationTitle = e => dispatchSetProperty({property: 'applicationTitle', value: e.target.value});
   return isPaneActive(state)(AppearancePane.id) && html`
     <h2 class='title'><${Icon}>${Icon.palette}</${Icon}>Appearance</h2>
     <${Card} className='settings__appearance'>
@@ -32,6 +33,16 @@ export const AppearancePane = ({dispatch, state}) => {
           <${Select.Option} value='light'>light</${Select.Option}>
           <${Select.Option} value='dark'>dark</${Select.Option}>
         </${Select}>
+      </${SettingsRow}>
+      <${SettingsRow} data-testid='settings-application-title'>
+        <${TextField}
+          class='settings__application-title'
+          label='Application Title'
+          placeholder='ElectronIM'
+          value=${applicationTitle(state)}
+          onInput=${setApplicationTitle}
+          inputProps=${{maxLength: 100}}
+        />
       </${SettingsRow}>
     </${Card}>
   `;

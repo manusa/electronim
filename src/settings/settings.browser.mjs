@@ -56,7 +56,8 @@ const Settings = ({initialState}) => {
     startMinimized: state.startMinimized,
     alwaysOnTop: state.alwaysOnTop,
     closeButtonBehavior: state.closeButtonBehavior,
-    keyboardShortcuts: state.keyboardShortcuts
+    keyboardShortcuts: state.keyboardShortcuts,
+    applicationTitle: state.applicationTitle
   });
   const cancel = () => closeDialog();
   return html`
@@ -113,6 +114,7 @@ Promise.all([
       newTabValue: '',
       disableNotificationsGlobally: currentSettings.disableNotificationsGlobally,
       theme: currentSettings.theme,
+      applicationTitle: currentSettings.applicationTitle ?? '',
       trayEnabled: currentSettings.trayEnabled,
       startMinimized: currentSettings.startMinimized,
       alwaysOnTop: currentSettings.alwaysOnTop,

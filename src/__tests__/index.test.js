@@ -54,7 +54,6 @@ describe('Entrypoint test suite', () => {
   });
   describe('App initialization', () => {
     beforeEach(() => require('../'));
-    test('Sets app name', () => expect(app.name).toBe('ElectronIM'));
     test('Adds ready event listener', () => expect(app.on).toHaveBeenCalledWith('ready', main.init));
     test('Adds quit event listener', () => expect(app.on).toHaveBeenCalledWith('quit', main.quit));
     test('Registers app keyboard shortcuts on every webContents created (web-contents-created)', () => {

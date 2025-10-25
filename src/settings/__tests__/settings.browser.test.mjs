@@ -72,7 +72,8 @@ describe('Settings in Browser test suite', () => {
           startMinimized: false,
           alwaysOnTop: false,
           closeButtonBehavior: 'quit',
-          keyboardShortcuts: {}
+          keyboardShortcuts: {},
+          applicationTitle: ''
         });
       });
       test('Cancel should send close dialog event', () => {

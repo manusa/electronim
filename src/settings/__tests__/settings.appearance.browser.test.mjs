@@ -53,6 +53,46 @@ describe('Settings (Appearance) in Browser test suite', () => {
       expect(settings.loadSettings()).toEqual(expect.objectContaining({
         theme: 'light'
       }));
-    }, 10000);
+    });
+  });
+  describe('Application Title', () => {
+    let $applicationTitleContainer;
+    let $input;
+    beforeEach(async () => {
+      $applicationTitleContainer = await findByTestId(document, 'settings-application-title');
+      $input = $applicationTitleContainer.querySelector('input');
+    });
+    test('Shows the application title input field', () => {
+      expect($applicationTitleContainer).not.toBeNull();
+      expect($input).not.toBeNull();
+    });
+    test('Input has correct placeholder', () => {
+      const $placeholder = $applicationTitleContainer.querySelector('.text-field__placeholder');
+      expect($placeholder.textContent).toBe('ElectronIM');
+    });
+    test('Input has max length of 100', () => {
+      expect($input.maxLength).toBe(100);
+    });
+    test('Custom application title can be entered and saved', async () => {
+      await user.clear($input);
+      await user.type($input, 'My Custom IM');
+      await user.click(document.querySelector('.settings__submit'));
+      expect(settings.loadSettings()).toEqual(expect.objectContaining({
+        applicationTitle: 'My Custom IM'
+      }));
+    });
+    test('Empty application title is saved as empty string', async () => {
+      await user.clear($input);
+      await user.click(document.querySelector('.settings__submit'));
+      const savedSettings = settings.loadSettings();
+      expect(savedSettings.applicationTitle).toBe('');
+    });
+    test('Empty application title overwrites previous custom title', async () => {
+      settings.updateSettings({applicationTitle: 'Previous Title'});
+      await user.clear($input);
+      await user.click(document.querySelector('.settings__submit'));
+      const savedSettings = settings.loadSettings();
+      expect(savedSettings.applicationTitle).toBe('');
+    });
   });
 });

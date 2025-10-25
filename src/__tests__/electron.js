@@ -92,6 +92,7 @@ const newBaseWindowInstance = () => {
     instance.contentBounds = {...instance.contentBounds, ...contentBounds};
   });
   instance.setFullScreen = jest.fn();
+  instance.setTitle = jest.fn();
   instance.show = jest.fn();
   instance.showInactive = jest.fn();
   return instance;

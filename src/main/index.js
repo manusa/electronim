@@ -17,7 +17,7 @@ const path = require('node:path');
 const {
   BaseWindow, Notification, app, desktopCapturer, ipcMain: eventBus, nativeTheme
 } = require('electron');
-const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS} = require('../constants');
+const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, appNameOrDefault} = require('../constants');
 const {openAboutDialog} = require('../about');
 const {newAppMenu, isNotAppMenu} = require('../app-menu');
 const {findDialog, initKeyboardEvents} = require('../base-window');
@@ -26,7 +26,9 @@ const {
   FIND_IN_PAGE_HEIGHT, FIND_IN_PAGE_WIDTH, isFindInPage, isNotFindInPage, findInPage, findInPageOpen, findInPageClose
 } = require('../find-in-page');
 const {openHelpDialog} = require('../help');
-const {getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSettings, importSettings, openElectronimFolder} = require('../settings');
+const {
+  getPlatform, loadSettings, updateSettings, openSettingsDialog, exportSettings, importSettings, openElectronimFolder
+} = require('../settings');
 const {
   getAvailableDictionaries, getAvailableNativeDictionaries, loadDictionaries, getEnabledDictionaries
 } = require('../spell-check');
@@ -262,6 +264,7 @@ const saveSettings = (_event, settings) => {
   loadDictionaries();
   nativeTheme.themeSource = settings.theme;
   mainWindow.setAlwaysOnTop(settings.alwaysOnTop);
+  mainWindow.setTitle(appNameOrDefault(settings.applicationTitle));
   closeDialog();
   appMenuClose();
   findInPageClose();
@@ -326,11 +329,14 @@ const browserVersionsReady = () => {
 const init = () => {
   fixUserDataLocation();
   loadDictionaries();
-  const {width = 800, height = 600, startMinimized, alwaysOnTop, theme} = loadSettings();
+  const currentSettings = loadSettings();
+  const {width = 800, height = 600, startMinimized, alwaysOnTop, theme, applicationTitle} = currentSettings;
+  app.name = appNameOrDefault(applicationTitle);
   nativeTheme.themeSource = theme;
   mainWindow = new BaseWindow({
     width, height, resizable: true, maximizable: true,
     alwaysOnTop,
+    title: appNameOrDefault(applicationTitle),
     icon: path.resolve(__dirname, '..', 'assets', getPlatform() === 'linux' ? 'icon.png' : 'icon.ico'),
     show: false, paintWhenInitiallyHidden: false,
     webPreferences

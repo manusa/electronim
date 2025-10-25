@@ -41,6 +41,22 @@ describe('Main :: Index module test suite', () => {
     main = require('../');
   });
   describe('init - environment preparation', () => {
+    describe('Sets app name', () => {
+      test('default', async () => {
+        // When
+        await waitForTrayInit(main.init);
+        // Then
+        expect(electron.app.name).toBe('ElectronIM');
+      });
+      test('with custom application title', async () => {
+        // Given
+        settings.updateSettings({applicationTitle: 'MyCustomAppName'});
+        // When
+        await waitForTrayInit(main.init);
+        // Then
+        expect(electron.app.name).toBe('MyCustomAppName');
+      });
+    });
     describe('theme', () => {
       test.each(['dark', 'light', 'system'])('uses theme from saved settings (%s)', async theme => {
         // Given

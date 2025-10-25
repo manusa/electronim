@@ -34,6 +34,7 @@ export const canSave = state => state.canSave ?? false;
 export const isPaneActive = state => paneId => state.activePane === paneId;
 export const closeButtonBehavior = state => state.closeButtonBehavior;
 export const theme = state => state.theme;
+export const applicationTitle = state => state.applicationTitle;
 export const useNativeSpellChecker = state => state.useNativeSpellChecker;
 export const keyboardShortcuts = state => state.keyboardShortcuts;
 export const dictionariesEnabled = state => state.dictionaries.enabled;
