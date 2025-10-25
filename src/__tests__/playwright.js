@@ -110,20 +110,35 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
         }
       }
     },
+    /**
+     * Wait for a window matching the filter criteria
+     * @param {Function} filterFn - Function that receives {url, title, window} and returns true when window is found
+     * @param {number} timeout - Maximum time to wait in ms (default: 10000)
+     * @returns {Promise<Object>} The Playwright window object that matches the filter
+     * @throws {Error} If no matching window is found within the timeout period
+     */
     waitForWindow: async (filterFn, timeout = 10000) => {
-      const startTime = Date.now();
-      while (Date.now() - startTime < timeout) {
-        const windows = electronApp.windows();
-        for (const window of windows) {
-          const url = window.url();
-          const title = await window.title();
-          if (filterFn({url, title, window})) {
-            return window;
+      let foundWindow = null;
+      await instance.waitForCondition(
+        async () => {
+          const windows = electronApp.windows();
+          for (const window of windows) {
+            const url = window.url();
+            const title = await window.title();
+            if (filterFn({url, title, window})) {
+              foundWindow = window;
+              return true;
+            }
           }
+          return false;
+        },
+        {
+          timeout,
+          interval: 100,
+          message: 'Window matching filter not found'
         }
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-      throw new Error(`Window matching filter not found within ${timeout}ms`);
+      );
+      return foundWindow;
     },
     /**
      * Get the currently active tab's data-tab-id attribute
