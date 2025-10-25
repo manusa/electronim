@@ -15,15 +15,16 @@
  */
 import {jest} from '@jest/globals';
 import {loadDOM} from '../../__tests__/index.mjs';
-import {getByText} from '@testing-library/dom';
+import {findByTestId, getByText} from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import {testEnvironment} from './settings.browser.mjs';
 
 describe('Settings (Appearance) in Browser test suite', () => {
+  let settings;
   let user;
   beforeEach(async () => {
     jest.resetModules();
-    await testEnvironment();
+    ({settings} = await testEnvironment());
     await import('../../../bundles/settings.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
     user = userEvent.setup(document);
@@ -37,5 +38,21 @@ describe('Settings (Appearance) in Browser test suite', () => {
       expect($appearanceCard.classList.contains('material3')).toBe(true);
       expect($appearanceCard.classList.contains('card')).toBe(true);
     });
+  });
+  describe('Theme selection', () => {
+    let $themeContainer;
+    beforeEach(async () => {
+      $themeContainer = await findByTestId(document, 'settings-theme-select');
+    });
+    test('Select shows the current theme', () => {
+      expect($themeContainer.querySelector('select').value).toBe('dark');
+    });
+    test('Different theme can be selected', async () => {
+      await user.selectOptions($themeContainer.querySelector('select'), 'light');
+      await user.click(document.querySelector('.settings__submit'));
+      expect(settings.loadSettings()).toEqual(expect.objectContaining({
+        theme: 'light'
+      }));
+    }, 10000);
   });
 });
