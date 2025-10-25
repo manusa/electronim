@@ -4,5 +4,6 @@
 /dist
 /node_modules
 /bundles
+/dev/user-data
 
 *.nupkg

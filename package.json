@@ -24,7 +24,7 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "test:e2e": "NODE_OPTIONS=--experimental-vm-modules jest --testMatch='**/?(*.)+(spec|test).e2e.?([mc])[jt]s?(x)' --verbose",
     "prestart": "node webpack.js",
-    "start": "electron .",
+    "start": "electron . --settings-path dev/settings.json --user-data dev/user-data",
     "prepack": "node webpack.js",
     "prepublish": "node webpack.js",
     "prebuild:linux": "node webpack.js",

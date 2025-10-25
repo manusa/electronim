@@ -1,0 +1,36 @@
+{
+  "tabs": [
+    {
+      "id": "mh5pumjz4ws57nqah68",
+      "disabled": false,
+      "sandboxed": false,
+      "openUrlsInApp": false,
+      "disableNotifications": false,
+      "url": "https://www.bennish.net/web-notifications.html"
+    },
+    {
+      "id": "mh5pvczh9v2eprtx3cm",
+      "disabled": false,
+      "sandboxed": false,
+      "openUrlsInApp": false,
+      "disableNotifications": false,
+      "url": "https://mozilla.github.io/webrtc-landing/gum_test.html"
+    }
+  ],
+  "useNativeSpellChecker": false,
+  "enabledDictionaries": [
+    "en"
+  ],
+  "theme": "system",
+  "trayEnabled": false,
+  "startMinimized": false,
+  "alwaysOnTop": false,
+  "closeButtonBehavior": "quit",
+  "keyboardShortcuts": {
+    "tabSwitchModifier": "Ctrl",
+    "tabTraverseModifier": "Ctrl"
+  },
+  "activeTab": "mh5pumjz4ws57nqah68",
+  "width": 800,
+  "height": 600
+}

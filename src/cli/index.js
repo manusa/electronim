@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+const path = require('node:path');
 
 /**
  * Parses command line arguments to extract the custom settings path.
@@ -71,7 +72,7 @@ const parseUserData = args => {
     return null;
   }
 
-  return userDataValue;
+  return path.resolve(userDataValue);
 };
 
 module.exports = {parseSettingsPath, parseUserData};
