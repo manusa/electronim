@@ -208,7 +208,7 @@ describe('Playwright utilities test suite', () => {
         test('throws error when window not found within timeout', async () => {
           await expect(
             electron.waitForWindow(({url}) => url.includes('nonexistent-window'), 500)
-          ).rejects.toThrow('Window matching filter not found within 500ms');
+          ).rejects.toThrow('Window matching filter not found (timeout after 500ms)');
         });
       });
     });

@@ -118,19 +118,17 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
      * @throws {Error} If no matching window is found within the timeout period
      */
     waitForWindow: async (filterFn, timeout = 10000) => {
-      let foundWindow = null;
-      await instance.waitForCondition(
+      return await instance.waitForCondition(
         async () => {
           const windows = electronApp.windows();
           for (const window of windows) {
             const url = window.url();
             const title = await window.title();
             if (filterFn({url, title, window})) {
-              foundWindow = window;
-              return true;
+              return window;
             }
           }
-          return false;
+          return null;
         },
         {
           timeout,
@@ -138,7 +136,6 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
           message: 'Window matching filter not found'
         }
       );
-      return foundWindow;
     },
     /**
      * Get the currently active tab's data-tab-id attribute
@@ -254,17 +251,19 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
     },
     /**
      * Wait for a condition to be true with polling
-     * @param {Function} conditionFn - Async function that returns true when condition is met
+     * @param {Function} conditionFn - Async function that returns a truthy value when condition is met
      * @param {Object} options - Options for waiting
      * @param {number} options.timeout - Maximum time to wait in ms (default: 5000)
      * @param {number} options.interval - Polling interval in ms (default: 100)
      * @param {string} options.message - Error message if timeout is reached
+     * @returns {Promise<*>} The truthy value returned by conditionFn, or throws if timeout is reached
      */
     waitForCondition: async (conditionFn, {timeout = 5000, interval = 100, message = 'Condition not met'} = {}) => {
       const startTime = Date.now();
       while (Date.now() - startTime < timeout) {
-        if (await conditionFn()) {
-          return true;
+        const result = await conditionFn();
+        if (result) {
+          return result;
         }
         await new Promise(resolve => setTimeout(resolve, interval));
       }
