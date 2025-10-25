@@ -55,15 +55,14 @@ export const KeyboardPane = ({dispatch, state}) => {
           value=${shortcuts?.tabSwitchModifier || ''}
           onChange=${setTabSwitchModifier}
         >
-          <${Select.Option} value=''>Ctrl (default)</${Select.Option}>
+          <${Select.Option} value=''>Control (default)</${Select.Option}>
           <${Select.Option} value='Alt'>Alt</${Select.Option}>
           <${Select.Option} value='Command'>Command</${Select.Option}>
           <${Select.Option} value='Control'>Control</${Select.Option}>
-          <${Select.Option} value='Ctrl'>Ctrl</${Select.Option}>
           <${Select.Option} value='Meta'>Meta</${Select.Option}>
         </${Select}>
         <div data-testid='settings-keyboard-tab-switch-modifier-description'>
-          ${shortcuts?.tabSwitchModifier || 'Ctrl'}+1-9 to switch to specific tab
+          ${shortcuts?.tabSwitchModifier || 'Control'}+1-9 to switch to specific tab
         </div>
       </${SettingsRow}>
       <${Card.Divider} />
@@ -74,15 +73,14 @@ export const KeyboardPane = ({dispatch, state}) => {
           value=${shortcuts?.tabTraverseModifier || ''}
           onChange=${setTabTraverseModifier}
         >
-          <${Select.Option} value=''>Ctrl (default)</${Select.Option}>
+          <${Select.Option} value=''>Control (default)</${Select.Option}>
           <${Select.Option} value='Alt'>Alt</${Select.Option}>
           <${Select.Option} value='Command'>Command</${Select.Option}>
           <${Select.Option} value='Control'>Control</${Select.Option}>
-          <${Select.Option} value='Ctrl'>Ctrl</${Select.Option}>
           <${Select.Option} value='Meta'>Meta</${Select.Option}>
         </${Select}>
         <div data-testid='settings-keyboard-tab-traverse-modifier-description'>
-          ${shortcuts?.tabTraverseModifier || 'Ctrl'}+Tab to cycle through tabs
+          ${shortcuts?.tabTraverseModifier || 'Control'}+Tab to cycle through tabs
         </div>
       </${SettingsRow}>
     </${Card}>

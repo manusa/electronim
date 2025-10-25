@@ -52,13 +52,6 @@ describe('Settings (Keyboard) in Browser test suite', () => {
       expect($tabSwitchSelectElement.value).toBe('Alt');
     });
 
-    test('should allow selecting Ctrl modifier', async () => {
-      // When
-      await user.selectOptions($tabSwitchSelectElement, 'Ctrl');
-      // Then
-      expect($tabSwitchSelectElement.value).toBe('Ctrl');
-    });
-
     test('should allow selecting Command modifier', async () => {
       // When
       await user.selectOptions($tabSwitchSelectElement, 'Command');
@@ -82,7 +75,7 @@ describe('Settings (Keyboard) in Browser test suite', () => {
 
     test('should have all valid modifier options available', () => {
       const options = Array.from($tabSwitchSelectElement.options).map(opt => opt.value);
-      expect(options).toEqual(['', 'Alt', 'Command', 'Control', 'Ctrl', 'Meta']);
+      expect(options).toEqual(['', 'Alt', 'Command', 'Control', 'Meta']);
     });
 
     describe('description', () => {
@@ -96,7 +89,7 @@ describe('Settings (Keyboard) in Browser test suite', () => {
       });
       test('should show default modifier in description when empty', () => {
         // Then
-        expect($description.textContent).toContain('Ctrl+1-9 to switch to specific tab');
+        expect($description.textContent).toContain('Control+1-9 to switch to specific tab');
       });
       test('should update description with current modifier', async () => {
         // When
@@ -149,16 +142,9 @@ describe('Settings (Keyboard) in Browser test suite', () => {
       expect($tabTraverseSelectElement.value).toBe('Command');
     });
 
-    test('should allow selecting Ctrl modifier', async () => {
-      // When
-      await user.selectOptions($tabTraverseSelectElement, 'Ctrl');
-      // Then
-      expect($tabTraverseSelectElement.value).toBe('Ctrl');
-    });
-
     test('should have all valid modifier options available', () => {
       const options = Array.from($tabTraverseSelectElement.options).map(opt => opt.value);
-      expect(options).toEqual(['', 'Alt', 'Command', 'Control', 'Ctrl', 'Meta']);
+      expect(options).toEqual(['', 'Alt', 'Command', 'Control', 'Meta']);
     });
 
     describe('description', () => {
@@ -172,7 +158,7 @@ describe('Settings (Keyboard) in Browser test suite', () => {
       });
       test('should show default modifier in description when empty', () => {
         // Then
-        expect($description.textContent).toContain('Ctrl+Tab');
+        expect($description.textContent).toContain('Control+Tab');
       });
       test('should update description with current modifier', async () => {
         // When
