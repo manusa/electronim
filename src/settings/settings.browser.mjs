@@ -36,6 +36,9 @@ import {
 import {
   KeyboardPane
 } from './settings.keyboard.browser.mjs';
+import {
+  AppearancePane
+} from './settings.appearance.browser.mjs';
 
 const settingsRoot = () => document.querySelector('.settings');
 
@@ -69,6 +72,8 @@ const Settings = ({initialState}) => {
         active=${isPaneActive(state)(SpellCheckPane.id)} onClick=${() => onActivatePane(SpellCheckPane.id)} />
       <${NavigationRail.Button} label='Keyboard' icon=${Icon.keyboard}
         active=${isPaneActive(state)(KeyboardPane.id)} onClick=${() => onActivatePane(KeyboardPane.id)} />
+      <${NavigationRail.Button} label='Appearance' icon=${Icon.palette}
+        active=${isPaneActive(state)(AppearancePane.id)} onClick=${() => onActivatePane(AppearancePane.id)} />
       <${NavigationRail.Button} label='Other' icon=${Icon.more}
         active=${isPaneActive(state)(OtherPane.id)} onClick=${() => onActivatePane(OtherPane.id)} />
     </${NavigationRail}>
@@ -76,6 +81,7 @@ const Settings = ({initialState}) => {
       <${ServicesPane} dispatch=${dispatch} state=${state} />
       <${SpellCheckPane} dispatch=${dispatch} state=${state} />
       <${KeyboardPane} dispatch=${dispatch} state=${state} />
+      <${AppearancePane} dispatch=${dispatch} state=${state} />
       <${OtherPane} dispatch=${dispatch} state=${state} />
     </div>
   `;
