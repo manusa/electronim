@@ -126,6 +126,26 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
       throw new Error(`Window matching filter not found within ${timeout}ms`);
     },
     /**
+     * Get the currently active tab's data-tab-id attribute
+     * @param {Object} window - The Playwright window object
+     */
+    getActiveTabId: async window => {
+      const activeTab = window.locator('.chrome-tab[active]').first();
+      await activeTab.waitFor({state: 'attached', timeout: 15000});
+      return await activeTab.getAttribute('data-tab-id');
+    },
+    /**
+     * Wait for the active tab to change to a specific tab ID
+     * @param {Object} window - The Playwright window object
+     * @param {string} expectedTabId - The expected tab ID
+     */
+    waitForActiveTab: async (window, expectedTabId) => {
+      await instance.waitForCondition(
+        async () => (await instance.getActiveTabId(window)) === expectedTabId,
+        {timeout: 15000, message: `Active tab did not change to ${expectedTabId}`}
+      );
+    },
+    /**
      * Send keyboard input via CDP (Chrome DevTools Protocol)
      * This triggers native keyboard events that Electron's before-input-event will catch
      */
@@ -234,41 +254,6 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
         await new Promise(resolve => setTimeout(resolve, interval));
       }
       throw new Error(`${message} (timeout after ${timeout}ms)`);
-    },
-    /**
-     * Get the currently active tab's data-tab-id attribute
-     * @param {Object} window - The Playwright window object
-     */
-    getActiveTabId: async window => {
-      // Use evaluate to directly access DOM in the renderer process
-      const deb = await window.evaluate(() => {
-        const activeTab = document.querySelector('.chrome-tab[active]');
-        return activeTab ? activeTab.getAttribute('data-tab-id') : null;
-      });
-      return deb;
-      // const activeTab = window.locator('.chrome-tab[active]');
-      // let tabId;
-      // try {
-      //   tabId = await activeTab.first().getAttribute('data-tab-id', {timeout: 1000});
-      // } catch {
-      //   // Ignore error and fallback
-      // }
-      // if (!tabId) {
-      //   await activeTab.first().waitFor({state: 'attached', timeout: 10000});
-      //   tabId = await activeTab.first().getAttribute('data-tab-id');
-      // }
-      // return tabId;
-    },
-    /**
-     * Wait for the active tab to change to a specific tab ID
-     * @param {Object} window - The Playwright window object
-     * @param {string} expectedTabId - The expected tab ID
-     */
-    waitForActiveTab: async (window, expectedTabId) => {
-      await instance.waitForCondition(
-        async () => (await instance.getActiveTabId(window)) === expectedTabId,
-        {timeout: 15000, message: `Active tab did not change to ${expectedTabId}`}
-      );
     }
   };
 

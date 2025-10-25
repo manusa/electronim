@@ -90,7 +90,6 @@ describe('Playwright utilities test suite', () => {
         expect(typeof electron.waitForActiveTab).toBe('function');
       });
     });
-
     describe('with custom settings', () => {
       let electron;
       let testServer;
@@ -132,7 +131,6 @@ describe('Playwright utilities test suite', () => {
         expect(settings.tabs[0].id).toBe('custom-tab');
       });
     });
-
     describe('with extra arguments', () => {
       let electron;
 
@@ -181,6 +179,13 @@ describe('Playwright utilities test suite', () => {
       await electron.kill();
     });
 
+    beforeEach(async () => {
+      // Trigger close dialog to ensure no modals are open before each test
+      await electron.app.evaluate(({ipcMain}) => {
+        ipcMain.emit('closeDialog');
+      });
+    });
+
     describe('waitForWindow', () => {
       test('finds window matching filter', () => {
         expect(mainWindow).toBeDefined();
@@ -215,21 +220,6 @@ describe('Playwright utilities test suite', () => {
         const result = electron.isFullScreen();
         expect(result).toBeInstanceOf(Promise);
         await result.catch(() => {}); // Wait for promise to resolve to prevent app from closing before the test is complete
-      });
-    });
-    describe('sendKeys', () => {
-      test('sends key without error', async () => {
-        await expect(electron.sendKeys('a')).resolves.not.toThrow();
-      });
-      test('sends special key without error', async () => {
-        await expect(electron.sendKeys('Escape')).resolves.not.toThrow();
-      });
-      test('sends key with modifier without error', async () => {
-        await expect(electron.sendKeys('f', ['control'])).resolves.not.toThrow();
-      });
-      test('window still exists after sending keys', () => {
-        expect(mainWindow).toBeDefined();
-        expect(electron.app.windows().length).toBeGreaterThan(0);
       });
     });
     describe('waitForCondition', () => {
@@ -271,7 +261,6 @@ describe('Playwright utilities test suite', () => {
         const tabId = await electron.getActiveTabId(mainWindow);
         expect(typeof tabId).toBe('string');
       });
-
       test('tab ID is not empty', async () => {
         const tabId = await electron.getActiveTabId(mainWindow);
         expect(tabId.length).toBeGreaterThan(0);
@@ -286,6 +275,21 @@ describe('Playwright utilities test suite', () => {
         const result = electron.isFindInPageOpen();
         expect(result).toBeInstanceOf(Promise);
         await result.catch(() => {}); // Wait for promise to resolve to prevent app from closing before the test is complete
+      });
+    });
+    describe('sendKeys', () => {
+      test('sends key without error', async () => {
+        await expect(electron.sendKeys('a')).resolves.not.toThrow();
+      });
+      test('sends special key without error', async () => {
+        await expect(electron.sendKeys('Escape')).resolves.not.toThrow();
+      });
+      test('sends key with modifier without error', async () => {
+        await expect(electron.sendKeys('f', ['control'])).resolves.not.toThrow();
+      });
+      test('window still exists after sending keys', () => {
+        expect(mainWindow).toBeDefined();
+        expect(electron.app.windows().length).toBeGreaterThan(0);
       });
     });
   });
