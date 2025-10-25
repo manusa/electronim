@@ -168,7 +168,7 @@ describe('CLI module test suite', () => {
       // When
       const result = parseUserData(args);
       // Then
-      expect(result).toBe('./userdata');
+      expect(result).toMatch(/^\/.*\/userdata$/);
       expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
 
