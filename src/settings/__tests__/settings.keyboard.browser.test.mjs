@@ -33,71 +33,56 @@ describe('Settings (Keyboard) in Browser test suite', () => {
 
   describe('Tab Switch Modifier', () => {
     let $tabSwitchContainer;
-    let $tabSwitchTextField;
-    let $tabSwitchInput;
+    let $tabSwitchSelect;
+    let $tabSwitchSelectElement;
     beforeEach(async () => {
       $tabSwitchContainer = await findByTestId(document, 'settings-keyboard-tab-switch-modifier');
-      $tabSwitchTextField = $tabSwitchContainer.querySelector('.material3.text-field');
-      $tabSwitchInput = $tabSwitchTextField.querySelector('input');
+      $tabSwitchSelect = $tabSwitchContainer.querySelector('.material3.select');
+      $tabSwitchSelectElement = $tabSwitchSelect.querySelector('select');
     });
 
     test('should display empty value by default', () => {
-      expect($tabSwitchInput.value).toBe('');
+      expect($tabSwitchSelectElement.value).toBe('');
     });
 
-    test('should accept valid modifier key', async () => {
+    test('should allow selecting Alt modifier', async () => {
       // When
-      await user.clear($tabSwitchInput);
-      await user.type($tabSwitchInput, 'Alt');
+      await user.selectOptions($tabSwitchSelectElement, 'Alt');
       // Then
-      expect($tabSwitchInput.value).toBe('Alt');
+      expect($tabSwitchSelectElement.value).toBe('Alt');
     });
 
-    test('should not show errored for valid modifier', async () => {
+    test('should allow selecting Ctrl modifier', async () => {
       // When
-      await user.clear($tabSwitchInput);
-      await user.type($tabSwitchInput, 'Ctrl');
+      await user.selectOptions($tabSwitchSelectElement, 'Ctrl');
       // Then
-      expect($tabSwitchTextField.classList.contains('errored')).toBe(false);
+      expect($tabSwitchSelectElement.value).toBe('Ctrl');
     });
 
-    test('should show errored for invalid modifier', async () => {
+    test('should allow selecting Command modifier', async () => {
       // When
-      await user.clear($tabSwitchInput);
-      await user.type($tabSwitchInput, 'InvalidKey');
+      await user.selectOptions($tabSwitchSelectElement, 'Command');
       // Then
-      await waitFor(() => expect($tabSwitchTextField.classList.contains('errored')).toBe(true));
+      expect($tabSwitchSelectElement.value).toBe('Command');
     });
 
-    test('should not show errored for empty value', async () => {
+    test('should allow selecting Control modifier', async () => {
       // When
-      await user.clear($tabSwitchInput);
+      await user.selectOptions($tabSwitchSelectElement, 'Control');
       // Then
-      expect($tabSwitchTextField.classList.contains('errored')).toBe(false);
+      expect($tabSwitchSelectElement.value).toBe('Control');
     });
 
-    test('should accept case insensitive modifiers', async () => {
+    test('should allow selecting Meta modifier', async () => {
       // When
-      await user.clear($tabSwitchInput);
-      await user.type($tabSwitchInput, 'alt');
+      await user.selectOptions($tabSwitchSelectElement, 'Meta');
       // Then
-      expect($tabSwitchTextField.classList.contains('errored')).toBe(false);
+      expect($tabSwitchSelectElement.value).toBe('Meta');
     });
 
-    test('should handle whitespace in input', async () => {
-      // When
-      await user.clear($tabSwitchInput);
-      await user.type($tabSwitchInput, '  Ctrl  ');
-      // Then
-      expect($tabSwitchTextField.classList.contains('errored')).toBe(false);
-    });
-
-    test('should reject partial modifier matches', async () => {
-      // When
-      await user.clear($tabSwitchInput);
-      await user.type($tabSwitchInput, 'Ct');
-      // Then
-      await waitFor(() => expect($tabSwitchTextField.classList.contains('errored')).toBe(true));
+    test('should have all valid modifier options available', () => {
+      const options = Array.from($tabSwitchSelectElement.options).map(opt => opt.value);
+      expect(options).toEqual(['', 'Alt', 'Command', 'Control', 'Ctrl', 'Meta']);
     });
 
     describe('description', () => {
@@ -115,8 +100,7 @@ describe('Settings (Keyboard) in Browser test suite', () => {
       });
       test('should update description with current modifier', async () => {
         // When
-        await user.clear($tabSwitchInput);
-        await user.type($tabSwitchInput, 'Command');
+        await user.selectOptions($tabSwitchSelectElement, 'Command');
         // Then
         await waitFor(() => expect($description.textContent).toContain('Command+1-9 to switch to specific tab'));
       });
@@ -125,71 +109,56 @@ describe('Settings (Keyboard) in Browser test suite', () => {
 
   describe('Tab Traverse Modifier', () => {
     let $tabTraverseContainer;
-    let $tabTraversTextField;
-    let $tabTraverseInput;
+    let $tabTraverseSelect;
+    let $tabTraverseSelectElement;
     beforeEach(async () => {
       $tabTraverseContainer = await findByTestId(document, 'settings-keyboard-tab-traverse-modifier');
-      $tabTraversTextField = $tabTraverseContainer.querySelector('.material3.text-field');
-      $tabTraverseInput = $tabTraversTextField.querySelector('input');
+      $tabTraverseSelect = $tabTraverseContainer.querySelector('.material3.select');
+      $tabTraverseSelectElement = $tabTraverseSelect.querySelector('select');
     });
 
     test('should display empty value by default', () => {
-      expect($tabTraverseInput.value).toBe('');
+      expect($tabTraverseSelectElement.value).toBe('');
     });
 
-    test('should accept valid modifier key', async () => {
+    test('should allow selecting Alt modifier', async () => {
       // When
-      await user.clear($tabTraverseInput);
-      await user.type($tabTraverseInput, 'Meta');
+      await user.selectOptions($tabTraverseSelectElement, 'Alt');
       // Then
-      expect($tabTraverseInput.value).toBe('Meta');
+      expect($tabTraverseSelectElement.value).toBe('Alt');
     });
 
-    test('should not show errored for valid modifier', async () => {
+    test('should allow selecting Meta modifier', async () => {
       // When
-      await user.clear($tabTraverseInput);
-      await user.type($tabTraverseInput, 'Control');
+      await user.selectOptions($tabTraverseSelectElement, 'Meta');
       // Then
-      expect($tabTraversTextField.classList.contains('errored')).toBe(false);
+      expect($tabTraverseSelectElement.value).toBe('Meta');
     });
 
-    test('should show errored for invalid modifier', async () => {
+    test('should allow selecting Control modifier', async () => {
       // When
-      await user.clear($tabTraverseInput);
-      await user.type($tabTraverseInput, 'InvalidKey');
+      await user.selectOptions($tabTraverseSelectElement, 'Control');
       // Then
-      await waitFor(() => expect($tabTraversTextField.classList.contains('errored')).toBe(true));
+      expect($tabTraverseSelectElement.value).toBe('Control');
     });
 
-    test('should not show errored for empty value', async () => {
+    test('should allow selecting Command modifier', async () => {
       // When
-      await user.clear($tabTraverseInput);
+      await user.selectOptions($tabTraverseSelectElement, 'Command');
       // Then
-      expect($tabTraversTextField.classList.contains('errored')).toBe(false);
+      expect($tabTraverseSelectElement.value).toBe('Command');
     });
 
-    test('should accept case insensitive modifiers', async () => {
+    test('should allow selecting Ctrl modifier', async () => {
       // When
-      await user.clear($tabTraverseInput);
-      await user.type($tabTraverseInput, 'alt');
+      await user.selectOptions($tabTraverseSelectElement, 'Ctrl');
       // Then
-      expect($tabTraversTextField.classList.contains('errored')).toBe(false);
+      expect($tabTraverseSelectElement.value).toBe('Ctrl');
     });
 
-    test('should handle whitespace in input', async () => {
-      // When
-      await user.clear($tabTraverseInput);
-      await user.type($tabTraverseInput, '  Ctrl  ');
-      // Then
-      expect($tabTraversTextField.classList.contains('errored')).toBe(false);
-    });
-
-    test('should reject partial modifier matches', async () => {
-      // When
-      await user.clear($tabTraverseInput);
-      await user.type($tabTraverseInput, 'Ct');
-      // Then
-      await waitFor(() => expect($tabTraversTextField.classList.contains('errored')).toBe(true));
+    test('should have all valid modifier options available', () => {
+      const options = Array.from($tabTraverseSelectElement.options).map(opt => opt.value);
+      expect(options).toEqual(['', 'Alt', 'Command', 'Control', 'Ctrl', 'Meta']);
     });
 
     describe('description', () => {
@@ -207,60 +176,11 @@ describe('Settings (Keyboard) in Browser test suite', () => {
       });
       test('should update description with current modifier', async () => {
         // When
-        await user.clear($tabTraverseInput);
-        await user.type($tabTraverseInput, 'Command');
+        await user.selectOptions($tabTraverseSelectElement, 'Command');
         // Then
         await waitFor(() => expect($description.textContent).toContain('Command+Tab'));
       });
     });
-  });
-
-  describe('Modifier validation', () => {
-    describe.each([
-      {testId: 'settings-keyboard-tab-switch-modifier', section: 'Tab Switch'},
-      {testId: 'settings-keyboard-tab-traverse-modifier', section: 'Tab Traverse'}
-    ])('$section modifier validation', ({testId}) => {
-      let $container;
-      let $textField;
-      let $input;
-
-      beforeEach(async () => {
-        $container = await findByTestId(document, testId);
-        $textField = $container.querySelector('.material3.text-field');
-        $input = $textField.querySelector('input');
-      });
-
-      test('should be valid for empty input', async () => {
-        await user.clear($input);
-        expect($textField.classList.contains('errored')).toBe(false);
-      });
-      test.each([
-        'Alt', 'Command', 'Control', 'Ctrl', 'Meta',
-        'alt', 'command', 'control', 'ctrl', 'meta',
-        'ALT', 'COMMAND', 'CONTROL', 'CTRL', 'META',
-        '  ', '  Ctrl  ', '  Alt  '
-      ])('should be valid for %s', async modifier => {
-        await user.clear($input);
-        await user.type($input, modifier);
-        expect($textField.classList.contains('errored')).toBe(false);
-      });
-      test.each([
-        'InvalidKey', 'Space', 'Enter', 'Tab', 'Shift', 'shift', 'SHIFT',
-        'Ct', 'Al', 'Comman', '123',
-        'Ctrl+Alt', 'Alt+Tab'
-      ])('should be invalid for %s', async modifier => {
-        await user.clear($input);
-        await user.type($input, modifier);
-        await waitFor(() => expect($textField.classList.contains('errored')).toBe(true));
-      });
-    });
-  });
-
-  test('Should display list of valid modifiers', async () => {
-    // Given
-    const $validModifiers = await findByTestId(document, 'settings-keyboard-valid-modifiers');
-    // Then
-    expect($validModifiers.textContent).toContain('Valid modifiers: Alt, Ctrl, Meta, Control, Command');
   });
 
   describe('Component structure', () => {
