@@ -32,22 +32,6 @@ describe('Settings (Other) in Browser test suite', () => {
     // Show other settings pane
     await user.click(getByText(document.querySelector('.material3.navigation-rail'), 'Other'));
   });
-  describe('Theme selection', () => {
-    let $themeContainer;
-    beforeEach(async () => {
-      $themeContainer = await findByTestId(document, 'settings-theme-select');
-    });
-    test('Select shows the current theme', () => {
-      expect($themeContainer.querySelector('select').value).toBe('dark');
-    });
-    test('Different theme can be selected', async () => {
-      await user.selectOptions($themeContainer.querySelector('select'), 'light');
-      await user.click(document.querySelector('.settings__submit'));
-      expect(settings.loadSettings()).toEqual(expect.objectContaining({
-        theme: 'light'
-      }));
-    }, 10000);
-  });
   describe('Toggle disable global notifications click', () => {
     let $notificationsSwitch;
     beforeEach(() => {

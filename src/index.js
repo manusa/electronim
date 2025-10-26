@@ -37,8 +37,6 @@ if (customSettingsPath) {
   setSettingsPath(customSettingsPath);
 }
 
-app.name = 'ElectronIM';
-
 app.on('ready', init);
 app.on('quit', quit);
 app.on('web-contents-created', registerAppShortcuts);

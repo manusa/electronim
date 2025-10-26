@@ -72,7 +72,8 @@ describe('Settings in Browser test suite', () => {
           startMinimized: false,
           alwaysOnTop: false,
           closeButtonBehavior: 'quit',
-          keyboardShortcuts: {}
+          keyboardShortcuts: {},
+          applicationTitle: ''
         });
       });
       test('Cancel should send close dialog event', () => {
@@ -93,6 +94,8 @@ describe('Settings in Browser test suite', () => {
     test.each([
       {label: 'Services', icon: '\ue5c3'},
       {label: 'Spell check', icon: '\ue8ce'},
+      {label: 'Keyboard', icon: '\ue312'},
+      {label: 'Appearance', icon: '\ue40a'},
       {label: 'Other', icon: '\ue619'}
     ])('Shows navigation rail item $label with $icon', ({label, icon}) => {
       const items = Array.from(document.querySelectorAll('.navigation-rail-button'))
@@ -156,9 +159,9 @@ describe('Settings in Browser test suite', () => {
 
     describe('Keyboard', () => {
       beforeEach(async () => {
-        const otherButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
+        const keyboardButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
           .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Keyboard');
-        fireEvent.click(otherButton);
+        fireEvent.click(keyboardButton);
         await waitFor(() => document.querySelector('h2.title'));
       });
 
@@ -175,6 +178,31 @@ describe('Settings in Browser test suite', () => {
           const title = document.querySelector('h2.title');
           expect(title).not.toBeNull();
           expect(title.textContent).toContain('Keyboard Shortcuts');
+        });
+      });
+    });
+
+    describe('Appearance', () => {
+      beforeEach(async () => {
+        const appearanceButton = Array.from(document.querySelectorAll('.navigation-rail-button'))
+          .find(button => button.querySelector('.navigation-rail-button__label').textContent === 'Appearance');
+        fireEvent.click(appearanceButton);
+        await waitFor(() => document.querySelector('h2.title'));
+      });
+
+      test('title contains icon', async () => {
+        await waitFor(() => {
+          const iconElement = document.querySelector('h2.title .material3.icon');
+          expect(iconElement).not.toBeNull();
+          expect(iconElement.textContent).toBe('\ue40a');
+        });
+      });
+
+      test('title contains text', async () => {
+        await waitFor(() => {
+          const title = document.querySelector('h2.title');
+          expect(title).not.toBeNull();
+          expect(title.textContent).toContain('Appearance');
         });
       });
     });

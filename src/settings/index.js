@@ -21,7 +21,7 @@ const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, KEYBOARD_SHORTCUTS} = require('../con
 const {showDialog} = require('../base-window');
 
 const APP_DIR = '.electronim';
-const APP_NAME = 'electronim';
+const APP_DIR_NAME = 'electronim';
 const SETTINGS_FILE = 'settings.json';
 const DEFAULT_SETTINGS = {
   tabs: [],
@@ -68,7 +68,7 @@ const resolveConfigDirectory = () => {
 
   // Use XDG_CONFIG_HOME if set, otherwise default to ~/.config
   const xdgConfigHome = process.env.XDG_CONFIG_HOME || path.join(HOME_DIR, '.config');
-  return path.join(xdgConfigHome, APP_NAME);
+  return path.join(xdgConfigHome, APP_DIR_NAME);
 };
 
 // Overrideable for tests

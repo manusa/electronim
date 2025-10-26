@@ -153,3 +153,9 @@
     gap: 8px;
     align-items: center;
 }
+
+.settings__appearance {
+    .text-field {
+        flex: 1;
+    }
+}

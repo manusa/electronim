@@ -90,6 +90,13 @@ const KEYBOARD_SHORTCUTS = Object.freeze({
 
 const ELECTRONIM_VERSION = JSON.parse(fs.readFileSync(path.resolve(findRootDir(), 'package.json'), 'utf8')).version;
 
+const appNameOrDefault = appName => {
+  if (appName?.trim().length > 0) {
+    return appName.trim();
+  }
+  return 'ElectronIM';
+};
+
 module.exports = {
-  APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, KEYBOARD_SHORTCUTS
+  APP_EVENTS, appNameOrDefault, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, KEYBOARD_SHORTCUTS
 };
