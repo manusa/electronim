@@ -45,7 +45,9 @@ electronim
 - 💤 Notifications can be disabled globally (Do not disturb).
 - ⌨ Keyboard [shortcuts](docs/Keyboard-shortcuts.md).
 - 🖥️ Screen sharing: Share your screen securely with any web service that supports it (e.g. Google Meet, Microsoft Teams, Zoom, and so on).
-- 🌗 Light and Dark themes with system override.
+- 🎨 Appearance customization:
+  - 🌗 Light and Dark themes with system override.
+  - 🏷️ Custom application title to personalize your ElectronIM window.
 - 🗕 System Tray.
 - 📌 Always on top: Keep ElectronIM window on top of other applications.
 - 🔎 Find in page.
