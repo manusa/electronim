@@ -35,7 +35,10 @@ globalThis.getSuggestions = word => {
   for (const suggestion of allSuggestions) {
     ret.add(suggestion);
   }
-  return Array.from(ret.values()).sort((w1, w2) => w1.localeCompare(w2)).slice(0, 10);
+  return Array.from(ret.values())
+    .filter(w => w !== null)
+    .sort((w1, w2) => w1.localeCompare(w2))
+    .slice(0, 10);
 };
 
 globalThis.reloadDictionaries = async () => {
