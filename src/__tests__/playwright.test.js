@@ -22,6 +22,18 @@ const {spawnElectron, createTestServer} = require('./');
 jest.setTimeout(30000);
 
 describe('Playwright utilities test suite', () => {
+  let sharedTestServer;
+
+  beforeAll(async () => {
+    sharedTestServer = await createTestServer({manualCleanup: true});
+  });
+
+  afterAll(async () => {
+    if (sharedTestServer) {
+      await sharedTestServer.close();
+    }
+  });
+
   describe('spawnElectron', () => {
     describe('basic instance functionality', () => {
       let electron;
@@ -29,7 +41,7 @@ describe('Playwright utilities test suite', () => {
       beforeAll(async () => {
         electron = await spawnElectron({
           settings: {
-            tabs: [{id: 'test', url: 'https://example.com', name: 'Test'}]
+            tabs: [{id: 'test', url: sharedTestServer.url, name: 'Test'}]
           }
         });
       });
@@ -138,7 +150,7 @@ describe('Playwright utilities test suite', () => {
         electron = await spawnElectron({
           extraArgs: ['--disable-extensions'],
           settings: {
-            tabs: [{id: 'test', url: 'https://example.com', name: 'Test'}]
+            tabs: [{id: 'test', url: sharedTestServer.url, name: 'Test'}]
           }
         });
       });
@@ -167,11 +179,11 @@ describe('Playwright utilities test suite', () => {
     beforeAll(async () => {
       electron = await spawnElectron({
         settings: {
-          tabs: [{id: 'test', url: 'https://example.com', name: 'Test'}]
+          tabs: [{id: 'test', url: sharedTestServer.url, name: 'Test'}]
         }
       });
       mainWindow = await electron.waitForWindow(
-        ({url, title}) => url.includes('chrome-tabs') || title.includes('ElectronIM')
+        ({url, title}) => url.includes('chrome-tabs') || title === 'ElectronIM tabs'
       );
     });
 
