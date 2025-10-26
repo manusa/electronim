@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-import {html, Card, Icon, TextField} from '../components/index.mjs';
+import {html, Card, Icon, Select} from '../components/index.mjs';
 import {
   isPaneActive,
   setProperty,
@@ -21,41 +21,26 @@ import {
 } from './settings.reducer.browser.mjs';
 import {SettingsRow} from './settings.common.browser.mjs';
 
-const validateKeyboardShortcut = value => {
-  if (!value || value.trim() === '') {
-    return true; // Empty is valid (uses default)
-  }
-
-  const validModifiers = ['Alt', 'Command', 'Control', 'Ctrl', 'Meta'];
-  const trimmedValue = value.trim();
-
-  return validModifiers.some(modifier =>
-    trimmedValue.toLowerCase() === modifier.toLowerCase()
-  );
-};
-
 export const KeyboardPane = ({dispatch, state}) => {
   const shortcuts = keyboardShortcuts(state);
   const dispatchSetProperty = setProperty({dispatch});
 
   const setTabSwitchModifier = e => {
-    const value = e.target.value;
     dispatchSetProperty({
       property: 'keyboardShortcuts',
       value: {
         ...shortcuts,
-        tabSwitchModifier: value
+        tabSwitchModifier: e.target.value || ''
       }
     });
   };
 
   const setTabTraverseModifier = e => {
-    const value = e.target.value;
     dispatchSetProperty({
       property: 'keyboardShortcuts',
       value: {
         ...shortcuts,
-        tabTraverseModifier: value
+        tabTraverseModifier: e.target.value || ''
       }
     });
   };
@@ -65,35 +50,39 @@ export const KeyboardPane = ({dispatch, state}) => {
     <${Card} className='settings__keyboard'>
       <p class='title-small' data-testid='settings-keyboard-tab-switch-modifier-title'>Tab Switch</p>
       <${SettingsRow} data-testid='settings-keyboard-tab-switch-modifier'>
-        <${TextField}
+        <${Select}
           label='Tab Switch Modifier'
-          placeholder='Ctrl (default)'
           value=${shortcuts?.tabSwitchModifier || ''}
-          onInput=${setTabSwitchModifier}
-          hasError=${shortcuts?.tabSwitchModifier && !validateKeyboardShortcut(shortcuts?.tabSwitchModifier)}
-          helperText='Modifier key for tab selection (Ctrl+1, Alt+1, etc.). Leave empty for default.'
-        />
+          onChange=${setTabSwitchModifier}
+        >
+          <${Select.Option} value=''>Control (default)</${Select.Option}>
+          <${Select.Option} value='Alt'>Alt</${Select.Option}>
+          <${Select.Option} value='Command'>Command</${Select.Option}>
+          <${Select.Option} value='Control'>Control</${Select.Option}>
+          <${Select.Option} value='Meta'>Meta</${Select.Option}>
+        </${Select}>
         <div data-testid='settings-keyboard-tab-switch-modifier-description'>
-          ${shortcuts?.tabSwitchModifier || 'Ctrl'}+1-9 to switch to specific tab
+          ${shortcuts?.tabSwitchModifier || 'Control'}+1-9 to switch to specific tab
         </div>
       </${SettingsRow}>
       <${Card.Divider} />
       <p class='title-small' data-testid='settings-keyboard-tab-traverse-modifier-title'>Tab Traverse</p>
       <${SettingsRow} data-testid='settings-keyboard-tab-traverse-modifier'>
-        <${TextField}
+        <${Select}
           label='Tab Traverse Modifier'
-          placeholder='Ctrl (default)'
           value=${shortcuts?.tabTraverseModifier || ''}
-          onInput=${setTabTraverseModifier}
-          hasError=${shortcuts?.tabTraverseModifier && !validateKeyboardShortcut(shortcuts?.tabTraverseModifier)}
-          helperText='Modifier key for tab traversal (Ctrl+Tab). Leave empty for default.'
-        />
+          onChange=${setTabTraverseModifier}
+        >
+          <${Select.Option} value=''>Control (default)</${Select.Option}>
+          <${Select.Option} value='Alt'>Alt</${Select.Option}>
+          <${Select.Option} value='Command'>Command</${Select.Option}>
+          <${Select.Option} value='Control'>Control</${Select.Option}>
+          <${Select.Option} value='Meta'>Meta</${Select.Option}>
+        </${Select}>
         <div data-testid='settings-keyboard-tab-traverse-modifier-description'>
-          ${shortcuts?.tabTraverseModifier || 'Ctrl'}+Tab to cycle through tabs
+          ${shortcuts?.tabTraverseModifier || 'Control'}+Tab to cycle through tabs
         </div>
       </${SettingsRow}>
-      <${Card.Divider} />
-      <p data-testid='settings-keyboard-valid-modifiers'><strong>Valid modifiers:</strong> Alt, Ctrl, Meta, Control, Command</p>
     </${Card}>
   `;
 };
