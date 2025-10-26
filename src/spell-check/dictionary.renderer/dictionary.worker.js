@@ -38,22 +38,48 @@ globalThis.getSuggestions = word => {
   return Array.from(ret.values()).sort((w1, w2) => w1.localeCompare(w2)).slice(0, 10);
 };
 
-globalThis.reloadDictionaries = () => {
+globalThis.reloadDictionaries = async () => {
   dictionaries.length = 0;
   const {enabledDictionaries} = loadSettings();
+  const loadedDictionaries = new Set();
+
+  const loadPromises = [];
+
   for (const dictionaryKey of enabledDictionaries) {
     let dictionary;
     try {
       dictionary = require(`dictionary-${dictionaryKey.toLowerCase()}`);
-      // eslint-disable-next-line no-unused-vars
-    } catch (error) {
+    } catch {
       // Error is ignored
+      continue;
     }
+
     if (dictionary) {
-      dictionary((_err, {aff, dic}) => {
-        dictionaries.push(new Nodehun(aff, dic));
+      // Convert callback-based dictionary loading to Promise
+      const loadPromise = new Promise((resolve, reject) => {
+        dictionary((err, {aff, dic}) => {
+          if (err) {
+            reject(err);
+          } else {
+            try {
+              dictionaries.push(new Nodehun(aff, dic));
+              loadedDictionaries.add(dictionaryKey);
+              resolve();
+            } catch (error) {
+              reject(error);
+            }
+          }
+        });
+      }).catch(() => {
+        // Error is ignored
       });
+
+      loadPromises.push(loadPromise);
     }
   }
+
+  await Promise.all(loadPromises);
+
+  return loadedDictionaries;
 };
 
