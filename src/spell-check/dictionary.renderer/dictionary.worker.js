@@ -18,21 +18,30 @@ const {loadSettings} = require('../../settings');
 
 const dictionaries = [];
 
-const isMisspelled = word =>
-  dictionaries.every(dictionary => !dictionary.spellSync(word));
+const isMisspelled = async word => {
+  for (const dictionary of dictionaries) {
+    const isCorrect = await dictionary.spell(word);
+    if (isCorrect) {
+      return false;
+    }
+  }
+  return true;
+};
 
-globalThis.getMisspelled = words => {
+globalThis.getMisspelled = async words => {
   if (dictionaries.length === 0) {
     return [];
   }
-  return words.filter(isMisspelled);
+  const results = await Promise.all(words.map(isMisspelled));
+  return words.filter((_, index) => results[index]);
 };
 
-globalThis.getSuggestions = word => {
+globalThis.getSuggestions = async word => {
   const ret = new Set();
-  const allSuggestions = dictionaries.map(dictionary => dictionary.suggestSync(word))
-    .flat();
-  for (const suggestion of allSuggestions) {
+  const allSuggestions = await Promise.all(
+    dictionaries.map(dictionary => dictionary.suggest(word))
+  );
+  for (const suggestion of allSuggestions.flat()) {
     ret.add(suggestion);
   }
   return Array.from(ret.values())

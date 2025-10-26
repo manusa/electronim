@@ -78,19 +78,19 @@ describe('Dictionary Worker test suite', () => {
       });
 
       describe('getMisspelled functionality', () => {
-        test('recognizes correct words', () => {
-          const misspelled = globalThis.getMisspelled(correctWords);
+        test('recognizes correct words', async () => {
+          const misspelled = await globalThis.getMisspelled(correctWords);
           expect(misspelled).toEqual([]);
         });
 
-        test('detects gibberish as misspelled', () => {
-          const misspelled = globalThis.getMisspelled(commonMisspelledWords);
+        test('detects gibberish as misspelled', async () => {
+          const misspelled = await globalThis.getMisspelled(commonMisspelledWords);
           expect(misspelled).toEqual([...commonMisspelledWords]);
         });
 
-        test('correctly identifies misspelled words in mixed list', () => {
+        test('correctly identifies misspelled words in mixed list', async () => {
           const mixedWords = [...correctWords, ...commonMisspelledWords];
-          const misspelled = globalThis.getMisspelled(mixedWords);
+          const misspelled = await globalThis.getMisspelled(mixedWords);
 
           // Correct words should not be in misspelled list
           for (const word of correctWords) {
@@ -98,39 +98,39 @@ describe('Dictionary Worker test suite', () => {
           }
         });
 
-        test('handles empty word list', () => {
-          const misspelled = globalThis.getMisspelled([]);
+        test('handles empty word list', async () => {
+          const misspelled = await globalThis.getMisspelled([]);
           expect(misspelled).toEqual([]);
         });
 
-        test('returns empty array when no dictionaries loaded', () => {
+        test('returns empty array when no dictionaries loaded', async () => {
           // Reset settings to empty dictionaries
           settings.updateSettings({enabledDictionaries: []});
-          globalThis.reloadDictionaries();
+          await globalThis.reloadDictionaries();
 
-          const misspelled = globalThis.getMisspelled(['test', 'asdfghjkl']);
+          const misspelled = await globalThis.getMisspelled(['test', 'asdfghjkl']);
           expect(misspelled).toEqual([]);
         });
       });
 
       describe('getSuggestions functionality', () => {
-        test('provides suggestions for misspelled words', () => {
-          const suggestions = globalThis.getSuggestions(commonMisspelledWords[0]);
+        test('provides suggestions for misspelled words', async () => {
+          const suggestions = await globalThis.getSuggestions(commonMisspelledWords[0]);
 
           expect(Array.isArray(suggestions)).toBe(true);
           // Suggestions might be empty for complete gibberish, which is acceptable
         });
 
-        test('limits suggestions to 10 or fewer', () => {
+        test('limits suggestions to 10 or fewer', async () => {
           // Use a word that might have many suggestions
-          const suggestions = globalThis.getSuggestions(commonMisspelledWords[0]);
+          const suggestions = await globalThis.getSuggestions(commonMisspelledWords[0]);
 
           expect(Array.isArray(suggestions)).toBe(true);
           expect(suggestions.length).toBeLessThanOrEqual(10);
         });
 
-        test('returns sorted suggestions', () => {
-          const suggestions = globalThis.getSuggestions(commonMisspelledWords[0]);
+        test('returns sorted suggestions', async () => {
+          const suggestions = await globalThis.getSuggestions(commonMisspelledWords[0]);
 
           if (suggestions.length > 1) {
             // Verify suggestions are sorted
@@ -139,10 +139,10 @@ describe('Dictionary Worker test suite', () => {
           }
         });
 
-        test('returns empty array for valid words', () => {
+        test('returns empty array for valid words', async () => {
           // Some implementations might return suggestions even for valid words
           // but we just verify it returns an array
-          const suggestions = globalThis.getSuggestions(correctWords[0]);
+          const suggestions = await globalThis.getSuggestions(correctWords[0]);
           expect(Array.isArray(suggestions)).toBe(true);
         });
       });
@@ -182,40 +182,40 @@ describe('Dictionary Worker test suite', () => {
       expect(typeof globalThis.getSuggestions).toBe('function');
     });
 
-    test('accepts words from any loaded dictionary', () => {
+    test('accepts words from any loaded dictionary', async () => {
       // Get test data for all enabled dictionaries
       const testData = DICTIONARY_TEST_DATA.filter(({langCode}) => dictionaries.includes(langCode));
 
       // Test words from each dictionary
       for (const {correctWords} of testData) {
-        const misspelled = globalThis.getMisspelled(correctWords);
+        const misspelled = await globalThis.getMisspelled(correctWords);
         // Words from any loaded dictionary should be recognized
         expect(misspelled).toEqual([]);
       }
     });
 
-    test('detects gibberish across all loaded dictionaries', () => {
-      const misspelled = globalThis.getMisspelled(commonMisspelledWords);
+    test('detects gibberish across all loaded dictionaries', async () => {
+      const misspelled = await globalThis.getMisspelled(commonMisspelledWords);
 
       // Gibberish detection should return an array
       // (Some dictionaries might actually have these as valid words)
       expect(Array.isArray(misspelled)).toBe(true);
     });
 
-    test('provides combined suggestions from all dictionaries', () => {
-      const suggestions = globalThis.getSuggestions(commonMisspelledWords[0]);
+    test('provides combined suggestions from all dictionaries', async () => {
+      const suggestions = await globalThis.getSuggestions(commonMisspelledWords[0]);
 
       expect(Array.isArray(suggestions)).toBe(true);
       // Should still limit to 10 even with multiple dictionaries
       expect(suggestions.length).toBeLessThanOrEqual(10);
     });
 
-    test('correctly handles mixed word list across languages', () => {
+    test('correctly handles mixed word list across languages', async () => {
       const testData = DICTIONARY_TEST_DATA.filter(({langCode}) => dictionaries.includes(langCode));
       const allCorrectWords = testData.flatMap(({correctWords}) => correctWords);
       const mixedWords = [...allCorrectWords, ...commonMisspelledWords];
 
-      const misspelled = globalThis.getMisspelled(mixedWords);
+      const misspelled = await globalThis.getMisspelled(mixedWords);
 
       // Correct words from any loaded dictionary should not be flagged
       for (const word of allCorrectWords) {
@@ -235,45 +235,45 @@ describe('Dictionary Worker test suite', () => {
       await globalThis.reloadDictionaries();
     });
 
-    test('handles single word', () => {
-      const misspelled = globalThis.getMisspelled(['hello']);
+    test('handles single word', async () => {
+      const misspelled = await globalThis.getMisspelled(['hello']);
       expect(misspelled).toEqual([]);
     });
 
-    test('handles words with special characters', () => {
-      const misspelled = globalThis.getMisspelled(['don\'t', 'it\'s', 'hello-world']);
+    test('handles words with special characters', async () => {
+      const misspelled = await globalThis.getMisspelled(['don\'t', 'it\'s', 'hello-world']);
       // Should handle contractions and hyphenated words
       expect(Array.isArray(misspelled)).toBe(true);
     });
 
-    test('handles very long word list', () => {
+    test('handles very long word list', async () => {
       const longList = Array(100).fill('test');
-      const misspelled = globalThis.getMisspelled(longList);
+      const misspelled = await globalThis.getMisspelled(longList);
       expect(misspelled).toEqual([]);
     });
 
-    test('handles mixed case words', () => {
-      const misspelled = globalThis.getMisspelled(['Hello', 'WORLD', 'gibbrshih']);
+    test('handles mixed case words', async () => {
+      const misspelled = await globalThis.getMisspelled(['Hello', 'WORLD', 'gibbrshih']);
       expect(misspelled).toEqual(['gibbrshih']);
     });
 
-    test('handles empty string in word list', () => {
-      const misspelled = globalThis.getMisspelled(['', 'hello', '']);
+    test('handles empty string in word list', async () => {
+      const misspelled = await globalThis.getMisspelled(['', 'hello', '']);
       expect(Array.isArray(misspelled)).toBe(true);
     });
 
-    test('handles duplicate words', () => {
-      const misspelled = globalThis.getMisspelled(['hello', 'hello', 'asdfghjkl', 'asdfghjkl']);
+    test('handles duplicate words', async () => {
+      const misspelled = await globalThis.getMisspelled(['hello', 'hello', 'asdfghjkl', 'asdfghjkl']);
       expect(Array.isArray(misspelled)).toBe(true);
     });
 
-    test('suggestions handles empty string', () => {
-      const suggestions = globalThis.getSuggestions('');
+    test('suggestions handles empty string', async () => {
+      const suggestions = await globalThis.getSuggestions('');
       expect(Array.isArray(suggestions)).toBe(true);
     });
 
-    test('getMisspelled returns unique results', () => {
-      const misspelled = globalThis.getMisspelled(['asdfghjkl', 'asdfghjkl', 'zxcvbnm']);
+    test('getMisspelled returns unique results', async () => {
+      const misspelled = await globalThis.getMisspelled(['asdfghjkl', 'asdfghjkl', 'zxcvbnm']);
       expect(misspelled).toEqual(['asdfghjkl', 'asdfghjkl', 'zxcvbnm']);
     });
   });
@@ -292,7 +292,7 @@ describe('Dictionary Worker test suite', () => {
       expect(loaded3).toBeInstanceOf(Set);
       expect(loaded1.has('en')).toBe(true);
 
-      const misspelled = globalThis.getMisspelled(['hello']);
+      const misspelled = await globalThis.getMisspelled(['hello']);
       expect(misspelled).toEqual([]);
     });
 
@@ -304,7 +304,7 @@ describe('Dictionary Worker test suite', () => {
       // Verify English was loaded
       expect(loaded1.has('en')).toBe(true);
       expect(loaded1.size).toBe(1);
-      expect(globalThis.getMisspelled(['hello'])).toEqual([]);
+      expect(await globalThis.getMisspelled(['hello'])).toEqual([]);
 
       // Change to Spanish
       settings.updateSettings({enabledDictionaries: ['es']});
@@ -313,7 +313,7 @@ describe('Dictionary Worker test suite', () => {
       // Verify Spanish was loaded
       expect(loaded2.has('es')).toBe(true);
       expect(loaded2.size).toBe(1);
-      expect(globalThis.getMisspelled(['hola'])).toEqual([]);
+      expect(await globalThis.getMisspelled(['hola'])).toEqual([]);
     });
 
     test('handles invalid dictionary gracefully', async () => {
@@ -330,7 +330,7 @@ describe('Dictionary Worker test suite', () => {
       expect(loaded.size).toBe(2);
 
       // Valid dictionaries should still work
-      expect(globalThis.getMisspelled(['hello', 'hola'])).toEqual([]);
+      expect(await globalThis.getMisspelled(['hello', 'hola'])).toEqual([]);
     });
 
     test('returns empty set when no dictionaries configured', async () => {
