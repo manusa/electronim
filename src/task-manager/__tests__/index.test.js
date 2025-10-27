@@ -66,6 +66,9 @@ describe('Task Manager module test suite', () => {
     });
     test('has windowOpenHandler', () => {
       expect(view.webContents.setWindowOpenHandler).toHaveBeenCalledWith(expect.any(Function));
+      view.webContents.getURL.mockReturnValue('file://task-manager/index.html');
+      view.webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
+      expect(electron.shell.openExternal).toHaveBeenCalledWith('https://example.com');
     });
     test('shows the dialog in the base window', () => {
       expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(view);

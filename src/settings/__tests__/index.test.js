@@ -202,8 +202,9 @@ describe('Settings module test suite', () => {
       // When
       openSettings();
       // Then
-      expect(electron.webContentsViewInstance.webContents.loadURL).toHaveBeenCalledTimes(1);
-      expect(electron.webContentsViewInstance.webContents.loadURL)
+      const view = electron.WebContentsView.mock.results.at(-1).value;
+      expect(view.webContents.loadURL).toHaveBeenCalledTimes(1);
+      expect(view.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/.+?\/index.html$/));
     });
   });

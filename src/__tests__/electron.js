@@ -27,43 +27,52 @@ const mockWebContentsViewInstance = webPreferences => {
     return events.EventEmitter.prototype.once.call(instance, eventName, func);
   });
   instance.setBounds = jest.fn();
-  instance.webContents = {
-    loadedUrl: '',
-    copy: jest.fn(),
-    copyImageAt: jest.fn(),
-    cut: jest.fn(),
-    destroy: jest.fn(),
-    executeJavaScript: jest.fn(async () => {}),
-    // https://www.electronjs.org/docs/latest/api/web-contents#contentsfindinpagetext-options
-    // contents.findInPage(text[, options])
-    findInPage: jest.fn(),
-    focus: jest.fn(),
-    forcefullyCrashRenderer: jest.fn(() => instance.listeners['render-process-gone']?.()),
-    getOSProcessId: jest.fn(() => webPreferences?.id || 1337),
-    getProcessId: jest.fn(() => webPreferences?.id || 1337),
-    getTitle: jest.fn(() => ''),
-    getURL: jest.fn(),
-    // https://nodejs.org/api/events.html#emitterlistenerseventname
-    listeners: jest.fn(eventName => instance.listeners[eventName] || []),
-    loadURL: jest.fn(url => {
-      instance.webContents.loadedUrl = url;
-    }),
-    navigationHistory: {
-      canGoBack: jest.fn(() => false),
-      goBack: jest.fn()
-    },
-    on: jest.fn((...args) => instance.on(...args)),
-    once: jest.fn((...args) => instance.once(...args)),
-    openDevTools: jest.fn(),
-    paste: jest.fn(),
-    reload: jest.fn(),
-    removeAllListeners: jest.fn(),
-    send: jest.fn(),
-    session: {},
-    setWindowOpenHandler: jest.fn(),
-    stopFindInPage: jest.fn(),
-    userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36'
+  instance.webContents = new events.EventEmitter();
+  instance.webContents.on = jest.fn((eventName, func) => {
+    instance.listeners[eventName] = func; // Also store in instance.listeners for backward compatibility
+    return events.EventEmitter.prototype.on.call(instance.webContents, eventName, func);
+  });
+  instance.webContents.once = jest.fn((eventName, func) => {
+    instance.listeners[eventName] = func; // Also store in instance.listeners for backward compatibility
+    return events.EventEmitter.prototype.once.call(instance.webContents, eventName, func);
+  });
+  // Custom listeners method for backward compatibility: returns first listener if only one, otherwise array
+  const originalListeners = instance.webContents.listeners.bind(instance.webContents);
+  instance.webContents.listeners = jest.fn(eventName => {
+    const listenerArray = originalListeners(eventName);
+    return listenerArray.length === 1 ? listenerArray[0] : listenerArray;
+  });
+  instance.webContents.loadedUrl = '';
+  instance.webContents.copy = jest.fn();
+  instance.webContents.copyImageAt = jest.fn();
+  instance.webContents.cut = jest.fn();
+  instance.webContents.destroy = jest.fn();
+  instance.webContents.executeJavaScript = jest.fn(async () => {});
+  // https://www.electronjs.org/docs/latest/api/web-contents#contentsfindinpagetext-options
+  // contents.findInPage(text[, options])
+  instance.webContents.findInPage = jest.fn();
+  instance.webContents.focus = jest.fn();
+  instance.webContents.forcefullyCrashRenderer = jest.fn(() => instance.listeners['render-process-gone']?.());
+  instance.webContents.getOSProcessId = jest.fn(() => webPreferences?.id || 1337);
+  instance.webContents.getProcessId = jest.fn(() => webPreferences?.id || 1337);
+  instance.webContents.getTitle = jest.fn(() => '');
+  instance.webContents.getURL = jest.fn();
+  instance.webContents.loadURL = jest.fn(url => {
+    instance.webContents.loadedUrl = url;
+  });
+  instance.webContents.navigationHistory = {
+    canGoBack: jest.fn(() => false),
+    goBack: jest.fn()
   };
+  instance.webContents.openDevTools = jest.fn();
+  instance.webContents.paste = jest.fn();
+  instance.webContents.reload = jest.fn();
+  instance.webContents.removeAllListeners = jest.fn();
+  instance.webContents.send = jest.fn();
+  instance.webContents.session = {};
+  instance.webContents.setWindowOpenHandler = jest.fn();
+  instance.webContents.stopFindInPage = jest.fn();
+  instance.webContents.userAgent = 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36';
   return instance;
 };
 
@@ -173,7 +182,6 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
   };
   const instance = {
     WebContentsView: jest.fn(() => webContentsViewInstance),
-    webContentsViewInstance,
     BaseWindow,
     Menu,
     MenuItem: jest.fn(def => def),

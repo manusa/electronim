@@ -187,18 +187,18 @@ describe('Chrome Tabs Module module test suite', () => {
     });
     test('checks for updates', async () => {
       // Given
-      const {webContentsViewInstance} = electron;
+      chromeTabs.newTabContainer();
+      const tabContainer = electron.WebContentsView.mock.results.at(-1).value;
       let resolveSend;
       const isSent = new Promise(resolve => {
         resolveSend = resolve;
       });
-      webContentsViewInstance.webContents.send = jest.fn(() => resolveSend(true));
-      chromeTabs.newTabContainer();
+      tabContainer.webContents.send = jest.fn(() => resolveSend(true));
       // When
       electron.ipcMain.emit('servicesReady');
       // Then
       await expect(isSent).resolves.toBe(true);
-      expect(webContentsViewInstance.webContents.send).toHaveBeenCalledWith('electronimNewVersionAvailable', true);
+      expect(tabContainer.webContents.send).toHaveBeenCalledWith('electronimNewVersionAvailable', true);
     });
     test('sets interval to check for updates with unref', () => {
       // Given
