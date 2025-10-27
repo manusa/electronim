@@ -19,42 +19,21 @@ describe('Task Manager module test suite', () => {
   let serviceManagerModule;
   let taskManagerModule;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
-    baseWindow = {
-      contentView: {
-        addChildView: jest.fn(),
-        children: []
-      },
-      getContentBounds: jest.fn(() => ({width: 800, height: 600}))
-    };
-    serviceManagerModule = {
-      getServices: jest.fn(() => ({
-        1: {
-          webContents: {
-            getTitle: jest.fn(() => 'Service 1'),
-            getProcessId: jest.fn(() => 100),
-            getOSProcessId: jest.fn(() => 1000),
-            forcefullyCrashRenderer: jest.fn(),
-            reload: jest.fn()
-          }
-        },
-        2: {
-          webContents: {
-            getTitle: jest.fn(() => 'Service 2'),
-            getProcessId: jest.fn(() => 200),
-            getOSProcessId: jest.fn(() => 2000),
-            forcefullyCrashRenderer: jest.fn(),
-            reload: jest.fn()
-          }
-        }
-      })),
-      getService: jest.fn(id => {
-        const services = serviceManagerModule.getServices();
-        return services[id];
-      })
-    };
+    await require('../../__tests__').testSettings();
+    baseWindow = new electron.BaseWindow();
+    serviceManagerModule = require('../../service-manager');
+
+    serviceManagerModule.addServices(electron.ipcRenderer)([
+      {id: 1337, url: 'https://localhost'},
+      {id: 313373, url: 'https://localhost?2'}
+    ]);
+    // eslint-disable-next-line no-warning-comments
+    // TODO this won't be necessary once we fix electron.mockWebContentsViewInstance
+    electron.WebContentsView.mock.results.at(0).value.webContents.getOSProcessId.mockReturnValueOnce(1000);
+    electron.WebContentsView.mock.results.at(1).value.webContents.getOSProcessId.mockReturnValueOnce(2000);
     electron.app.getAppMetrics.mockReturnValue([
       {
         pid: 1000, // Use OS PIDs to match getOSProcessId()
@@ -71,114 +50,68 @@ describe('Task Manager module test suite', () => {
   });
 
   describe('openTaskManagerDialog', () => {
-    let openDialog;
+    let view;
 
     beforeEach(() => {
-      openDialog = taskManagerModule.openTaskManagerDialog(baseWindow, serviceManagerModule);
+      taskManagerModule.openTaskManagerDialog(baseWindow, serviceManagerModule)();
+      view = electron.WebContentsView.mock.results.at(-1).value;
     });
-
     test('creates a WebContentsView', () => {
-      openDialog();
-
-      expect(electron.WebContentsView).toHaveBeenCalledTimes(1);
+      expect(electron.WebContentsView).toHaveBeenCalledTimes(3); // 2 services + 1 task manager
     });
-
     test('loads the task manager HTML', () => {
-      openDialog();
-
-      const view = electron.WebContentsView.mock.results[0].value;
       expect(view.webContents.loadURL).toHaveBeenCalledWith(
         expect.stringContaining('task-manager/index.html')
       );
     });
-
     test('has windowOpenHandler', () => {
-      openDialog();
-
-      const view = electron.WebContentsView.mock.results[0].value;
       expect(view.webContents.setWindowOpenHandler).toHaveBeenCalledWith(expect.any(Function));
     });
-
     test('shows the dialog in the base window', () => {
-      openDialog();
-
-      const view = electron.WebContentsView.mock.results[0].value;
       expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(view);
     });
 
     describe('webPreferences', () => {
+      let webPreferences;
+      beforeEach(() => {
+        webPreferences = electron.WebContentsView.mock.calls.at(-1).at(0).webPreferences;
+      });
       test('is sandboxed', () => {
-        openDialog();
-
-        const webPreferences = electron.WebContentsView.mock.calls[0][0].webPreferences;
         expect(webPreferences.sandbox).toBe(true);
       });
-
       test('has no node integration', () => {
-        openDialog();
-
-        const webPreferences = electron.WebContentsView.mock.calls[0][0].webPreferences;
         expect(webPreferences.nodeIntegration).toBe(false);
       });
-
       test('has context isolation', () => {
-        openDialog();
-
-        const webPreferences = electron.WebContentsView.mock.calls[0][0].webPreferences;
         expect(webPreferences.contextIsolation).toBe(true);
       });
     });
 
     describe('event listeners', () => {
       test('registers taskManagerGetMetrics listener', () => {
-        const onSpy = jest.spyOn(electron.ipcMain, 'on');
-        openDialog();
-
-        expect(onSpy).toHaveBeenCalledWith(
-          'taskManagerGetMetrics',
-          expect.any(Function)
-        );
-        onSpy.mockRestore();
+        expect(electron.ipcMain.rawListeners('taskManagerGetMetrics')).toHaveLength(1);
       });
 
       test('registers taskManagerKillProcess listener', () => {
-        const onSpy = jest.spyOn(electron.ipcMain, 'on');
-        openDialog();
-
-        expect(onSpy).toHaveBeenCalledWith(
-          'taskManagerKillProcess',
-          expect.any(Function)
-        );
-        onSpy.mockRestore();
+        expect(electron.ipcMain.rawListeners('taskManagerKillProcess')).toHaveLength(1);
       });
 
       test('removes event listeners when webContents is destroyed', () => {
-        const removeListenerSpy = jest.spyOn(electron.ipcMain, 'removeListener');
-        openDialog();
-
-        const view = electron.WebContentsView.mock.results[0].value;
         const destroyedCallback = view.webContents.on.mock.calls.find(
           call => call[0] === 'destroyed'
         )[1];
 
         destroyedCallback();
-
-        expect(removeListenerSpy).toHaveBeenCalledWith(
-          'taskManagerGetMetrics',
-          expect.any(Function)
-        );
-        expect(removeListenerSpy).toHaveBeenCalledWith(
-          'taskManagerKillProcess',
-          expect.any(Function)
-        );
-        removeListenerSpy.mockRestore();
+        // view.webContents.send('destroyed'); // TODO: Update with mock EventEmitter when electron.js is tuned
+        expect(electron.ipcMain.rawListeners('taskManagerGetMetrics')).toBeEmpty();
+        expect(electron.ipcMain.rawListeners('taskManagerKillProcess')).toBeEmpty();
       });
     });
   });
 
   describe('getMetrics', () => {
     test('returns empty array when no services', () => {
-      serviceManagerModule.getServices.mockReturnValue({});
+      serviceManagerModule.removeAll();
 
       const result = taskManagerModule.getMetrics(serviceManagerModule)();
 
@@ -190,13 +123,13 @@ describe('Task Manager module test suite', () => {
 
       expect(result).toHaveLength(2);
       expect(result[0]).toMatchObject({
-        id: '1',
-        name: 'Service 1',
+        id: '1337',
+        name: '1337',
         pid: 1000
       });
       expect(result[1]).toMatchObject({
-        id: '2',
-        name: 'Service 2',
+        id: '313373',
+        name: '313373',
         pid: 2000
       });
     });
@@ -243,47 +176,37 @@ describe('Task Manager module test suite', () => {
 
   describe('killProcess', () => {
     let event;
+    let webContents;
 
     beforeEach(() => {
+      process.kill = jest.fn();
       event = {};
+      webContents = electron.WebContentsView.mock.results.at(0).value.webContents;
     });
 
     test('crashes and reloads the service renderer', () => {
-      const mockService = {
-        webContents: {
-          forcefullyCrashRenderer: jest.fn(),
-          reload: jest.fn()
-        }
-      };
-      serviceManagerModule.getService = jest.fn(() => mockService);
+      taskManagerModule.killProcess(serviceManagerModule)(event, {id: '1337'});
 
-      taskManagerModule.killProcess(serviceManagerModule)(event, {id: '1'});
-
-      expect(mockService.webContents.forcefullyCrashRenderer).toHaveBeenCalledTimes(1);
-      expect(mockService.webContents.reload).toHaveBeenCalledTimes(1);
+      expect(webContents.forcefullyCrashRenderer).toHaveBeenCalledTimes(1);
+      expect(process.kill).toHaveBeenCalledWith(1000, 'SIGKILL');
+      expect(webContents.reload).toHaveBeenCalledTimes(1);
     });
 
     test('does nothing when service not found', () => {
-      serviceManagerModule.getService.mockReturnValue(null);
-
       expect(() => {
         taskManagerModule.killProcess(serviceManagerModule)(event, {id: 'nonexistent'});
       }).not.toThrow();
+      expect(webContents.forcefullyCrashRenderer).not.toHaveBeenCalled();
+      expect(process.kill).not.toHaveBeenCalled();
     });
 
     test('handles errors gracefully', () => {
-      const mockService = {
-        webContents: {
-          forcefullyCrashRenderer: jest.fn(() => {
-            throw new Error('Crash failed');
-          }),
-          reload: jest.fn()
-        }
-      };
-      serviceManagerModule.getService = jest.fn(() => mockService);
+      webContents.forcefullyCrashRenderer = jest.fn(() => {
+        throw new Error('Crash failed');
+      });
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
 
-      taskManagerModule.killProcess(serviceManagerModule)(event, {id: '1'});
+      taskManagerModule.killProcess(serviceManagerModule)(event, {id: '1337'});
 
       expect(consoleError).toHaveBeenCalledWith('Error killing process:', expect.any(Error));
       consoleError.mockRestore();

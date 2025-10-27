@@ -49,8 +49,10 @@ const killProcess = serviceManagerModule => (_event, {id}) => {
   const service = serviceManagerModule.getService(id);
   if (service) {
     try {
+      service.webContents.once('render-process-gone', service.webContents.reload);
       service.webContents.forcefullyCrashRenderer();
-      service.webContents.reload();
+      // Kill the renderer process using the OS too (prevents hanging processes in Linux)
+      process.kill(service.webContents.getOSProcessId(), 'SIGKILL');
     } catch (error) {
       console.error('Error killing process:', error);
     }

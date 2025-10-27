@@ -15,7 +15,7 @@
  */
 const events = require('node:events');
 
-const mockWebContentsViewInstance = () => {
+const mockWebContentsViewInstance = webPreferences => {
   const instance = {
     listeners: {},
     on: jest.fn((eventName, func) => {
@@ -36,8 +36,9 @@ const mockWebContentsViewInstance = () => {
       // contents.findInPage(text[, options])
       findInPage: jest.fn(),
       focus: jest.fn(),
-      forcefullyCrashRenderer: jest.fn(),
-      getProcessId: jest.fn(() => 1000),
+      forcefullyCrashRenderer: jest.fn(() => instance.listeners['render-process-gone']?.()),
+      getOSProcessId: jest.fn(() => webPreferences.id || 1337),
+      getProcessId: jest.fn(() => webPreferences.id || 1337),
       getTitle: jest.fn(() => ''),
       getURL: jest.fn(),
       // https://nodejs.org/api/events.html#emitterlistenerseventname
