@@ -54,7 +54,9 @@ describe('Main :: Tab listeners test suite', () => {
       // Then
       expect(serviceManagerModule.addServices).not.toHaveBeenCalled();
       expect(addServicesNested).not.toHaveBeenCalled();
-      expect(electron.WebContentsView.mock.results[0].value.webContents.loadURL)
+      const settingsView = electron.WebContentsView.mock.results.at(-1).value;
+      expect(settingsView).toBeDefined();
+      expect(settingsView.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
     });
     test('Previous saved services in loaded settings, should add services to manager and mark first enabled service as active', () => {
@@ -74,7 +76,7 @@ describe('Main :: Tab listeners test suite', () => {
       expect(serviceManagerModule.addServices).toHaveBeenCalledWith(event.sender);
       expect(addServicesNested).toHaveBeenCalledTimes(1);
       expect(addServicesNested).toHaveBeenCalledWith([{id: '1337', otherInfo: 'A Tab', active: true}]);
-      expect(electron.WebContentsView.mock.results[0].value.webContents.loadURL)
+      expect(electron.WebContentsView.mock.results.at(-1).value.webContents.loadURL)
         .not.toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
     });
   });
@@ -117,8 +119,6 @@ describe('Main :: Tab listeners test suite', () => {
       // When
       mockIpc.emit('activateService', {}, {id: 'validId'});
       // Then
-      expect(baseWindow.contentView.addChildView)
-        .toHaveBeenCalledBefore(electron.WebContentsView.mock.results[0].value.setBounds);
       expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(activeService.setBounds);
     });
   });
@@ -140,11 +140,10 @@ describe('Main :: Tab listeners test suite', () => {
     await waitForTrayInit(() => main.init());
     const baseWindow = electron.BaseWindow.getAllWindows()[0];
     baseWindow.restore = jest.fn();
-    baseWindow.show = jest.fn();
     // When
     mockIpc.send('notificationClick', {}, {tabId: 'validId'});
     // Then
-    expect(electron.WebContentsView.mock.results[0].value.webContents.send)
+    expect(electron.WebContentsView.mock.results.at(1).value.webContents.send)
       .toHaveBeenCalledWith('activateServiceInContainer', {tabId: 'validId'});
     expect(baseWindow.restore).toHaveBeenCalledTimes(1);
     expect(baseWindow.show).toHaveBeenCalledTimes(1);

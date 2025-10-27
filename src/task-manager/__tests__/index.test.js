@@ -31,7 +31,7 @@ describe('Task Manager module test suite', () => {
       {id: 313373, url: 'https://localhost?2'}
     ]);
     // eslint-disable-next-line no-warning-comments
-    // TODO this won't be necessary once we fix electron.mockWebContentsViewInstance
+    // TODO this won't be necessary once we fix electron.newWebContentsViewInstance
     electron.WebContentsView.mock.results.at(0).value.webContents.getOSProcessId.mockReturnValueOnce(1000);
     electron.WebContentsView.mock.results.at(1).value.webContents.getOSProcessId.mockReturnValueOnce(2000);
     electron.app.getAppMetrics.mockReturnValue([

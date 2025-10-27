@@ -25,8 +25,6 @@ describe('Find in Page :: main test suite', () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
     await require('../../__tests__').testSettings();
-    // Each view should be a separate instance
-    electron.WebContentsView = jest.fn(() => require('../../__tests__').mockWebContentsViewInstance());
     eventBus = electron.ipcMain;
     jest.spyOn(require('../../user-agent'), 'initBrowserVersions')
       .mockImplementation(() => Promise.resolve({}));

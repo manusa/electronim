@@ -14,7 +14,6 @@
    limitations under the License.
  */
 module.exports = {
-  mockWebContentsViewInstance: require('./electron.js').mockWebContentsViewInstance,
   spawnElectron: require('./playwright.js').spawnElectron,
   testElectron: require('./electron.js').testElectron,
   testSettings: require('./settings.js').testSettings,

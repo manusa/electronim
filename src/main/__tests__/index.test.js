@@ -31,8 +31,6 @@ describe('Main :: Index module test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
-    // Each view should be a separate instance
-    electron.WebContentsView = jest.fn(() => require('../../__tests__').mockWebContentsViewInstance());
     settings = await require('../../__tests__').testSettings();
     jest.spyOn(settings, 'getPlatform').mockImplementation(() => 'linux');
     await require('../../__tests__').testUserAgent();

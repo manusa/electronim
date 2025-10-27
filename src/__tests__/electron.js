@@ -15,7 +15,7 @@
  */
 const events = require('node:events');
 
-const mockWebContentsViewInstance = webPreferences => {
+const newWebContentsViewInstance = webPreferences => {
   const instance = new events.EventEmitter();
   instance.listeners = {};
   instance.on = jest.fn((eventName, func) => {
@@ -95,6 +95,7 @@ const newBaseWindowInstance = () => {
   instance.minimize = jest.fn();
   instance.on = jest.fn(instance.on);
   instance.removeMenu = jest.fn();
+  instance.restore = jest.fn();
   instance.setAlwaysOnTop = jest.fn();
   instance.setBounds = jest.fn(bounds => {
     instance.bounds = {...instance.bounds, ...bounds};
@@ -110,7 +111,6 @@ const newBaseWindowInstance = () => {
 };
 
 const mockElectronInstance = ({...overriddenProps} = {}) => {
-  const webContentsViewInstance = mockWebContentsViewInstance();
   const sessionInstance = {
     availableSpellCheckerLanguages: [],
     clearCache: jest.fn(),
@@ -181,7 +181,7 @@ const mockElectronInstance = ({...overriddenProps} = {}) => {
     })
   };
   const instance = {
-    WebContentsView: jest.fn(() => webContentsViewInstance),
+    WebContentsView: jest.fn(newWebContentsViewInstance),
     BaseWindow,
     Menu,
     MenuItem: jest.fn(def => def),
@@ -248,5 +248,5 @@ const testElectron = () => {
 };
 
 module.exports = {
-  mockWebContentsViewInstance, testElectron
+  newWebContentsViewInstance, testElectron
 };

@@ -20,20 +20,12 @@ describe('Main :: Global listeners test suite', () => {
   let electron;
   let main;
   let baseWindow;
-  let webContentsViewInstances;
   let eventBus;
   let settings;
   beforeEach(async () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
     await require('../../__tests__').testUserAgent();
-    webContentsViewInstances = [];
-    // Each view should be a separate instance
-    electron.WebContentsView = jest.fn(() => {
-      const view = require('../../__tests__').mockWebContentsViewInstance();
-      webContentsViewInstances.push(view);
-      return view;
-    });
     settings = await require('../../__tests__').testSettings();
     settings.updateSettings({
       keyboardShortcuts: {
@@ -241,8 +233,7 @@ describe('Main :: Global listeners test suite', () => {
     // When
     eventBus.send('settingsOpenDialog');
     // Then
-    const view = webContentsViewInstances
-      .find(wcv => wcv.webContents.loadedUrl.endsWith('settings/index.html'));
+    const view = electron.WebContentsView.mock.results.at(-1).value;
     expect(view).toBeDefined();
     expect(view.isDialog).toBe(true);
     expect(view.webContents.loadURL)
@@ -265,8 +256,7 @@ describe('Main :: Global listeners test suite', () => {
       // When
       eventBus.send('settingsSave', {}, {tabs: [{id: 1337}], enabledDictionaries: []});
       // Then
-      const view = webContentsViewInstances
-        .find(wcv => wcv.webContents.loadedUrl.endsWith('spell-check/dictionary.renderer/index.html'));
+      const view = electron.WebContentsView.mock.results.at(0).value;
       expect(view.webContents.loadURL)
         .toHaveBeenCalledWith(expect.stringMatching(/spell-check\/dictionary.renderer\/index.html$/));
     });
