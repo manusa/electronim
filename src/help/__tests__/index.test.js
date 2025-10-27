@@ -22,55 +22,47 @@ describe('Help module test suite', () => {
     help = require('../');
   });
   describe('openHelpDialog', () => {
-    let openHelp;
+    let baseWindow;
+    let view;
     beforeEach(() => {
-      openHelp = help.openHelpDialog(new electron.BaseWindow());
+      baseWindow = new electron.BaseWindow();
+      help.openHelpDialog(baseWindow)();
+      view = electron.WebContentsView.mock.results.at(-1).value;
     });
-    describe('webPreferences', () => {
-      test('is sandboxed', () => {
-        // When
-        openHelp();
-        // Then
-        const WebContentsView = electron.WebContentsView;
-        expect(WebContentsView).toHaveBeenCalledTimes(1);
-        expect(WebContentsView).toHaveBeenCalledWith({
-          webPreferences: expect.objectContaining({sandbox: true, nodeIntegration: false})
-        });
-      });
-      test('has no node integration', () => {
-        // When
-        openHelp();
-        // Then
-        expect(electron.WebContentsView).toHaveBeenCalledWith({
-          webPreferences: expect.objectContaining({nodeIntegration: false})
-        });
-      });
-      test('has context isolation', () => {
-        // When
-        openHelp();
-        // Then
-        expect(electron.WebContentsView).toHaveBeenCalledWith({
-          webPreferences: expect.objectContaining({contextIsolation: true})
-        });
-      });
+    test('creates a WebContentsView', () => {
+      expect(electron.WebContentsView).toHaveBeenCalledTimes(1);
     });
-    test('hasWindowOpenHandler', () => {
-      // Given
-      electron.webContentsViewInstance.webContents.getURL.mockReturnValue('file://help/index.html');
-      openHelp();
-      // When
-      electron.webContentsViewInstance.webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
-      // Then
+    test('loads the help HTML', () => {
+      expect(view.webContents.loadURL).toHaveBeenCalledWith(
+        expect.stringContaining('help/index.html')
+      );
+    });
+    test('sets will-navigate handler', () => {
+      expect(view.webContents.rawListeners('will-navigate').length).toBeGreaterThan(0);
+    });
+    test('has windowOpenHandler', () => {
+      expect(view.webContents.setWindowOpenHandler).toHaveBeenCalledWith(expect.any(Function));
+      view.webContents.getURL.mockReturnValue('file://help/index.html');
+      view.webContents.setWindowOpenHandler.mock.calls[0][0]({url: 'https://example.com'});
       expect(electron.shell.openExternal).toHaveBeenCalledWith('https://example.com');
     });
-    test('should open dialog and add event listeners', () => {
-      // When
-      openHelp();
-      // Then
-      expect(electron.webContentsViewInstance.webContents.loadURL).toHaveBeenCalledTimes(1);
-      expect(electron.webContentsViewInstance.webContents.loadURL)
-        .toHaveBeenCalledWith(expect.stringMatching(/.+?\/index.html$/)); // NOSONAR
-      expect(electron.webContentsViewInstance.webContents.on).toHaveBeenCalledWith('will-navigate', expect.any(Function));
+    test('shows the dialog in the base window', () => {
+      expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(view);
+    });
+    describe('webPreferences', () => {
+      let webPreferences;
+      beforeEach(() => {
+        webPreferences = electron.WebContentsView.mock.calls.at(-1).at(0).webPreferences;
+      });
+      test('is sandboxed', () => {
+        expect(webPreferences.sandbox).toBe(true);
+      });
+      test('has no node integration', () => {
+        expect(webPreferences.nodeIntegration).toBe(false);
+      });
+      test('has context isolation', () => {
+        expect(webPreferences.contextIsolation).toBe(true);
+      });
     });
   });
 });
