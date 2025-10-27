@@ -16,52 +16,53 @@
 const events = require('node:events');
 
 const mockWebContentsViewInstance = webPreferences => {
-  const instance = {
-    listeners: {},
-    on: jest.fn((eventName, func) => {
-      instance.listeners[eventName] = func;
+  const instance = new events.EventEmitter();
+  instance.listeners = {};
+  instance.on = jest.fn((eventName, func) => {
+    instance.listeners[eventName] = func;
+    return events.EventEmitter.prototype.on.call(instance, eventName, func);
+  });
+  instance.once = jest.fn((eventName, func) => {
+    instance.listeners[eventName] = func;
+    return events.EventEmitter.prototype.once.call(instance, eventName, func);
+  });
+  instance.setBounds = jest.fn();
+  instance.webContents = {
+    loadedUrl: '',
+    copy: jest.fn(),
+    copyImageAt: jest.fn(),
+    cut: jest.fn(),
+    destroy: jest.fn(),
+    executeJavaScript: jest.fn(async () => {}),
+    // https://www.electronjs.org/docs/latest/api/web-contents#contentsfindinpagetext-options
+    // contents.findInPage(text[, options])
+    findInPage: jest.fn(),
+    focus: jest.fn(),
+    forcefullyCrashRenderer: jest.fn(() => instance.listeners['render-process-gone']?.()),
+    getOSProcessId: jest.fn(() => webPreferences?.id || 1337),
+    getProcessId: jest.fn(() => webPreferences?.id || 1337),
+    getTitle: jest.fn(() => ''),
+    getURL: jest.fn(),
+    // https://nodejs.org/api/events.html#emitterlistenerseventname
+    listeners: jest.fn(eventName => instance.listeners[eventName] || []),
+    loadURL: jest.fn(url => {
+      instance.webContents.loadedUrl = url;
     }),
-    once: jest.fn((eventName, func) => {
-      instance.listeners[eventName] = func;
-    }),
-    setBounds: jest.fn(),
-    webContents: {
-      loadedUrl: '',
-      copy: jest.fn(),
-      copyImageAt: jest.fn(),
-      cut: jest.fn(),
-      destroy: jest.fn(),
-      executeJavaScript: jest.fn(async () => {}),
-      // https://www.electronjs.org/docs/latest/api/web-contents#contentsfindinpagetext-options
-      // contents.findInPage(text[, options])
-      findInPage: jest.fn(),
-      focus: jest.fn(),
-      forcefullyCrashRenderer: jest.fn(() => instance.listeners['render-process-gone']?.()),
-      getOSProcessId: jest.fn(() => webPreferences.id || 1337),
-      getProcessId: jest.fn(() => webPreferences.id || 1337),
-      getTitle: jest.fn(() => ''),
-      getURL: jest.fn(),
-      // https://nodejs.org/api/events.html#emitterlistenerseventname
-      listeners: jest.fn(eventName => instance.listeners[eventName] || []),
-      loadURL: jest.fn(url => {
-        instance.webContents.loadedUrl = url;
-      }),
-      navigationHistory: {
-        canGoBack: jest.fn(() => false),
-        goBack: jest.fn()
-      },
-      on: jest.fn((...args) => instance.on(...args)),
-      once: jest.fn((...args) => instance.once(...args)),
-      openDevTools: jest.fn(),
-      paste: jest.fn(),
-      reload: jest.fn(),
-      removeAllListeners: jest.fn(),
-      send: jest.fn(),
-      session: {},
-      setWindowOpenHandler: jest.fn(),
-      stopFindInPage: jest.fn(),
-      userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36'
-    }
+    navigationHistory: {
+      canGoBack: jest.fn(() => false),
+      goBack: jest.fn()
+    },
+    on: jest.fn((...args) => instance.on(...args)),
+    once: jest.fn((...args) => instance.once(...args)),
+    openDevTools: jest.fn(),
+    paste: jest.fn(),
+    reload: jest.fn(),
+    removeAllListeners: jest.fn(),
+    send: jest.fn(),
+    session: {},
+    setWindowOpenHandler: jest.fn(),
+    stopFindInPage: jest.fn(),
+    userAgent: 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36'
   };
   return instance;
 };
