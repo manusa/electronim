@@ -18,6 +18,10 @@ on:
     tags:
     - '*'
 
+permissions:
+  contents: write
+  id-token: write  # Required for npmjs OIDC
+
 jobs:
   npm:
     name: NPM Publish
@@ -26,9 +30,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '22.x'
+          node-version: 24
+          registry-url: 'https://registry.npmjs.org'
+      # Ensure npm 11.5.1 or later is installed (required for https://docs.npmjs.com/trusted-publishers)
+      - name: Update npm
+        run: npm install -g npm@latest
       - name: Install
         run: npm install
       - name: Change Package version
@@ -36,7 +44,4 @@ jobs:
       - name: Prepare NPM package
         run: node ./utils/prepare-npm-package.js
       - name: Publish
-        run: |
-          export NPM_TOKEN=${{ secrets.NPM_TOKEN }}
-          echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> .npmrc
-          npm publish
+        run: npm publish
