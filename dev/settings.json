@@ -15,11 +15,21 @@
       "openUrlsInApp": false,
       "disableNotifications": false,
       "url": "https://mozilla.github.io/webrtc-landing/gum_test.html"
+    },
+    {
+      "id": "mh7q8jk5uhhgigbndzj",
+      "disabled": false,
+      "sandboxed": false,
+      "openUrlsInApp": false,
+      "disableNotifications": true,
+      "url": "https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_textarea"
     }
   ],
   "useNativeSpellChecker": false,
   "enabledDictionaries": [
-    "en"
+    "en",
+    "ca",
+    "es"
   ],
   "theme": "system",
   "trayEnabled": false,
@@ -27,11 +37,11 @@
   "alwaysOnTop": false,
   "closeButtonBehavior": "quit",
   "keyboardShortcuts": {
-    "tabSwitchModifier": "Ctrl",
-    "tabTraverseModifier": "Ctrl"
+    "tabSwitchModifier": "",
+    "tabTraverseModifier": ""
   },
-  "activeTab": "mh5pumjz4ws57nqah68",
-  "width": 800,
-  "height": 600,
+  "activeTab": "mh7q8jk5uhhgigbndzj",
+  "width": 1183,
+  "height": 771,
   "applicationTitle": ""
 }
