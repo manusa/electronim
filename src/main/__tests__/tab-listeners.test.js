@@ -264,4 +264,42 @@ describe('Main :: Tab listeners test suite', () => {
       ]);
     });
   });
+  describe('handleSetServiceDisableNotifications', () => {
+    test('valid tab ID with disableNotifications true, should update settings and relay event', async () => {
+      // Given
+      settings.updateSettings({tabs: [{id: 'test-tab-1', disableNotifications: false}, {id: 'test-tab-2'}]});
+      await waitForTrayInit(() => main.init());
+      const tabContainer = electron.WebContentsView.mock.results.at(1).value;
+      // When
+      mockIpc.send('setServiceDisableNotifications', {}, {id: 'test-tab-1', disableNotifications: true});
+      // Then
+      const updatedSettings = settings.loadSettings();
+      expect(updatedSettings.tabs).toEqual([{id: 'test-tab-1', disableNotifications: true}, {id: 'test-tab-2'}]);
+      expect(tabContainer.webContents.send)
+        .toHaveBeenCalledWith('setServiceDisableNotifications', {id: 'test-tab-1', disableNotifications: true});
+    });
+    test('valid tab ID with disableNotifications false, should update settings and relay event', async () => {
+      // Given
+      settings.updateSettings({tabs: [{id: 'test-tab-1', disableNotifications: true}, {id: 'test-tab-2'}]});
+      await waitForTrayInit(() => main.init());
+      const tabContainer = electron.WebContentsView.mock.results.at(1).value;
+      // When
+      mockIpc.send('setServiceDisableNotifications', {}, {id: 'test-tab-1', disableNotifications: false});
+      // Then
+      const updatedSettings = settings.loadSettings();
+      expect(updatedSettings.tabs).toEqual([{id: 'test-tab-1', disableNotifications: false}, {id: 'test-tab-2'}]);
+      expect(tabContainer.webContents.send)
+        .toHaveBeenCalledWith('setServiceDisableNotifications', {id: 'test-tab-1', disableNotifications: false});
+    });
+    test('tab without disableNotifications property, should add it when updated', async () => {
+      // Given
+      settings.updateSettings({tabs: [{id: 'test-tab-1'}, {id: 'test-tab-2'}]});
+      await waitForTrayInit(() => main.init());
+      // When
+      mockIpc.send('setServiceDisableNotifications', {}, {id: 'test-tab-1', disableNotifications: true});
+      // Then
+      const updatedSettings = settings.loadSettings();
+      expect(updatedSettings.tabs).toEqual([{id: 'test-tab-1', disableNotifications: true}, {id: 'test-tab-2'}]);
+    });
+  });
 });
