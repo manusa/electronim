@@ -29,6 +29,20 @@ const desktopCapturer = {
   getSources: async opts => ipcRenderer.invoke(APP_EVENTS.desktopCapturerGetSources, opts)
 };
 
+const getThumbnailDataURL = thumbnail => {
+  if (!thumbnail || typeof thumbnail.isEmpty !== 'function') {
+    return null;
+  }
+  if (thumbnail.isEmpty()) {
+    return null;
+  }
+  try {
+    return thumbnail.toDataURL();
+  } catch {
+    return null;
+  }
+};
+
 let currentRoot = null;
 
 const removeRoot = () => {
@@ -133,14 +147,13 @@ const Style = () => html`
 `;
 
 // eslint-disable-next-line no-unused-vars
-const Source = ({id, name, thumbnail, _display_id, _appIcon, resolve}) => {
+const Source = ({id, name, thumbnailDataURL, _display_id, _appIcon, resolve}) => {
   const selectStream = async event => {
     event.preventDefault();
     event.stopPropagation();
     resolve(await stream(id));
     removeRoot();
   };
-  const thumbnailDataURL = thumbnail.isEmpty() ? '' : thumbnail.toDataURL();
   return html`
     <div class="${ROOT_CLASS}__source" onclick=${selectStream}>
       ${thumbnailDataURL && html`
@@ -162,28 +175,45 @@ const NoSourcesFound = ({sources}) => sources !== null && sources.length === 0 &
   html`<div>No sources found</div>`;
 
 const Container = ({resolve, reject}) => {
-  const [sources, setSources] = useState(null);
+  const [sourcesMap, setSourcesMap] = useState(null);
+
   const updateSourcesFunction = () => {
     desktopCapturer.getSources(DEFAULT_SOURCES_OPTIONS).then(newSources => {
-      // Sort: screens (with display_id) first, then windows, alphabetically by name within each group
-      const sortedSources = newSources.sort((a, b) => {
-        const aHasDisplay = Boolean(a.display_id);
-        const bHasDisplay = Boolean(b.display_id);
-        if (aHasDisplay !== bHasDisplay) {
-          return aHasDisplay ? -1 : 1;
-        }
-        return a.name.localeCompare(b.name);
+      const updatedSourcesMap = {};
+
+      newSources.forEach(source => {
+        const thumbnailDataURL = getThumbnailDataURL(source.thumbnail);
+        const existingSource = sourcesMap?.[source.id];
+
+        updatedSourcesMap[source.id] = {
+          ...source,
+          // Use new thumbnail if available, otherwise use previous thumbnail
+          thumbnailDataURL: thumbnailDataURL || existingSource?.thumbnailDataURL || ''
+        };
       });
-      setSources(sortedSources);
+
+      setSourcesMap(updatedSourcesMap);
     });
   };
+
   useEffect(() => {
-    setTimeout(updateSourcesFunction, sources ? 300 : 0);
-  }, [sources]);
+    setTimeout(updateSourcesFunction, sourcesMap ? 300 : 0);
+  }, [sourcesMap]);
   const cancel = () => {
     reject(new Error('Screen share aborted by user'));
     removeRoot();
   };
+
+  // Convert map to sorted array for rendering
+  const sources = sourcesMap ? Object.values(sourcesMap).sort((a, b) => {
+    const aHasDisplay = Boolean(a.display_id);
+    const bHasDisplay = Boolean(b.display_id);
+    if (aHasDisplay !== bHasDisplay) {
+      return aHasDisplay ? -1 : 1;
+    }
+    return a.name.localeCompare(b.name);
+  }) : null;
+
   return html`
     <${Style}/>
     <div class="${ROOT_CLASS}__overlay" onclick=${cancel}>

@@ -182,6 +182,75 @@ describe('Browser mediaDevices shim test suite', () => {
       expect(sources[4].textContent).toBe('Zoom');
     });
   });
+  describe('thumbnail caching', () => {
+    test('should show placeholder when initial thumbnail is missing', async () => {
+      // Given - no thumbnail on first fetch
+      electron.ipcRenderer.invoke = jest.fn(async () => [
+        {id: 'window:1', name: 'Chrome', thumbnail: null}
+      ]);
+      // When
+      globalThis.navigator.mediaDevices.getDisplayMedia();
+      // Then
+      await waitFor(() =>
+        expect(document.querySelector('.electron-desktop-capturer-root__source')).not.toBeNull());
+      expect(document.querySelector('.electron-desktop-capturer-root__thumbnail--placeholder')).not.toBeNull();
+      expect(document.querySelector('img.electron-desktop-capturer-root__thumbnail')).toBeNull();
+    });
+    test('should show thumbnail when it becomes available', async () => {
+      // Given - thumbnail becomes available on second fetch
+      const validThumbnail = {
+        toDataURL: jest.fn(() => 'data:image/png;base64,validdata'),
+        isEmpty: jest.fn(() => false)
+      };
+      let callCount = 0;
+      electron.ipcRenderer.invoke = jest.fn(async () => {
+        callCount++;
+        if (callCount === 1) {
+          return [{id: 'window:1', name: 'Chrome', thumbnail: null}];
+        }
+        return [{id: 'window:1', name: 'Chrome', thumbnail: validThumbnail}];
+      });
+      // When
+      globalThis.navigator.mediaDevices.getDisplayMedia();
+      // Then - first shows placeholder
+      await waitFor(() =>
+        expect(document.querySelector('.electron-desktop-capturer-root__thumbnail--placeholder')).not.toBeNull());
+      // Then - eventually shows thumbnail
+      await waitFor(() =>
+        expect(document.querySelector('img.electron-desktop-capturer-root__thumbnail')).not.toBeNull(),
+      {timeout: 1000});
+      expect(document.querySelector('.electron-desktop-capturer-root__thumbnail--placeholder')).toBeNull();
+    });
+    test('should preserve thumbnail when subsequent fetches have no thumbnail', async () => {
+      // Given - thumbnail available initially, then missing
+      const validThumbnail = {
+        toDataURL: jest.fn(() => 'data:image/png;base64,cacheddata'),
+        isEmpty: jest.fn(() => false)
+      };
+      let callCount = 0;
+      electron.ipcRenderer.invoke = jest.fn(async () => {
+        callCount++;
+        if (callCount === 1) {
+          return [{id: 'window:1', name: 'Chrome', thumbnail: validThumbnail}];
+        }
+        return [{id: 'window:1', name: 'Chrome', thumbnail: null}];
+      });
+      // When
+      globalThis.navigator.mediaDevices.getDisplayMedia();
+      // Then - shows thumbnail initially
+      await waitFor(() =>
+        expect(document.querySelector('img.electron-desktop-capturer-root__thumbnail')).not.toBeNull());
+      const firstImage = document.querySelector('img.electron-desktop-capturer-root__thumbnail');
+      expect(firstImage.src).toBe('data:image/png;base64,cacheddata');
+      // Wait for next poll (300ms + buffer)
+      await new Promise(resolve => setTimeout(resolve, 400));
+      // Then - thumbnail is still visible (cached)
+      const secondImage = document.querySelector('img.electron-desktop-capturer-root__thumbnail');
+      expect(secondImage).not.toBeNull();
+      expect(secondImage.src).toBe('data:image/png;base64,cacheddata');
+      expect(document.querySelector('.electron-desktop-capturer-root__thumbnail--placeholder')).toBeNull();
+    });
+  });
   describe('events', () => {
     test('select stream, should remove selector and resolve promise', async () => {
       // Given
