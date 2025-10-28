@@ -109,6 +109,18 @@ const Style = () => html`
       height: 81px;
       object-fit: cover;
     }
+    .${ROOT_CLASS} .${ROOT_CLASS}__thumbnail--placeholder {
+      background: rgba(100,100,100,.3);
+      border: 1px dashed rgba(255,255,255,.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .${ROOT_CLASS} .${ROOT_CLASS}__thumbnail--placeholder::before {
+      content: '👁️';
+      font-size: 24px;
+      opacity: 0.5;
+    }
     .${ROOT_CLASS} .${ROOT_CLASS}__name {
       margin-top: 3px;
       text-align: center;
@@ -128,9 +140,15 @@ const Source = ({id, name, thumbnail, _display_id, _appIcon, resolve}) => {
     resolve(await stream(id));
     removeRoot();
   };
+  const thumbnailDataURL = thumbnail.isEmpty() ? '' : thumbnail.toDataURL();
   return html`
     <div class="${ROOT_CLASS}__source" onclick=${selectStream}>
-      <img class="${ROOT_CLASS}__thumbnail" alt=${id} src=${thumbnail.toDataURL()} />
+      ${thumbnailDataURL && html`
+        <img class="${ROOT_CLASS}__thumbnail" alt=${id} src=${thumbnailDataURL} />
+      `}
+      ${!thumbnailDataURL && html`
+        <div class="${ROOT_CLASS}__thumbnail ${ROOT_CLASS}__thumbnail--placeholder"></div>
+      `}
       <span class="${ROOT_CLASS}__name">${name}</span>
     </div>
   `;
@@ -146,7 +164,18 @@ const NoSourcesFound = ({sources}) => sources !== null && sources.length === 0 &
 const Container = ({resolve, reject}) => {
   const [sources, setSources] = useState(null);
   const updateSourcesFunction = () => {
-    desktopCapturer.getSources(DEFAULT_SOURCES_OPTIONS).then(setSources);
+    desktopCapturer.getSources(DEFAULT_SOURCES_OPTIONS).then(newSources => {
+      // Sort: screens (with display_id) first, then windows, alphabetically by name within each group
+      const sortedSources = newSources.sort((a, b) => {
+        const aHasDisplay = Boolean(a.display_id);
+        const bHasDisplay = Boolean(b.display_id);
+        if (aHasDisplay !== bHasDisplay) {
+          return aHasDisplay ? -1 : 1;
+        }
+        return a.name.localeCompare(b.name);
+      });
+      setSources(sortedSources);
+    });
   };
   useEffect(() => {
     setTimeout(updateSourcesFunction, sources ? 300 : 0);
