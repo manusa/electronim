@@ -213,7 +213,7 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
       await cdpSession.detach();
 
       // Wait for event to be processed
-      await new Promise(resolve => setTimeout(resolve, 300));
+      await new Promise(resolve => setTimeout(resolve, 100));
     },
     /**
      * Get the first window's fullscreen state

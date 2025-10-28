@@ -24,33 +24,27 @@ const TEST_TIMEOUT = 15000;
 describe('E2E :: Keyboard shortcuts test suite', () => {
   let electron;
   let mainWindow;
-  let testServer1;
-  let testServer2;
-  let testServer3;
+  let testServer;
 
   beforeAll(async () => {
-    // Start HTTP servers with test pages
-    testServer1 = await createTestServer({manualCleanup: true});
-    testServer2 = await createTestServer({manualCleanup: true});
-    testServer3 = await createTestServer({manualCleanup: true});
+    testServer = await createTestServer({manualCleanup: true});
 
-    // Start Electron with multiple test tabs
     electron = await spawnElectron({
       settings: {
         tabs: [
           {
             id: 'test-service-1',
-            url: testServer1.url,
+            url: testServer.url,
             customName: 'Test Service 1'
           },
           {
             id: 'test-service-2',
-            url: testServer2.url,
+            url: testServer.url,
             customName: 'Test Service 2'
           },
           {
             id: 'test-service-3',
-            url: testServer3.url,
+            url: testServer.url,
             customName: 'Test Service 3'
           }
         ]
@@ -63,9 +57,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
   afterAll(async () => {
     await Promise.all([
       electron.kill(),
-      testServer1.close(),
-      testServer2.close(),
-      testServer3.close()
+      testServer.close()
     ]);
   }, STARTUP_TIMEOUT);
 
@@ -107,11 +99,6 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
   });
 
   describe('Ctrl+[1-9] tab switching', () => {
-    beforeEach(async () => {
-      await electron.sendKeys('1', ['control']);
-      await electron.waitForActiveTab(mainWindow, 'test-service-1');
-    });
-
     test('Ctrl+1 activates first tab', async () => {
       // Given
       await electron.sendKeys('2', ['control']);
@@ -214,11 +201,6 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
   });
 
   describe('Meta key shortcuts (macOS legacy support)', () => {
-    beforeEach(async () => {
-      await electron.sendKeys('3', ['control']);
-      await electron.waitForActiveTab(mainWindow, 'test-service-3');
-    });
-
     test('Meta+1 activates first tab', async () => {
       // When
       await electron.sendKeys('1', ['meta']);
