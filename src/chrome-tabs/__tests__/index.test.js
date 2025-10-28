@@ -24,7 +24,7 @@ describe('Chrome Tabs Module module test suite', () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
     settings = await require('../../__tests__').testSettings();
-    jest.mock('../check-for-updates', () => ({
+    jest.mock('../../update', () => ({
       getLatestRelease: () => Promise.resolve({})
     }));
     chromeTabs = require('../');

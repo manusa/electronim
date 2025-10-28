@@ -18,7 +18,7 @@
  */
 const {createTestServer} = require('../../__tests__');
 
-describe('Check For Updates module test suite', () => {
+describe('Update module test suite', () => {
   beforeEach(() => {
     jest.resetModules();
   });
@@ -26,7 +26,7 @@ describe('Check For Updates module test suite', () => {
     describe('with real call', () => {
       test('retrieves the latest released version from GitHub', async () => {
         // When
-        const {version} = await require('../check-for-updates').getLatestRelease();
+        const {version} = await require('..').getLatestRelease();
         // Then
         expect(version).toMatch(/^\d+\.\d+\.\d+$/);
       });
@@ -38,7 +38,7 @@ describe('Check For Updates module test suite', () => {
         const server = await createTestServer({
           handler: (req, res) => testHandler(req, res)
         });
-        checkForUpdates = require('../check-for-updates');
+        checkForUpdates = require('..');
         checkForUpdates.setUrl({
           githubReleasesLatestUrl: `${server.url}/latest`
         });

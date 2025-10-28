@@ -17,7 +17,7 @@ const {WebContentsView, Menu, MenuItem, ipcMain: eventBus} = require('electron')
 const path = require('node:path');
 const {APP_EVENTS} = require('../constants');
 const {loadSettings} = require('../settings');
-const {getLatestRelease} = require('./check-for-updates');
+const {getLatestRelease} = require('../update');
 
 const TABS_CONTAINER_HEIGHT = 46;
 
