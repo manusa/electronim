@@ -213,10 +213,6 @@ const initTabListener = () => {
   eventBus.on(APP_EVENTS.zoomReset, handleZoomReset);
 };
 
-const initDesktopCapturerHandler = () => {
-  eventBus.handle(APP_EVENTS.desktopCapturerGetSources, (_event, opts) => desktopCapturer.getSources(opts));
-};
-
 const appMenuOpen = () => {
   const {width, height} = mainWindow.getContentBounds();
   mainWindow.contentView.addChildView(appMenu);
@@ -283,6 +279,7 @@ const initGlobalListeners = () => {
   eventBus.on(APP_EVENTS.appMenuOpen, appMenuOpen);
   eventBus.on(APP_EVENTS.appMenuClose, appMenuClose);
   eventBus.on(APP_EVENTS.closeDialog, closeDialog);
+  eventBus.handle(APP_EVENTS.desktopCapturerGetSources, (_event, opts) => desktopCapturer.getSources(opts));
   eventBus.handle(APP_EVENTS.dictionaryGetAvailable, getAvailableDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetAvailableNative, getAvailableNativeDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetEnabled, getEnabledDictionaries);
@@ -353,7 +350,6 @@ const init = () => {
   }
   mainWindow.on('close', handleWindowClose);
   initTabListener();
-  initDesktopCapturerHandler();
   initGlobalListeners();
   initBrowserVersions()
     .then(browserVersionsReady)

@@ -43,11 +43,13 @@ describe('Main :: Global listeners test suite', () => {
   });
   test.each([
     'aboutOpenDialog', 'appMenuOpen', 'appMenuClose', 'closeDialog',
+    'desktopCapturerGetSources',
     'dictionaryGetAvailable', 'dictionaryGetAvailableNative', 'dictionaryGetEnabled',
     'findInPage', 'findInPageOpen', 'findInPageClose',
     'fullscreenToggle', 'helpOpenDialog', 'keyboardEventsInit', 'quit', 'restore',
-    'settingsLoad', 'settingsOpenDialog', 'settingsExport', 'settingsImport', 'settingsSave',
+    'settingsLoad', 'settingsOpenDialog', 'settingsExport', 'settingsImport', 'settingsSave', 'settingsOpenFolder',
     'tabSwitchToPosition', 'tabTraverseNext', 'tabTraversePrevious',
+    'taskManagerOpenDialog',
     'trayInit'
   ])('should register listener for %s', channel => {
     // Then
@@ -346,5 +348,37 @@ describe('Main :: Global listeners test suite', () => {
   test('trayInit, should initialize tray', () => {
     // Then
     expect(electron.Tray).toHaveBeenCalledTimes(1);
+  });
+  test('desktopCapturerGetSources, should call desktopCapturer.getSources with options', async () => {
+    // Given
+    const mockSources = [{id: 'screen1', name: 'Screen 1'}, {id: 'window1', name: 'Window 1'}];
+    electron.desktopCapturer.getSources.mockResolvedValue(mockSources);
+    const opts = {types: ['screen', 'window']};
+    // When
+    const result = await eventBus.send('desktopCapturerGetSources', {}, opts);
+    // Then
+    expect(electron.desktopCapturer.getSources).toHaveBeenCalledWith(opts);
+    expect(result).toEqual(mockSources);
+  });
+  test('settingsOpenFolder, should open electronim folder using shell.openPath', async () => {
+    // Given
+    electron.shell.openPath.mockResolvedValue('');
+    // When
+    const result = await eventBus.send('settingsOpenFolder');
+    // Then
+    expect(electron.shell.openPath).toHaveBeenCalledTimes(1);
+    expect(electron.shell.openPath).toHaveBeenCalledWith(expect.any(String));
+    expect(result).toEqual({success: true, path: expect.any(String)});
+  });
+  test('taskManagerOpenDialog, should open task manager dialog', () => {
+    // When
+    eventBus.send('taskManagerOpenDialog');
+    // Then
+    const view = electron.WebContentsView.mock.results
+      .map(r => r.value).find(bv => bv.webContents.loadedUrl?.endsWith('task-manager/index.html'));
+    expect(view).toBeDefined();
+    expect(baseWindow.contentView.addChildView).toHaveBeenCalledWith(view);
+    expect(view.webContents.loadURL)
+      .toHaveBeenCalledWith(expect.stringMatching(/task-manager\/index.html$/));
   });
 });
