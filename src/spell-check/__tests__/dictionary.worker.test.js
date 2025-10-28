@@ -247,7 +247,7 @@ describe('Dictionary Worker test suite', () => {
     });
 
     test('handles very long word list', async () => {
-      const longList = Array(100).fill('test');
+      const longList = new Array(100).fill('test');
       const misspelled = await globalThis.getMisspelled(longList);
       expect(misspelled).toEqual([]);
     });
