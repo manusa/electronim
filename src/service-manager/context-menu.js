@@ -45,6 +45,9 @@ const entries = ({webContents, params}) => {
       label: 'Paste',
       visible: params.editFlags.canPaste,
       click: () => webContents.paste()
+    }, {
+      label: 'Select All',
+      click: () => webContents.selectAll()
     }], [{
       label: 'Copy link address',
       visible: !!params.linkURL,

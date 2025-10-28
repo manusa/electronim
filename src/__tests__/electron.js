@@ -67,6 +67,7 @@ const newWebContentsViewInstance = webPreferences => {
   instance.webContents.openDevTools = jest.fn();
   instance.webContents.paste = jest.fn();
   instance.webContents.reload = jest.fn();
+  instance.webContents.selectAll = jest.fn();
   instance.webContents.removeAllListeners = jest.fn();
   instance.webContents.send = jest.fn();
   instance.webContents.session = {};
