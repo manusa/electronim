@@ -28,7 +28,8 @@ describe('Browser mediaDevices shim test suite', () => {
   beforeEach(() => {
     jest.resetModules();
     mockThumbnail = {
-      toDataURL: jest.fn()
+      toDataURL: jest.fn(() => 'data:image/png;base64,mockdata'),
+      isEmpty: jest.fn(() => false)
     };
     globalThis.APP_EVENTS = {
       desktopCapturerGetSources: 'desktopCapturerGetSources'
@@ -76,7 +77,109 @@ describe('Browser mediaDevices shim test suite', () => {
         expect(document.querySelector('.electron-desktop-capturer-root__source')).not.toBeNull());
       expect(electron.ipcRenderer.invoke).toHaveBeenCalled();
       expect(document.querySelectorAll('.electron-desktop-capturer-root__source')).toHaveLength(2);
-      expect(mockThumbnail.toDataURL).toHaveBeenCalledTimes(2);
+      expect(mockThumbnail.isEmpty).toHaveBeenCalled();
+      expect(mockThumbnail.toDataURL).toHaveBeenCalled();
+    });
+    test('mediaDevices.getDisplayMedia, should render placeholder for hidden windows with empty thumbnails', async () => {
+      // Given
+      const emptyThumbnail = {
+        toDataURL: jest.fn(() => ''),
+        isEmpty: jest.fn(() => true)
+      };
+      electron.ipcRenderer.invoke = jest.fn(async () => [
+        {id: 'hidden-window', name: 'Hidden Window', thumbnail: emptyThumbnail}
+      ]);
+      // When
+      globalThis.navigator.mediaDevices.getDisplayMedia();
+      // Then
+      await waitFor(() =>
+        expect(document.querySelector('.electron-desktop-capturer-root__source')).not.toBeNull());
+      expect(emptyThumbnail.isEmpty).toHaveBeenCalled();
+      expect(emptyThumbnail.toDataURL).not.toHaveBeenCalled();
+      const placeholder = document.querySelector('.electron-desktop-capturer-root__thumbnail--placeholder');
+      expect(placeholder).not.toBeNull();
+      expect(document.querySelector('img.electron-desktop-capturer-root__thumbnail')).toBeNull();
+    });
+  });
+  describe('sorting', () => {
+    test('should display screens (with display_id) before windows', async () => {
+      // Given - windows listed before screens in the response
+      const screenThumbnail = {toDataURL: jest.fn(() => 'screen-data'), isEmpty: jest.fn(() => false)};
+      const windowThumbnail = {toDataURL: jest.fn(() => 'window-data'), isEmpty: jest.fn(() => false)};
+      electron.ipcRenderer.invoke = jest.fn(async () => [
+        {id: 'window:1', name: 'Chrome', thumbnail: windowThumbnail},
+        {id: 'screen:0', name: 'Screen 1', display_id: '123', thumbnail: screenThumbnail},
+        {id: 'window:2', name: 'Firefox', thumbnail: windowThumbnail}
+      ]);
+      // When
+      globalThis.navigator.mediaDevices.getDisplayMedia();
+      // Then
+      await waitFor(() =>
+        expect(document.querySelectorAll('.electron-desktop-capturer-root__source')).toHaveLength(3));
+      const sources = document.querySelectorAll('.electron-desktop-capturer-root__source .electron-desktop-capturer-root__name');
+      expect(sources[0].textContent).toBe('Screen 1');
+      expect(sources[1].textContent).toBe('Chrome');
+      expect(sources[2].textContent).toBe('Firefox');
+    });
+    test('should sort screens alphabetically by name', async () => {
+      // Given
+      const thumbnail = {toDataURL: jest.fn(() => 'data'), isEmpty: jest.fn(() => false)};
+      electron.ipcRenderer.invoke = jest.fn(async () => [
+        {id: 'screen:2', name: 'Screen 3', display_id: '789', thumbnail},
+        {id: 'screen:0', name: 'Screen 1', display_id: '123', thumbnail},
+        {id: 'screen:1', name: 'Screen 2', display_id: '456', thumbnail}
+      ]);
+      // When
+      globalThis.navigator.mediaDevices.getDisplayMedia();
+      // Then
+      await waitFor(() =>
+        expect(document.querySelectorAll('.electron-desktop-capturer-root__source')).toHaveLength(3));
+      const sources = document.querySelectorAll('.electron-desktop-capturer-root__source .electron-desktop-capturer-root__name');
+      expect(sources[0].textContent).toBe('Screen 1');
+      expect(sources[1].textContent).toBe('Screen 2');
+      expect(sources[2].textContent).toBe('Screen 3');
+    });
+    test('should sort windows alphabetically by name', async () => {
+      // Given
+      const thumbnail = {toDataURL: jest.fn(() => 'data'), isEmpty: jest.fn(() => false)};
+      electron.ipcRenderer.invoke = jest.fn(async () => [
+        {id: 'window:2', name: 'Zoom', thumbnail},
+        {id: 'window:0', name: 'Chrome', thumbnail},
+        {id: 'window:1', name: 'Firefox', thumbnail}
+      ]);
+      // When
+      globalThis.navigator.mediaDevices.getDisplayMedia();
+      // Then
+      await waitFor(() =>
+        expect(document.querySelectorAll('.electron-desktop-capturer-root__source')).toHaveLength(3));
+      const sources = document.querySelectorAll('.electron-desktop-capturer-root__source .electron-desktop-capturer-root__name');
+      expect(sources[0].textContent).toBe('Chrome');
+      expect(sources[1].textContent).toBe('Firefox');
+      expect(sources[2].textContent).toBe('Zoom');
+    });
+    test('should maintain stable order: screens alphabetically, then windows alphabetically', async () => {
+      // Given
+      const thumbnail = {toDataURL: jest.fn(() => 'data'), isEmpty: jest.fn(() => false)};
+      electron.ipcRenderer.invoke = jest.fn(async () => [
+        {id: 'window:3', name: 'Zoom', thumbnail},
+        {id: 'screen:1', name: 'Display 2', display_id: '456', thumbnail},
+        {id: 'window:1', name: 'Chrome', thumbnail},
+        {id: 'screen:0', name: 'Display 1', display_id: '123', thumbnail},
+        {id: 'window:2', name: 'Firefox', thumbnail}
+      ]);
+      // When
+      globalThis.navigator.mediaDevices.getDisplayMedia();
+      // Then
+      await waitFor(() =>
+        expect(document.querySelectorAll('.electron-desktop-capturer-root__source')).toHaveLength(5));
+      const sources = document.querySelectorAll('.electron-desktop-capturer-root__source .electron-desktop-capturer-root__name');
+      // Screens first, alphabetically
+      expect(sources[0].textContent).toBe('Display 1');
+      expect(sources[1].textContent).toBe('Display 2');
+      // Windows second, alphabetically
+      expect(sources[2].textContent).toBe('Chrome');
+      expect(sources[3].textContent).toBe('Firefox');
+      expect(sources[4].textContent).toBe('Zoom');
     });
   });
   describe('events', () => {
