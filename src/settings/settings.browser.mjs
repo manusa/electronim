@@ -88,39 +88,37 @@ const Settings = ({initialState}) => {
   `;
 };
 
-Promise.all([
-  settingsLoad(),
-  dictionaryGetAvailable(),
-  dictionaryGetAvailableNative(),
-  dictionaryGetEnabled()
-]).then(
-  (
-    [currentSettings, availableDictionaries, availableNativeDictionaries, enabledDictionaries]
-  ) => {
-    const initialState = {
-      activePane: ServicesPane.id,
-      invalidTabs: new Set(),
-      canCancel: currentSettings.tabs.length > 0,
-      canSave: currentSettings.tabs.length > 0,
-      dictionaries: {
-        available: availableDictionaries,
-        availableNative: availableNativeDictionaries,
-        enabled: enabledDictionaries
-      },
-      useNativeSpellChecker: currentSettings.useNativeSpellChecker,
-      tabs: currentSettings.tabs,
-      expandedTabs: [],
-      newTabValid: false,
-      newTabValue: '',
-      disableNotificationsGlobally: currentSettings.disableNotificationsGlobally,
-      theme: currentSettings.theme,
-      applicationTitle: currentSettings.applicationTitle ?? '',
-      trayEnabled: currentSettings.trayEnabled,
-      startMinimized: currentSettings.startMinimized,
-      alwaysOnTop: currentSettings.alwaysOnTop,
-      closeButtonBehavior: currentSettings.closeButtonBehavior,
-      keyboardShortcuts: currentSettings.keyboardShortcuts
-    };
-    render(html`<${Settings} initialState=${initialState} />`, settingsRoot());
-  }
-);
+const [currentSettings, availableDictionaries, availableNativeDictionaries, enabledDictionaries] =
+  await Promise.all([
+    settingsLoad(),
+    dictionaryGetAvailable(),
+    dictionaryGetAvailableNative(),
+    dictionaryGetEnabled()
+  ]);
+
+const initialState = {
+  activePane: ServicesPane.id,
+  invalidTabs: new Set(),
+  canCancel: currentSettings.tabs.length > 0,
+  canSave: currentSettings.tabs.length > 0,
+  dictionaries: {
+    available: availableDictionaries,
+    availableNative: availableNativeDictionaries,
+    enabled: enabledDictionaries
+  },
+  useNativeSpellChecker: currentSettings.useNativeSpellChecker,
+  tabs: currentSettings.tabs,
+  expandedTabs: [],
+  newTabValid: false,
+  newTabValue: '',
+  disableNotificationsGlobally: currentSettings.disableNotificationsGlobally,
+  theme: currentSettings.theme,
+  applicationTitle: currentSettings.applicationTitle ?? '',
+  trayEnabled: currentSettings.trayEnabled,
+  startMinimized: currentSettings.startMinimized,
+  alwaysOnTop: currentSettings.alwaysOnTop,
+  closeButtonBehavior: currentSettings.closeButtonBehavior,
+  keyboardShortcuts: currentSettings.keyboardShortcuts
+};
+
+render(html`<${Settings} initialState=${initialState} />`, settingsRoot());
