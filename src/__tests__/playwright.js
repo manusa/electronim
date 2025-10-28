@@ -242,7 +242,7 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
         // Access the BaseWindow's contentView to check for find-in-page dialog
         // The contentView property exists on BaseWindow instances
         const contentView = window.contentView;
-        if (!contentView || !contentView.children) {
+        if (!contentView?.children) {
           return false;
         }
         // Check if any child view has the isFindInPage property
