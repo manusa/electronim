@@ -183,31 +183,6 @@ describe('Chrome Tabs Module module test suite', () => {
         webPreferences: expect.objectContaining({sandbox: true, nodeIntegration: false})
       });
     });
-    test('checks for updates', async () => {
-      // Given
-      chromeTabs.newTabContainer();
-      const tabContainer = electron.WebContentsView.mock.results.at(-1).value;
-      let resolveSend;
-      const isSent = new Promise(resolve => {
-        resolveSend = resolve;
-      });
-      tabContainer.webContents.send = jest.fn(() => resolveSend(true));
-      // When
-      electron.ipcMain.emit('servicesReady');
-      // Then
-      await expect(isSent).resolves.toBe(true);
-      expect(tabContainer.webContents.send).toHaveBeenCalledWith('electronimNewVersionAvailable', true);
-    });
-    test('sets interval to check for updates with unref', () => {
-      // Given
-      const unref = jest.fn();
-      globalThis.setInterval = jest.fn(() => ({unref}));
-      // When
-      chromeTabs.newTabContainer();
-      // Then
-      expect(setInterval).toHaveBeenCalled();
-      expect(unref).toHaveBeenCalled();
-    });
   });
   describe('context menu', () => {
     let tabContainer;

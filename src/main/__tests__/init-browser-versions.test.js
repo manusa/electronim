@@ -80,5 +80,14 @@ describe('Main :: initBrowserVersions test suite', () => {
       // Then
       expect(electron.Tray).toHaveBeenCalledTimes(1);
     });
+    test('emits checkForUpdatesInit event', async () => {
+      // Given
+      const checkForUpdatesInitListener = jest.fn();
+      electron.ipcMain.on('checkForUpdatesInit', checkForUpdatesInitListener);
+      // When
+      await waitForTrayInit(() => require('../').init());
+      // Then
+      expect(checkForUpdatesInitListener).toHaveBeenCalledTimes(1);
+    });
   });
 });

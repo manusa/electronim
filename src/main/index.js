@@ -35,6 +35,7 @@ const {
 const serviceManager = require('../service-manager');
 const {openTaskManagerDialog} = require('../task-manager');
 const {initTray} = require('../tray');
+const {checkForUpdatesInit} = require('../update');
 const {initBrowserVersions, userAgentForWebContents} = require('../user-agent');
 
 const webPreferences = {
@@ -278,11 +279,15 @@ const initGlobalListeners = () => {
   eventBus.on(APP_EVENTS.aboutOpenDialog, openAboutDialog(mainWindow));
   eventBus.on(APP_EVENTS.appMenuOpen, appMenuOpen);
   eventBus.on(APP_EVENTS.appMenuClose, appMenuClose);
+  eventBus.on(APP_EVENTS.checkForUpdatesInit, checkForUpdatesInit);
   eventBus.on(APP_EVENTS.closeDialog, closeDialog);
   eventBus.handle(APP_EVENTS.desktopCapturerGetSources, (_event, opts) => desktopCapturer.getSources(opts));
   eventBus.handle(APP_EVENTS.dictionaryGetAvailable, getAvailableDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetAvailableNative, getAvailableNativeDictionaries);
   eventBus.handle(APP_EVENTS.dictionaryGetEnabled, getEnabledDictionaries);
+  eventBus.on(APP_EVENTS.electronimNewVersionAvailable, newVersionAvailable => {
+    tabContainer.webContents.send(APP_EVENTS.electronimNewVersionAvailable, newVersionAvailable);
+  });
   eventBus.on(APP_EVENTS.escape, () => {
     if (mainWindow.contentView.children.some(isFindInPage)) {
       eventBus.emit(APP_EVENTS.findInPageClose);
@@ -320,6 +325,7 @@ const browserVersionsReady = () => {
   appMenu = newAppMenu();
   app.userAgentFallback = userAgentForWebContents(appMenu.webContents);
   eventBus.emit(APP_EVENTS.keyboardEventsInit);
+  eventBus.emit(APP_EVENTS.checkForUpdatesInit);
   eventBus.emit(APP_EVENTS.trayInit);
 };
 

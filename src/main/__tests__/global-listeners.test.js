@@ -42,9 +42,11 @@ describe('Main :: Global listeners test suite', () => {
     baseWindow = electron.BaseWindow.getAllWindows()[0];
   });
   test.each([
-    'aboutOpenDialog', 'appMenuOpen', 'appMenuClose', 'closeDialog',
+    'aboutOpenDialog', 'appMenuOpen', 'appMenuClose',
+    'checkForUpdatesInit', 'closeDialog',
     'desktopCapturerGetSources',
     'dictionaryGetAvailable', 'dictionaryGetAvailableNative', 'dictionaryGetEnabled',
+    'electronimNewVersionAvailable',
     'findInPage', 'findInPageOpen', 'findInPageClose',
     'fullscreenToggle', 'helpOpenDialog', 'keyboardEventsInit', 'quit', 'restore',
     'settingsLoad', 'settingsOpenDialog', 'settingsExport', 'settingsImport', 'settingsSave', 'settingsOpenFolder',
@@ -348,6 +350,17 @@ describe('Main :: Global listeners test suite', () => {
   test('trayInit, should initialize tray', () => {
     // Then
     expect(electron.Tray).toHaveBeenCalledTimes(1);
+  });
+  test('electronimNewVersionAvailable, should forward event to tabContainer webContents', () => {
+    // Given
+    const tabContainer = electron.WebContentsView.mock.results.find(
+      r => r.value.webContents.loadedUrl?.includes('chrome-tabs')
+    )?.value;
+    expect(tabContainer).toBeDefined();
+    // When
+    eventBus.emit('electronimNewVersionAvailable', true);
+    // Then
+    expect(tabContainer.webContents.send).toHaveBeenCalledWith('electronimNewVersionAvailable', true);
   });
   test('desktopCapturerGetSources, should call desktopCapturer.getSources with options', async () => {
     // Given
