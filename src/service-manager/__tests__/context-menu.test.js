@@ -86,7 +86,7 @@ describe('Service Manager context-menu test suite', () => {
       expect(electron.Menu).toHaveBeenCalledTimes(1);
       expect(mockMenu.popup).toHaveBeenCalledWith({x: 14, y: 38});
     });
-    test.each(['Back', 'Reload', 'Find in Page', 'Cut', 'Copy', 'Copy image', 'Paste', 'Copy link address', 'Copy link text', 'Open link in external browser', 'DevTools'])(
+    test.each(['Back', 'Reload', 'Find in Page', 'Cut', 'Copy', 'Copy image', 'Paste', 'Select All', 'Copy link address', 'Copy link text', 'Open link in external browser', 'DevTools'])(
       'adds MenuItem with label %s', async label => {
         expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label}));
       });
@@ -215,6 +215,14 @@ describe('Service Manager context-menu test suite', () => {
         electron.MenuItem.mock.calls.find(c => c[0].label === 'Paste')[0].click();
         // Then
         expect(serviceManager.getService('1337').webContents.paste).toHaveBeenCalledTimes(1);
+      });
+    });
+    describe('Select All', () => {
+      test('click, should select all', async () => {
+        // When
+        electron.MenuItem.mock.calls.find(c => c[0].label === 'Select All')[0].click();
+        // Then
+        expect(serviceManager.getService('1337').webContents.selectAll).toHaveBeenCalledTimes(1);
       });
     });
     describe('Link context menu', () => {
