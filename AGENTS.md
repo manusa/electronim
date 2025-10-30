@@ -26,12 +26,12 @@ npm install  # Install dependencies - takes ~55 seconds
 - `npm run build:win` - Builds and bundles the application for Windows systems
 
 ### Testing
-- `npm test` - Run full test suite - takes ~13 seconds, runs 801 tests. NEVER CANCEL - Set timeout to 30+ minutes.
+- `npm test` - Run full test suite - takes ~13 seconds, runs 1072 tests (58 test suites). NEVER CANCEL - Set timeout to 30+ minutes.
 - `npm run test:e2e` - Run end-to-end tests to verify application startup - takes ~10-15 seconds
 - The project uses Jest with ECMAScript modules requiring the experimental VM modules flag for Node.js
 
 ### Running the Application
-- `npm run prestart && npm start` - Build and run the Electron application locally
+- `npm run prestart && npm start` - Build and run the Electron application locally (uses `dev/settings.json` and `dev/user-data` by default for development)
 - `npm start -- --user-data /path/to/userdata` - Run with a custom application data directory (useful for running multiple instances)
 - `npm start -- --settings-path /path/to/settings.json` - Run with a custom settings file location (useful for testing or multiple profiles)
 - `npm start -- --user-data /path/to/instance1 --settings-path /path/to/instance1/settings.json` - Run with both custom user data and settings paths
@@ -89,15 +89,20 @@ The project includes E2E tests to verify the complete Electron application stack
 - Window verification uses DevTools output analysis to confirm successful rendering
 - Process termination uses SIGKILL due to tray icon preventing graceful SIGTERM shutdown
 - **Startup E2E Tests** (`src/__tests__/startup.test.e2e.js`) - Tests actual Electron application startup by spawning the full process
-- **Settings Dialog E2E Tests** (`src/__tests__/settings-dialog.test.e2e.js`) - Tests that settings dialog appears when app starts with empty settings using `--settings-path` argument
+- **First-time Install E2E Tests** (`src/__tests__/first-time-install.test.e2e.js`) - Tests that settings dialog appears when app starts with empty settings using `--settings-path` argument
+- **About Dialog E2E Tests** (`src/__tests__/about.test.e2e.js`) - Tests About dialog functionality
+- **Help Dialog E2E Tests** (`src/__tests__/help.test.e2e.js`) - Tests Help dialog functionality
+- **Keyboard Shortcuts E2E Tests** (`src/__tests__/keyboard-shortcuts.test.e2e.js`) - Tests keyboard shortcuts functionality
+- **Task Manager E2E Tests** (`src/__tests__/task-manager.test.e2e.js`) - Tests task manager functionality
 
 ## Technical Architecture
 
 ### Key Technologies
-- **Electron**: Desktop application framework 
+- **Electron**: Desktop application framework
 - **Preact**: Lightweight React alternative for UI components
 - **Webpack**: Module bundler for creating optimized bundles
 - **Jest**: Testing framework with JSDOM environment
+- **Playwright**: Browser automation for end-to-end testing
 - **ESLint**: Code linting with custom configuration
 
 ### Project Structure
@@ -107,9 +112,22 @@ The project includes E2E tests to verify the complete Electron application stack
   - `settings/` - Application settings and configuration UI
   - `cli/` - Command-line argument parsing and validation
   - `about/` - About dialog and information
+  - `app-menu/` - Application menu functionality
+  - `assets/` - Asset files and resources
+  - `base-window/` - Base window management utilities
   - `chrome-tabs/` - Tab UI components based on Chrome tabs
   - `components/` - Reusable UI components (Material Design 3 style)
+  - `constants/` - Application-wide constants and configuration
+  - `find-in-page/` - Find in page functionality
+  - `help/` - Help dialog and documentation display
+  - `http-client/` - HTTP client module for network requests
   - `spell-check/` - Spell checking functionality with multiple language support
+  - `styles/` - Shared styles and theming
+  - `task-manager/` - Task and metrics management
+  - `tray/` - System tray integration
+  - `update/` - Update checking and release management
+  - `user-agent/` - User agent handling and configuration
+  - `__tests__/` - Shared testing utilities and infrastructure
 - `.github/` - GitHub configuration files
   - `workflows/` - CI/CD workflows
 - `bundles/` - Generated webpack bundles (not committed)
@@ -121,6 +139,9 @@ The project includes E2E tests to verify the complete Electron application stack
   - `electronim.spec` - Spec file to build the [Fedora COPR package](https://copr.fedorainfracloud.org/coprs/manusa/electronim) (Linux)
   - `entitlements.mac.plist` Contains the MacOS entitlements for the application (Mac)
   - `VERIFICATION.txt` - [Chocolatey](https://chocolatey.org/) Moderation verification file (Windows)
+- `dev/` - Development configuration
+  - `settings.json` - Development settings file (committed for reusability, used by `npm start`)
+  - `user-data/` - Development user data directory (not committed, used by `npm start`)
 - `utils/` - Build and utility scripts
 - `docs/` - Application documentation including setup guides and troubleshooting.
   These files are also accessible from within the application (they are bundled too).
@@ -209,6 +230,14 @@ The project provides several utilities in `src/__tests__/` to facilitate testing
 5. **User Agent Testing** (`src/__tests__/user-agent.js`):
    - Utilities for user agent testing
 
+6. **Update Module Testing** (`src/__tests__/update.js`):
+   - Utilities for testing update functionality in isolation
+   - Provides helpers for mocking GitHub release checking
+
+7. **Playwright Testing** (`src/__tests__/playwright.js`):
+   - Playwright testing infrastructure for browser automation
+   - Used in E2E tests for advanced browser interactions
+
 #### Browser Component Testing
 - Browser test files use `.browser.test.mjs` extension
 - Use JSDOM environment for browser component tests
@@ -226,7 +255,7 @@ The project provides several utilities in `src/__tests__/` to facilitate testing
 
 - **npm install**: ~55 seconds
 - **Linting and bundling** (`npm run pretest`): ~2 seconds
-- **Test suite** (`npm test`): ~13 seconds (801 tests)
+- **Test suite** (`npm test`): ~13 seconds (1072 tests, 58 test suites)
 - **Application startup**: ~3-5 seconds
 - **Platform builds**: 10-20 minutes (network dependent)
 
@@ -260,7 +289,7 @@ Solution: Document that builds require internet access to download Electron head
 ElectronIM supports:
 - **Linux**: AppImage, Snap, tar.gz packages
 - **macOS**: DMG and tar.gz for both x64 and arm64
-- **Windows**: ZIP and portable executable
+- **Windows**: ZIP, portable executable, and MSI installer
 
 The application can aggregate services like WhatsApp Web, Telegram Web, Slack, and other web-based messaging platforms into a unified interface.
 
@@ -276,9 +305,9 @@ added 872 packages, and audited 873 packages in 55s
 
 ### Sample Test Output
 ```
-Test Suites: 51 passed, 51 total
-Tests:       801 passed, 801 total
+Test Suites: 58 passed, 58 total
+Tests:       1072 passed, 1072 total
 Snapshots:   0 total
-Time:        13.069 s
+Time:        12.653 s
 Coverage:    Lines: ~96% | Functions: ~94% | Branches: ~89% | Statements: ~96%
 ```
