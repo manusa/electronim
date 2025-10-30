@@ -17,7 +17,6 @@ const {WebContentsView, Menu, MenuItem, ipcMain: eventBus} = require('electron')
 const path = require('node:path');
 const {APP_EVENTS} = require('../constants');
 const {loadSettings} = require('../settings');
-const {getLatestRelease} = require('../update');
 
 const TABS_CONTAINER_HEIGHT = 46;
 
@@ -27,14 +26,6 @@ const webPreferences = {
   sandbox: true,
   preload: path.resolve(__dirname, '..', '..', 'bundles', 'chrome-tabs.preload.js'),
   partition: 'persist:electronim'
-};
-
-const checkForUpdates = webContents => {
-  getLatestRelease()
-    .then(release => {
-      webContents.send(APP_EVENTS.electronimNewVersionAvailable, !release.matchesCurrent);
-    })
-    .catch(e => console.debug('Error checking for updates', e));
 };
 
 const handleContextMenu = viewOrWindow => async (event, params) => {
@@ -104,8 +95,6 @@ const newTabContainer = () => {
   tabContainer.webContents.loadURL(`file://${__dirname}/index.html`,
     {extraHeaders: 'pragma: no-cache\nCache-control: no-cache'});
   tabContainer.webContents.on('context-menu', handleContextMenu(tabContainer));
-  eventBus.once(APP_EVENTS.servicesReady, () => checkForUpdates(tabContainer.webContents));
-  setInterval(() => checkForUpdates(tabContainer.webContents), 1000 * 60 * 30).unref();
   return tabContainer;
 };
 
