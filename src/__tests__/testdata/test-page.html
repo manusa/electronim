@@ -80,6 +80,12 @@
       <input type="text" id="test-input" placeholder="Type something here..." style="width: 100%; padding: 10px; font-size: 16px; border-radius: 4px; border: none;">
       <p id="input-echo" style="margin-top: 10px; font-style: italic;"></p>
     </div>
+
+    <div class="status" style="margin-top: 20px;">
+      <p><strong>Screen Sharing Test:</strong></p>
+      <button id="share-screen-btn">Start Screen Sharing</button>
+      <p id="screen-share-status" style="margin-top: 10px; font-style: italic;"></p>
+    </div>
   </div>
 
   <script>
@@ -109,6 +115,36 @@
 
     testInput.addEventListener('input', (e) => {
       inputEcho.textContent = e.target.value ? `You typed: ${e.target.value}` : '';
+    });
+
+    // Screen sharing functionality
+    const shareScreenBtn = document.getElementById('share-screen-btn');
+    const screenShareStatus = document.getElementById('screen-share-status');
+
+    shareScreenBtn.addEventListener('click', async () => {
+      try {
+        screenShareStatus.textContent = 'Requesting screen share...';
+        screenShareStatus.style.color = 'yellow';
+
+        // Request screen sharing - this will trigger the mediadevices shim
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: true,
+          audio: false
+        });
+
+        screenShareStatus.textContent = 'Screen sharing started successfully!';
+        screenShareStatus.style.color = 'lightgreen';
+
+        // Store the stream for testing purposes
+        globalThis.electronimScreenShareStream = stream;
+
+        // Log the stream tracks
+        console.log('Screen share stream tracks:', stream.getTracks());
+      } catch (error) {
+        screenShareStatus.textContent = `Error: ${error.message}`;
+        screenShareStatus.style.color = 'red';
+        console.error('Screen sharing error:', error);
+      }
     });
 
     // Add a marker for test validation
