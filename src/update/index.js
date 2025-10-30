@@ -13,7 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {ELECTRONIM_VERSION} = require('../constants');
+const {ipcMain: eventBus} = require('electron');
+const {ELECTRONIM_VERSION, APP_EVENTS} = require('../constants');
 const {httpClient} = require('../http-client');
 const GITHUB_RELEASES = 'https://github.com/manusa/electronim/releases';
 
@@ -21,6 +22,9 @@ const GITHUB_RELEASES = 'https://github.com/manusa/electronim/releases';
 let githubReleasesLatest = `${GITHUB_RELEASES}/latest`;
 
 const TAG_MATCHER = new RegExp(`${GITHUB_RELEASES}/tag/(.+)`);
+
+// Store the latest version
+let latestVersion = null;
 
 // For testing purposes only
 const setUrl = ({githubReleasesLatestUrl}) => {
@@ -30,28 +34,44 @@ const setUrl = ({githubReleasesLatestUrl}) => {
 };
 
 /**
- * Checks if there is a new version of Electronim available and compares it with the current version.
- *
- * @returns {Promise<{matchesCurrent: boolean, version: string}>}
+ * Checks for updates and emits event to IPC main if a new version is available.
  */
-const getLatestRelease = async () => {
-  // Use HTTP endpoint instead of API to avoid rate limits
-  const response = await httpClient.get(githubReleasesLatest, {
-    headers: {Accept: '*/*'},
-    maxRedirects: 0,
-    validateStatus: null
-  });
-  if (response.status !== 302) {
-    throw new Error('Unexpected response from GitHub');
+const checkForUpdates = async () => {
+  try {
+    // Use HTTP endpoint instead of API to avoid rate limits
+    const response = await httpClient.get(githubReleasesLatest, {
+      headers: {Accept: '*/*'},
+      maxRedirects: 0,
+      validateStatus: null
+    });
+    if (response.status !== 302) {
+      throw new Error('Unexpected response from GitHub');
+    }
+    let version = TAG_MATCHER.exec(response.headers.location)[1];
+    if (version.startsWith('v')) {
+      version = version.substring(1);
+    }
+    latestVersion = version;
+    if (ELECTRONIM_VERSION !== latestVersion) {
+      eventBus.emit(APP_EVENTS.electronimNewVersionAvailable, true);
+    }
+  } catch (error) {
+    console.debug('Error checking for updates', error);
   }
-  let version = TAG_MATCHER.exec(response.headers.location)[1];
-  if (version.startsWith('v')) {
-    version = version.substring(1);
-  }
-  return ({
-    version,
-    matchesCurrent: ELECTRONIM_VERSION === version
-  });
 };
 
-module.exports = {getLatestRelease, setUrl};
+/**
+ * Starts polling for updates. Checks immediately and then every 30 minutes.
+ */
+const checkForUpdatesInit = async () => {
+  await checkForUpdates();
+  setInterval(checkForUpdates, 1000 * 60 * 30).unref();
+};
+
+module.exports = {
+  get latestVersion() {
+    return latestVersion;
+  },
+  setUrl,
+  checkForUpdatesInit
+};

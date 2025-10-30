@@ -19,45 +19,51 @@
 const {createTestServer} = require('../../__tests__');
 
 describe('Update module test suite', () => {
+  let electron;
   beforeEach(() => {
     jest.resetModules();
+    electron = require('../../__tests__').testElectron();
   });
-  describe('getLatestRelease', () => {
+  describe('checkForUpdatesInit', () => {
     describe('with real call', () => {
       test('retrieves the latest released version from GitHub', async () => {
+        // Given
+        const update = require('..');
         // When
-        const {version} = await require('..').getLatestRelease();
+        await update.checkForUpdatesInit();
         // Then
-        expect(version).toMatch(/^\d+\.\d+\.\d+$/);
+        expect(update.latestVersion).toMatch(/^\d+\.\d+\.\d+$/);
       });
     });
     describe('with HTTP server', () => {
       let testHandler;
-      let checkForUpdates;
+      let update;
       beforeEach(async () => {
         const server = await createTestServer({
           handler: (req, res) => testHandler(req, res)
         });
-        checkForUpdates = require('..');
-        checkForUpdates.setUrl({
+        update = require('..');
+        update.setUrl({
           githubReleasesLatestUrl: `${server.url}/latest`
         });
       });
-      test('with unexpected status code throws error', async () => {
+      test('with unexpected status code does not throw', async () => {
         // Given
         testHandler = (req, res) => {
-          res.writeHead(200, {'Content-Type': 'text/plain'});
+          res.writeHead(404, {'Content-Type': 'text/plain'});
           res.end();
         };
-        // When & Then
-        await expect(checkForUpdates.getLatestRelease()).rejects.toThrow('Unexpected response from GitHub');
+        // When
+        await update.checkForUpdatesInit();
+        // Then
+        expect(update.latestVersion).toBeNull();
       });
       test.each([
         ['v1.33.7', '1.33.7'],
         ['1.33.7', '1.33.7'],
         ['v1.33.7-rc.1', '1.33.7-rc.1'],
         ['1.33.7-beta.1', '1.33.7-beta.1']
-      ])('version: transforms %s tag_name to %s', async (tag_name, expected) => {
+      ])('latestVersion: transforms %s tag_name to %s', async (tag_name, expected) => {
         // Given
         testHandler = (req, res) => {
           res.writeHead(302, {
@@ -67,28 +73,85 @@ describe('Update module test suite', () => {
           res.end();
         };
         // When
-        const {version} = await checkForUpdates.getLatestRelease();
+        await update.checkForUpdatesInit();
         // Then
-        expect(version).toBe(expected);
+        expect(update.latestVersion).toBe(expected);
       });
-      test.each([
-        ['v1.33.7', false],
-        ['1.33.7', false],
-        ['v0.0.0', true],
-        ['0.0.0', true]
-      ])('matchesCurrent: compares %s with 0.0.0', async (tag_name, expected) => {
-        // Given
-        testHandler = (req, res) => {
-          res.writeHead(302, {
-            location: `https://github.com/manusa/electronim/releases/tag/${tag_name}`,
-            'Content-Type': 'text/plain'
+      describe('electronimNewVersionAvailable', () => {
+        let eventListener;
+        beforeEach(() => {
+          eventListener = jest.fn();
+          electron.ipcMain.on('electronimNewVersionAvailable', eventListener);
+        });
+        describe('emits event when new version available', () => {
+          test.each([
+            ['v1.33.7'],
+            ['1.33.7']
+          ])('for version %s', async tag_name => {
+            // Given
+            testHandler = (req, res) => {
+              res.writeHead(302, {
+                location: `https://github.com/manusa/electronim/releases/tag/${tag_name}`,
+                'Content-Type': 'text/plain'
+              });
+              res.end();
+            };
+            // When
+            await update.checkForUpdatesInit();
+            // Then
+            expect(eventListener).toHaveBeenCalledWith(true);
           });
-          res.end();
-        };
-        // When
-        const {matchesCurrent} = await checkForUpdates.getLatestRelease();
-        // Then
-        expect(matchesCurrent).toBe(expected);
+        });
+        describe('does not emit event when current version', () => {
+          test.each([
+            ['v0.0.0'],
+            ['0.0.0']
+          ])('for version %s', async tag_name => {
+            // Given
+            testHandler = (req, res) => {
+              res.writeHead(302, {
+                location: `https://github.com/manusa/electronim/releases/tag/${tag_name}`,
+                'Content-Type': 'text/plain'
+              });
+              res.end();
+            };
+            // When
+            await update.checkForUpdatesInit();
+            // Then
+            expect(eventListener).not.toHaveBeenCalled();
+          });
+        });
+      });
+      describe('polling interval', () => {
+        let setIntervalSpy;
+        beforeEach(() => {
+          testHandler = (req, res) => {
+            res.writeHead(302, {
+              location: 'https://github.com/manusa/electronim/releases/tag/v1.0.0',
+              'Content-Type': 'text/plain'
+            });
+            res.end();
+          };
+          setIntervalSpy = jest.spyOn(globalThis, 'setInterval');
+        });
+        afterEach(() => {
+          setIntervalSpy.mockRestore();
+        });
+        test('should set up polling interval for checking updates every 30 minutes', async () => {
+          // When
+          await update.checkForUpdatesInit();
+          // Then
+          expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 1000 * 60 * 30);
+        });
+        test('should call unref on interval to prevent process hang', async () => {
+          // Given
+          const unref = jest.fn();
+          setIntervalSpy.mockReturnValue({unref});
+          // When
+          await update.checkForUpdatesInit();
+          // Then
+          expect(unref).toHaveBeenCalledTimes(1);
+        });
       });
     });
   });
