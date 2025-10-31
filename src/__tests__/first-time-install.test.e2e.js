@@ -19,8 +19,6 @@
 
 const {spawnElectron} = require('./');
 
-const STARTUP_TIMEOUT = 15000;
-
 describe('E2E :: First-time install test suite', () => {
   describe('on first launch with no configured services', () => {
     let electron;
@@ -30,11 +28,11 @@ describe('E2E :: First-time install test suite', () => {
       electron = await spawnElectron({settings: {tabs: []}});
       // Wait for settings dialog to appear (it should appear automatically when no tabs are configured)
       settingsWindow = await electron.waitForWindow(({url}) => url.includes('settings/index.html'));
-    }, STARTUP_TIMEOUT);
+    });
 
     afterAll(async () => {
       await electron.kill();
-    }, STARTUP_TIMEOUT);
+    });
 
     test('starts the application', () => {
       expect(electron.app).toBeDefined();

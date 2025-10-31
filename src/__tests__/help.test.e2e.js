@@ -18,8 +18,6 @@
 */
 const {spawnElectron, createTestServer} = require('./');
 
-const STARTUP_TIMEOUT = 15000;
-
 describe('E2E :: Help dialog test suite', () => {
   describe('opening and displaying help information', () => {
     let electron;
@@ -44,11 +42,11 @@ describe('E2E :: Help dialog test suite', () => {
       });
       mainWindow = await electron.waitForWindow(
         ({url, title}) => url.includes('chrome-tabs') || title === 'ElectronIM tabs');
-    }, STARTUP_TIMEOUT);
+    });
 
     afterAll(async () => {
       await Promise.all([electron.kill(), testServer.close()]);
-    }, STARTUP_TIMEOUT);
+    });
 
     test('starts the application', () => {
       expect(electron.app).toBeDefined();

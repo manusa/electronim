@@ -18,9 +18,6 @@
 */
 const {spawnElectron, createTestServer} = require('./');
 
-const STARTUP_TIMEOUT = 30000;
-const TEST_TIMEOUT = 15000;
-
 describe('E2E :: Screen sharing test suite', () => {
   describe('screen sharing functionality', () => {
     let electron;
@@ -52,11 +49,11 @@ describe('E2E :: Screen sharing test suite', () => {
         ({url}) => url === testServer.url || url.includes('localhost'),
         5000
       );
-    }, STARTUP_TIMEOUT);
+    });
 
     afterAll(async () => {
       await Promise.all([electron.kill(), testServer.close()]);
-    }, STARTUP_TIMEOUT);
+    });
 
     test('starts the application', () => {
       expect(electron.app).toBeDefined();
@@ -86,7 +83,7 @@ describe('E2E :: Screen sharing test suite', () => {
         // Wait for the shim overlay to appear
         const shimRoot = testPageWindow.locator('.electron-desktop-capturer-root');
         await expect(shimRoot).toBeVisible({timeout: 5000});
-      }, TEST_TIMEOUT);
+      });
 
       test('shim overlay has overlay container', async () => {
         const shimOverlay = testPageWindow.locator('.electron-desktop-capturer-root__overlay');
@@ -142,7 +139,7 @@ describe('E2E :: Screen sharing test suite', () => {
           // Wait for the overlay to disappear
           const shimRoot = testPageWindow.locator('.electron-desktop-capturer-root');
           await expect(shimRoot).not.toBeVisible({timeout: 5000});
-        }, TEST_TIMEOUT);
+        });
 
         test('screen sharing status shows success', async () => {
           const screenShareStatus = testPageWindow.locator('#screen-share-status');
@@ -185,7 +182,7 @@ describe('E2E :: Screen sharing test suite', () => {
           // Wait for the shim overlay to appear
           shimRoot = testPageWindow.locator('.electron-desktop-capturer-root');
           await expect(shimRoot).toBeVisible({timeout: 5000});
-        }, TEST_TIMEOUT);
+        });
 
         test('clicking overlay background closes the shim', async () => {
           // Click the overlay (not the sources container)
@@ -194,7 +191,7 @@ describe('E2E :: Screen sharing test suite', () => {
 
           // Wait for the overlay to disappear
           await expect(shimRoot).not.toBeVisible({timeout: 5000});
-        }, TEST_TIMEOUT);
+        });
 
         test('screen sharing status shows cancellation error', async () => {
           const screenShareStatus = testPageWindow.locator('#screen-share-status');

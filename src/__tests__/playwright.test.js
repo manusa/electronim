@@ -19,8 +19,6 @@
 
 const {spawnElectron, createTestServer} = require('./');
 
-jest.setTimeout(30000);
-
 describe('Playwright utilities test suite', () => {
   let sharedTestServer;
 

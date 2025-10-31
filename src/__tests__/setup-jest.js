@@ -13,6 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
+// Set unified timeout for all tests
+jest.setTimeout(45000);
+
 afterEach(async () => {
   jest.useRealTimers();
   const fs = require('node:fs');
