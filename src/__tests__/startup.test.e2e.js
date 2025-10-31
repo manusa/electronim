@@ -117,7 +117,7 @@ describe('E2E :: Application startup test suite', () => {
 
         test('test page has loaded marker', async () => {
           const testPageLoaded = await testPageWindow.evaluate(() => {
-            return window.electronimTestPageLoaded === true;
+            return globalThis.electronimTestPageLoaded === true;
           });
           expect(testPageLoaded).toBe(true);
         });
