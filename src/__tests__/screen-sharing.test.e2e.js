@@ -40,15 +40,13 @@ describe('E2E :: Screen sharing test suite', () => {
           ]
         }
       });
-      // Wait for main window to ensure app is ready
-      await electron.waitForWindow(
-        ({url, title}) => url.includes('chrome-tabs') || title === 'ElectronIM tabs');
-
       // Wait for the test page window to appear
       testPageWindow = await electron.waitForWindow(
         ({url}) => url === testServer.url || url.includes('localhost'),
         5000
       );
+      // Ensure the screen sharing button is loaded
+      await electron.waitForCondition(() => testPageWindow.locator('#share-screen-btn') !== null);
     });
 
     afterAll(async () => {
