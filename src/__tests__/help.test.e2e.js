@@ -215,7 +215,7 @@ describe('E2E :: Help dialog test suite', () => {
 
           // Extract the ID from href and verify the element is in viewport
           const targetId = href.replace('#', '').replace(/__/g, '__');
-          const targetElement = helpWindow.locator(`#${targetId.replace(/\./g, String.raw`\.`)}`);
+          const targetElement = helpWindow.locator(`#${targetId.replace(/\./g, String.raw`\\.`)}`);
           await expect(targetElement).toBeInViewport();
         });
       });
