@@ -22,11 +22,13 @@ limitations under the License.
 <body>
     <script>
         require('./dictionary.worker');
-        try {
-            await reloadDictionaries();
-        } catch (error) {
-            console.error(error);
-        }
+        (async () => {
+            try {
+                await reloadDictionaries();
+            } catch (error) {
+                console.error(error);
+            }
+        })();
     </script>
 </body>
 </html>
