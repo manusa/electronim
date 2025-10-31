@@ -220,7 +220,7 @@ const Container = ({resolve, reject}) => {
       <div class="${ROOT_CLASS}__sources" >
         <${NoSourcesFound} sources=${sources}/>
         <${LoadingSources} sources=${sources}/>
-        ${sources !== null && sources.map(source => (html`
+        ${sources?.map(source => (html`
           <${Source} resolve=${resolve} ...${source} />
         `))}
       </div>
