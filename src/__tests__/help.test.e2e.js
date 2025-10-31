@@ -163,11 +163,11 @@ describe('E2E :: Help dialog test suite', () => {
           // Wait for URL hash to change
           await electron.waitForCondition(
             async () => helpWindow.url().includes('#Setup.md'),
-            {timeout: 2000, message: 'URL hash did not change to #Setup.md'}
+            {message: 'URL hash did not change to #Setup.md'}
           );
 
           // Verify the Setup section is in viewport
-          const setupHeading = helpWindow.locator(String.raw`#Setup\.md`);
+          const setupHeading = helpWindow.locator('h1[id="Setup.md"]');
           await expect(setupHeading).toBeInViewport();
         });
 
@@ -178,11 +178,11 @@ describe('E2E :: Help dialog test suite', () => {
           // Wait for URL hash to change
           await electron.waitForCondition(
             async () => helpWindow.url().includes('#Keyboard-shortcuts.md'),
-            {timeout: 2000, message: 'URL hash did not change to #Keyboard-shortcuts.md'}
+            {message: 'URL hash did not change to #Keyboard-shortcuts.md'}
           );
 
           // Verify the Keyboard Shortcuts section is in viewport
-          const keyboardHeading = helpWindow.locator(String.raw`#Keyboard-shortcuts\.md`);
+          const keyboardHeading = helpWindow.locator('h1[id="Keyboard-shortcuts.md"]');
           await expect(keyboardHeading).toBeInViewport();
         });
 
@@ -193,30 +193,26 @@ describe('E2E :: Help dialog test suite', () => {
           // Wait for URL hash to change
           await electron.waitForCondition(
             async () => helpWindow.url().includes('#Troubleshooting.md'),
-            {timeout: 2000, message: 'URL hash did not change to #Troubleshooting.md'}
+            {message: 'URL hash did not change to #Troubleshooting.md'}
           );
 
           // Verify the Troubleshooting section is in viewport
-          const troubleshootingHeading = helpWindow.locator(String.raw`#Troubleshooting\.md`);
+          const troubleshootingHeading = helpWindow.locator('h1[id="Troubleshooting.md"]');
           await expect(troubleshootingHeading).toBeInViewport();
         });
 
         test('clicking sublevel ToC link scrolls to subsection', async () => {
-          // Click on a sublevel link (e.g., "Install" under Setup)
-          const sublevelLink = helpWindow.locator('.toc-container .toc-sublevel a').first();
-          const href = await sublevelLink.getAttribute('href');
-          await sublevelLink.click();
+          const setupInstallLink = helpWindow.locator('.toc-container .toc-sublevel a[href="#Setup.md__install"]');
+          await setupInstallLink.click();
 
           // Wait for URL hash to change
           await electron.waitForCondition(
-            async () => helpWindow.url().includes(href),
-            {timeout: 2000, message: `URL hash did not change to ${href}`}
+            async () => helpWindow.url().includes('#Setup.md__install'),
+            {message: 'URL hash did not change to #Setup.md__install'}
           );
 
-          // Extract the ID from href and verify the element is in viewport
-          const targetId = href.replace('#', '').replace(/__/g, '__');
-          const targetElement = helpWindow.locator(`#${targetId.replace(/\./g, String.raw`\\.`)}`);
-          await expect(targetElement).toBeInViewport();
+          const troubleshootingHeading = helpWindow.locator('h2[id="Setup.md__install"]');
+          await expect(troubleshootingHeading).toBeInViewport();
         });
       });
 
@@ -230,14 +226,13 @@ describe('E2E :: Help dialog test suite', () => {
           const closeButton = helpWindow.locator('.top-app-bar .leading-navigation-icon');
           await closeButton.click();
 
-          // Wait a moment for the dialog to close
-          await new Promise(resolve => setTimeout(resolve, 500));
-
-          // Verify help dialog is no longer in the windows list
-          const helpStillExists = electron.app.windows().some(
-            window => window.url().includes('help/index.html')
+          const windowClosed = await electron.waitForCondition(
+            () => !electron.app.windows().some(
+              window => window.url().includes('help/index.html')
+            ), {message: 'Help window did not close in time'}
           );
-          expect(helpStillExists).toBe(false);
+
+          expect(windowClosed).toBe(true);
         });
       });
     });
