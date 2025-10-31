@@ -130,19 +130,19 @@ describe('E2E :: Help dialog test suite', () => {
         });
 
         test('documents container displays Setup section', async () => {
-          const setupHeading = helpWindow.locator('.documents-container h1#Setup\\.md');
+          const setupHeading = helpWindow.locator(String.raw`.documents-container h1#Setup\.md`);
           await expect(setupHeading).toBeVisible();
           await expect(setupHeading).toHaveText('Setup');
         });
 
         test('documents container displays Keyboard Shortcuts section', async () => {
-          const keyboardHeading = helpWindow.locator('.documents-container h1#Keyboard-shortcuts\\.md');
+          const keyboardHeading = helpWindow.locator(String.raw`.documents-container h1#Keyboard-shortcuts\.md`);
           await expect(keyboardHeading).toBeVisible();
           await expect(keyboardHeading).toHaveText('Keyboard Shortcuts');
         });
 
         test('documents container displays Troubleshooting section', async () => {
-          const troubleshootingHeading = helpWindow.locator('.documents-container h1#Troubleshooting\\.md');
+          const troubleshootingHeading = helpWindow.locator(String.raw`.documents-container h1#Troubleshooting\.md`);
           await expect(troubleshootingHeading).toBeVisible();
           await expect(troubleshootingHeading).toHaveText('Troubleshooting');
         });
@@ -167,7 +167,7 @@ describe('E2E :: Help dialog test suite', () => {
           );
 
           // Verify the Setup section is in viewport
-          const setupHeading = helpWindow.locator('#Setup\\.md');
+          const setupHeading = helpWindow.locator(String.raw`#Setup\.md`);
           await expect(setupHeading).toBeInViewport();
         });
 
@@ -182,7 +182,7 @@ describe('E2E :: Help dialog test suite', () => {
           );
 
           // Verify the Keyboard Shortcuts section is in viewport
-          const keyboardHeading = helpWindow.locator('#Keyboard-shortcuts\\.md');
+          const keyboardHeading = helpWindow.locator(String.raw`#Keyboard-shortcuts\.md`);
           await expect(keyboardHeading).toBeInViewport();
         });
 
@@ -197,7 +197,7 @@ describe('E2E :: Help dialog test suite', () => {
           );
 
           // Verify the Troubleshooting section is in viewport
-          const troubleshootingHeading = helpWindow.locator('#Troubleshooting\\.md');
+          const troubleshootingHeading = helpWindow.locator(String.raw`#Troubleshooting\.md`);
           await expect(troubleshootingHeading).toBeInViewport();
         });
 
@@ -215,7 +215,7 @@ describe('E2E :: Help dialog test suite', () => {
 
           // Extract the ID from href and verify the element is in viewport
           const targetId = href.replace('#', '').replace(/__/g, '__');
-          const targetElement = helpWindow.locator(`#${targetId.replace(/\./g, '\\.')}`);
+          const targetElement = helpWindow.locator(`#${targetId.replace(/\./g, String.raw`\.`)}`);
           await expect(targetElement).toBeInViewport();
         });
       });
