@@ -185,7 +185,7 @@ describe('E2E :: Screen sharing test suite', () => {
           // Wait for the shim overlay to appear
           shimRoot = testPageWindow.locator('.electron-desktop-capturer-root');
           await expect(shimRoot).toBeVisible({timeout: 5000});
-        });
+        }, TEST_TIMEOUT);
 
         test('clicking overlay background closes the shim', async () => {
           // Click the overlay (not the sources container)
