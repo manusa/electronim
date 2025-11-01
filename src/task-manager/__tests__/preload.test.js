@@ -29,7 +29,8 @@ describe('Task Manager Module preload test suite', () => {
         expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
           close: expect.toBeFunction(),
           getMetrics: expect.toBeFunction(),
-          killProcess: expect.toBeFunction()
+          killProcess: expect.toBeFunction(),
+          openDevTools: expect.toBeFunction()
         });
       });
     });
@@ -57,6 +58,13 @@ describe('Task Manager Module preload test suite', () => {
           {id: 'test-id'}
         );
       });
+      test('openDevTools sends taskManagerOpenDevTools event', () => {
+        api.openDevTools('test-id');
+        expect(electron.ipcRenderer.send).toHaveBeenCalledWith(
+          'taskManagerOpenDevTools',
+          {id: 'test-id'}
+        );
+      });
     });
   });
   describe('preload.bundle', () => {
@@ -67,7 +75,8 @@ describe('Task Manager Module preload test suite', () => {
       expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
         close: expect.toBeFunction(),
         getMetrics: expect.toBeFunction(),
-        killProcess: expect.toBeFunction()
+        killProcess: expect.toBeFunction(),
+        openDevTools: expect.toBeFunction()
       });
     });
   });
