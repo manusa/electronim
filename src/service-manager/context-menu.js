@@ -13,9 +13,58 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {Menu, MenuItem, clipboard, ipcMain: eventBus, shell} = require('electron');
+const {Menu, MenuItem, clipboard, ipcMain: eventBus, shell, dialog} = require('electron');
 const {contextMenuHandler, contextMenuNativeHandler} = require('../spell-check');
 const {APP_EVENTS} = require('../constants');
+
+const getImageFilename = imageUrl => {
+  try {
+    const url = new URL(imageUrl);
+    const pathname = url.pathname;
+    const filename = pathname.split('/').pop();
+    if (filename && filename.includes('.')) {
+      return filename;
+    }
+  } catch {
+    // Invalid URL or no filename, use default
+  }
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T').join('-').split('-').slice(0, 6).join('');
+  return `image-${timestamp}.png`;
+};
+
+const handleSaveImage = async (webContents, imageUrl) => {
+  const defaultFilename = getImageFilename(imageUrl);
+  const {canceled, filePath} = await dialog.showSaveDialog({
+    defaultPath: defaultFilename,
+    filters: [
+      {name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg']},
+      {name: 'All Files', extensions: ['*']}
+    ]
+  });
+
+  if (canceled || !filePath) {
+    return;
+  }
+
+  try {
+    // Set up one-time listener for the download
+    const downloadListener = (_event, item) => {
+      item.setSavePath(filePath);
+      item.once('done', (_e, state) => {
+        if (state === 'completed') {
+          console.log('Image saved successfully:', filePath);
+        } else {
+          console.error('Image download failed:', state);
+        }
+      });
+    };
+
+    webContents.session.once('will-download', downloadListener);
+    webContents.downloadURL(imageUrl);
+  } catch (error) {
+    console.error('Error saving image:', error);
+  }
+};
 
 const entries = ({webContents, params}) => {
   return [
@@ -41,6 +90,10 @@ const entries = ({webContents, params}) => {
       label: 'Copy image',
       visible: params.mediaType === 'image',
       click: () => webContents.copyImageAt(params.x, params.y)
+    }, {
+      label: 'Save Image As...',
+      visible: params.mediaType === 'image',
+      click: () => handleSaveImage(webContents, params.srcURL)
     }, {
       label: 'Paste',
       visible: params.editFlags.canPaste,

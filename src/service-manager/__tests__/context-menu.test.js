@@ -86,7 +86,7 @@ describe('Service Manager context-menu test suite', () => {
       expect(electron.Menu).toHaveBeenCalledTimes(1);
       expect(mockMenu.popup).toHaveBeenCalledWith({x: 14, y: 38});
     });
-    test.each(['Back', 'Reload', 'Find in Page', 'Cut', 'Copy', 'Copy image', 'Paste', 'Select All', 'Copy link address', 'Copy link text', 'Open link in external browser', 'DevTools'])(
+    test.each(['Back', 'Reload', 'Find in Page', 'Cut', 'Copy', 'Copy image', 'Save Image As...', 'Paste', 'Select All', 'Copy link address', 'Copy link text', 'Open link in external browser', 'DevTools'])(
       'adds MenuItem with label %s', async label => {
         expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label}));
       });
@@ -198,6 +198,71 @@ describe('Service Manager context-menu test suite', () => {
           electron.MenuItem.mock.calls.find(c => c[0].label === 'Copy image')[0].click();
           // Then
           expect(serviceManager.getService('1337').webContents.copyImageAt).toHaveBeenCalledTimes(1);
+        });
+      });
+      describe('Save Image As...', () => {
+        test('visible when mediaType === image', async () => {
+          params.mediaType = 'image';
+          params.srcURL = 'https://example.com/test.png';
+          await listeners('context-menu')(event, params);
+          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+            visible: true,
+            label: 'Save Image As...'
+          }));
+        });
+        test('not visible when mediaType is not image', async () => {
+          params.mediaType = 'video';
+          await listeners('context-menu')(event, params);
+          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+            visible: false,
+            label: 'Save Image As...'
+          }));
+        });
+        test('click with canceled dialog, should not download', async () => {
+          // Given
+          params.srcURL = 'https://example.com/test.png';
+          electron.dialog.showSaveDialog.mockImplementationOnce(async () => ({canceled: true}));
+          // When
+          await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
+          // Then
+          expect(electron.dialog.showSaveDialog).toHaveBeenCalledTimes(1);
+          expect(serviceManager.getService('1337').webContents.downloadURL).not.toHaveBeenCalled();
+        });
+        test('click with selected path, should download image', async () => {
+          // Given
+          params.srcURL = 'https://example.com/test.png';
+          const savePath = '/home/user/Downloads/test.png';
+          electron.dialog.showSaveDialog.mockImplementationOnce(async () => ({
+            canceled: false,
+            filePath: savePath
+          }));
+          // When
+          await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
+          // Then
+          expect(electron.dialog.showSaveDialog).toHaveBeenCalledTimes(1);
+          expect(electron.dialog.showSaveDialog).toHaveBeenCalledWith(expect.objectContaining({
+            defaultPath: 'test.png',
+            filters: expect.arrayContaining([
+              expect.objectContaining({name: 'Images'}),
+              expect.objectContaining({name: 'All Files'})
+            ])
+          }));
+          expect(serviceManager.getService('1337').webContents.downloadURL).toHaveBeenCalledWith('https://example.com/test.png');
+        });
+        test('click with image URL without filename, should use timestamp default', async () => {
+          // Given
+          params.srcURL = 'https://example.com/';
+          const savePath = '/home/user/Downloads/image.png';
+          electron.dialog.showSaveDialog.mockImplementationOnce(async () => ({
+            canceled: false,
+            filePath: savePath
+          }));
+          // When
+          await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
+          // Then
+          expect(electron.dialog.showSaveDialog).toHaveBeenCalledWith(expect.objectContaining({
+            defaultPath: expect.stringMatching(/^image-\d+\.png$/)
+          }));
         });
       });
     });

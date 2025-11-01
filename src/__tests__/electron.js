@@ -47,6 +47,22 @@ const newWebContentsViewInstance = webPreferences => {
   instance.webContents.copyImageAt = jest.fn();
   instance.webContents.cut = jest.fn();
   instance.webContents.destroy = jest.fn();
+  instance.webContents.downloadURL = jest.fn(url => {
+    // Create a mock download item
+    const downloadItem = new events.EventEmitter();
+    downloadItem.setSavePath = jest.fn();
+    downloadItem.getFilename = jest.fn(() => 'test-image.png');
+    downloadItem.getSavePath = jest.fn(() => '');
+    downloadItem.getURL = jest.fn(() => url);
+    // Emit will-download event on the session
+    if (instance.webContents.session) {
+      process.nextTick(() => {
+        instance.webContents.session.emit('will-download', {}, downloadItem);
+        // Auto-complete the download after a short delay
+        process.nextTick(() => downloadItem.emit('done', {}, 'completed'));
+      });
+    }
+  });
   instance.webContents.executeJavaScript = jest.fn(async () => {});
   // https://www.electronjs.org/docs/latest/api/web-contents#contentsfindinpagetext-options
   // contents.findInPage(text[, options])
@@ -70,7 +86,7 @@ const newWebContentsViewInstance = webPreferences => {
   instance.webContents.selectAll = jest.fn();
   instance.webContents.removeAllListeners = jest.fn();
   instance.webContents.send = jest.fn();
-  instance.webContents.session = {};
+  instance.webContents.session = webPreferences?.session || new events.EventEmitter();
   instance.webContents.setWindowOpenHandler = jest.fn();
   instance.webContents.stopFindInPage = jest.fn();
   instance.webContents.userAgent = 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36';
@@ -112,16 +128,15 @@ const newBaseWindowInstance = () => {
 };
 
 const mockElectronInstance = ({...overriddenProps} = {}) => {
-  const sessionInstance = {
-    availableSpellCheckerLanguages: [],
-    clearCache: jest.fn(),
-    clearCodeCaches: jest.fn(),
-    clearHostResolverCache: jest.fn(),
-    clearStorageData: jest.fn(),
-    setSpellCheckerEnabled: jest.fn(),
-    setSpellCheckerLanguages: jest.fn(),
-    userAgentInterceptor: true
-  };
+  const sessionInstance = new events.EventEmitter();
+  sessionInstance.availableSpellCheckerLanguages = [];
+  sessionInstance.clearCache = jest.fn();
+  sessionInstance.clearCodeCaches = jest.fn();
+  sessionInstance.clearHostResolverCache = jest.fn();
+  sessionInstance.clearStorageData = jest.fn();
+  sessionInstance.setSpellCheckerEnabled = jest.fn();
+  sessionInstance.setSpellCheckerLanguages = jest.fn();
+  sessionInstance.userAgentInterceptor = true;
   // BaseWindow
   const BaseWindow = jest.fn(() => {
     const baseWindow = newBaseWindowInstance();
