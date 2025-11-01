@@ -157,5 +157,6 @@
   .task-manager-actions {
     display: flex;
     justify-content: flex-end;
+    gap: calc(var(--default-spacing) * 2);
   }
 }
