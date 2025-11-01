@@ -40,7 +40,8 @@ describe('Task Manager in Browser test suite', () => {
           cpu: {percentCPUUsage: 2.3}
         }
       ]),
-      killProcess: jest.fn()
+      killProcess: jest.fn(),
+      openDevTools: jest.fn()
     };
     globalThis.electron = electron;
     await import('../task-manager.browser.mjs');
@@ -74,6 +75,12 @@ describe('Task Manager in Browser test suite', () => {
       const endTaskButton = screen.getByText('End Task');
 
       expect(endTaskButton).toBeTruthy();
+    });
+
+    test('displays Open DevTools button', () => {
+      const openDevToolsButton = screen.getByText('Open DevTools');
+
+      expect(openDevToolsButton).toBeTruthy();
     });
   });
 
@@ -148,6 +155,45 @@ describe('Task Manager in Browser test suite', () => {
 
       expect(firstRow.classList.contains('selected')).toBe(true);
       expect(secondRow.classList.contains('selected')).toBe(true);
+    });
+
+    test('Open DevTools button is initially disabled', () => {
+      const openDevToolsButton = screen.getByText('Open DevTools').closest('button');
+
+      expect(openDevToolsButton.disabled).toBe(true);
+    });
+
+    test('selecting one row enables Open DevTools button', async () => {
+      const firstRow = screen.getByText('WhatsApp Web').closest('tr');
+
+      firstRow.click();
+      await waitFor(() => {
+        const openDevToolsButton = screen.getByText('Open DevTools').closest('button');
+        return !openDevToolsButton.disabled;
+      });
+
+      const openDevToolsButton = screen.getByText('Open DevTools').closest('button');
+      expect(openDevToolsButton.disabled).toBe(false);
+    });
+
+    test('selecting multiple rows disables Open DevTools button', async () => {
+      const firstRow = screen.getByText('WhatsApp Web').closest('tr');
+      const secondRow = screen.getByText('Telegram Web').closest('tr');
+
+      firstRow.click();
+      await waitFor(() => {
+        const openDevToolsButton = screen.getByText('Open DevTools').closest('button');
+        return !openDevToolsButton.disabled;
+      });
+
+      secondRow.click();
+      await waitFor(() => {
+        const openDevToolsButton = screen.getByText('Open DevTools').closest('button');
+        return openDevToolsButton.disabled;
+      });
+
+      const openDevToolsButton = screen.getByText('Open DevTools').closest('button');
+      expect(openDevToolsButton.disabled).toBe(true);
     });
 
     test('clicking a selected row deselects it', async () => {
@@ -235,6 +281,52 @@ describe('Task Manager in Browser test suite', () => {
         expect(electron.killProcess).toHaveBeenCalledWith('service-1');
         expect(electron.killProcess).toHaveBeenCalledWith('service-2');
       });
+    });
+  });
+
+  describe('Open DevTools action', () => {
+    beforeEach(async () => {
+      await waitFor(() => screen.getByText('WhatsApp Web'));
+    });
+
+    test('clicking Open DevTools calls openDevTools with service ID', async () => {
+      const firstRow = screen.getByText('WhatsApp Web').closest('tr');
+      firstRow.click();
+
+      await waitFor(() => {
+        const openDevToolsButton = screen.getByText('Open DevTools').closest('button');
+        return !openDevToolsButton.disabled;
+      });
+
+      const openDevToolsButton = screen.getByText('Open DevTools').closest('button');
+      openDevToolsButton.click();
+
+      await waitFor(() => expect(electron.openDevTools).toHaveBeenCalledWith('service-1'));
+    });
+
+    test('Open DevTools button has tooltip', () => {
+      const openDevToolsButton = screen.getByText('Open DevTools').closest('button');
+
+      expect(openDevToolsButton.getAttribute('title')).toBe('Open Developer Tools for selected service');
+    });
+
+    test('clicking Open DevTools does not deselect the row', async () => {
+      const firstRow = screen.getByText('WhatsApp Web').closest('tr');
+      firstRow.click();
+
+      await waitFor(() => {
+        const openDevToolsButton = screen.getByText('Open DevTools').closest('button');
+        return !openDevToolsButton.disabled;
+      });
+
+      const openDevToolsButton = screen.getByText('Open DevTools').closest('button');
+      openDevToolsButton.click();
+
+      await waitFor(() => expect(electron.openDevTools).toHaveBeenCalled());
+
+      // Row should still be selected
+      expect(firstRow.classList.contains('selected')).toBe(true);
+      expect(openDevToolsButton.disabled).toBe(false);
     });
   });
 

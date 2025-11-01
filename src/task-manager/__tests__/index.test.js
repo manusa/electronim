@@ -99,6 +99,10 @@ describe('Task Manager module test suite', () => {
         expect(electron.ipcMain.rawListeners('taskManagerKillProcess')).toHaveLength(1);
       });
 
+      test('registers taskManagerOpenDevTools listener', () => {
+        expect(electron.ipcMain.rawListeners('taskManagerOpenDevTools')).toHaveLength(1);
+      });
+
       test('removes event listeners when webContents is destroyed', () => {
         const destroyedCallback = view.webContents.on.mock.calls.find(
           call => call[0] === 'destroyed'
@@ -108,6 +112,7 @@ describe('Task Manager module test suite', () => {
         // view.webContents.send('destroyed'); // TODO: Update with mock EventEmitter when electron.js is tuned
         expect(electron.ipcMain.rawListeners('taskManagerGetMetrics')).toBeEmpty();
         expect(electron.ipcMain.rawListeners('taskManagerKillProcess')).toBeEmpty();
+        expect(electron.ipcMain.rawListeners('taskManagerOpenDevTools')).toBeEmpty();
       });
     });
   });
@@ -212,6 +217,41 @@ describe('Task Manager module test suite', () => {
       taskManagerModule.killProcess(serviceManagerModule)(event, {id: '1337'});
 
       expect(consoleError).toHaveBeenCalledWith('Error killing process:', expect.any(Error));
+      consoleError.mockRestore();
+    });
+  });
+
+  describe('openDevTools', () => {
+    let event;
+    let webContents;
+
+    beforeEach(() => {
+      event = {};
+      webContents = electron.WebContentsView.mock.results.at(0).value.webContents;
+    });
+
+    test('opens DevTools for the service', () => {
+      taskManagerModule.openDevTools(serviceManagerModule)(event, {id: '1337'});
+
+      expect(webContents.openDevTools).toHaveBeenCalledWith({mode: 'detach', activate: true});
+    });
+
+    test('does nothing when service not found', () => {
+      expect(() => {
+        taskManagerModule.openDevTools(serviceManagerModule)(event, {id: 'nonexistent'});
+      }).not.toThrow();
+      expect(webContents.openDevTools).not.toHaveBeenCalled();
+    });
+
+    test('handles errors gracefully', () => {
+      webContents.openDevTools = jest.fn(() => {
+        throw new Error('DevTools failed to open');
+      });
+      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+
+      taskManagerModule.openDevTools(serviceManagerModule)(event, {id: '1337'});
+
+      expect(consoleError).toHaveBeenCalledWith('Error opening DevTools:', expect.any(Error));
       consoleError.mockRestore();
     });
   });

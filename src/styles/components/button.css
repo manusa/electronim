@@ -58,3 +58,24 @@
   font-size: 20px;
   font-family: 'Material Symbols Outlined', sans-serif;
 }
+
+/* Material Design 3 disabled state */
+.electronim .material3.button:disabled,
+.electronim .material3.button.disabled {
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.38;
+}
+
+.electronim .material3.button.outlined:disabled,
+.electronim .material3.button.outlined.disabled {
+  border-color: var(--md-sys-color-on-surface);
+  color: var(--md-sys-color-on-surface);
+  opacity: 0.38;
+}
+
+/* Prevent hover effects on disabled buttons */
+.electronim .material3.button.outlined:disabled:hover,
+.electronim .material3.button.outlined.disabled:hover {
+  background-color: transparent;
+}

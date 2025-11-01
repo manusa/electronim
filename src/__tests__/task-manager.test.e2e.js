@@ -137,8 +137,29 @@ describe('E2E :: Task Manager test suite', () => {
       expect(rowCount).toBeGreaterThanOrEqual(2);
     });
 
+    test('verifies action buttons are displayed', async () => {
+      const actionButtons = taskManagerWindow.locator('.task-manager-actions button');
+      await expect(actionButtons).toHaveCount(2);
+    });
+
+    test('verifies Open DevTools button exists', async () => {
+      const openDevToolsButton = taskManagerWindow.locator('.task-manager-actions button', {hasText: 'Open DevTools'});
+      await expect(openDevToolsButton).toBeVisible();
+    });
+
+    test('verifies Open DevTools button is initially disabled', async () => {
+      const openDevToolsButton = taskManagerWindow.locator('.task-manager-actions button', {hasText: 'Open DevTools'});
+      await expect(openDevToolsButton).toBeDisabled();
+    });
+
+    test('verifies Open DevTools button has tooltip', async () => {
+      const openDevToolsButton = taskManagerWindow.locator('.task-manager-actions button', {hasText: 'Open DevTools'});
+      const tooltip = await openDevToolsButton.getAttribute('title');
+      expect(tooltip).toBe('Open Developer Tools for selected service');
+    });
+
     test('verifies End Task button is initially disabled', async () => {
-      const endTaskButton = taskManagerWindow.locator('.task-manager-actions button');
+      const endTaskButton = taskManagerWindow.locator('.task-manager-actions button', {hasText: 'End Task'});
       await expect(endTaskButton).toBeDisabled();
       await expect(endTaskButton).toContainText('End Task');
     });
@@ -152,8 +173,13 @@ describe('E2E :: Task Manager test suite', () => {
       });
 
       test('End Task button becomes enabled when task is selected', async () => {
-        const endTaskButton = taskManagerWindow.locator('.task-manager-actions button');
+        const endTaskButton = taskManagerWindow.locator('.task-manager-actions button', {hasText: 'End Task'});
         await expect(endTaskButton).toBeEnabled();
+      });
+
+      test('Open DevTools button becomes enabled when exactly one task is selected', async () => {
+        const openDevToolsButton = taskManagerWindow.locator('.task-manager-actions button', {hasText: 'Open DevTools'});
+        await expect(openDevToolsButton).toBeEnabled();
       });
 
       test('can select multiple tasks', async () => {
@@ -169,8 +195,23 @@ describe('E2E :: Task Manager test suite', () => {
           await expect(taskRows.nth(1)).toHaveClass(/selected/);
 
           // Button text should change to "End Tasks" (plural)
-          const endTaskButton = taskManagerWindow.locator('.task-manager-actions button');
+          const endTaskButton = taskManagerWindow.locator('.task-manager-actions button', {hasText: 'End Task'});
           await expect(endTaskButton).toContainText('End Tasks');
+        }
+      });
+
+      test('Open DevTools button is disabled when multiple tasks are selected', async () => {
+        const taskRows = taskManagerWindow.locator('.task-manager-table tbody tr');
+        const rowCount = await taskRows.count();
+
+        if (rowCount >= 2) {
+          // Verify both rows are still selected from previous test
+          await expect(taskRows.nth(0)).toHaveClass(/selected/);
+          await expect(taskRows.nth(1)).toHaveClass(/selected/);
+
+          // Open DevTools button should be disabled with multiple selections
+          const openDevToolsButton = taskManagerWindow.locator('.task-manager-actions button', {hasText: 'Open DevTools'});
+          await expect(openDevToolsButton).toBeDisabled();
         }
       });
 
@@ -243,6 +284,58 @@ describe('E2E :: Task Manager test suite', () => {
             await expect(taskRows.nth(i)).not.toHaveClass(/selected/);
           }
         });
+      });
+    });
+
+    describe('button styling and spacing', () => {
+      test('action buttons have gap between them', async () => {
+        const actionsContainer = taskManagerWindow.locator('.task-manager-actions');
+        const gap = await actionsContainer.evaluate(el => {
+          const styles = window.getComputedStyle(el);
+          return styles.gap;
+        });
+
+        // Should have gap styling applied
+        expect(gap).not.toBe('0px');
+        expect(gap).not.toBe('normal');
+      });
+
+      test('disabled buttons have reduced opacity', async () => {
+        const openDevToolsButton = taskManagerWindow.locator('.task-manager-actions button', {hasText: 'Open DevTools'});
+        const opacity = await openDevToolsButton.evaluate(el => {
+          const styles = window.getComputedStyle(el);
+          return styles.opacity;
+        });
+
+        // Disabled button should have 0.38 opacity (Material Design 3)
+        expect(parseFloat(opacity)).toBe(0.38);
+      });
+
+      test('enabled button has full opacity after selection', async () => {
+        const firstRow = taskManagerWindow.locator('.task-manager-table tbody tr').first();
+
+        // Deselect all tasks first
+        const taskRows = taskManagerWindow.locator('.task-manager-table tbody tr');
+        const rowCount = await taskRows.count();
+        for (let i = 0; i < rowCount; i++) {
+          const row = taskRows.nth(i);
+          const rowClass = await row.getAttribute('class');
+          if (rowClass?.includes('selected')) {
+            await row.click();
+          }
+        }
+
+        // Select one task
+        await firstRow.click();
+
+        const openDevToolsButton = taskManagerWindow.locator('.task-manager-actions button', {hasText: 'Open DevTools'});
+        const opacity = await openDevToolsButton.evaluate(el => {
+          const styles = window.getComputedStyle(el);
+          return styles.opacity;
+        });
+
+        // Enabled button should have full opacity (1)
+        expect(parseFloat(opacity)).toBe(1);
       });
     });
 

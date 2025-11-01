@@ -19,5 +19,6 @@ const {contextBridge, ipcRenderer} = require('electron');
 contextBridge.exposeInMainWorld('electron', {
   close: () => ipcRenderer.sendSync(APP_EVENTS.closeDialog),
   getMetrics: () => ipcRenderer.sendSync(APP_EVENTS.taskManagerGetMetrics),
-  killProcess: id => ipcRenderer.send(APP_EVENTS.taskManagerKillProcess, {id})
+  killProcess: id => ipcRenderer.send(APP_EVENTS.taskManagerKillProcess, {id}),
+  openDevTools: id => ipcRenderer.send(APP_EVENTS.taskManagerOpenDevTools, {id})
 });

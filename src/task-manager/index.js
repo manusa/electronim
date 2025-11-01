@@ -59,6 +59,17 @@ const killProcess = serviceManagerModule => (_event, {id}) => {
   }
 };
 
+const openDevTools = serviceManagerModule => (_event, {id}) => {
+  const service = serviceManagerModule.getService(id);
+  if (service && service.webContents) {
+    try {
+      service.webContents.openDevTools({mode: 'detach', activate: true});
+    } catch (error) {
+      console.error('Error opening DevTools:', error);
+    }
+  }
+};
+
 const openTaskManagerDialog = (baseWindow, serviceManagerModule) => () => {
   const taskManagerView = new WebContentsView({webPreferences});
   taskManagerView.webContents.loadURL(`file://${__dirname}/index.html`);
@@ -71,16 +82,19 @@ const openTaskManagerDialog = (baseWindow, serviceManagerModule) => () => {
   };
 
   const killProcessHandler = killProcess(serviceManagerModule);
+  const openDevToolsHandler = openDevTools(serviceManagerModule);
 
   eventBus.on(APP_EVENTS.taskManagerGetMetrics, getMetricsHandler);
   eventBus.on(APP_EVENTS.taskManagerKillProcess, killProcessHandler);
+  eventBus.on(APP_EVENTS.taskManagerOpenDevTools, openDevToolsHandler);
 
   taskManagerView.webContents.on('destroyed', () => {
     eventBus.removeListener(APP_EVENTS.taskManagerGetMetrics, getMetricsHandler);
     eventBus.removeListener(APP_EVENTS.taskManagerKillProcess, killProcessHandler);
+    eventBus.removeListener(APP_EVENTS.taskManagerOpenDevTools, openDevToolsHandler);
   });
 
   showDialog(baseWindow, taskManagerView);
 };
 
-module.exports = {openTaskManagerDialog, getMetrics, killProcess};
+module.exports = {openTaskManagerDialog, getMetrics, killProcess, openDevTools};

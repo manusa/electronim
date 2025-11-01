@@ -73,6 +73,7 @@ const APP_EVENTS = {
   taskManagerOpenDialog: 'taskManagerOpenDialog',
   taskManagerGetMetrics: 'taskManagerGetMetrics',
   taskManagerKillProcess: 'taskManagerKillProcess',
+  taskManagerOpenDevTools: 'taskManagerOpenDevTools',
   trayInit: 'trayInit',
   zoomIn: 'zoomIn',
   zoomOut: 'zoomOut',

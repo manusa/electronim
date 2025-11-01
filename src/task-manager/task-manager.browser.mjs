@@ -130,6 +130,12 @@ const TaskManagerContent = () => {
     }
   };
 
+  const handleOpenDevTools = () => {
+    if (selectedTaskIds.length === 1) {
+      globalThis.electron.openDevTools(selectedTaskIds[0]);
+    }
+  };
+
   const allSelected = tasks.length > 0 && selectedTaskIds.length === tasks.length;
 
   return html`
@@ -152,6 +158,14 @@ const TaskManagerContent = () => {
         </table>
       </div>
       <div class="task-manager-actions">
+        <${Button}
+          onClick=${handleOpenDevTools}
+          disabled=${selectedTaskIds.length !== 1}
+          type=${Button.types.outlined}
+          title="Open Developer Tools for selected service"
+        >
+          Open DevTools
+        </${Button}>
         <${Button}
           onClick=${handleEndTask}
           disabled=${selectedTaskIds.length === 0}
