@@ -225,7 +225,7 @@ describe('Service Manager context-menu test suite', () => {
           await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
           // Then
           expect(electron.dialog.showSaveDialog).toHaveBeenCalledWith(
-            electron.BaseWindow.getAllWindows()[0],
+            null,
             expect.objectContaining({
               defaultPath: 'test.png',
               filters: [
@@ -269,7 +269,7 @@ describe('Service Manager context-menu test suite', () => {
           await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
           // Then
           expect(electron.dialog.showSaveDialog).toHaveBeenCalledWith(
-            electron.BaseWindow.getAllWindows()[0],
+            null,
             expect.objectContaining({
               defaultPath: expect.stringMatching(/^image-\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.png$/)
             })
@@ -282,7 +282,7 @@ describe('Service Manager context-menu test suite', () => {
           await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
           // Then
           expect(electron.dialog.showSaveDialog).toHaveBeenCalledWith(
-            electron.BaseWindow.getAllWindows()[0],
+            null,
             expect.objectContaining({
               defaultPath: 'image.jpg'
             })
@@ -318,6 +318,26 @@ describe('Service Manager context-menu test suite', () => {
           // Then
           expect(electron.dialog.showSaveDialog).not.toHaveBeenCalled();
           expect(serviceManager.getService('1337').webContents.downloadURL).not.toHaveBeenCalled();
+        });
+        test('works even when no BaseWindow exists', async () => {
+          // Given
+          const originalGetAllWindows = electron.BaseWindow.getAllWindows;
+          electron.BaseWindow.getAllWindows = jest.fn(() => []);
+          params.srcURL = 'https://example.com/test.png';
+          electron.dialog.showSaveDialog.mockImplementationOnce(async () => ({
+            canceled: false,
+            filePath: '/tmp/test.png'
+          }));
+          // When
+          await listeners('context-menu')(event, params);
+          await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
+          // Then
+          expect(electron.dialog.showSaveDialog).toHaveBeenCalledWith(
+            null,
+            expect.objectContaining({defaultPath: 'test.png'})
+          );
+          // Restore
+          electron.BaseWindow.getAllWindows = originalGetAllWindows;
         });
       });
     });

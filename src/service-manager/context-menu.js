@@ -148,7 +148,7 @@ const spellCheckContextMenu = async ({webContents, params}) => {
 const regularContextMenu = ({webContents, params}) => {
   const menu = new Menu();
   const isVisible = me => !Object.keys(me).includes('visible') || me.visible === true;
-  const mainWindow = BaseWindow.getAllWindows()[0];
+  const mainWindow = BaseWindow.getAllWindows()[0] || null;
   const allEntries = entries({webContents, params, mainWindow});
   for (let idx = 0; idx < allEntries.length; idx++) {
     const group = allEntries[idx];
