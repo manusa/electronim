@@ -86,7 +86,7 @@ describe('Service Manager context-menu test suite', () => {
       expect(electron.Menu).toHaveBeenCalledTimes(1);
       expect(mockMenu.popup).toHaveBeenCalledWith({x: 14, y: 38});
     });
-    test.each(['Back', 'Reload', 'Find in Page', 'Cut', 'Copy', 'Copy image', 'Paste', 'Select All', 'Copy link address', 'Copy link text', 'Open link in external browser', 'DevTools'])(
+    test.each(['Back', 'Reload', 'Find in Page', 'Cut', 'Copy', 'Copy image', 'Save Image As...', 'Paste', 'Select All', 'Copy link address', 'Copy link text', 'Open link in external browser', 'DevTools'])(
       'adds MenuItem with label %s', async label => {
         expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({label}));
       });
@@ -198,6 +198,126 @@ describe('Service Manager context-menu test suite', () => {
           electron.MenuItem.mock.calls.find(c => c[0].label === 'Copy image')[0].click();
           // Then
           expect(serviceManager.getService('1337').webContents.copyImageAt).toHaveBeenCalledTimes(1);
+        });
+      });
+      describe('Save Image As...', () => {
+        beforeEach(() => {
+          params.mediaType = 'image';
+          params.srcURL = 'https://example.com/images/test.png';
+        });
+        test('visible when mediaType === image', async () => {
+          await listeners('context-menu')(event, params);
+          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+            visible: true,
+            label: 'Save Image As...'
+          }));
+        });
+        test('not visible when mediaType is not image', async () => {
+          params.mediaType = 'video';
+          await listeners('context-menu')(event, params);
+          expect(electron.MenuItem).toHaveBeenCalledWith(expect.objectContaining({
+            visible: false,
+            label: 'Save Image As...'
+          }));
+        });
+        test('click, should show save dialog with correct filename', async () => {
+          // When
+          await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
+          // Then
+          expect(electron.dialog.showSaveDialog).toHaveBeenCalledWith(
+            electron.BaseWindow.getAllWindows()[0],
+            expect.objectContaining({
+              defaultPath: 'test.png',
+              filters: [
+                {name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'bmp']},
+                {name: 'All Files', extensions: ['*']}
+              ]
+            })
+          );
+        });
+        test('click, should not download when save dialog is cancelled', async () => {
+          // Given
+          electron.dialog.showSaveDialog.mockImplementationOnce(async () => ({canceled: true}));
+          // When
+          await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
+          // Then
+          expect(serviceManager.getService('1337').webContents.downloadURL).not.toHaveBeenCalled();
+        });
+        test('click, should download image when save path is provided', async () => {
+          // Given
+          const savePath = '/tmp/test-image.png';
+          electron.dialog.showSaveDialog.mockImplementationOnce(async () => ({
+            canceled: false,
+            filePath: savePath
+          }));
+          // When
+          await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
+          // Then
+          expect(electron.dialog.showSaveDialog).toHaveBeenCalled();
+          expect(serviceManager.getService('1337').webContents.session.once).toHaveBeenCalledWith(
+            'will-download',
+            expect.any(Function)
+          );
+          expect(serviceManager.getService('1337').webContents.downloadURL).toHaveBeenCalledWith(
+            'https://example.com/images/test.png'
+          );
+        });
+        test('generates timestamped filename when URL has no extension', async () => {
+          // Given
+          params.srcURL = 'https://example.com/image';
+          // When
+          await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
+          // Then
+          expect(electron.dialog.showSaveDialog).toHaveBeenCalledWith(
+            electron.BaseWindow.getAllWindows()[0],
+            expect.objectContaining({
+              defaultPath: expect.stringMatching(/^image-\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.png$/)
+            })
+          );
+        });
+        test('extracts filename from URL with query parameters', async () => {
+          // Given
+          params.srcURL = 'https://example.com/path/to/image.jpg?token=abc123&size=large';
+          // When
+          await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
+          // Then
+          expect(electron.dialog.showSaveDialog).toHaveBeenCalledWith(
+            electron.BaseWindow.getAllWindows()[0],
+            expect.objectContaining({
+              defaultPath: 'image.jpg'
+            })
+          );
+        });
+        test('handles download completion successfully', async () => {
+          // Given
+          const savePath = '/tmp/test-image.png';
+          const mockDownloadItem = new electron.events.EventEmitter();
+          mockDownloadItem.setSavePath = jest.fn();
+          mockDownloadItem.once = jest.fn((eventName, callback) => {
+            mockDownloadItem.on(eventName, callback);
+          });
+          electron.dialog.showSaveDialog.mockImplementationOnce(async () => ({
+            canceled: false,
+            filePath: savePath
+          }));
+          // When
+          await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
+          const downloadHandler = serviceManager.getService('1337').webContents.session.once.mock.calls
+            .find(call => call[0] === 'will-download')[1];
+          downloadHandler({}, mockDownloadItem);
+          // Then
+          expect(mockDownloadItem.setSavePath).toHaveBeenCalledWith(savePath);
+          // Simulate download completion
+          mockDownloadItem.emit('done', {}, 'completed');
+        });
+        test('handles missing srcURL gracefully', async () => {
+          // Given
+          params.srcURL = '';
+          // When
+          await electron.MenuItem.mock.calls.find(c => c[0].label === 'Save Image As...')[0].click();
+          // Then
+          expect(electron.dialog.showSaveDialog).not.toHaveBeenCalled();
+          expect(serviceManager.getService('1337').webContents.downloadURL).not.toHaveBeenCalled();
         });
       });
     });
