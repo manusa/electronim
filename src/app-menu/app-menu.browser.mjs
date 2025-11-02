@@ -16,7 +16,7 @@
 import {html, render, Icon, Menu} from '../components/index.mjs';
 
 const {
-  aboutOpenDialog, chromeWebStoreOpenDialog, close, helpOpenDialog, quit, settingsOpenDialog
+  aboutOpenDialog, chromeExtensionsEnabled, chromeWebStoreOpenDialog, close, helpOpenDialog, quit, settingsOpenDialog
 } = globalThis.electron;
 
 const getAppMenu = () => document.querySelector('.app-menu');
@@ -27,6 +27,7 @@ const AppMenu = () => {
     e.stopPropagation();
     func();
   };
+
   return (html`
     <div class='wrapper' onClick=${() => close() /* n.b. can't be referenced directly, keep nested function */}>
       <div class='scrim'>
@@ -35,8 +36,10 @@ const AppMenu = () => {
             onClick=${noBubbling(helpOpenDialog)} />
           <${Menu.Item} icon=${Icon.settings} label='Settings' data-testid='settings-menu-entry'
             onClick=${noBubbling(settingsOpenDialog)} />
-          <${Menu.Item} icon=${Icon.apps} label='Chrome Web Store' data-testid='chrome-web-store-menu-entry'
-            onClick=${noBubbling(chromeWebStoreOpenDialog)} />
+          ${chromeExtensionsEnabled && html`
+            <${Menu.Item} icon=${Icon.apps} label='Chrome Web Store' data-testid='chrome-web-store-menu-entry'
+              onClick=${noBubbling(chromeWebStoreOpenDialog)} />
+          `}
           <${Menu.Item} icon=${Icon.info} label='About' data-testid='about-menu-entry'
             onClick=${noBubbling(aboutOpenDialog)} />
           <${Menu.Item} icon=${Icon.close} label='Quit' data-testid='quit-menu-entry'

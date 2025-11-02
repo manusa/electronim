@@ -45,4 +45,9 @@ const openChromeWebStore = baseWindow => () => {
   showDialog(baseWindow, chromeWebStoreView);
 };
 
-module.exports = {openChromeWebStore};
+const isChromeExtensionsEnabled = loadSettings => () => {
+  const settings = loadSettings();
+  return settings.chromeExtensionsPreview === true;
+};
+
+module.exports = {openChromeWebStore, isChromeExtensionsEnabled};

@@ -73,7 +73,8 @@ describe('Settings in Browser test suite', () => {
           alwaysOnTop: false,
           closeButtonBehavior: 'quit',
           keyboardShortcuts: {},
-          applicationTitle: ''
+          applicationTitle: '',
+          chromeExtensionsPreview: false
         });
       });
       test('Cancel should send close dialog event', () => {

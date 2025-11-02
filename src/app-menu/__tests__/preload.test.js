@@ -22,11 +22,15 @@ describe('App Menu Module preload test suite', () => {
   describe('preload (just for coverage and sanity, see bundle tests)', () => {
     beforeEach(() => {
       globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
+      electron.ipcMain.on('chromeExtensionsEnabled', event => {
+        event.returnValue = false;
+      });
       require('../preload');
     });
     test('creates an API', () => {
       expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
         aboutOpenDialog: expect.toBeFunction(),
+        chromeExtensionsEnabled: expect.toBeBoolean(),
         chromeWebStoreOpenDialog: expect.toBeFunction(),
         close: expect.toBeFunction(),
         helpOpenDialog: expect.toBeFunction(),
@@ -40,25 +44,32 @@ describe('App Menu Module preload test suite', () => {
         api = electron.contextBridge.exposeInMainWorld.mock.calls[0][1];
       });
       test.each([
-        ['aboutOpenDialog', 'aboutOpenDialog'],
-        ['chromeWebStoreOpenDialog', 'chromeWebStoreOpenDialog'],
-        ['close', 'appMenuClose'],
-        ['helpOpenDialog', 'helpOpenDialog'],
-        ['quit', 'quit'],
-        ['settingsOpenDialog', 'settingsOpenDialog']
-      ])('%s invokes %s', (apiMethod, event) => {
+        ['aboutOpenDialog', 'aboutOpenDialog', 'send'],
+        ['chromeWebStoreOpenDialog', 'chromeWebStoreOpenDialog', 'send'],
+        ['close', 'appMenuClose', 'send'],
+        ['helpOpenDialog', 'helpOpenDialog', 'send'],
+        ['quit', 'quit', 'send'],
+        ['settingsOpenDialog', 'settingsOpenDialog', 'send']
+      ])('%s invokes %s', (apiMethod, event, method) => {
         api[apiMethod]();
-        expect(electron.ipcRenderer.send).toHaveBeenCalledWith(event);
+        expect(electron.ipcRenderer[method]).toHaveBeenCalledWith(event);
+      });
+      test('chromeExtensionsEnabled is a boolean value', () => {
+        expect(api.chromeExtensionsEnabled).toBeBoolean();
       });
     });
   });
   describe('preload.bundle', () => {
     beforeEach(() => {
+      electron.ipcMain.on('chromeExtensionsEnabled', event => {
+        event.returnValue = false;
+      });
       require('../../../bundles/app-menu.preload');
     });
     test('creates an API', () => {
       expect(electron.contextBridge.exposeInMainWorld).toHaveBeenCalledWith('electron', {
         aboutOpenDialog: expect.toBeFunction(),
+        chromeExtensionsEnabled: expect.toBeBoolean(),
         chromeWebStoreOpenDialog: expect.toBeFunction(),
         close: expect.toBeFunction(),
         helpOpenDialog: expect.toBeFunction(),

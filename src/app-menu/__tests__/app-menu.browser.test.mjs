@@ -22,6 +22,9 @@ describe('App Menu in Browser test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
     electron = await testElectron();
+    electron.ipcMain.on('chromeExtensionsEnabled', event => {
+      event.returnValue = false;
+    });
     await import('../../../bundles/app-menu.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });

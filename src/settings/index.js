@@ -35,7 +35,8 @@ const DEFAULT_SETTINGS = {
   keyboardShortcuts: {
     tabSwitchModifier: KEYBOARD_SHORTCUTS.tabSwitchModifier,
     tabTraverseModifier: KEYBOARD_SHORTCUTS.tabTraverseModifier
-  }
+  },
+  chromeExtensionsPreview: false
 };
 
 const webPreferences = {
