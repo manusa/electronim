@@ -209,7 +209,7 @@
     "webpack": "5.102.1"
   },
   "dependencies": {
-    "axios": "1.13.0",
+    "axios": "1.13.1",
     "axios-retry": "4.5.0",
     "dictionary-ca": "2.6.0",
     "dictionary-ca-valencia": "2.6.0",
