@@ -99,7 +99,8 @@ describe('E2E :: Screen sharing test suite', () => {
         let sources;
         beforeAll(async () => {
           sources = shimRoot.locator('.electron-desktop-capturer-root__source');
-          await electron.waitForCondition(async () => await sources.count() > 0);
+          // Wait for sources to load - can take up to 9+ seconds in CI as shim polls every 300ms
+          await electron.waitForCondition(async () => await sources.count() > 0, {timeout: 10000});
         });
         test('displays loading message initially', async () => {
           // Wait for sources to appear (up to 3 seconds, as the shim polls every 300ms)
@@ -136,8 +137,9 @@ describe('E2E :: Screen sharing test suite', () => {
       describe('selecting a source', () => {
         let sources;
         beforeAll(async () => {
-          await electron.waitForCondition(() => shimRoot.locator('.electron-desktop-capturer-root__source') !== null);
           sources = shimRoot.locator('.electron-desktop-capturer-root__source');
+          // Wait for sources to load - can take up to 9+ seconds in CI as shim polls every 300ms
+          await electron.waitForCondition(async () => await sources.count() > 0, {timeout: 10000});
         });
         test('clicking a source closes the overlay', async () => {
           const firstSource = sources.first();
@@ -186,6 +188,9 @@ describe('E2E :: Screen sharing test suite', () => {
 
       describe('canceling screen sharing', () => {
         beforeAll(async () => {
+          // Ensure any previous overlay is closed before starting this test
+          await expect(shimRoot).not.toBeVisible({timeout: 5000});
+
           // Trigger screen sharing again to test cancellation
           await shareScreenBtn.click();
 
