@@ -22,7 +22,7 @@ const getImageFilename = imageUrl => {
     const url = new URL(imageUrl);
     const pathname = url.pathname;
     const filename = pathname.split('/').pop();
-    if (filename && filename.includes('.')) {
+    if (filename?.includes('.')) {
       return filename;
     }
   } catch {
