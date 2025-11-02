@@ -23,6 +23,7 @@ describe('E2E :: Screen sharing test suite', () => {
     let electron;
     let testServer;
     let testPageWindow;
+    let shareScreenBtn;
 
     beforeAll(async () => {
       // Start HTTP server with test page
@@ -45,8 +46,9 @@ describe('E2E :: Screen sharing test suite', () => {
         ({url}) => url === testServer.url || url.includes('localhost'),
         5000
       );
-      // Ensure the screen sharing button is loaded
-      await electron.waitForCondition(() => testPageWindow.locator('#share-screen-btn') !== null);
+      // Initialize share screen button locator and ensure it's loaded
+      shareScreenBtn = testPageWindow.locator('#share-screen-btn');
+      await electron.waitForCondition(async () => await shareScreenBtn.count() > 0);
     });
 
     afterAll(async () => {
@@ -63,12 +65,10 @@ describe('E2E :: Screen sharing test suite', () => {
 
     describe('screen sharing button', () => {
       test('screen sharing button is visible', async () => {
-        const shareScreenBtn = testPageWindow.locator('#share-screen-btn');
         await expect(shareScreenBtn).toBeVisible();
       });
 
       test('screen sharing button has correct text', async () => {
-        const shareScreenBtn = testPageWindow.locator('#share-screen-btn');
         await expect(shareScreenBtn).toContainText('Start Screen Sharing');
       });
     });
@@ -76,10 +76,9 @@ describe('E2E :: Screen sharing test suite', () => {
     describe('mediadevices shim overlay', () => {
       let shimRoot;
       beforeAll(async () => {
-        const shareScreenBtn = testPageWindow.locator('#share-screen-btn');
         await shareScreenBtn.click();
-        await electron.waitForCondition(() => testPageWindow.locator('.electron-desktop-capturer-root') !== null);
         shimRoot = testPageWindow.locator('.electron-desktop-capturer-root');
+        await electron.waitForCondition(async () => await shimRoot.count() > 0);
       });
       test('clicking screen sharing button opens shim overlay', async () => {
         // Clicking is done in beforeAll
@@ -99,8 +98,8 @@ describe('E2E :: Screen sharing test suite', () => {
       describe('sources list', () => {
         let sources;
         beforeAll(async () => {
-          await electron.waitForCondition(() => shimRoot.locator('.electron-desktop-capturer-root__source') !== null);
           sources = shimRoot.locator('.electron-desktop-capturer-root__source');
+          await electron.waitForCondition(async () => await sources.count() > 0);
         });
         test('displays loading message initially', async () => {
           // Wait for sources to appear (up to 3 seconds, as the shim polls every 300ms)
@@ -154,6 +153,13 @@ describe('E2E :: Screen sharing test suite', () => {
         });
 
         test('stream is created and available', async () => {
+          // Wait for stream to be created after selection
+          await electron.waitForCondition(async () => {
+            return await testPageWindow.evaluate(() => {
+              return Boolean(globalThis.electronimScreenShareStream);
+            });
+          });
+          // If we reach here, the stream exists (waitForCondition passed)
           const hasStream = await testPageWindow.evaluate(() => {
             return Boolean(globalThis.electronimScreenShareStream);
           });
@@ -181,17 +187,14 @@ describe('E2E :: Screen sharing test suite', () => {
       describe('canceling screen sharing', () => {
         beforeAll(async () => {
           // Trigger screen sharing again to test cancellation
-          const shareScreenBtn = testPageWindow.locator('#share-screen-btn');
           await shareScreenBtn.click();
 
-          // Wait for the shim overlay to appear
-          shimRoot = testPageWindow.locator('.electron-desktop-capturer-root');
           await expect(shimRoot).toBeVisible({timeout: 5000});
         });
 
         test('clicking overlay background closes the shim', async () => {
           // Click the overlay (not the sources container)
-          const shimOverlay = testPageWindow.locator('.electron-desktop-capturer-root__overlay');
+          const shimOverlay = shimRoot.locator('.electron-desktop-capturer-root__overlay');
           await shimOverlay.click({position: {x: 5, y: 5}});
 
           // Wait for the overlay to disappear
