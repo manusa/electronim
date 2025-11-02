@@ -129,7 +129,8 @@ describe('Settings module test suite', () => {
         keyboardShortcuts: {
           tabSwitchModifier: 'Ctrl',
           tabTraverseModifier: 'Ctrl'
-        }
+        },
+        chromeExtensionsPreview: false
       });
     });
     test('object and saved settings, should overwrite overlapping settings', () => {
@@ -152,6 +153,7 @@ describe('Settings module test suite', () => {
           tabSwitchModifier: 'Ctrl',
           tabTraverseModifier: 'Ctrl'
         },
+        chromeExtensionsPreview: false,
         activeTab: 1337,
         otherSetting: '1337'
       });
@@ -176,6 +178,7 @@ describe('Settings module test suite', () => {
           tabSwitchModifier: 'Ctrl',
           tabTraverseModifier: 'Ctrl'
         },
+        chromeExtensionsPreview: false,
         activeTab: 1337 // Should be corrected to valid tab ID
       });
     });

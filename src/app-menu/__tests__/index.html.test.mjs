@@ -19,7 +19,10 @@ import {loadDOM, testElectron} from '../../__tests__/index.mjs';
 describe('App Menu index.html test suite', () => {
   beforeEach(async () => {
     jest.resetModules();
-    await testElectron();
+    const electron = await testElectron();
+    electron.ipcMain.on('chromeExtensionsEnabled', event => {
+      event.returnValue = false;
+    });
     await import('../../../bundles/app-menu.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });

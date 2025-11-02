@@ -67,16 +67,18 @@ describe('Chrome Extensions module test suite', () => {
       // When
       openChromeWebStore();
       // Then
-      expect(electron.webContentsViewInstance.webContents.loadURL).toHaveBeenCalledTimes(1);
-      expect(electron.webContentsViewInstance.webContents.loadURL)
+      const webContentsViewInstance = electron.WebContentsView.mock.results[0].value;
+      expect(webContentsViewInstance.webContents.loadURL).toHaveBeenCalledTimes(1);
+      expect(webContentsViewInstance.webContents.loadURL)
         .toHaveBeenCalledWith('https://chromewebstore.google.com/');
-      expect(electron.webContentsViewInstance.webContents.on).toHaveBeenCalledWith('will-navigate', expect.any(Function));
-      expect(electron.webContentsViewInstance.webContents.on).toHaveBeenCalledWith('context-menu', expect.any(Function));
+      expect(webContentsViewInstance.webContents.on).toHaveBeenCalledWith('will-navigate', expect.any(Function));
+      expect(webContentsViewInstance.webContents.on).toHaveBeenCalledWith('context-menu', expect.any(Function));
     });
     test('context menu should have DevTools entry', () => {
       // Given
       openChromeWebStore();
-      const contextMenuHandler = electron.webContentsViewInstance.webContents.on.mock.calls
+      const webContentsViewInstance = electron.WebContentsView.mock.results[0].value;
+      const contextMenuHandler = webContentsViewInstance.webContents.on.mock.calls
         .find(call => call[0] === 'context-menu')[1];
       // When
       contextMenuHandler({}, {x: 10, y: 20});
@@ -90,14 +92,41 @@ describe('Chrome Extensions module test suite', () => {
     test('context menu DevTools click should open dev tools', () => {
       // Given
       openChromeWebStore();
-      const contextMenuHandler = electron.webContentsViewInstance.webContents.on.mock.calls
+      const webContentsViewInstance = electron.WebContentsView.mock.results[0].value;
+      const contextMenuHandler = webContentsViewInstance.webContents.on.mock.calls
         .find(call => call[0] === 'context-menu')[1];
       contextMenuHandler({}, {x: 10, y: 20});
       const devToolsMenuItem = electron.MenuItem.mock.calls[0][0];
       // When
       devToolsMenuItem.click();
       // Then
-      expect(electron.webContentsViewInstance.webContents.openDevTools).toHaveBeenCalledTimes(1);
+      expect(webContentsViewInstance.webContents.openDevTools).toHaveBeenCalledTimes(1);
+    });
+  });
+  describe('isChromeExtensionsEnabled', () => {
+    test('should return true when chromeExtensionsPreview is true', () => {
+      // Given
+      const loadSettings = jest.fn(() => ({chromeExtensionsPreview: true}));
+      // When
+      const result = chromeExtensions.isChromeExtensionsEnabled(loadSettings)();
+      // Then
+      expect(result).toBe(true);
+    });
+    test('should return false when chromeExtensionsPreview is false', () => {
+      // Given
+      const loadSettings = jest.fn(() => ({chromeExtensionsPreview: false}));
+      // When
+      const result = chromeExtensions.isChromeExtensionsEnabled(loadSettings)();
+      // Then
+      expect(result).toBe(false);
+    });
+    test('should return false when chromeExtensionsPreview is not set', () => {
+      // Given
+      const loadSettings = jest.fn(() => ({}));
+      // When
+      const result = chromeExtensions.isChromeExtensionsEnabled(loadSettings)();
+      // Then
+      expect(result).toBe(false);
     });
   });
 });
