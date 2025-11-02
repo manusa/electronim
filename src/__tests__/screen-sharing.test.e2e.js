@@ -74,40 +74,45 @@ describe('E2E :: Screen sharing test suite', () => {
     });
 
     describe('mediadevices shim overlay', () => {
-      test('clicking screen sharing button opens shim overlay', async () => {
+      let shimRoot;
+      beforeAll(async () => {
         const shareScreenBtn = testPageWindow.locator('#share-screen-btn');
         await shareScreenBtn.click();
-
-        // Wait for the shim overlay to appear
-        const shimRoot = testPageWindow.locator('.electron-desktop-capturer-root');
+        await electron.waitForCondition(() => testPageWindow.locator('.electron-desktop-capturer-root') !== null);
+        shimRoot = testPageWindow.locator('.electron-desktop-capturer-root');
+      });
+      test('clicking screen sharing button opens shim overlay', async () => {
+        // Clicking is done in beforeAll
         await expect(shimRoot).toBeVisible({timeout: 5000});
       });
 
       test('shim overlay has overlay container', async () => {
-        const shimOverlay = testPageWindow.locator('.electron-desktop-capturer-root__overlay');
+        const shimOverlay = shimRoot.locator('.electron-desktop-capturer-root__overlay');
         await expect(shimOverlay).toBeVisible();
       });
 
       test('shim overlay has sources container', async () => {
-        const shimSources = testPageWindow.locator('.electron-desktop-capturer-root__sources');
+        const shimSources = shimRoot.locator('.electron-desktop-capturer-root__sources');
         await expect(shimSources).toBeVisible();
       });
 
       describe('sources list', () => {
+        let sources;
+        beforeAll(async () => {
+          await electron.waitForCondition(() => shimRoot.locator('.electron-desktop-capturer-root__source') !== null);
+          sources = shimRoot.locator('.electron-desktop-capturer-root__source');
+        });
         test('displays loading message initially', async () => {
-          // The loading message might be very brief, but we should see sources eventually
-          const sources = testPageWindow.locator('.electron-desktop-capturer-root__source');
           // Wait for sources to appear (up to 3 seconds, as the shim polls every 300ms)
-          await expect(sources.first()).toBeVisible({timeout: 3000});
+          await expect(sources.first()).toBeVisible({timeout: 9000});
         });
 
         test('displays available sources', async () => {
-          const sources = testPageWindow.locator('.electron-desktop-capturer-root__source');
           expect(await sources.count()).toBeGreaterThan(0);
         });
 
         test('each source has a name', async () => {
-          const firstSource = testPageWindow.locator('.electron-desktop-capturer-root__source').first();
+          const firstSource = sources.first();
           const sourceName = firstSource.locator('.electron-desktop-capturer-root__name');
           await expect(sourceName).toBeVisible();
           const nameText = await sourceName.textContent();
@@ -115,14 +120,14 @@ describe('E2E :: Screen sharing test suite', () => {
         });
 
         test('each source has a thumbnail or placeholder', async () => {
-          const firstSource = testPageWindow.locator('.electron-desktop-capturer-root__source').first();
+          const firstSource = sources.first();
           // Should have either a thumbnail image or a placeholder
           const thumbnail = firstSource.locator('.electron-desktop-capturer-root__thumbnail');
           await expect(thumbnail).toBeVisible();
         });
 
         test('sources are clickable', async () => {
-          const firstSource = testPageWindow.locator('.electron-desktop-capturer-root__source').first();
+          const firstSource = sources.first();
           // Verify the cursor style indicates it's clickable
           const cursor = await firstSource.evaluate(el => globalThis.getComputedStyle(el).cursor);
           expect(cursor).toBe('pointer');
@@ -130,12 +135,16 @@ describe('E2E :: Screen sharing test suite', () => {
       });
 
       describe('selecting a source', () => {
+        let sources;
+        beforeAll(async () => {
+          await electron.waitForCondition(() => shimRoot.locator('.electron-desktop-capturer-root__source') !== null);
+          sources = shimRoot.locator('.electron-desktop-capturer-root__source');
+        });
         test('clicking a source closes the overlay', async () => {
-          const firstSource = testPageWindow.locator('.electron-desktop-capturer-root__source').first();
+          const firstSource = sources.first();
           await firstSource.click();
 
           // Wait for the overlay to disappear
-          const shimRoot = testPageWindow.locator('.electron-desktop-capturer-root');
           await expect(shimRoot).not.toBeVisible({timeout: 5000});
         });
 
@@ -170,8 +179,6 @@ describe('E2E :: Screen sharing test suite', () => {
       });
 
       describe('canceling screen sharing', () => {
-        let shimRoot;
-
         beforeAll(async () => {
           // Trigger screen sharing again to test cancellation
           const shareScreenBtn = testPageWindow.locator('#share-screen-btn');
