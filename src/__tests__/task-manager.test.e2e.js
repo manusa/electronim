@@ -291,7 +291,7 @@ describe('E2E :: Task Manager test suite', () => {
       test('action buttons have gap between them', async () => {
         const actionsContainer = taskManagerWindow.locator('.task-manager-actions');
         const gap = await actionsContainer.evaluate(el => {
-          const styles = window.getComputedStyle(el);
+          const styles = globalThis.getComputedStyle(el);
           return styles.gap;
         });
 
@@ -303,7 +303,7 @@ describe('E2E :: Task Manager test suite', () => {
       test('disabled buttons have reduced opacity', async () => {
         const openDevToolsButton = taskManagerWindow.locator('.task-manager-actions button', {hasText: 'Open DevTools'});
         const opacity = await openDevToolsButton.evaluate(el => {
-          const styles = window.getComputedStyle(el);
+          const styles = globalThis.getComputedStyle(el);
           return styles.opacity;
         });
 
@@ -330,7 +330,7 @@ describe('E2E :: Task Manager test suite', () => {
 
         const openDevToolsButton = taskManagerWindow.locator('.task-manager-actions button', {hasText: 'Open DevTools'});
         const opacity = await openDevToolsButton.evaluate(el => {
-          const styles = window.getComputedStyle(el);
+          const styles = globalThis.getComputedStyle(el);
           return styles.opacity;
         });
 
