@@ -181,7 +181,7 @@ const Container = ({resolve, reject}) => {
     desktopCapturer.getSources(DEFAULT_SOURCES_OPTIONS).then(newSources => {
       const updatedSourcesMap = {};
 
-      newSources.forEach(source => {
+      for (const source of newSources) {
         const thumbnailDataURL = getThumbnailDataURL(source.thumbnail);
         const existingSource = sourcesMap?.[source.id];
 
@@ -190,7 +190,7 @@ const Container = ({resolve, reject}) => {
           // Use new thumbnail if available, otherwise use previous thumbnail
           thumbnailDataURL: thumbnailDataURL || existingSource?.thumbnailDataURL || ''
         };
-      });
+      }
 
       setSourcesMap(updatedSourcesMap);
     });
