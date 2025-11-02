@@ -61,7 +61,7 @@ const killProcess = serviceManagerModule => (_event, {id}) => {
 
 const openDevTools = serviceManagerModule => (_event, {id}) => {
   const service = serviceManagerModule.getService(id);
-  if (service && service.webContents) {
+  if (service?.webContents) {
     try {
       service.webContents.openDevTools({mode: 'detach', activate: true});
     } catch (error) {
