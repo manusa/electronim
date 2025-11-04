@@ -16,10 +16,16 @@
 describe('Chrome Extensions module test suite', () => {
   let electron;
   let chromeExtensions;
+  let originalChromeVersion;
   beforeEach(() => {
     jest.resetModules();
+    originalChromeVersion = process.versions.chrome;
+    process.versions.chrome = '133.0.6920.0';
     electron = require('../../__tests__').testElectron();
     chromeExtensions = require('../');
+  });
+  afterEach(() => {
+    process.versions.chrome = originalChromeVersion;
   });
   describe('openChromeWebStore', () => {
     let openChromeWebStore;
@@ -101,6 +107,16 @@ describe('Chrome Extensions module test suite', () => {
       devToolsMenuItem.click();
       // Then
       expect(webContentsViewInstance.webContents.openDevTools).toHaveBeenCalledTimes(1);
+    });
+    test('should set Chrome user agent when opening Chrome Web Store', () => {
+      // When
+      openChromeWebStore();
+      // Then
+      const webContentsViewInstance = electron.WebContentsView.mock.results[0].value;
+      expect(webContentsViewInstance.webContents.setUserAgent).toHaveBeenCalledTimes(1);
+      expect(webContentsViewInstance.webContents.setUserAgent).toHaveBeenCalledWith(
+        expect.stringMatching(/^Mozilla\/5\.0 .* Chrome\/133\.0\.0\.0 Safari\/537\.36$/)
+      );
     });
   });
   describe('isChromeExtensionsEnabled', () => {

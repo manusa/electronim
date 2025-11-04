@@ -17,6 +17,7 @@ const {Menu, MenuItem, WebContentsView} = require('electron');
 const path = require('node:path');
 const {showDialog} = require('../base-window');
 const {handleRedirect, windowOpenHandler} = require('../service-manager/redirect');
+const {chromeUserAgent} = require('../user-agent');
 
 const webPreferences = {
   contextIsolation: true,
@@ -38,6 +39,7 @@ const handleContextMenu = viewOrWindow => (_event, params) => {
 
 const openChromeWebStore = baseWindow => () => {
   const chromeWebStoreView = new WebContentsView({webPreferences});
+  chromeWebStoreView.webContents.setUserAgent(chromeUserAgent());
   chromeWebStoreView.webContents.loadURL('https://chromewebstore.google.com/');
   chromeWebStoreView.webContents.on('will-navigate', handleRedirect(chromeWebStoreView));
   chromeWebStoreView.webContents.on('context-menu', handleContextMenu(chromeWebStoreView));

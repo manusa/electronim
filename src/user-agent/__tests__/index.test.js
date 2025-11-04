@@ -97,6 +97,52 @@ describe('User Agent module test suite', () => {
       expect(result).toBe('Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) Chrome/1337.1337.1337 Safari/537.36');
     });
   });
+  describe('chromeUserAgent', () => {
+    let originalPlatform;
+    let originalChromeVersion;
+    beforeEach(async () => {
+      userAgent = await testUserAgent();
+      originalPlatform = process.platform;
+      originalChromeVersion = process.versions.chrome;
+      process.versions.chrome = '133.0.6920.0';
+    });
+    afterEach(() => {
+      Object.defineProperty(process, 'platform', {value: originalPlatform});
+      process.versions.chrome = originalChromeVersion;
+    });
+    test('should return macOS Chrome user agent on darwin', () => {
+      // Given
+      Object.defineProperty(process, 'platform', {value: 'darwin'});
+      // When
+      const result = userAgent.chromeUserAgent();
+      // Then
+      expect(result).toBe('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36');
+    });
+    test('should return Windows Chrome user agent on win32', () => {
+      // Given
+      Object.defineProperty(process, 'platform', {value: 'win32'});
+      // When
+      const result = userAgent.chromeUserAgent();
+      // Then
+      expect(result).toBe('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36');
+    });
+    test('should return Linux Chrome user agent on linux', () => {
+      // Given
+      Object.defineProperty(process, 'platform', {value: 'linux'});
+      // When
+      const result = userAgent.chromeUserAgent();
+      // Then
+      expect(result).toBe('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36');
+    });
+    test('should use major version from process.versions.chrome formatted as X.0.0.0', () => {
+      // Given
+      process.versions.chrome = '142.0.7444.59';
+      // When
+      const result = userAgent.chromeUserAgent();
+      // Then
+      expect(result).toContain('Chrome/142.0.0.0');
+    });
+  });
   describe('addUserAgentInterceptor', () => {
     let session;
     beforeEach(() => {
