@@ -90,6 +90,9 @@ const newWebContentsViewInstance = webPreferences => {
   instance.webContents.setWindowOpenHandler = jest.fn();
   instance.webContents.stopFindInPage = jest.fn();
   instance.webContents.userAgent = 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/1337.36 (KHTML, like Gecko) ElectronIM/13.337.0 Chrome/WillBeReplacedByLatestChromium Electron/0.0.99 Safari/537.36';
+  instance.webContents.setUserAgent = jest.fn(userAgent => {
+    instance.webContents.userAgent = userAgent;
+  });
   return instance;
 };
 

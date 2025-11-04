@@ -89,6 +89,26 @@ const firefoxUserAgent = userAgent => firefoxVersion => {
 
 const userAgentForWebContents = webContents => defaultUserAgent(webContents.userAgent);
 
+const chromeUserAgent = () => {
+  const chromeVersion = process.versions.chrome;
+  // Extract major version and format as X.0.0.0 (e.g., 142.0.7444.59 -> 142.0.0.0)
+  const majorVersion = chromeVersion.split('.')[0];
+  const formattedVersion = `${majorVersion}.0.0.0`;
+  const platform = process.platform;
+
+  let platformString;
+  if (platform === 'darwin') {
+    platformString = 'Macintosh; Intel Mac OS X 10_15_7';
+  } else if (platform === 'win32') {
+    platformString = 'Windows NT 10.0; Win64; x64';
+  } else {
+    // Linux and other platforms
+    platformString = 'X11; Linux x86_64';
+  }
+
+  return `Mozilla/5.0 (${platformString}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${formattedVersion} Safari/537.36`;
+};
+
 const addUserAgentInterceptor = session => {
   if (!session.userAgentInterceptor) {
     session.webRequest.onBeforeSendHeaders(USER_AGENT_INTERCEPTOR_FILTER, (details, callback) => {
@@ -109,6 +129,7 @@ module.exports = {
   BROWSER_VERSIONS,
   initBrowserVersions,
   userAgentForWebContents,
+  chromeUserAgent,
   addUserAgentInterceptor,
   setUrls // For testing purposes only
 };
