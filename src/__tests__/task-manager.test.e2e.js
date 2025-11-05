@@ -308,7 +308,7 @@ describe('E2E :: Task Manager test suite', () => {
         });
 
         // Disabled button should have 0.38 opacity (Material Design 3)
-        expect(parseFloat(opacity)).toBe(0.38);
+        expect(Number.parseFloat(opacity)).toBe(0.38);
       });
 
       test('enabled button has full opacity after selection', async () => {
@@ -335,7 +335,7 @@ describe('E2E :: Task Manager test suite', () => {
         });
 
         // Enabled button should have full opacity (1)
-        expect(parseFloat(opacity)).toBe(1);
+        expect(Number.parseFloat(opacity)).toBe(1);
       });
     });
 
