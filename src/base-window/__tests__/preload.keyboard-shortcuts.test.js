@@ -44,6 +44,51 @@ describe('Browser Keyboard Shortcuts test suite', () => {
     });
   });
   describe('Control modified events', () => {
+    test('ctrl+R, should send reload app event', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      // When
+      globalThis.dispatchEvent(new KeyboardEvent('keyup', {key: 'R', ctrlKey: true}));
+      // Then
+      expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.send).toHaveBeenCalledWith('reload');
+    });
+    test('ctrl+r (lowercase), should send reload app event', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      // When
+      globalThis.dispatchEvent(new KeyboardEvent('keyup', {key: 'r', ctrlKey: true}));
+      // Then
+      expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.send).toHaveBeenCalledWith('reload');
+    });
+    test('ctrl++ (zoom in), should send zoomIn event', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      // When
+      globalThis.dispatchEvent(new KeyboardEvent('keyup', {key: '+', ctrlKey: true}));
+      // Then
+      expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.send).toHaveBeenCalledWith('zoomIn');
+    });
+    test('ctrl+- (zoom out), should send zoomOut event', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      // When
+      globalThis.dispatchEvent(new KeyboardEvent('keyup', {key: '-', ctrlKey: true}));
+      // Then
+      expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.send).toHaveBeenCalledWith('zoomOut');
+    });
+    test('ctrl+0 (zoom reset), should send zoomReset event', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      // When
+      globalThis.dispatchEvent(new KeyboardEvent('keyup', {key: '0', ctrlKey: true}));
+      // Then
+      expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.send).toHaveBeenCalledWith('zoomReset');
+    });
     test('ctrl+unrecognized_key, should NOT send any app event', () => {
       // Given
       browserKeyboardShortcuts.initKeyboardShortcuts();
@@ -59,6 +104,15 @@ describe('Browser Keyboard Shortcuts test suite', () => {
       browserKeyboardShortcuts.initKeyboardShortcuts();
       // When
       globalThis.dispatchEvent(new KeyboardEvent('keyup', {key: 'R', metaKey: true}));
+      // Then
+      expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
+      expect(electron.ipcRenderer.send).toHaveBeenCalledWith('reload');
+    });
+    test('cmd+r (lowercase), should send reload app event', () => {
+      // Given
+      browserKeyboardShortcuts.initKeyboardShortcuts();
+      // When
+      globalThis.dispatchEvent(new KeyboardEvent('keyup', {key: 'r', metaKey: true}));
       // Then
       expect(electron.ipcRenderer.send).toHaveBeenCalledTimes(1);
       expect(electron.ipcRenderer.send).toHaveBeenCalledWith('reload');

@@ -14,3 +14,4 @@
    limitations under the License.
  */
 require('./preload.webstore-private');
+require('../base-window/preload.keyboard-shortcuts').initKeyboardShortcuts();
