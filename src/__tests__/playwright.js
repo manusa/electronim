@@ -20,11 +20,13 @@
  */
 function toVirtualKeyCode(key) {
   const keyCodes = {
+    F5: 116,
     F11: 122,
     F12: 123,
     Escape: 27,
     Tab: 9,
     Enter: 13,
+    0: 48,
     1: 49,
     2: 50,
     3: 51,
@@ -34,9 +36,13 @@ function toVirtualKeyCode(key) {
     7: 55,
     8: 56,
     9: 57,
-    0: 48,
+    '+': 187,
+    '-': 189,
+    '=': 187,
     F: 70,
-    f: 70
+    f: 70,
+    R: 82,
+    r: 82
   };
   return keyCodes[key] || key.codePointAt(0);
 }
@@ -279,6 +285,34 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
         await new Promise(resolve => setTimeout(resolve, interval));
       }
       throw new Error(`${message} (timeout after ${timeout}ms)`);
+    },
+    /**
+     * Get the zoom factor for a window
+     * @param {Object} window - The Playwright window object
+     * @returns {Promise<number>} The zoom factor (1.0 = 100%)
+     */
+    getZoom: async window => {
+      // Get the window's URL to identify which webContents it is
+      const windowUrl = window.url();
+
+      return await electronApp.evaluate(async ({webContents}, url) => {
+        // Find the webContents with matching URL
+        const allWebContents = webContents.getAllWebContents();
+        const matchingWebContents = allWebContents.find(wc => {
+          try {
+            return wc.getURL() === url;
+          } catch {
+            return false;
+          }
+        });
+
+        if (matchingWebContents) {
+          return matchingWebContents.getZoomFactor();
+        }
+
+        // Fallback to 1.0 if not found
+        return 1.0;
+      }, windowUrl);
     }
   };
 
