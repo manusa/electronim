@@ -30,7 +30,7 @@ describe('Service Manager Module preload test suite', () => {
   });
   describe('preload', () => {
     beforeEach(() => {
-      jest.spyOn(require('../preload.keyboard-shortcuts'), 'initKeyboardShortcuts');
+      jest.spyOn(require('../../base-window/preload.keyboard-shortcuts'), 'initKeyboardShortcuts');
       jest.spyOn(require('../preload.spell-check'), 'initSpellChecker');
     });
     test('adds required libraries', async () => {
@@ -39,7 +39,7 @@ describe('Service Manager Module preload test suite', () => {
       // Then
       expect(globalThis.Notification).toEqual(expect.any(Function));
       expect(globalThis.navigator.mediaDevices.getDisplayMedia).toEqual(expect.any(Function));
-      expect(require('../preload.keyboard-shortcuts').initKeyboardShortcuts).toHaveBeenCalledTimes(1);
+      expect(require('../../base-window/preload.keyboard-shortcuts').initKeyboardShortcuts).toHaveBeenCalledTimes(1);
       await waitFor(() => expect(mockElectron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
       expect(require('../preload.spell-check').initSpellChecker).toHaveBeenCalledTimes(1);
     });
