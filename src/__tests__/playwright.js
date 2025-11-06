@@ -161,16 +161,18 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
     /**
      * Send keyboard input via CDP (Chrome DevTools Protocol)
      * This triggers native keyboard events that Electron's before-input-event will catch
+     * @param {Object} window - Optional Playwright window object. If not provided, uses the first available window
+     * @param {string} key - The key to send
+     * @param {Array<string>} modifiers - Optional array of modifier keys (e.g., ['control', 'shift'])
      */
-    sendKeys: async (key, modifiers = []) => {
-      // Get the first window's CDP session
-      const windows = electronApp.windows();
-      if (windows.length === 0) {
+    sendKeys: async ({window, key, modifiers = []}) => {
+      const targetWindow = window || electronApp.windows()[0];
+
+      if (!targetWindow) {
         throw new Error('No windows available to send keys to');
       }
 
-      const window = windows[0];
-      const cdpSession = await window.context().newCDPSession(window);
+      const cdpSession = await targetWindow.context().newCDPSession(targetWindow);
 
       // Map modifier names to CDP modifier values
       const modifierBits = modifiers.reduce((bits, mod) => {

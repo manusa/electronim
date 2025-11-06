@@ -289,13 +289,16 @@ describe('Playwright utilities test suite', () => {
     });
     describe('sendKeys', () => {
       test('sends key without error', async () => {
-        await expect(electron.sendKeys('a')).resolves.not.toThrow();
+        await expect(electron.sendKeys({window: mainWindow, key: 'a'})).resolves.not.toThrow();
       });
       test('sends special key without error', async () => {
-        await expect(electron.sendKeys('Escape')).resolves.not.toThrow();
+        await expect(electron.sendKeys({window: mainWindow, key: 'Escape'})).resolves.not.toThrow();
       });
       test('sends key with modifier without error', async () => {
-        await expect(electron.sendKeys('f', ['control'])).resolves.not.toThrow();
+        await expect(electron.sendKeys({window: mainWindow, key: 'f', modifiers: ['control']})).resolves.not.toThrow();
+      });
+      test('sends key without window parameter (uses first window)', async () => {
+        await expect(electron.sendKeys({key: 'a'})).resolves.not.toThrow();
       });
       test('window still exists after sending keys', () => {
         expect(mainWindow).toBeDefined();
