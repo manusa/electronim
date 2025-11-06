@@ -28,7 +28,7 @@ const getImageFilename = imageUrl => {
   } catch {
     // Invalid URL or no filename, use default
   }
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T').join('-').split('-').slice(0, 6).join('');
+  const timestamp = new Date().toISOString().replaceAll(':', '-').replaceAll('.', '-').split('T').join('-').split('-').slice(0, 6).join('');
   return `image-${timestamp}.png`;
 };
 
