@@ -140,6 +140,7 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
     /**
      * Get the currently active tab's data-tab-id attribute
      * @param {Object} window - The Playwright window object
+     * @returns {Promise<string>} The active tab's ID
      */
     getActiveTabId: async window => {
       const activeTab = window.locator('.chrome-tab[active]').first();
