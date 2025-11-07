@@ -20,7 +20,7 @@ const {spawnElectron, createTestServer} = require('./');
 
 describe('E2E :: Keyboard shortcuts test suite', () => {
   let electron;
-  let mainWindow;
+  let chromeTabsView;
   let testServer;
 
   beforeAll(async () => {
@@ -47,7 +47,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
         ]
       }
     });
-    mainWindow = await electron.waitForWindow(
+    chromeTabsView = await electron.waitForWindow(
       ({url, title}) => url.includes('chrome-tabs') || title === 'ElectronIM tabs');
   });
 
@@ -59,7 +59,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
   });
 
   test('application starts with multiple tabs', async () => {
-    const tabs = mainWindow.locator('.chrome-tab');
+    const tabs = chromeTabsView.locator('.chrome-tab');
     await expect(tabs).toHaveCount(3);
   });
 
@@ -72,7 +72,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
 
     test('pressing F11 toggles fullscreen state', async () => {
       // When
-      await electron.sendKeys({window: mainWindow, key: 'F11'});
+      await electron.sendKeys({window: chromeTabsView, key: 'F11'});
       await electron.waitForCondition(
         async () => (await electron.isFullScreen()) === !initialFullScreen,
         {message: 'Fullscreen state did not toggle'}
@@ -85,7 +85,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
       // Given
       expect(await electron.isFullScreen()).toBe(!initialFullScreen);
       // When
-      await electron.sendKeys({window: mainWindow, key: 'F11'});
+      await electron.sendKeys({window: chromeTabsView, key: 'F11'});
       await electron.waitForCondition(
         async () => (await electron.isFullScreen()) === initialFullScreen,
         {message: 'Fullscreen state did not toggle back'}
@@ -98,76 +98,76 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
   describe('Ctrl+[1-9] tab switching', () => {
     test('Ctrl+1 activates first tab', async () => {
       // Given
-      await electron.sendKeys({window: mainWindow, key: '2', modifiers: ['control']});
-      await electron.waitForActiveTab(mainWindow, 'test-service-2');
+      await electron.sendKeys({window: chromeTabsView, key: '2', modifiers: ['control']});
+      await electron.waitForActiveTab(chromeTabsView, 'test-service-2');
       // When
-      await electron.sendKeys({window: mainWindow, key: '1', modifiers: ['control']});
-      await electron.waitForActiveTab(mainWindow, 'test-service-1');
+      await electron.sendKeys({window: chromeTabsView, key: '1', modifiers: ['control']});
+      await electron.waitForActiveTab(chromeTabsView, 'test-service-1');
       // Then
-      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-1');
+      expect(await electron.getActiveTabId(chromeTabsView)).toBe('test-service-1');
     });
 
     test('Ctrl+2 activates second tab', async () => {
       // When
-      await electron.sendKeys({window: mainWindow, key: '2', modifiers: ['control']});
-      await electron.waitForActiveTab(mainWindow, 'test-service-2');
+      await electron.sendKeys({window: chromeTabsView, key: '2', modifiers: ['control']});
+      await electron.waitForActiveTab(chromeTabsView, 'test-service-2');
       // Then
-      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-2');
+      expect(await electron.getActiveTabId(chromeTabsView)).toBe('test-service-2');
     });
 
     test('Ctrl+3 activates third tab', async () => {
       // When
-      await electron.sendKeys({window: mainWindow, key: '3', modifiers: ['control']});
-      await electron.waitForActiveTab(mainWindow, 'test-service-3');
+      await electron.sendKeys({window: chromeTabsView, key: '3', modifiers: ['control']});
+      await electron.waitForActiveTab(chromeTabsView, 'test-service-3');
       // Then
-      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-3');
+      expect(await electron.getActiveTabId(chromeTabsView)).toBe('test-service-3');
     });
   });
 
   describe('Ctrl+Tab tab traversal', () => {
     test('Ctrl+Tab cycles to next tab', async () => {
       // Given
-      await electron.sendKeys({window: mainWindow, key: '1', modifiers: ['control']});
-      await electron.waitForActiveTab(mainWindow, 'test-service-1');
+      await electron.sendKeys({window: chromeTabsView, key: '1', modifiers: ['control']});
+      await electron.waitForActiveTab(chromeTabsView, 'test-service-1');
       // When
-      await electron.sendKeys({window: mainWindow, key: 'Tab', modifiers: ['control']});
-      await electron.waitForActiveTab(mainWindow, 'test-service-2');
+      await electron.sendKeys({window: chromeTabsView, key: 'Tab', modifiers: ['control']});
+      await electron.waitForActiveTab(chromeTabsView, 'test-service-2');
       // Then
-      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-2');
+      expect(await electron.getActiveTabId(chromeTabsView)).toBe('test-service-2');
     });
 
     test('Ctrl+Shift+Tab cycles to previous tab', async () => {
       // Given
-      await electron.sendKeys({window: mainWindow, key: '2', modifiers: ['control']});
-      await electron.waitForActiveTab(mainWindow, 'test-service-2');
+      await electron.sendKeys({window: chromeTabsView, key: '2', modifiers: ['control']});
+      await electron.waitForActiveTab(chromeTabsView, 'test-service-2');
       // When
-      await electron.sendKeys({window: mainWindow, key: 'Tab', modifiers: ['control', 'shift']});
-      await electron.waitForActiveTab(mainWindow, 'test-service-1');
+      await electron.sendKeys({window: chromeTabsView, key: 'Tab', modifiers: ['control', 'shift']});
+      await electron.waitForActiveTab(chromeTabsView, 'test-service-1');
       // Then
-      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-1');
+      expect(await electron.getActiveTabId(chromeTabsView)).toBe('test-service-1');
     });
 
     test('Ctrl+Tab wraps around from last to first tab', async () => {
       // Given
       // Start from last tab
-      await electron.sendKeys({window: mainWindow, key: '3', modifiers: ['control']});
-      await electron.waitForActiveTab(mainWindow, 'test-service-3');
+      await electron.sendKeys({window: chromeTabsView, key: '3', modifiers: ['control']});
+      await electron.waitForActiveTab(chromeTabsView, 'test-service-3');
       // When
-      await electron.sendKeys({window: mainWindow, key: 'Tab', modifiers: ['control']});
-      await electron.waitForActiveTab(mainWindow, 'test-service-1');
+      await electron.sendKeys({window: chromeTabsView, key: 'Tab', modifiers: ['control']});
+      await electron.waitForActiveTab(chromeTabsView, 'test-service-1');
       // Then
-      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-1');
+      expect(await electron.getActiveTabId(chromeTabsView)).toBe('test-service-1');
     });
   });
 
   describe('Ctrl+f find in page', () => {
     test('pressing Ctrl+f opens find-in-page dialog', async () => {
       // Given
-      await electron.sendKeys({window: mainWindow, key: '1', modifiers: ['control']});
-      await electron.waitForActiveTab(mainWindow, 'test-service-1');
+      await electron.sendKeys({window: chromeTabsView, key: '1', modifiers: ['control']});
+      await electron.waitForActiveTab(chromeTabsView, 'test-service-1');
       expect(await electron.isFindInPageOpen()).toBe(false);
       // When
-      await electron.sendKeys({window: mainWindow, key: 'f', modifiers: ['control']});
+      await electron.sendKeys({window: chromeTabsView, key: 'f', modifiers: ['control']});
       await electron.waitForCondition(
         async () => await electron.isFindInPageOpen(),
         {message: 'Find-in-page dialog did not open'}
@@ -179,7 +179,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
     test('pressing Escape closes find-in-page dialog', async () => {
       // Given
       if (!(await electron.isFindInPageOpen())) {
-        await electron.sendKeys({window: mainWindow, key: 'f', modifiers: ['control']});
+        await electron.sendKeys({window: chromeTabsView, key: 'f', modifiers: ['control']});
         await electron.waitForCondition(
           async () => await electron.isFindInPageOpen(),
           {message: 'Find-in-page dialog did not open'}
@@ -187,7 +187,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
       }
       expect(await electron.isFindInPageOpen()).toBe(true);
       // When
-      await electron.sendKeys({window: mainWindow, key: 'Escape'});
+      await electron.sendKeys({window: chromeTabsView, key: 'Escape'});
       await electron.waitForCondition(
         async () => !(await electron.isFindInPageOpen()),
         {message: 'Find-in-page dialog did not close'}
@@ -200,18 +200,18 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
   describe('Meta key shortcuts (macOS legacy support)', () => {
     test('Meta+1 activates first tab', async () => {
       // When
-      await electron.sendKeys({window: mainWindow, key: '1', modifiers: ['meta']});
-      await electron.waitForActiveTab(mainWindow, 'test-service-1');
+      await electron.sendKeys({window: chromeTabsView, key: '1', modifiers: ['meta']});
+      await electron.waitForActiveTab(chromeTabsView, 'test-service-1');
       // Then
-      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-1');
+      expect(await electron.getActiveTabId(chromeTabsView)).toBe('test-service-1');
     });
 
     test('Meta+2 activates first tab', async () => {
       // When
-      await electron.sendKeys({window: mainWindow, key: '2', modifiers: ['meta']});
-      await electron.waitForActiveTab(mainWindow, 'test-service-2');
+      await electron.sendKeys({window: chromeTabsView, key: '2', modifiers: ['meta']});
+      await electron.waitForActiveTab(chromeTabsView, 'test-service-2');
       // Then
-      expect(await electron.getActiveTabId(mainWindow)).toBe('test-service-2');
+      expect(await electron.getActiveTabId(chromeTabsView)).toBe('test-service-2');
     });
   });
 });

@@ -21,14 +21,12 @@ const {spawnElectron, createTestServer} = require('./');
 describe('E2E :: About dialog test suite', () => {
   describe('opening and displaying about information', () => {
     let electron;
-    let mainWindow;
+    let chromeTabsView;
     let testServer;
 
     beforeAll(async () => {
-      // Start HTTP server with test page
       testServer = await createTestServer({manualCleanup: true});
 
-      // Start Electron with test settings
       electron = await spawnElectron({
         settings: {
           tabs: [
@@ -40,7 +38,7 @@ describe('E2E :: About dialog test suite', () => {
           ]
         }
       });
-      mainWindow = await electron.waitForWindow(
+      chromeTabsView = await electron.waitForWindow(
         ({url, title}) => url.includes('chrome-tabs') || title === 'ElectronIM tabs');
     });
 
@@ -57,14 +55,12 @@ describe('E2E :: About dialog test suite', () => {
       let aboutWindow;
 
       test('opens app menu when clicking menu button', async () => {
-        const menuButton = mainWindow.locator('.menu__button');
+        const menuButton = chromeTabsView.locator('.menu__button');
         await expect(menuButton).toBeVisible();
         await menuButton.click();
 
         // Wait for app menu window to appear
-        appMenuWindow = await electron.waitForWindow(
-          ({url}) => url.includes('app-menu/index.html')
-        );
+        appMenuWindow = await electron.waitForWindow(({url}) => url.includes('app-menu/index.html'));
         expect(appMenuWindow).toBeDefined();
       });
 
@@ -79,9 +75,7 @@ describe('E2E :: About dialog test suite', () => {
         await aboutMenuItem.click();
 
         // Wait for about dialog window to appear
-        aboutWindow = await electron.waitForWindow(
-          ({url}) => url.includes('about/index.html')
-        );
+        aboutWindow = await electron.waitForWindow(({url}) => url.includes('about/index.html'));
         expect(aboutWindow).toBeDefined();
       });
 

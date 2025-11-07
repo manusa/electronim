@@ -21,7 +21,7 @@ const {spawnElectron, createTestServer} = require('./');
 describe('E2E :: Help dialog test suite', () => {
   describe('opening and displaying help information', () => {
     let electron;
-    let mainWindow;
+    let chromeTabsView;
     let testServer;
 
     beforeAll(async () => {
@@ -40,7 +40,7 @@ describe('E2E :: Help dialog test suite', () => {
           ]
         }
       });
-      mainWindow = await electron.waitForWindow(
+      chromeTabsView = await electron.waitForWindow(
         ({url, title}) => url.includes('chrome-tabs') || title === 'ElectronIM tabs');
     });
 
@@ -57,14 +57,12 @@ describe('E2E :: Help dialog test suite', () => {
       let helpWindow;
 
       test('opens app menu when clicking menu button', async () => {
-        const menuButton = mainWindow.locator('.menu__button');
+        const menuButton = chromeTabsView.locator('.menu__button');
         await expect(menuButton).toBeVisible();
         await menuButton.click();
 
         // Wait for app menu window to appear
-        appMenuWindow = await electron.waitForWindow(
-          ({url}) => url.includes('app-menu/index.html')
-        );
+        appMenuWindow = await electron.waitForWindow(({url}) => url.includes('app-menu/index.html'));
         expect(appMenuWindow).toBeDefined();
       });
 

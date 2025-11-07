@@ -45,7 +45,6 @@ describe('E2E :: Task Manager test suite', () => {
         ]
       }
     });
-    // Wait for main window to load
     await electron.waitForWindow(
       ({url, title}) => url.includes('chrome-tabs') || title === 'ElectronIM tabs');
   });
@@ -68,10 +67,7 @@ describe('E2E :: Task Manager test suite', () => {
       });
 
       // Wait for task manager window to appear
-      taskManagerWindow = await electron.waitForWindow(
-        ({url}) => url.includes('task-manager/index.html'),
-        5000
-      );
+      taskManagerWindow = await electron.waitForWindow(({url}) => url.includes('task-manager/index.html'));
     });
 
     test('task manager dialog is displayed', () => {

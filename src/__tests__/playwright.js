@@ -111,21 +111,26 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
       }
     },
     /**
-     * Wait for a window matching the filter criteria
+     * Wait for a window matching the filter criteria and waits for it to be loaded
      * @param {Function} filterFn - Function that receives {url, title, window} and returns true when window is found
-     * @param {number} timeout - Maximum time to wait in ms (default: 10000)
+     * @param {Object} options - Options for waiting
+     * @param {number} options.timeout - Maximum time to wait in ms (default: 10000)
+     * @param {string} options.loadState - Load state to wait for: 'load', 'domcontentloaded', or 'networkidle' (default: 'load')
      * @returns {Promise<Object>} The Playwright window object that matches the filter
-     * @throws {Error} If no matching window is found within the timeout period
+     * @throws {Error} If no matching window is found within the timeout period or if window fails to load
      */
-    waitForWindow: async (filterFn, timeout = 10000) => {
-      return await instance.waitForCondition(
+    waitForWindow: async (filterFn, {
+      timeout = 10000,
+      loadState = 'load'
+    } = {}) => {
+      const foundWindow = await instance.waitForCondition(
         async () => {
           const windows = electronApp.windows();
-          for (const window of windows) {
-            const url = window.url();
-            const title = await window.title();
-            if (filterFn({url, title, window})) {
-              return window;
+          for (const win of windows) {
+            const url = win.url();
+            const title = await win.title();
+            if (filterFn({url, title, window: win})) {
+              return win;
             }
           }
           return null;
@@ -136,6 +141,9 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
           message: 'Window matching filter not found'
         }
       );
+      await foundWindow.waitForLoadState(loadState, {timeout});
+
+      return foundWindow;
     },
     /**
      * Get the currently active tab's data-tab-id attribute

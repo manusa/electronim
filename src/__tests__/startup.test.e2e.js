@@ -21,7 +21,7 @@ const {spawnElectron, createTestServer} = require('./');
 describe('E2E :: Application startup test suite', () => {
   describe('with configured tab services', () => {
     let electron;
-    let mainWindow;
+    let chromeTabsView;
     let testServer;
 
     beforeAll(async () => {
@@ -41,7 +41,7 @@ describe('E2E :: Application startup test suite', () => {
           ]
         }
       });
-      mainWindow = await electron.waitForWindow(
+      chromeTabsView = await electron.waitForWindow(
         ({url, title}) => url.includes('chrome-tabs') || title === 'ElectronIM tabs');
     });
 
@@ -54,43 +54,43 @@ describe('E2E :: Application startup test suite', () => {
     });
 
     test('creates main window', () => {
-      expect(mainWindow).toBeDefined();
+      expect(chromeTabsView).toBeDefined();
     });
 
     describe('main window', () => {
       test('has ElectronIM title', async () => {
-        const title = await mainWindow.title();
+        const title = await chromeTabsView.title();
         expect(title).toContain('ElectronIM');
       });
 
       test('verifies tab container element exists', async () => {
-        const tabContainer = await mainWindow.locator('.tab-container');
+        const tabContainer = await chromeTabsView.locator('.tab-container');
         await expect(tabContainer).toBeVisible();
       });
 
       test('verifies HTML has electronim class', async () => {
-        const html = await mainWindow.locator('html.electronim');
+        const html = await chromeTabsView.locator('html.electronim');
         await expect(html).toHaveCount(1);
       });
 
       test('can execute JavaScript in the renderer process', async () => {
-        const title = await mainWindow.evaluate(() => document.title);
+        const title = await chromeTabsView.evaluate(() => document.title);
         expect(title).toContain('ElectronIM');
       });
     });
 
     describe('configured tab', () => {
       test('displays the configured tab', async () => {
-        const chromeTabs = mainWindow.locator('.chrome-tabs');
+        const chromeTabs = chromeTabsView.locator('.chrome-tabs');
         await expect(chromeTabs).toBeVisible();
 
-        const tabs = mainWindow.locator('.chrome-tab');
+        const tabs = chromeTabsView.locator('.chrome-tab');
         await expect(tabs).toHaveCount(1);
       });
 
       test('tab has correct title', async () => {
         // The title is updated dynamically from the settings, so we need to wait for it
-        const tabTitle = mainWindow.locator('.chrome-tab .chrome-tab-title');
+        const tabTitle = chromeTabsView.locator('.chrome-tab .chrome-tab-title');
         // Wait for the title to be visible and have content
         await expect(tabTitle).toBeVisible({timeout: 10000});
         const titleText = await tabTitle.textContent();
@@ -104,9 +104,7 @@ describe('E2E :: Application startup test suite', () => {
         beforeAll(async () => {
           // Wait for the test page window to appear
           testPageWindow = await electron.waitForWindow(
-            ({url}) => url === testServer.url || url.includes('localhost'),
-            5000
-          );
+            ({url}) => url === testServer.url || url.includes('localhost'));
         });
 
         test('test page window is created', () => {

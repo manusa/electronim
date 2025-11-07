@@ -43,9 +43,7 @@ describe('E2E :: Screen sharing test suite', () => {
       });
       // Wait for the test page window to appear
       testPageWindow = await electron.waitForWindow(
-        ({url}) => url === testServer.url || url.includes('localhost'),
-        5000
-      );
+        ({url}) => url === testServer.url || url.includes('localhost'));
       // Initialize share screen button locator and ensure it's loaded
       shareScreenBtn = testPageWindow.locator('#share-screen-btn');
       await electron.waitForCondition(async () => await shareScreenBtn.count() > 0);

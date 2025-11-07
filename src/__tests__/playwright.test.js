@@ -62,7 +62,7 @@ describe('Playwright utilities test suite', () => {
       });
 
       test('creates at least one window', async () => {
-        // Wait for window to be created
+        // Wait for a window to be created
         await electron.waitForWindow(() => true);
         const windows = electron.app.windows();
         expect(windows.length).toBeGreaterThan(0);
@@ -162,7 +162,7 @@ describe('Playwright utilities test suite', () => {
       });
 
       test('windows are created despite extra arguments', async () => {
-        // Wait for window to be created
+        // Wait for a window to be created
         await electron.waitForWindow(() => true);
         const windows = electron.app.windows();
         expect(windows.length).toBeGreaterThan(0);
@@ -181,8 +181,7 @@ describe('Playwright utilities test suite', () => {
         }
       });
       mainWindow = await electron.waitForWindow(
-        ({url, title}) => url.includes('chrome-tabs') || title === 'ElectronIM tabs'
-      );
+        ({url, title}) => url.includes('chrome-tabs') || title === 'ElectronIM tabs');
     });
 
     afterAll(async () => {
@@ -217,7 +216,7 @@ describe('Playwright utilities test suite', () => {
       describe('with timeout', () => {
         test('throws error when window not found within timeout', async () => {
           await expect(
-            electron.waitForWindow(({url}) => url.includes('nonexistent-window'), 500)
+            electron.waitForWindow(({url}) => url.includes('nonexistent-window'), {timeout: 500})
           ).rejects.toThrow('Window matching filter not found (timeout after 500ms)');
         });
       });
