@@ -46,7 +46,10 @@ describe('E2E :: Screen sharing test suite', () => {
         ({url}) => url === testServer.url || url.includes('localhost'));
       // Initialize share screen button locator and ensure it's loaded
       shareScreenBtn = testPageWindow.locator('#share-screen-btn');
-      await electron.waitForCondition(async () => await shareScreenBtn.count() > 0);
+      await electron.waitForCondition(
+        async () => await shareScreenBtn.count() > 0,
+        {timeout: 5000, interval: 100, message: 'Share screen button did not appear'}
+      );
     });
 
     afterAll(async () => {
@@ -76,7 +79,10 @@ describe('E2E :: Screen sharing test suite', () => {
       beforeAll(async () => {
         await shareScreenBtn.click();
         shimRoot = testPageWindow.locator('.electron-desktop-capturer-root');
-        await electron.waitForCondition(async () => await shimRoot.count() > 0);
+        await electron.waitForCondition(
+          async () => await shimRoot.count() > 0,
+          {timeout: 5000, interval: 100, message: 'Screen sharing overlay did not appear'}
+        );
       });
       test('clicking screen sharing button opens shim overlay', async () => {
         // Clicking is done in beforeAll
@@ -98,7 +104,10 @@ describe('E2E :: Screen sharing test suite', () => {
         beforeAll(async () => {
           sources = shimRoot.locator('.electron-desktop-capturer-root__source');
           // Wait for sources to load - can take up to 9+ seconds in CI as shim polls every 300ms
-          await electron.waitForCondition(async () => await sources.count() > 0, {timeout: 10000});
+          await electron.waitForCondition(
+            async () => await sources.count() > 0,
+            {timeout: 10000, interval: 300, message: 'Screen sharing sources did not load'}
+          );
         });
         test('displays loading message initially', async () => {
           // Wait for sources to appear (up to 3 seconds, as the shim polls every 300ms)
@@ -137,14 +146,20 @@ describe('E2E :: Screen sharing test suite', () => {
         beforeAll(async () => {
           sources = shimRoot.locator('.electron-desktop-capturer-root__source');
           // Wait for sources to load - can take up to 9+ seconds in CI as shim polls every 300ms
-          await electron.waitForCondition(async () => await sources.count() > 0, {timeout: 10000});
+          await electron.waitForCondition(
+            async () => await sources.count() > 0,
+            {timeout: 10000, interval: 300, message: 'Screen sharing sources did not load for selection test'}
+          );
         });
         test('clicking a source closes the overlay', async () => {
           const firstSource = sources.first();
           await firstSource.click();
 
           // Wait for the overlay to disappear
-          await expect(shimRoot).not.toBeVisible({timeout: 5000});
+          await electron.waitForCondition(
+            async () => !(await shimRoot.isVisible()),
+            {timeout: 5000, interval: 100, message: 'Overlay did not close after selecting source'}
+          );
         });
 
         test('screen sharing status shows success', async () => {
@@ -154,11 +169,14 @@ describe('E2E :: Screen sharing test suite', () => {
 
         test('stream is created and available', async () => {
           // Wait for stream to be created after selection
-          await electron.waitForCondition(async () => {
-            return await testPageWindow.evaluate(() => {
-              return Boolean(globalThis.electronimScreenShareStream);
-            });
-          });
+          await electron.waitForCondition(
+            async () => {
+              return await testPageWindow.evaluate(() => {
+                return Boolean(globalThis.electronimScreenShareStream);
+              });
+            },
+            {timeout: 5000, interval: 100, message: 'Screen share stream was not created'}
+          );
           // If we reach here, the stream exists (waitForCondition passed)
           const hasStream = await testPageWindow.evaluate(() => {
             return Boolean(globalThis.electronimScreenShareStream);
@@ -187,12 +205,19 @@ describe('E2E :: Screen sharing test suite', () => {
       describe('canceling screen sharing', () => {
         beforeAll(async () => {
           // Ensure any previous overlay is closed before starting this test
-          await expect(shimRoot).not.toBeVisible({timeout: 5000});
+          await electron.waitForCondition(
+            async () => !(await shimRoot.isVisible()),
+            {timeout: 5000, interval: 100, message: 'Previous overlay did not close before cancel test'}
+          );
 
           // Trigger screen sharing again to test cancellation
           await shareScreenBtn.click();
 
-          await expect(shimRoot).toBeVisible({timeout: 5000});
+          // Wait for overlay to appear
+          await electron.waitForCondition(
+            async () => await shimRoot.isVisible(),
+            {timeout: 5000, interval: 100, message: 'Overlay did not appear for cancel test'}
+          );
         });
 
         test('clicking overlay background closes the shim', async () => {
@@ -201,7 +226,10 @@ describe('E2E :: Screen sharing test suite', () => {
           await shimOverlay.click({position: {x: 5, y: 5}});
 
           // Wait for the overlay to disappear
-          await expect(shimRoot).not.toBeVisible({timeout: 5000});
+          await electron.waitForCondition(
+            async () => !(await shimRoot.isVisible()),
+            {timeout: 5000, interval: 100, message: 'Overlay did not close after clicking background'}
+          );
         });
 
         test('screen sharing status shows cancellation error', async () => {
