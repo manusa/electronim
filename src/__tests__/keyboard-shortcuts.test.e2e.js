@@ -22,6 +22,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
   let electron;
   let chromeTabsView;
   let testServer;
+  let testView;
 
   beforeAll(async () => {
     testServer = await createTestServer({manualCleanup: true});
@@ -49,6 +50,7 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
     });
     chromeTabsView = await electron.waitForWindow(
       ({url, title}) => url.includes('chrome-tabs') || title === 'ElectronIM tabs');
+    testView = await electron.waitForWindow(({title}) => title === 'ElectronIM Test Page');
   });
 
   afterAll(async () => {
@@ -212,6 +214,151 @@ describe('E2E :: Keyboard shortcuts test suite', () => {
       await electron.waitForActiveTab(chromeTabsView, 'test-service-2');
       // Then
       expect(await electron.getActiveTabId(chromeTabsView)).toBe('test-service-2');
+    });
+  });
+
+  describe('Reload shortcuts', () => {
+    let waitForTimestampChange;
+    let initialTimestamp;
+
+    beforeEach(async () => {
+      initialTimestamp = await testView.locator('#timestamp').textContent();
+      waitForTimestampChange = async () => {
+        await electron.waitForCondition(
+          async () => initialTimestamp !== await testView.locator('#timestamp').textContent(),
+          {timeout: 5000, interval: 5, message: 'Timestamp did not change after reload'}
+        );
+      };
+    });
+
+    test('pressing F5 reloads the service', async () => {
+      // When
+      await electron.sendKeys({window: testView, key: 'F5'});
+      await waitForTimestampChange();
+      // Then
+      const timestampAfter = await testView.locator('#timestamp').textContent();
+      expect(timestampAfter).not.toBe(initialTimestamp);
+    });
+
+    test('pressing Ctrl+r reloads the service', async () => {
+      // When
+      await electron.sendKeys({window: testView, key: 'r', modifiers: ['control']});
+      await waitForTimestampChange();
+      // Then
+      const timestampAfter = await testView.locator('#timestamp').textContent();
+      expect(timestampAfter).not.toBe(initialTimestamp);
+    });
+
+    test('pressing Ctrl+R (uppercase) reloads the service', async () => {
+      // When
+      await electron.sendKeys({window: testView, key: 'R', modifiers: ['control']});
+      await waitForTimestampChange();
+      // Then
+      const timestampAfter = await testView.locator('#timestamp').textContent();
+      expect(timestampAfter).not.toBe(initialTimestamp);
+    });
+
+    test('pressing Meta+r reloads the service (macOS)', async () => {
+      // When
+      await electron.sendKeys({window: testView, key: 'r', modifiers: ['meta']});
+      await waitForTimestampChange();
+      // Then
+      const timestampAfter = await testView.locator('#timestamp').textContent();
+      expect(timestampAfter).not.toBe(initialTimestamp);
+    });
+
+    test('pressing Meta+R (uppercase) reloads the service (macOS)', async () => {
+      // When
+      await electron.sendKeys({window: testView, key: 'R', modifiers: ['meta']});
+      await waitForTimestampChange();
+      // Then
+      const timestampAfter = await testView.locator('#timestamp').textContent();
+      expect(timestampAfter).not.toBe(initialTimestamp);
+    });
+  });
+
+  describe('Zoom shortcuts', () => {
+    let waitForZoomChange;
+
+    beforeEach(async () => {
+      waitForZoomChange = async zoomCondition => {
+        await electron.waitForCondition(
+          async () => zoomCondition(await electron.getZoom(testView)),
+          {timeout: 3000, interval: 5, message: 'Zoom did not change'});
+      };
+      // Reset zoom to 1.0 before each test
+      await electron.sendKeys({window: testView, key: '0', modifiers: ['control']});
+      await waitForZoomChange(zoom => zoom === 1.0);
+    });
+
+    test('pressing Ctrl+0 resets zoom to 100%', async () => {
+      // Given - zoom in first
+      await electron.sendKeys({window: testView, key: '+', modifiers: ['control']});
+      await waitForZoomChange(zoom => zoom > 1.0);
+
+      // When
+      await electron.sendKeys({window: testView, key: '0', modifiers: ['control']});
+      await waitForZoomChange(zoom => zoom === 1.0);
+
+      // Then
+      const finalZoom = await electron.getZoom(testView);
+      expect(finalZoom).toBe(1.0);
+    });
+
+    test('pressing Ctrl++ increases zoom level', async () => {
+      // When
+      await electron.sendKeys({window: testView, key: '+', modifiers: ['control']});
+      await waitForZoomChange(zoom => zoom > 1.0);
+
+      // Then
+      const finalZoom = await electron.getZoom(testView);
+      expect(finalZoom).toBeCloseTo(1.1, 1);
+    });
+
+    test('pressing Ctrl+- decreases zoom level', async () => {
+      // When
+      await electron.sendKeys({window: testView, key: '-', modifiers: ['control']});
+      await waitForZoomChange(zoom => zoom < 1.0);
+
+      // Then
+      const finalZoom = await electron.getZoom(testView);
+      expect(finalZoom).toBeCloseTo(0.9, 1);
+    });
+
+    test('multiple Ctrl++ increases zoom progressively', async () => {
+      // When
+      await electron.sendKeys({window: testView, key: '+', modifiers: ['control']});
+      await electron.sendKeys({window: testView, key: '+', modifiers: ['control']});
+      await electron.sendKeys({window: testView, key: '+', modifiers: ['control']});
+      await waitForZoomChange(zoom => zoom > 1.2);
+
+      // Then
+      const finalZoom = await electron.getZoom(testView);
+      expect(finalZoom).toBeCloseTo(1.3, 1);
+    });
+
+    test('multiple Ctrl+- decreases zoom progressively', async () => {
+      // When
+      await electron.sendKeys({window: testView, key: '-', modifiers: ['control']});
+      await electron.sendKeys({window: testView, key: '-', modifiers: ['control']});
+      await electron.sendKeys({window: testView, key: '-', modifiers: ['control']});
+      await waitForZoomChange(zoom => zoom < 0.8);
+
+      // Then
+      const finalZoom = await electron.getZoom(testView);
+      expect(finalZoom).toBeCloseTo(0.7, 1);
+    });
+
+    test('zoom does not go below minimum threshold', async () => {
+      // When - zoom out many times to try to reach minimum
+      for (let i = 0; i < 15; i++) {
+        await electron.sendKeys({window: testView, key: '-', modifiers: ['control']});
+      }
+      await waitForZoomChange(zoom => zoom < 0.3);
+
+      // Then - should not go below 0.1
+      const finalZoom = await electron.getZoom(testView);
+      expect(finalZoom).toBeGreaterThanOrEqual(0.1);
     });
   });
 });
