@@ -194,7 +194,7 @@
     "@testing-library/user-event": "14.6.1",
     "chrome-tabs": "5.4.0",
     "css-loader": "7.1.2",
-    "electron": "39.1.2",
+    "electron": "39.2.1",
     "electron-builder": "26.0.12",
     "eslint": "9.39.1",
     "eslint-plugin-jest": "29.1.0",
