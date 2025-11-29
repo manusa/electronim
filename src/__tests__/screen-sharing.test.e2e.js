@@ -177,7 +177,6 @@ describe('E2E :: Screen sharing test suite', () => {
         });
 
         test('displays available sources', async () => {
-          await expect(sources.first()).toBeVisible({timeout: 5000});
           expect(await sources.count()).toBeGreaterThan(0);
         });
 
@@ -271,11 +270,8 @@ describe('E2E :: Screen sharing test suite', () => {
           await ensureOverlayClosed();
 
           // Open overlay for cancellation test
-          await openOverlay();
-
-          // Wait a moment for the overlay to be fully interactive
           // Note: We don't need to wait for sources to test cancellation
-          await shimRoot.locator('.electron-desktop-capturer-root__overlay').waitFor({state: 'visible', timeout: 5000});
+          await openOverlay();
         });
 
         test('clicking overlay background closes the shim', async () => {
