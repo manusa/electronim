@@ -169,10 +169,10 @@ describe('E2E :: Screen sharing test suite', () => {
         let sources;
 
         beforeAll(async () => {
-          // Ensure overlay is open (may have been closed by timing)
-          if (!(await isOverlayVisible())) {
-            await openOverlay();
-          }
+          // Always close and reopen overlay to ensure fresh state with sources loading
+          // This prevents issues where the overlay appears open but sources stopped loading
+          await ensureOverlayClosed();
+          await openOverlay();
           sources = await waitForSources();
         });
 
@@ -207,10 +207,9 @@ describe('E2E :: Screen sharing test suite', () => {
         let sources;
 
         beforeAll(async () => {
-          // Ensure overlay is open with sources loaded
-          if (!(await isOverlayVisible())) {
-            await openOverlay();
-          }
+          // Always close and reopen overlay to ensure fresh state with sources loading
+          await ensureOverlayClosed();
+          await openOverlay();
           sources = await waitForSources();
         });
 
