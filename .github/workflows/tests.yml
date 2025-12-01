@@ -37,12 +37,13 @@ jobs:
         run: npm install
       - name: Pretest
         run: npm run pretest
-      - name: Playwright requirements
+      - name: Setup Xvfb (Playwright requirements)
         run: |
           # Start virtual display for headless Electron
           sudo apt-get update
           sudo apt-get install -y xvfb
-          export DISPLAY=:99
+          # Persist DISPLAY to subsequent steps via GITHUB_ENV
+          echo "DISPLAY=:99" >> "$GITHUB_ENV"
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
           # Wait for display to be ready
           sleep 3
