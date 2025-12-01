@@ -169,10 +169,10 @@ describe('E2E :: Screen sharing test suite', () => {
         let sources;
 
         beforeAll(async () => {
-          // Always close and reopen overlay to ensure fresh state with sources loading
-          // This prevents issues where the overlay appears open but sources stopped loading
-          await ensureOverlayClosed();
-          await openOverlay();
+          // Ensure overlay is open (may have been closed by timing)
+          if (!(await isOverlayVisible())) {
+            await openOverlay();
+          }
           sources = await waitForSources();
         });
 
@@ -207,18 +207,11 @@ describe('E2E :: Screen sharing test suite', () => {
         let sources;
 
         beforeAll(async () => {
-          // Overlay should already be open with sources from 'sources list' tests
-          // If not visible, reopen it
+          // Ensure overlay is open with sources loaded
           if (!(await isOverlayVisible())) {
             await openOverlay();
           }
-          // Get the sources locator - they should already be loaded
-          sources = shimRoot.locator('.electron-desktop-capturer-root__source');
-          // Verify sources are available, wait if needed
-          const count = await sources.count();
-          if (count === 0) {
-            sources = await waitForSources();
-          }
+          sources = await waitForSources();
         });
 
         test('clicking a source closes the overlay', async () => {
