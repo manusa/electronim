@@ -201,7 +201,7 @@
     "jest": "30.2.0",
     "jest-environment-jsdom": "30.2.0",
     "jest-environment-node": "30.2.0",
-    "jest-extended": "6.0.0",
+    "jest-extended": "7.0.0",
     "node-abi": "4.24.0",
     "playwright": "1.57.0",
     "style-loader": "4.0.0",
