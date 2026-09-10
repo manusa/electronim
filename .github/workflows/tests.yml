@@ -53,7 +53,7 @@ jobs:
         run: npm run test:e2e
       - name: SonarCloud
         run: |
-          ./node_modules/.bin/sonar
+          ./node_modules/.bin/sonar-scanner-npm
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
