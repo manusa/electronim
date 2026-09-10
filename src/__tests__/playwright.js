@@ -55,7 +55,10 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
   // Add playwright global expectations
   // Extend Jest's expect with Playwright matchers
   const {expect: playwrightExpect} = require('@playwright/test');
-  globalThis.expect = Object.assign(globalThis.expect, playwrightExpect);
+  // Playwright's expect exposes its own state accessors. Jest's must be kept, since jest-circus
+  // reads the expect state (suppressedErrors) after every test through them.
+  const {getState, setState} = globalThis.expect;
+  globalThis.expect = Object.assign(globalThis.expect, playwrightExpect, {getState, setState});
   // Set environment for testing
   process.env.NODE_ENV = 'test';
   process.env.DISPLAY = process.env.DISPLAY || ':99';
