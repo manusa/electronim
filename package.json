@@ -197,7 +197,7 @@
     "electron": "39.2.7",
     "electron-builder": "26.15.3",
     "eslint": "9.39.2",
-    "eslint-plugin-jest": "29.5.0",
+    "eslint-plugin-jest": "29.16.6",
     "jest": "30.5.1",
     "jest-environment-jsdom": "30.5.1",
     "jest-environment-node": "30.5.1",
