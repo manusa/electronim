@@ -18,6 +18,18 @@ const {loadSettings} = require('../../settings');
 
 const dictionaries = [];
 
+// nodehun@3.0.2 reads the affix and dictionary buffers as NUL-terminated C strings, but Node
+// Buffers carry no terminator. Hunspell therefore parses past the end of the data into whatever
+// follows it on the heap, and intermittently ends up with a broken affix table: literal .dic
+// entries still spell correctly while affix-derived forms (such as 'casa' in Italian, which is not
+// a literal entry) are reported as misspelled. The damage is decided when the instance is built and
+// never heals. Hand over NUL-terminated copies so the parse always stops at the end of the data.
+const nullTerminated = buffer => {
+  const terminated = Buffer.alloc(buffer.length + 1);
+  buffer.copy(terminated);
+  return terminated;
+};
+
 const isMisspelled = async word => {
   for (const dictionary of dictionaries) {
     const isCorrect = await dictionary.spell(word);
@@ -74,7 +86,7 @@ globalThis.reloadDictionaries = async () => {
             reject(err);
           } else {
             try {
-              dictionaries.push(new Nodehun(aff, dic));
+              dictionaries.push(new Nodehun(nullTerminated(aff), nullTerminated(dic)));
               loadedDictionaries.add(dictionaryKey);
               resolve();
             } catch (error) {
