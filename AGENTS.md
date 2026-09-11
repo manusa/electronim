@@ -176,16 +176,8 @@ they catch things the unit suite cannot: **always run them when changing anythin
 
 #### Dependencies deliberately held back
 
-Two are pinned below their latest release on purpose. Check here before "fixing" them:
+One dependency is pinned below its latest release on purpose. Check here before "fixing" it:
 
-- **`playwright` / `@playwright/test` (1.59.0)**. `spawnElectron` merges Playwright's expect
-  into Jest's global expect, which is how the e2e suites get `toBeVisible` and friends. Up to
-  1.59 `@playwright/test` extends the same `expect` package Jest uses, so those matchers and
-  the expect state are Jest's. From 1.60 playwright vendors its own copy: the matchers become
-  unreachable and the merge clobbers Jest's `getState`, so jest-circus fails the suites
-  outright. Moving past 1.59 means having the e2e suites take `expect` from
-  `@playwright/test` directly instead of through the global. `npm test` does not catch this,
-  only `npm run test:e2e` does.
 - **`dictionary-pt-br` (1.2.2)**. 2.0.1 adds `FORBIDDENWORD` on top of non-ASCII UTF-8 affix
   flags, which nodehun's hunspell misassociates, so common words (`casa`, `livro`, `mundo`)
   are all reported misspelled. The dictionary worker test catches this.
