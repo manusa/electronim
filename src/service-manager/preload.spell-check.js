@@ -18,7 +18,14 @@ const {ipcRenderer, webFrame} = require('electron');
 
 const spellCheckFunction = (words, callback) => {
   ipcRenderer.invoke(APP_EVENTS.dictionaryGetMisspelled, words)
-    .then(misspelled => callback(misspelled));
+    // Blink keeps the request pending until the callback runs, so a rejection (the dictionary
+    // renderer failing to load, say) must still answer, reporting nothing as misspelled. The
+    // rejection handler is passed to then rather than chained through catch, which would also
+    // catch a throw from the callback itself and answer the same request a second time.
+    .then(misspelled => callback(misspelled), () => callback([]))
+    // Only ever reached if the callback itself threw, which is Blink's side of the contract
+    // breaking. Report it rather than leaving an unhandled rejection, and never answer again.
+    .catch(error => console.error('Spell check callback failed', error));
 };
 
 const initSpellChecker = () => new Promise(resolve => {

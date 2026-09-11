@@ -69,7 +69,14 @@ const shouldOpenInExternalBrowser = (view, url) => {
 };
 
 const openExternal = urlString => {
-  if (!['http:', 'https:', 'ftp:', 'ftps:'].includes(new URL(urlString).protocol)) {
+  let protocol;
+  try {
+    ({protocol} = new URL(urlString));
+  } catch {
+    // Not a URL at all: the page controls this value, so never hand it to the shell
+    return;
+  }
+  if (!['http:', 'https:', 'ftp:', 'ftps:'].includes(protocol)) {
     return;
   }
   shell.openExternal(urlString).then(() => {});
@@ -96,5 +103,5 @@ const windowOpenHandler = view => {
 };
 
 module.exports = {
-  handleRedirect, shouldOpenInExternalBrowser, windowOpenHandler
+  handleRedirect, openExternal, shouldOpenInExternalBrowser, windowOpenHandler
 };

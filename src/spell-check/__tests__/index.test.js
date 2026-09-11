@@ -109,6 +109,32 @@ describe('Spell-check module test suite', () => {
             expect.objectContaining({label: 'the-suggestion'})
           ]);
         });
+        describe('and a dictionary renderer that fails to answer', () => {
+          let consoleError;
+          beforeEach(() => {
+            consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+            // getSuggestions is never defined when dictionary.worker fails to load
+            webContents.executeJavaScript = jest.fn(async () => {
+              throw new Error('Script failed to execute');
+            });
+          });
+          afterEach(() => {
+            consoleError.mockRestore();
+          });
+          test('should return empty array instead of rejecting', async () => {
+            // When
+            const result = await spellCheck.contextMenuHandler({}, params, webContents);
+            // Then
+            expect(result).toEqual([]);
+          });
+          test('should report the failure', async () => {
+            // When
+            await spellCheck.contextMenuHandler({}, params, webContents);
+            // Then
+            expect(consoleError).toHaveBeenCalledWith(
+              'Could not retrieve spelling suggestions', expect.any(Error));
+          });
+        });
         test('containing a quote, should still be passed as a single valid argument', async () => {
           // Given
           params.misspelledWord = 'doesn\'t';
@@ -120,6 +146,20 @@ describe('Spell-check module test suite', () => {
           const argument = expression.slice('getSuggestions('.length, -1);
           expect(JSON.parse(argument)).toBe('doesn\'t');
         });
+      });
+    });
+    describe('handleGetMisspelled', () => {
+      test('with a dictionary renderer that fails to answer, should report nothing as misspelled', async () => {
+        // Given
+        // Blink asks for every batch of words typed in every service: a rejection here would have
+        // Electron log a failed handler on each keystroke
+        webContents.executeJavaScript = jest.fn(async () => {
+          throw new Error('Script failed to execute');
+        });
+        // When
+        const result = await electron.ipcMain.send('dictionaryGetMisspelled', {}, ['the-word']);
+        // Then
+        expect(result).toEqual([]);
       });
     });
     describe('contextMenuNativeHandler', () => {

@@ -13,8 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {Menu, MenuItem, clipboard, ipcMain: eventBus, shell, dialog} = require('electron');
+const {Menu, MenuItem, clipboard, ipcMain: eventBus, dialog} = require('electron');
 const {contextMenuHandler, contextMenuNativeHandler} = require('../spell-check');
+const {openExternal} = require('./redirect');
 const {APP_EVENTS} = require('../constants');
 
 const getImageFilename = imageUrl => {
@@ -112,7 +113,9 @@ const entries = ({webContents, params}) => {
     }, {
       label: 'Open link in external browser',
       visible: !!params.linkURL,
-      click: () => shell.openExternal(params.linkURL)
+      // The URL comes from the page, so it goes through the same scheme allowlist the redirect
+      // handler applies rather than straight to the shell
+      click: () => openExternal(params.linkURL)
     }], [{
       label: 'DevTools',
       click: () => webContents.openDevTools()
@@ -120,18 +123,17 @@ const entries = ({webContents, params}) => {
   ];
 };
 
-const spellCheckContextMenu = async ({webContents, params}) => {
-  const menu = new Menu();
-  let spellingSuggestions;
+const spellCheckSuggestions = async ({webContents, params}) => {
   if (webContents.session.spellcheck) {
-    spellingSuggestions = contextMenuNativeHandler(webContents, params);
-  } else {
-    spellingSuggestions = await contextMenuHandler(webContents, params);
+    return contextMenuNativeHandler(webContents, params);
   }
-  if (spellingSuggestions && spellingSuggestions.length > 0) {
-    for (const mi of spellingSuggestions) {
-      menu.append(mi);
-    }
+  return contextMenuHandler(webContents, params);
+};
+
+const spellCheckContextMenu = spellingSuggestions => {
+  const menu = new Menu();
+  for (const mi of spellingSuggestions) {
+    menu.append(mi);
   }
   return menu;
 };
@@ -160,10 +162,22 @@ const handleContextMenu = viewOrWindow => async (_event, params) => {
   const {webContents} = viewOrWindow;
   let menu;
   if (params.misspelledWord) {
-    menu = await spellCheckContextMenu({webContents, params});
-  } else {
-    menu = regularContextMenu({webContents, params});
+    let spellingSuggestions;
+    try {
+      spellingSuggestions = await spellCheckSuggestions({webContents, params});
+    } catch (error) {
+      // Keeping the guarantee that a menu always pops up local to this function, rather than
+      // resting on every suggestion source staying rejection-free
+      console.error('Could not retrieve spelling suggestions', error);
+    }
+    if (spellingSuggestions?.length > 0) {
+      menu = spellCheckContextMenu(spellingSuggestions);
+    }
   }
+  // A misspelled word the spell checker has no suggestions for (or a spell checker that failed to
+  // load altogether) would otherwise pop up an empty menu, which looks exactly like a broken
+  // right-click. Fall back to the regular menu so there is always something to act on.
+  menu ??= regularContextMenu({webContents, params});
   const {x, y} = params;
   menu.popup({x: x + 1, y: y + 1});
 };

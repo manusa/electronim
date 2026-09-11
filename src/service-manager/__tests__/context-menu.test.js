@@ -25,7 +25,8 @@ describe('Service Manager context-menu test suite', () => {
     await require('../../__tests__').testSettings();
     jest.mock('../../spell-check');
     event = new Event('');
-    params = {x: 13, y: 37};
+    // Electron's ContextMenuParams always carries editFlags, whatever was right-clicked
+    params = {x: 13, y: 37, editFlags: {}};
     serviceManager = require('../');
     serviceManager.addServices({send: jest.fn()})([{id: '1337', url: 'https://localhost'}]);
     listeners = serviceManager.getService('1337').webContents.listeners;
@@ -36,12 +37,47 @@ describe('Service Manager context-menu test suite', () => {
       spellChecker = require('../../spell-check');
       params.misspelledWord = 'wrong-word';
     });
-    test('should always popup the menu ??', async () => {
+    test('with suggestions, should popup a single menu at the specified location (x+1, y+1)', async () => {
+      // Given
+      spellChecker.contextMenuHandler.mockImplementationOnce(() => [
+        new electron.MenuItem({label: 'suggestion 1'})
+      ]);
       // When
       await listeners('context-menu')(event, params);
       // Then
       expect(electron.Menu).toHaveBeenCalledTimes(1);
       expect(electron.Menu.mock.results[0].value.popup).toHaveBeenCalledWith({x: 14, y: 38});
+    });
+    describe('with no available suggestions', () => {
+      beforeEach(async () => {
+        spellChecker.contextMenuHandler.mockImplementationOnce(() => []);
+        await listeners('context-menu')(event, params);
+      });
+      test('falls back to the regular context menu', () => {
+        expect(electron.Menu.mock.results[0].value.entries)
+          .toContainEqual(expect.objectContaining({label: 'Select All'}));
+      });
+      test('popups a single menu', () => {
+        expect(electron.Menu).toHaveBeenCalledTimes(1);
+      });
+    });
+    describe('when the suggestions cannot be retrieved', () => {
+      let consoleError;
+      beforeEach(async () => {
+        consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+        spellChecker.contextMenuHandler.mockImplementationOnce(() => {
+          throw new Error('Script failed to execute');
+        });
+        await listeners('context-menu')(event, params);
+      });
+      afterEach(() => {
+        consoleError.mockRestore();
+      });
+      test('should still popup the regular context menu', () => {
+        expect(electron.Menu.mock.results[0].value.popup).toHaveBeenCalledWith({x: 14, y: 38});
+        expect(electron.Menu.mock.results[0].value.entries)
+          .toContainEqual(expect.objectContaining({label: 'Select All'}));
+      });
     });
     describe('with native spellcheck', () => {
       beforeEach(() => {
@@ -57,8 +93,10 @@ describe('Service Manager context-menu test suite', () => {
         await listeners('context-menu')(event, params);
         // Then
         expect(spellChecker.contextMenuHandler).not.toHaveBeenCalled();
-        expect(electron.MenuItem).toHaveBeenCalledWith({label: 'suggestion 1'});
-        expect(electron.MenuItem).toHaveBeenCalledWith({label: 'suggestion 2'});
+        expect(electron.Menu.mock.results[0].value.entries).toEqual([
+          expect.objectContaining({label: 'suggestion 1'}),
+          expect.objectContaining({label: 'suggestion 2'})
+        ]);
       });
     });
     describe('with regular spellcheck', () => {
@@ -71,14 +109,15 @@ describe('Service Manager context-menu test suite', () => {
         await listeners('context-menu')(event, params);
         // Then
         expect(spellChecker.contextMenuNativeHandler).not.toHaveBeenCalled();
-        expect(electron.MenuItem).toHaveBeenCalledWith({label: 'suggestion 1'});
+        expect(electron.Menu.mock.results[0].value.entries).toEqual([
+          expect.objectContaining({label: 'suggestion 1'})
+        ]);
       });
     });
   });
   describe('regularContextMenu', () => {
     let mockMenu;
     beforeEach(async () => {
-      params.editFlags = {};
       await listeners('context-menu')(event, params);
       mockMenu = electron.Menu.mock.results[0].value;
     });
@@ -376,6 +415,16 @@ describe('Service Manager context-menu test suite', () => {
           // Then
           expect(electron.shell.openExternal).toHaveBeenCalledWith('https://example.com');
         });
+        // The URL is page-controlled, so it goes through the same allowlist as a redirect
+        test.each(['file:///etc/passwd', 'smb://host/share/invoice.exe', 'mailto:someone@example.com', 'not a url'])(
+          'click with %s, should not reach the shell', async linkURL => {
+            params.linkURL = linkURL;
+            await listeners('context-menu')(event, params);
+            // When
+            electron.MenuItem.mock.calls.find(c => c[0].label === 'Open link in external browser')[0].click();
+            // Then
+            expect(electron.shell.openExternal).not.toHaveBeenCalled();
+          });
       });
     });
   });
