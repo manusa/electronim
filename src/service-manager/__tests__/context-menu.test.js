@@ -415,6 +415,16 @@ describe('Service Manager context-menu test suite', () => {
           // Then
           expect(electron.shell.openExternal).toHaveBeenCalledWith('https://example.com');
         });
+        // The URL is page-controlled, so it goes through the same allowlist as a redirect
+        test.each(['file:///etc/passwd', 'smb://host/share/invoice.exe', 'mailto:someone@example.com', 'not a url'])(
+          'click with %s, should not reach the shell', async linkURL => {
+            params.linkURL = linkURL;
+            await listeners('context-menu')(event, params);
+            // When
+            electron.MenuItem.mock.calls.find(c => c[0].label === 'Open link in external browser')[0].click();
+            // Then
+            expect(electron.shell.openExternal).not.toHaveBeenCalled();
+          });
       });
     });
   });

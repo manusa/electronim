@@ -13,8 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-const {Menu, MenuItem, clipboard, ipcMain: eventBus, shell, dialog} = require('electron');
+const {Menu, MenuItem, clipboard, ipcMain: eventBus, dialog} = require('electron');
 const {contextMenuHandler, contextMenuNativeHandler} = require('../spell-check');
+const {openExternal} = require('./redirect');
 const {APP_EVENTS} = require('../constants');
 
 const getImageFilename = imageUrl => {
@@ -112,7 +113,9 @@ const entries = ({webContents, params}) => {
     }, {
       label: 'Open link in external browser',
       visible: !!params.linkURL,
-      click: () => shell.openExternal(params.linkURL)
+      // The URL comes from the page, so it goes through the same scheme allowlist the redirect
+      // handler applies rather than straight to the shell
+      click: () => openExternal(params.linkURL)
     }], [{
       label: 'DevTools',
       click: () => webContents.openDevTools()
