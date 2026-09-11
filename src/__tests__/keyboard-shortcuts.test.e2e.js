@@ -16,8 +16,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-const {spawnElectron, createTestServer} = require('./');
-const {expect} = require('@playwright/test');
+const {spawnElectron, createTestServer, expect} = require('./');
 
 describe('E2E :: Keyboard shortcuts test suite', () => {
   let electron;

@@ -19,5 +19,11 @@ module.exports = {
   testSettings: require('./settings.js').testSettings,
   testUpdate: require('./update.js').testUpdate,
   testUserAgent: require('./user-agent.js').testUserAgent,
-  createTestServer: require('./http-server.js').createTestServer
+  createTestServer: require('./http-server.js').createTestServer,
+  // The e2e suites assert with Playwright's matchers, so they need Playwright's expect rather than
+  // Jest's global. Exposed here so it comes from the same require they already use, and lazily so
+  // that the unit suites, which also load this module, never pull @playwright/test in.
+  get expect() {
+    return require('@playwright/test').expect;
+  }
 };

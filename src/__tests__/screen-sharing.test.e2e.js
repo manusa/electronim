@@ -16,8 +16,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-const {spawnElectron, createTestServer} = require('./');
-const {expect} = require('@playwright/test');
+const {spawnElectron, createTestServer, expect} = require('./');
 
 // In CI environments, desktopCapturer.getSources() may return empty results
 // because there's no real display available (even with Xvfb).

@@ -16,8 +16,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-const {spawnElectron, createTestServer} = require('./');
-const {expect} = require('@playwright/test');
+const {spawnElectron, createTestServer, expect} = require('./');
 
 describe('E2E :: About dialog test suite', () => {
   describe('opening and displaying about information', () => {
