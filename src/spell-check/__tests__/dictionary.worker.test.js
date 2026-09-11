@@ -15,13 +15,13 @@
  */
 
 const DICTIONARY_TEST_DATA = [
-  {langCode: 'en', correctWords: ['hello', 'world', 'test', 'computer']},
+  {langCode: 'en', correctWords: ['hello', 'world', 'test', 'computer'], suggestion: {misspelled: 'helo', expected: 'hello'}},
   {langCode: 'en-GB', correctWords: ['colour', 'programme', 'centre']},
-  {langCode: 'es', correctWords: ['hola', 'mundo', 'casa', 'libro']},
-  {langCode: 'fr', correctWords: ['bonjour', 'monde', 'maison', 'livre']},
-  {langCode: 'de', correctWords: ['hallo', 'Welt', 'Haus', 'Buch']},
-  {langCode: 'it', correctWords: ['ciao', 'mondo', 'casa', 'libro']},
-  {langCode: 'pt', correctWords: ['casa', 'livro', 'mundo']},
+  {langCode: 'es', correctWords: ['hola', 'mundo', 'casa', 'libro'], suggestion: {misspelled: 'mundoo', expected: 'mundo'}},
+  {langCode: 'fr', correctWords: ['bonjour', 'monde', 'maison', 'livre'], suggestion: {misspelled: 'bonjor', expected: 'bonjour'}},
+  {langCode: 'de', correctWords: ['hallo', 'Welt', 'Haus', 'Buch'], suggestion: {misspelled: 'Hauss', expected: 'Haus'}},
+  {langCode: 'it', correctWords: ['ciao', 'mondo', 'casa', 'libro'], suggestion: {misspelled: 'ciaoo', expected: 'ciao'}},
+  {langCode: 'pt', correctWords: ['casa', 'livro', 'mundo'], suggestion: {misspelled: 'livr', expected: 'livro'}},
   {langCode: 'pt-BR', correctWords: ['casa', 'livro', 'mundo']},
   {langCode: 'ca', correctWords: ['casa', 'llibre']},
   {langCode: 'ca-valencia', correctWords: ['casa', 'llibre']},
@@ -32,7 +32,7 @@ const DICTIONARY_TEST_DATA = [
   {langCode: 'ru', correctWords: ['дом']},
   {langCode: 'uk', correctWords: ['дім', 'мова'], misspelledWords: ['ъъъъъ', 'йцукенгш', 'щщщщщ']},
   {langCode: 'tr', correctWords: ['merhaba', 'ev', 'kitap']},
-  {langCode: 'lt', correctWords: ['labas', 'namas', 'knyga']},
+  {langCode: 'lt', correctWords: ['labas', 'namas', 'namai', 'knyga'], suggestion: {misspelled: 'nama', expected: 'namai'}},
   {langCode: 'ka', correctWords: ['სახლი']}
 ];
 
@@ -52,7 +52,7 @@ describe('Dictionary Worker test suite', () => {
 
   describe.each(DICTIONARY_TEST_DATA)(
     'Dictionary: $langCode',
-    ({langCode, correctWords, misspelledWords = commonMisspelledWords}) => {
+    ({langCode, correctWords, misspelledWords = commonMisspelledWords, suggestion}) => {
       let loadedDictionaries;
 
       beforeAll(async () => {
@@ -127,6 +127,13 @@ describe('Dictionary Worker test suite', () => {
           expect(Array.isArray(suggestions)).toBe(true);
           // Suggestions might be empty for complete gibberish, which is acceptable
         });
+
+        if (suggestion) {
+          test('suggests the correct spelling for a misspelled word', async () => {
+            const suggestions = await globalThis.getSuggestions(suggestion.misspelled);
+            expect(suggestions).toContain(suggestion.expected);
+          });
+        }
 
         test('limits suggestions to 10 or fewer', async () => {
           // Use a word that might have many suggestions
