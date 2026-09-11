@@ -109,6 +109,17 @@ describe('Spell-check module test suite', () => {
             expect.objectContaining({label: 'the-suggestion'})
           ]);
         });
+        test('containing a quote, should still be passed as a single valid argument', async () => {
+          // Given
+          params.misspelledWord = 'doesn\'t';
+          webContents.executeJavaScript = jest.fn(async () => []);
+          // When
+          await spellCheck.contextMenuHandler({}, params, webContents);
+          // Then
+          const [expression] = webContents.executeJavaScript.mock.calls[0];
+          const argument = expression.slice('getSuggestions('.length, -1);
+          expect(JSON.parse(argument)).toBe('doesn\'t');
+        });
       });
     });
     describe('contextMenuNativeHandler', () => {
