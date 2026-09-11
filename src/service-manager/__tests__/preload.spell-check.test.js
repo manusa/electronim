@@ -75,4 +75,36 @@ describe('Browser Spell Check test suite', () => {
     expect(dictionaryGetMisspelled).toHaveBeenCalledWith([]);
     expect(spellCheckCallback).toHaveBeenCalledTimes(1);
   });
+  test('spellCheck, should trigger callback even if dictionaryGetMisspelled fails', async () => {
+    // Given
+    browserSpellCheck.initSpellChecker();
+    await waitFor(() => expect(electron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
+    electron.ipcRenderer.invoke = jest.fn(async () => {
+      throw new Error('Script failed to execute');
+    });
+    const spellCheckCallback = jest.fn();
+    // When
+    await electron.webFrame.spellCheckProviders.eo.spellCheck(['word'], spellCheckCallback);
+    // Then
+    // Blink leaves the request pending forever if the callback never runs
+    await waitFor(() => expect(spellCheckCallback).toHaveBeenCalledWith([]));
+  });
+  test('spellCheck, should answer a request only once even if the callback throws', async () => {
+    // Given
+    const dictionaryGetMisspelled = jest.fn();
+    electron.ipcMain.on('dictionaryGetMisspelled', dictionaryGetMisspelled);
+    browserSpellCheck.initSpellChecker();
+    await waitFor(() => expect(electron.webFrame.setSpellCheckProvider).toHaveBeenCalledTimes(1));
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const spellCheckCallback = jest.fn(() => {
+      throw new Error('Blink blew up');
+    });
+    // When
+    await electron.webFrame.spellCheckProviders.eo.spellCheck(['word'], spellCheckCallback);
+    // Then
+    // Catching a throw from the callback would answer the very same request a second time
+    await waitFor(() => expect(consoleError).toHaveBeenCalledWith('Spell check callback failed', expect.any(Error)));
+    expect(spellCheckCallback).toHaveBeenCalledTimes(1);
+    consoleError.mockRestore();
+  });
 });

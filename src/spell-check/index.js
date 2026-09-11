@@ -87,8 +87,16 @@ const getAvailableDictionaries = () => AVAILABLE_DICTIONARIES;
 const getAvailableNativeDictionaries = () =>
   fakeRendererWorker?.webContents.session.availableSpellCheckerLanguages ?? [];
 
-const handleGetMisspelled = async (_event, words) =>
-  fakeRendererWorker.webContents.executeJavaScript(`getMisspelled(${JSON.stringify(words)})`);
+const handleGetMisspelled = async (_event, words) => {
+  try {
+    return await fakeRendererWorker.webContents.executeJavaScript(`getMisspelled(${JSON.stringify(words)})`);
+  } catch {
+    // Blink asks for every batch of words typed in every service, so a dictionary renderer that
+    // failed to load would otherwise have Electron log a rejected handler on each keystroke.
+    // Nothing can be checked without it: report nothing as misspelled.
+    return [];
+  }
+};
 
 const getUseNativeSpellChecker = () => loadSettings().useNativeSpellChecker;
 
@@ -119,11 +127,23 @@ const menuItem = ({webContents, suggestion}) => new MenuItem({
   }
 });
 
+const getSuggestions = async misspelledWord => {
+  try {
+    return await fakeRendererWorker.webContents
+      .executeJavaScript(`getSuggestions(${JSON.stringify(misspelledWord)})`);
+  } catch (error) {
+    // The dictionary renderer is the only source of suggestions, and it is gone as soon as
+    // dictionary.worker fails to load (a missing nodehun build, for instance). Report it and return
+    // no suggestions: an unhandled rejection here would take the whole context menu down with it.
+    console.error('Could not retrieve spelling suggestions', error);
+    return [];
+  }
+};
+
 const contextMenuHandler = async (webContents, {misspelledWord}) => {
   const ret = [];
   if (misspelledWord && misspelledWord.length > 0) {
-    const suggestions = await fakeRendererWorker.webContents
-      .executeJavaScript(`getSuggestions(${JSON.stringify(misspelledWord)})`);
+    const suggestions = await getSuggestions(misspelledWord);
     for (const suggestion of suggestions) {
       ret.push(menuItem({webContents, suggestion}));
     }
