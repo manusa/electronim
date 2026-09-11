@@ -24,10 +24,26 @@ const dictionaries = [];
 // entries still spell correctly while affix-derived forms (such as 'casa' in Italian, which is not
 // a literal entry) are reported as misspelled. The damage is decided when the instance is built and
 // never heals. Hand over NUL-terminated copies so the parse always stops at the end of the data.
-const nullTerminated = buffer => {
-  const terminated = Buffer.alloc(buffer.length + 1);
-  buffer.copy(terminated);
+const nullTerminated = data => {
+  const terminated = Buffer.alloc(data.length + 1);
+  terminated.set(data);
   return terminated;
+};
+
+// The dictionary-* packages come in two shapes: the older CommonJS releases export a function
+// taking a callback, while the newer majors are ESM modules whose default export is {aff, dic}
+// directly. A dynamic import covers both, since importing CommonJS exposes module.exports as
+// `default`, and it is the only option for the newer ones: they use top level await, so they are
+// asynchronous ES modules and require() of them always throws.
+const loadDictionaryData = async dictionaryKey => {
+  const dictionaryModule = await import(`dictionary-${dictionaryKey.toLowerCase()}`);
+  const dictionary = dictionaryModule.default ?? dictionaryModule;
+  if (typeof dictionary !== 'function') {
+    return dictionary;
+  }
+  return new Promise((resolve, reject) => {
+    dictionary((err, data) => (err ? reject(err) : resolve(data)));
+  });
 };
 
 const isMisspelled = async word => {
@@ -70,36 +86,16 @@ globalThis.reloadDictionaries = async () => {
   const loadPromises = [];
 
   for (const dictionaryKey of enabledDictionaries) {
-    let dictionary;
-    try {
-      dictionary = require(`dictionary-${dictionaryKey.toLowerCase()}`);
-    } catch {
-      // Error is ignored
-      continue;
-    }
-
-    if (dictionary) {
-      // Convert callback-based dictionary loading to Promise
-      const loadPromise = new Promise((resolve, reject) => {
-        dictionary((err, {aff, dic}) => {
-          if (err) {
-            reject(err);
-          } else {
-            try {
-              dictionaries.push(new Nodehun(nullTerminated(aff), nullTerminated(dic)));
-              loadedDictionaries.add(dictionaryKey);
-              resolve();
-            } catch (error) {
-              reject(error);
-            }
-          }
-        });
-      }).catch(() => {
-        // Error is ignored
+    const loadPromise = loadDictionaryData(dictionaryKey)
+      .then(({aff, dic}) => {
+        dictionaries.push(new Nodehun(nullTerminated(aff), nullTerminated(dic)));
+        loadedDictionaries.add(dictionaryKey);
+      })
+      .catch(() => {
+        // Error is ignored (unknown or unreadable dictionary)
       });
 
-      loadPromises.push(loadPromise);
-    }
+    loadPromises.push(loadPromise);
   }
 
   await Promise.all(loadPromises);
