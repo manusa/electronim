@@ -17,6 +17,7 @@
   limitations under the License.
 */
 const {spawnElectron, createTestServer} = require('./index');
+const {expect} = require('@playwright/test');
 
 describe('E2E :: Task Manager test suite', () => {
   let electron;

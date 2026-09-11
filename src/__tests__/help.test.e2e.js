@@ -17,6 +17,7 @@
   limitations under the License.
 */
 const {spawnElectron, createTestServer} = require('./');
+const {expect} = require('@playwright/test');
 
 describe('E2E :: Help dialog test suite', () => {
   describe('opening and displaying help information', () => {
