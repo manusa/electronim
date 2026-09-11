@@ -30,6 +30,9 @@ const DICTIONARY_TEST_DATA = [
   {langCode: 'sv', correctWords: ['hus', 'bok']},
   {langCode: 'pl', correctWords: ['dom']},
   {langCode: 'ru', correctWords: ['дом']},
+  // dictionary-uk maps every latin character to the empty string through ICONV, so it accepts any
+  // latin token as correctly spelled and needs cyrillic gibberish here. That also means enabling it
+  // alongside a latin-script dictionary silently stops latin misspellings being reported: see #710.
   {langCode: 'uk', correctWords: ['дім', 'мова'], misspelledWords: ['ъъъъъ', 'йцукенгш', 'щщщщщ']},
   {langCode: 'tr', correctWords: ['merhaba', 'ev', 'kitap']},
   {langCode: 'lt', correctWords: ['labas', 'namas', 'namai', 'knyga'], suggestion: {misspelled: 'nama', expected: 'namai'}},
