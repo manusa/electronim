@@ -17,6 +17,7 @@
   limitations under the License.
 */
 const {spawnElectron, createTestServer} = require('./');
+const {expect} = require('@playwright/test');
 
 // In CI environments, desktopCapturer.getSources() may return empty results
 // because there's no real display available (even with Xvfb).

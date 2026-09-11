@@ -18,6 +18,7 @@
 */
 
 const {spawnElectron} = require('./');
+const {expect} = require('@playwright/test');
 
 describe('E2E :: First-time install test suite', () => {
   describe('on first launch with no configured services', () => {
