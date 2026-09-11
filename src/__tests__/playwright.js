@@ -52,13 +52,19 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
   const path = require('node:path');
   const fs = require('node:fs');
   const os = require('node:os');
-  // Add playwright global expectations
-  // Extend Jest's expect with Playwright matchers
+  // Extend Jest's expect with Playwright's matchers (toBeVisible, toHaveText, and so on), which the
+  // e2e suites reach through the global expect.
+  //
+  // This works because up to playwright 1.59 @playwright/test extends the very same 'expect' package
+  // Jest uses, so Playwright's matchers and state accessors are Jest's. From 1.60 on, playwright
+  // vendors its own copy of expect, and two things break at once: the matchers are no longer
+  // reachable from Jest's expect, and this assignment overwrites Jest's getState with Playwright's,
+  // which makes jest-circus throw while collecting suppressed errors and the suite fails to run.
+  //
+  // Keep playwright pinned at 1.59 or below until the e2e suites take their expect from
+  // @playwright/test directly instead of through the global.
   const {expect: playwrightExpect} = require('@playwright/test');
-  // Playwright's expect exposes its own state accessors. Jest's must be kept, since jest-circus
-  // reads the expect state (suppressedErrors) after every test through them.
-  const {getState, setState} = globalThis.expect;
-  globalThis.expect = Object.assign(globalThis.expect, playwrightExpect, {getState, setState});
+  globalThis.expect = Object.assign(globalThis.expect, playwrightExpect);
   // Set environment for testing
   process.env.NODE_ENV = 'test';
   process.env.DISPLAY = process.env.DISPLAY || ':99';
