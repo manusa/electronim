@@ -27,6 +27,7 @@ const newWebContentsViewInstance = webPreferences => {
     return events.EventEmitter.prototype.once.call(instance, eventName, func);
   });
   instance.setBounds = jest.fn();
+  instance.setVisible = jest.fn();
   instance.webContents = new events.EventEmitter();
   instance.webContents.on = jest.fn((eventName, func) => {
     instance.listeners[eventName] = func; // Also store in instance.listeners for backward compatibility

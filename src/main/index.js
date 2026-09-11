@@ -56,8 +56,24 @@ const fixUserDataLocation = () => {
   }
 };
 
+// The app menu never outlives a single open/close pair. Reusing one view across opens left the
+// second open attached and hit-testing but painting nothing: an invisible full-window layer that
+// swallowed every mouse click while the keyboard kept working. Service views survive the same
+// detach and re-attach, which is what a tab switch does to them, so this is specific to the
+// overlay. Build it on open and destroy it on close, as the dialogs and find-in-page already do.
+const destroyAppMenu = () => {
+  const view = mainWindow.contentView.children.find(v => v.isAppMenu);
+  appMenu = null;
+  if (!view) {
+    return;
+  }
+  mainWindow.contentView.removeChildView(view);
+  view.webContents.destroy();
+};
+
 const resetMainWindow = () => {
   eventBus.emit(APP_EVENTS.findInPageClose);
+  destroyAppMenu();
   const currentViews = mainWindow.contentView.children;
   for (const view of currentViews.filter(isNotTabContainer)) {
     mainWindow.contentView.removeChildView(view);
@@ -88,7 +104,7 @@ const handleMainWindowResize = () => {
 
   setTimeout(() => {
     const {width: contentWidth, height: contentHeight} = mainWindow.getContentBounds();
-    if (appMenu?.setBounds ?? false) {
+    if (appMenu) {
       appMenu.setBounds({x: 0, y: 0, width: contentWidth, height: contentHeight});
     }
     for (const view of mainWindow.contentView.children.filter(isFindInPage)) {
@@ -216,16 +232,30 @@ const initTabListener = () => {
 };
 
 const appMenuOpen = () => {
+  if (mainWindow.contentView.children.some(view => view.isAppMenu)) {
+    return;
+  }
   const {width, height} = mainWindow.getContentBounds();
-  mainWindow.contentView.addChildView(appMenu);
-  appMenu.setBounds({x: 0, y: 0, width, height});
+  const menu = newAppMenu();
+  appMenu = menu;
+  // The view covers the whole window and the only way to dismiss it is the scrim its own renderer
+  // draws. Attached while that sandboxed renderer is still booting it would be a blank layer on
+  // top, swallowing clicks with nothing to click, so keep it hidden until it has something to show.
+  menu.setVisible(false);
+  mainWindow.contentView.addChildView(menu);
+  menu.setBounds({x: 0, y: 0, width, height});
+  menu.webContents.once('did-finish-load', () => {
+    if (appMenu === menu) {
+      menu.setVisible(true);
+    }
+  });
 };
 
 const appMenuClose = () => {
   if (!mainWindow.contentView.children.some(view => view.isAppMenu)) {
     return;
   }
-  mainWindow.contentView.removeChildView(appMenu);
+  destroyAppMenu();
   activateService({tabId: serviceManager.getActiveService()});
 };
 
@@ -265,7 +295,9 @@ const saveSettings = (_event, settings) => {
   mainWindow.setTitle(appNameOrDefault(settings.applicationTitle));
   closeDialog();
   appMenuClose();
-  findInPageClose();
+  // findInPageClose is curried (mainWindow => () => ...), so calling it here would only build a
+  // closure and throw it away. The registered listener is the one bound to the window.
+  eventBus.emit(APP_EVENTS.findInPageClose);
   for (const view of mainWindow.contentView.children) {
     mainWindow.contentView.removeChildView(view);
     view.webContents.destroy();
@@ -297,8 +329,11 @@ const initGlobalListeners = () => {
     if (mainWindow.contentView.children.some(isFindInPage)) {
       eventBus.emit(APP_EVENTS.findInPageClose);
     } else {
-      eventBus.emit(APP_EVENTS.appMenuClose);
+      // The dialog has to go first: a dialog opened from the app menu sits on top of it, and
+      // appMenuClose resets the window, which drops the dialog from contentView.children. Closing
+      // the app menu first would leave closeDialog unable to find the dialog it has to destroy.
       eventBus.emit(APP_EVENTS.closeDialog);
+      eventBus.emit(APP_EVENTS.appMenuClose);
     }
   });
   eventBus.on(APP_EVENTS.findInPage, findInPage(mainWindow));
@@ -327,8 +362,7 @@ const initGlobalListeners = () => {
 
 const browserVersionsReady = () => {
   tabContainer = newTabContainer();
-  appMenu = newAppMenu();
-  app.userAgentFallback = userAgentForWebContents(appMenu.webContents);
+  app.userAgentFallback = userAgentForWebContents(tabContainer.webContents);
   eventBus.emit(APP_EVENTS.keyboardEventsInit);
   eventBus.emit(APP_EVENTS.checkForUpdatesInit);
   eventBus.emit(APP_EVENTS.trayInit);
