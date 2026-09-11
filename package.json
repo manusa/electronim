@@ -17,6 +17,7 @@
     "bundles",
     "docs",
     "src",
+    "!src/**/__tests__",
     "utils"
   ],
   "scripts": {
@@ -67,6 +68,10 @@
     "appId": "com.marcnuri.electronim",
     "productName": "ElectronIM",
     "copyright": "Copyright 2019 Marc Nuri",
+    "files": [
+      "**/*",
+      "!**/__tests__"
+    ],
     "directories": {
       "output": "dist",
       "buildResources": "assets"
