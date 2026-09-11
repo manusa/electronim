@@ -8,8 +8,16 @@ Always reference these instructions first and fallback to search or bash command
 
 ### Requirements
 
-- **Node.js**: v22.x (LTS) - [Download](https://nodejs.org/en/download/)
-  Seems like newer Node.js versions (v24+) have some issues with Jest and native modules.
+- **Node.js**: v22.x (LTS) or newer - [Download](https://nodejs.org/en/download/)
+  Node v22, v24 and v26 all work. The floor is set by eslint 10
+  (`^20.19.0 || ^22.13.0 || >=24`) and electron 44 (`>= 22.12.0`); CI uses v22.x.
+  Node v26 used to leave an unusable electron install, because the `extract-zip` that
+  electron's postinstall relied on stalled part way through extraction and never settled,
+  so `node_modules/electron/path.txt` was never written and every suite that loads
+  `src/settings/index.js` failed in `getElectronPath`. electron 44 replaced that extractor
+  and the problem is gone. Note `nodehun` is a native node-gyp addon with no prebuilds, so
+  it has to be rebuilt when the Node ABI changes:
+  `npx node-gyp@11 rebuild --directory=node_modules/nodehun`.
 
 ### Bootstrap and Setup
 Run these commands to set up the development environment:
@@ -26,7 +34,7 @@ npm install  # Install dependencies - takes ~55 seconds
 - `npm run build:win` - Builds and bundles the application for Windows systems
 
 ### Testing
-- `npm test` - Run full test suite - takes ~13 seconds, runs 1072 tests (58 test suites). NEVER CANCEL - Set timeout to 30+ minutes.
+- `npm test` - Run full test suite - takes ~10 seconds, runs 1136 tests (59 test suites). NEVER CANCEL - Set timeout to 30+ minutes.
 - `npm run test:e2e` - Run end-to-end tests to verify application startup - takes ~10-15 seconds
 - The project uses Jest with ECMAScript modules requiring the experimental VM modules flag for Node.js
 
@@ -94,6 +102,11 @@ The project includes E2E tests to verify the complete Electron application stack
 - **Help Dialog E2E Tests** (`src/__tests__/help.test.e2e.js`) - Tests Help dialog functionality
 - **Keyboard Shortcuts E2E Tests** (`src/__tests__/keyboard-shortcuts.test.e2e.js`) - Tests keyboard shortcuts functionality
 - **Task Manager E2E Tests** (`src/__tests__/task-manager.test.e2e.js`) - Tests task manager functionality
+- **Screen Sharing E2E Tests** (`src/__tests__/screen-sharing.test.e2e.js`) - Tests screen-sharing source selection
+
+`npm run test:e2e` runs 131 tests across these 7 suites. They drive the real application, so
+they catch things the unit suite cannot: **always run them when changing anything under
+`src/__tests__/` or bumping `playwright`/`electron`.**
 
 ## Technical Architecture
 
@@ -160,6 +173,22 @@ The project includes E2E tests to verify the complete Electron application stack
 - Development dependencies: `npm install --save-exact -D <package>`
 - Always run `npm run pretest` after adding dependencies
 - Pin dependencies to the patch version (i.e. don't reference dependencies using ~ or ^)
+
+#### Dependencies deliberately held back
+
+Two are pinned below their latest release on purpose. Check here before "fixing" them:
+
+- **`playwright` / `@playwright/test` (1.59.0)**. `spawnElectron` merges Playwright's expect
+  into Jest's global expect, which is how the e2e suites get `toBeVisible` and friends. Up to
+  1.59 `@playwright/test` extends the same `expect` package Jest uses, so those matchers and
+  the expect state are Jest's. From 1.60 playwright vendors its own copy: the matchers become
+  unreachable and the merge clobbers Jest's `getState`, so jest-circus fails the suites
+  outright. Moving past 1.59 means having the e2e suites take `expect` from
+  `@playwright/test` directly instead of through the global. `npm test` does not catch this,
+  only `npm run test:e2e` does.
+- **`dictionary-pt-br` (1.2.2)**. 2.0.1 adds `FORBIDDENWORD` on top of non-ASCII UTF-8 affix
+  flags, which nodehun's hunspell misassociates, so common words (`casa`, `livro`, `mundo`)
+  are all reported misspelled. The dictionary worker test catches this.
 
 ### Working with Settings
 The settings system uses Preact components with Material Design 3 styling:
@@ -255,7 +284,7 @@ The project provides several utilities in `src/__tests__/` to facilitate testing
 
 - **npm install**: ~55 seconds
 - **Linting and bundling** (`npm run pretest`): ~2 seconds
-- **Test suite** (`npm test`): ~13 seconds (1072 tests, 58 test suites)
+- **Test suite** (`npm test`): ~10 seconds (1136 tests, 59 test suites)
 - **Application startup**: ~3-5 seconds
 - **Platform builds**: 10-20 minutes (network dependent)
 
@@ -298,16 +327,16 @@ The application can aggregate services like WhatsApp Web, Telegram Web, Slack, a
 ### Sample npm install Output
 ```
 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
-added 872 packages, and audited 873 packages in 55s
+added 825 packages, and audited 826 packages in 55s
 155 packages are looking for funding
-5 vulnerabilities (1 low, 2 moderate, 2 high)
+13 vulnerabilities (5 moderate, 8 high)
 ```
 
 ### Sample Test Output
 ```
-Test Suites: 58 passed, 58 total
-Tests:       1072 passed, 1072 total
+Test Suites: 59 passed, 59 total
+Tests:       1136 passed, 1136 total
 Snapshots:   0 total
 Time:        12.653 s
-Coverage:    Lines: ~96% | Functions: ~94% | Branches: ~89% | Statements: ~96%
+Coverage:    Lines: ~91% | Functions: ~74% | Branches: ~46% | Statements: ~79%
 ```
