@@ -19,7 +19,7 @@ const DICTIONARY_TEST_DATA = [
   {langCode: 'en-GB', correctWords: ['colour', 'programme', 'centre']},
   {langCode: 'es', correctWords: ['hola', 'mundo', 'casa', 'libro']},
   {langCode: 'fr', correctWords: ['bonjour', 'monde', 'maison', 'livre']},
-  // {langCode: 'de', correctWords: ['hallo', 'welt', 'haus', 'buch']}, // Doesn't seem to load properly TODO
+  {langCode: 'de', correctWords: ['hallo', 'Welt', 'Haus', 'Buch']},
   {langCode: 'it', correctWords: ['ciao', 'mondo', 'casa', 'libro']},
   {langCode: 'pt', correctWords: ['casa', 'livro', 'mundo']},
   {langCode: 'pt-BR', correctWords: ['casa', 'livro', 'mundo']},
@@ -30,14 +30,16 @@ const DICTIONARY_TEST_DATA = [
   {langCode: 'sv', correctWords: ['hus', 'bok']},
   {langCode: 'pl', correctWords: ['dom']},
   {langCode: 'ru', correctWords: ['дом']},
-  // {langCode: 'uk', correctWords: ['дім']},  // Doesn't seem to load properly TODO
+  {langCode: 'uk', correctWords: ['дім', 'мова'], misspelledWords: ['ъъъъъ', 'йцукенгш', 'щщщщщ']},
   {langCode: 'tr', correctWords: ['merhaba', 'ev', 'kitap']},
-  {langCode: 'lt', correctWords: ['labas', 'namai', 'knyga']},
+  {langCode: 'lt', correctWords: ['labas', 'namas', 'knyga']},
   {langCode: 'ka', correctWords: ['სახლი']}
 ];
 
 // Common gibberish words that should be misspelled in any language
-// Using impossible letter combinations that no language would have
+// Using impossible letter combinations that no language would have.
+// A dictionary that accepts these (dictionary-uk accepts any latin-script token) overrides them
+// through the misspelledWords field above.
 const commonMisspelledWords = ['xqzxqz', 'bcdfghjklm', 'qqqqq'];
 
 describe('Dictionary Worker test suite', () => {
@@ -50,7 +52,7 @@ describe('Dictionary Worker test suite', () => {
 
   describe.each(DICTIONARY_TEST_DATA)(
     'Dictionary: $langCode',
-    ({langCode, correctWords}) => {
+    ({langCode, correctWords, misspelledWords = commonMisspelledWords}) => {
       let loadedDictionaries;
 
       beforeAll(async () => {
@@ -84,12 +86,12 @@ describe('Dictionary Worker test suite', () => {
         });
 
         test('detects gibberish as misspelled', async () => {
-          const misspelled = await globalThis.getMisspelled(commonMisspelledWords);
-          expect(misspelled).toEqual([...commonMisspelledWords]);
+          const misspelled = await globalThis.getMisspelled(misspelledWords);
+          expect(misspelled).toEqual([...misspelledWords]);
         });
 
         test('correctly identifies misspelled words in mixed list', async () => {
-          const mixedWords = [...correctWords, ...commonMisspelledWords];
+          const mixedWords = [...correctWords, ...misspelledWords];
           const misspelled = await globalThis.getMisspelled(mixedWords);
 
           // Correct words should not be in misspelled list
@@ -114,8 +116,13 @@ describe('Dictionary Worker test suite', () => {
       });
 
       describe('getSuggestions functionality', () => {
+        beforeAll(async () => {
+          settings.updateSettings({enabledDictionaries: [langCode]});
+          await globalThis.reloadDictionaries();
+        });
+
         test('provides suggestions for misspelled words', async () => {
-          const suggestions = await globalThis.getSuggestions(commonMisspelledWords[0]);
+          const suggestions = await globalThis.getSuggestions(misspelledWords[0]);
 
           expect(Array.isArray(suggestions)).toBe(true);
           // Suggestions might be empty for complete gibberish, which is acceptable
@@ -123,14 +130,14 @@ describe('Dictionary Worker test suite', () => {
 
         test('limits suggestions to 10 or fewer', async () => {
           // Use a word that might have many suggestions
-          const suggestions = await globalThis.getSuggestions(commonMisspelledWords[0]);
+          const suggestions = await globalThis.getSuggestions(misspelledWords[0]);
 
           expect(Array.isArray(suggestions)).toBe(true);
           expect(suggestions.length).toBeLessThanOrEqual(10);
         });
 
         test('returns sorted suggestions', async () => {
-          const suggestions = await globalThis.getSuggestions(commonMisspelledWords[0]);
+          const suggestions = await globalThis.getSuggestions(misspelledWords[0]);
 
           if (suggestions.length > 1) {
             // Verify suggestions are sorted
