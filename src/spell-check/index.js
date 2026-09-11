@@ -122,7 +122,8 @@ const menuItem = ({webContents, suggestion}) => new MenuItem({
 const contextMenuHandler = async (webContents, {misspelledWord}) => {
   const ret = [];
   if (misspelledWord && misspelledWord.length > 0) {
-    const suggestions = await fakeRendererWorker.webContents.executeJavaScript(`getSuggestions('${misspelledWord}')`);
+    const suggestions = await fakeRendererWorker.webContents
+      .executeJavaScript(`getSuggestions(${JSON.stringify(misspelledWord)})`);
     for (const suggestion of suggestions) {
       ret.push(menuItem({webContents, suggestion}));
     }
