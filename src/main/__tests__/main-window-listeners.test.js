@@ -143,12 +143,14 @@ describe('Main :: Main window listeners test suite', () => {
         expect(settings.loadSettings()).toEqual(expect.objectContaining({width: 13, height: 37}));
       });
       describe('app-menu', () => {
-        test('should ignore if closed (the app-menu only exists while it is open)', async () => {
+        test('should ignore if closed (the app-menu is built ahead of open, but only attached while open)', async () => {
+          // Given
+          const pendingAppMenu = appMenuModule.newAppMenu.mock.results[0].value;
           // When
           baseWindow.emit('resize', {sender: baseWindow});
           await baseWindowGetContentBounds;
           // Then
-          expect(appMenuModule.newAppMenu).not.toHaveBeenCalled();
+          expect(pendingAppMenu.setBounds).not.toHaveBeenCalled();
           expect(baseWindow.contentView.children.some(cv => cv.isAppMenu)).toBe(false);
         });
         describe('while open', () => {
