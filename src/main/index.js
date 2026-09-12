@@ -57,11 +57,16 @@ const fixUserDataLocation = () => {
   }
 };
 
-// The app menu never outlives a single open/close pair. Reusing one view across opens left the
-// second open attached and hit-testing but painting nothing: an invisible full-window layer that
-// swallowed every mouse click while the keyboard kept working. Service views survive the same
-// detach and re-attach, which is what a tab switch does to them, so this is specific to the
-// overlay. Build it on open and destroy it on close, as the dialogs and find-in-page already do.
+// The app menu never outlives a single open/close pair, because a WebContentsView that has already
+// been added to the window does not composite again when it is re-added. Re-verified on electron
+// 44.3.0 / Chromium 152 under X11 (Fedora 44, Cinnamon/muffin): the second open is deterministically
+// blank, and the window is then permanently dead to BOTH mouse and keyboard - Escape never even
+// reaches the main process. It is not a dead renderer and not a stale frame: at the blank open the
+// webContents is alive, not destroyed, not loading, on the right URL, and the view is attached,
+// visible and correctly bounded. webContents.invalidate() does not rescue it. macOS composites the
+// re-attached view fine, so this reproduces only on the Linux path. Service views survive the same
+// detach and re-attach, which is what a tab switch does to them, so this is specific to the overlay.
+// Hence: never attach a view twice. Build a fresh one for every open and destroy it on close.
 const destroyAppMenu = () => {
   const view = mainWindow.contentView.children.find(v => v.isAppMenu);
   appMenu = null;
