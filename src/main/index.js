@@ -48,6 +48,7 @@ const webPreferences = {
 let mainWindow;
 let tabContainer;
 let appMenu;
+let pendingAppMenu;
 
 const fixUserDataLocation = () => {
   const userDataPath = app.getPath('userData');
@@ -56,11 +57,16 @@ const fixUserDataLocation = () => {
   }
 };
 
-// The app menu never outlives a single open/close pair. Reusing one view across opens left the
-// second open attached and hit-testing but painting nothing: an invisible full-window layer that
-// swallowed every mouse click while the keyboard kept working. Service views survive the same
-// detach and re-attach, which is what a tab switch does to them, so this is specific to the
-// overlay. Build it on open and destroy it on close, as the dialogs and find-in-page already do.
+// The app menu never outlives a single open/close pair, because a WebContentsView that has already
+// been added to the window does not composite again when it is re-added. Re-verified on electron
+// 44.3.0 / Chromium 152 under X11 (Fedora 44, Cinnamon/muffin): the second open is deterministically
+// blank, and the window is then permanently dead to BOTH mouse and keyboard - Escape never even
+// reaches the main process. It is not a dead renderer and not a stale frame: at the blank open the
+// webContents is alive, not destroyed, not loading, on the right URL, and the view is attached,
+// visible and correctly bounded. webContents.invalidate() does not rescue it. macOS composites the
+// re-attached view fine, so this reproduces only on the Linux path. Service views survive the same
+// detach and re-attach, which is what a tab switch does to them, so this is specific to the overlay.
+// Hence: never attach a view twice. Build a fresh one for every open and destroy it on close.
 const destroyAppMenu = () => {
   const view = mainWindow.contentView.children.find(v => v.isAppMenu);
   appMenu = null;
@@ -69,6 +75,34 @@ const destroyAppMenu = () => {
   }
   mainWindow.contentView.removeChildView(view);
   view.webContents.destroy();
+};
+
+// Building it on close rather than on open keeps that guarantee while taking the renderer spawn and
+// the page load off the click path: opening then only has to attach a view that has already
+// finished loading. Measured on macOS, that is the difference between ~280ms of dead time on every
+// press and none. The view is still never attached twice, which is what the rebuild is for.
+const buildPendingAppMenu = () => {
+  if (pendingAppMenu) {
+    return;
+  }
+  const menu = newAppMenu();
+  menu.webContents.once('did-finish-load', () => {
+    menu.isLoaded = true;
+  });
+  pendingAppMenu = menu;
+};
+
+// A pre-warmed menu captures settings at build time: its preload reads chromeExtensionsPreview
+// synchronously to decide whether to offer the Chrome Web Store entry. A menu built before a
+// settings save would therefore show stale state the next time it is opened. appMenuClose only
+// rebuilds when the menu happened to be open, and settings can be saved with it closed - from the
+// tab-bar context menu, or on first run - so the save path has to refresh it explicitly.
+const refreshPendingAppMenu = () => {
+  if (pendingAppMenu) {
+    pendingAppMenu.webContents.destroy();
+    pendingAppMenu = null;
+  }
+  buildPendingAppMenu();
 };
 
 const resetMainWindow = () => {
@@ -236,19 +270,24 @@ const appMenuOpen = () => {
     return;
   }
   const {width, height} = mainWindow.getContentBounds();
-  const menu = newAppMenu();
+  buildPendingAppMenu();
+  const menu = pendingAppMenu;
+  pendingAppMenu = null;
   appMenu = menu;
   // The view covers the whole window and the only way to dismiss it is the scrim its own renderer
   // draws. Attached while that sandboxed renderer is still booting it would be a blank layer on
   // top, swallowing clicks with nothing to click, so keep it hidden until it has something to show.
-  menu.setVisible(false);
+  // A menu built on the previous close has normally finished loading long before this point.
+  menu.setVisible(menu.isLoaded === true);
   mainWindow.contentView.addChildView(menu);
   menu.setBounds({x: 0, y: 0, width, height});
-  menu.webContents.once('did-finish-load', () => {
-    if (appMenu === menu) {
-      menu.setVisible(true);
-    }
-  });
+  if (menu.isLoaded !== true) {
+    menu.webContents.once('did-finish-load', () => {
+      if (appMenu === menu) {
+        menu.setVisible(true);
+      }
+    });
+  }
 };
 
 const appMenuClose = () => {
@@ -256,6 +295,7 @@ const appMenuClose = () => {
     return;
   }
   destroyAppMenu();
+  buildPendingAppMenu();
   activateService({tabId: serviceManager.getActiveService()});
 };
 
@@ -295,6 +335,7 @@ const saveSettings = (_event, settings) => {
   mainWindow.setTitle(appNameOrDefault(settings.applicationTitle));
   closeDialog();
   appMenuClose();
+  refreshPendingAppMenu();
   // findInPageClose is curried (mainWindow => () => ...), so calling it here would only build a
   // closure and throw it away. The registered listener is the one bound to the window.
   eventBus.emit(APP_EVENTS.findInPageClose);
@@ -363,6 +404,7 @@ const initGlobalListeners = () => {
 const browserVersionsReady = () => {
   tabContainer = newTabContainer();
   app.userAgentFallback = userAgentForWebContents(tabContainer.webContents);
+  buildPendingAppMenu();
   eventBus.emit(APP_EVENTS.keyboardEventsInit);
   eventBus.emit(APP_EVENTS.checkForUpdatesInit);
   eventBus.emit(APP_EVENTS.trayInit);

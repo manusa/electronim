@@ -22,6 +22,7 @@ describe('Main :: Global listeners test suite', () => {
   let baseWindow;
   let eventBus;
   let settings;
+  let appMenuModule;
   beforeEach(async () => {
     jest.resetModules();
     electron = require('../../__tests__').testElectron();
@@ -34,6 +35,8 @@ describe('Main :: Global listeners test suite', () => {
       },
       trayEnabled: true
     });
+    appMenuModule = require('../../app-menu');
+    jest.spyOn(appMenuModule, 'newAppMenu', null);
     eventBus = electron.ipcMain;
     const trayInitPromise = new Promise(resolve => electron.ipcMain.on('trayInit', resolve));
     main = require('../');
@@ -342,6 +345,16 @@ describe('Main :: Global listeners test suite', () => {
       eventBus.send('settingsSave', {}, {theme: 'light'});
       // Then
       expect(electron.nativeTheme.themeSource).toEqual('light');
+    });
+    test('should rebuild the pre-warmed app-menu, even with the menu closed', () => {
+      // Given - the menu is not attached, as when settings is opened from the tab-bar
+      // context menu or on first run. The pre-warmed menu captures settings when it is
+      // built, so one built before this save would show stale entries on the next open.
+      const buildsBeforeSave = appMenuModule.newAppMenu.mock.calls.length;
+      // When
+      eventBus.send('settingsSave', {}, {tabs: [{id: 1337}], enabledDictionaries: []});
+      // Then
+      expect(appMenuModule.newAppMenu.mock.calls.length).toBeGreaterThan(buildsBeforeSave);
     });
     test('should close find-in-page', () => {
       // Given
