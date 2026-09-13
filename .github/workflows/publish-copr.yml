@@ -42,6 +42,15 @@ jobs:
         run: echo "WORKFLOW_DISPATCH_GITHUB_REF=refs/tags/${{ inputs.version }}" >> $GITHUB_ENV
       - name: Change build-config/electronim.spec version
         run: ./utils/version-from-tag.js
+      # Copr stores chroot settings server side, re-apply them so they can't drift from this file
+      - name: Configure chroots
+        run: |
+          # EL9 defaults to Node.js 16, which is too old to build the application
+          for chroot in rhel-9 centos-stream-9 centos-stream+epel-next-9 epel-9; do
+            for arch in x86_64 aarch64; do
+              copr-cli edit-chroot "manusa/electronim/${chroot}-${arch}" --modules nodejs:22
+            done
+          done
       - name: Publish
         run: |
           copr-cli build manusa/electronim build-config/electronim.spec --enable-net on

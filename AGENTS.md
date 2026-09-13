@@ -52,6 +52,8 @@ npm install  # Install dependencies - takes ~55 seconds
 - `npm run build:linux` - Build Linux packages (AppImage, snap, tar.gz). NEVER CANCEL - May take 30+ minutes. Set timeout to 60+ minutes.
 - `npm run build:mac` - Build macOS packages (dmg, tar.gz)  
 - `npm run build:win` - Build Windows packages (zip, portable exe)
+- `npm run build:linux -- dir` - Build only the given electron-builder targets (e.g. `dir`, `snap`, `AppImage tar.gz`). The platform flag is the last argument of each `build:*` script so extra arguments become its targets; the `prebuild:*` hook still bundles with webpack first. Never call `electron-builder` directly, it skips that hook.
+- Bundling happens only in `pretest`, `pretest:e2e`, `prestart`, `prepack` and the `prebuild:*` hooks, not on `npm install`.
 - **IMPORTANT**: Build commands fail in environments with network restrictions due to Electron header downloads (node-gyp attempting to download from https://www.electronjs.org/headers). Document this limitation if builds fail with "network connectivity" errors.
 
 ## Validation

@@ -48,7 +48,7 @@ jobs:
       - name: Change Package version
         run: ./utils/version-from-tag.js
       - name: Build Snap
-        run: npx electron-builder --linux snap --publish never
+        run: npm run build:linux -- snap
       - name: Publish
         run: |
           sudo apt update && sudo apt-get install snapd

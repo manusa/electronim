@@ -36,7 +36,8 @@ jobs:
       - name: Change Package version
         run: ./utils/version-from-tag.js
       - name: Build Linux
-        run: npm run build:linux
+        # The snap is built and published by publish-snap.yml
+        run: npm run build:linux -- AppImage tar.gz
       - name: Upload tar.gz
         run: ./utils/upload-artifact.js electronim-linux-x64.tar.gz application/tar+gzip
       - name: Upload AppImage
