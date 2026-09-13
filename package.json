@@ -23,17 +23,17 @@
   "scripts": {
     "pretest": "eslint -c eslint.config.mjs . && node webpack.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "pretest:e2e": "node webpack.js",
     "test:e2e": "NODE_OPTIONS=--experimental-vm-modules jest --testMatch='**/?(*.)+(spec|test).e2e.?([mc])[jt]s?(x)' --verbose",
     "prestart": "node webpack.js",
     "start": "electron . --settings-path dev/settings.json --user-data dev/user-data",
     "prepack": "node webpack.js",
-    "prepublish": "node webpack.js",
     "prebuild:linux": "node webpack.js",
-    "build:linux": "electron-builder --linux --publish never",
+    "build:linux": "electron-builder --publish never --linux",
     "prebuild:mac": "node webpack.js",
-    "build:mac": "electron-builder --mac --publish never",
+    "build:mac": "electron-builder --publish never --mac",
     "prebuild:win": "node webpack.js",
-    "build:win": "electron-builder --win --publish never"
+    "build:win": "electron-builder --publish never --win"
   },
   "publishConfig": {
     "access": "public"

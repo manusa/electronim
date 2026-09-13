@@ -47,9 +47,8 @@ applications (or whatever you want) into a single browser (Electron) window.
 npm install
 #TODO automate or remove GITHUB_REF workaround
 GITHUB_REF=refs/tags/v%{version} node ./utils/version-from-tag.js
-node webpack.js
 # Only the unpacked application is packaged, the AppImage, snap and tar.gz targets aren't needed
-npx electron-builder --linux dir --publish never
+npm run build:linux -- dir
 
 # Remove bin files that might collision with local system binaries
 rm -f %{unpacked_dir}/resources/app.asar.unpacked/node_modules/nodehun/build/node_gyp_bins/python3
