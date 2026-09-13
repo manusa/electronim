@@ -24,8 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      SNAPCRAFT_LOGIN: ${{ secrets.SNAPCRAFT_LOGIN }}
-      SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_LOGIN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -43,12 +41,6 @@ jobs:
         run: ./utils/upload-artifact.js electronim-linux-x64.tar.gz application/tar+gzip
       - name: Upload AppImage
         run: ./utils/upload-artifact.js electronim-linux-x86_64.AppImage application/octet-stream
-      - name: Publish Snap
-        run: |
-          sudo apt update && sudo apt-get install snapd
-          sudo chown root:root / # Snapcraft requires '/' to be root owned
-          sudo snap install snapcraft --classic
-          snapcraft push --release=stable ./dist/electronim-linux-amd64.snap
   macOS:
     name: macOS Artifact
     runs-on: macos-latest
