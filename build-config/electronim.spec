@@ -47,8 +47,17 @@ applications (or whatever you want) into a single browser (Electron) window.
 npm install
 #TODO automate or remove GITHUB_REF workaround
 GITHUB_REF=refs/tags/v%{version} node ./utils/version-from-tag.js
-# Only the unpacked application is packaged, the AppImage, snap and tar.gz targets aren't needed
-npm run build:linux -- dir
+# Only the unpacked application is packaged. Copr also builds older tags with this spec, and
+# the --dir flag works whatever the argument order of their build:linux script.
+npm run build:linux -- --dir
+# electron-builder ignores --dir when build:linux lists its own targets, fail instead of
+# silently building (and racing) packages this RPM doesn't use
+unexpected=$(find dist -mindepth 1 -maxdepth 1 ! -path '%{unpacked_dir}' ! -name builder-effective-config.yaml ! -name builder-debug.yml)
+if [ -n "$unexpected" ] || [ ! -d %{unpacked_dir} ]; then
+  echo "error: expected dist to contain only %{unpacked_dir}, build:linux must not list targets" >&2
+  ls -1 dist >&2
+  exit 1
+fi
 
 # Remove bin files that might collision with local system binaries
 rm -f %{unpacked_dir}/resources/app.asar.unpacked/node_modules/nodehun/build/node_gyp_bins/python3
