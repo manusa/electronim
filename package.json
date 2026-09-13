@@ -145,7 +145,8 @@
         }
       ],
       "entitlements": "build-config/entitlements.mac.plist",
-      "entitlementsInherit": "build-config/entitlements.mac.plist"
+      "entitlementsInherit": "build-config/entitlements.mac.plist",
+      "identity": "-"
     },
     "dmg": {
       "title": "ElectronIM",
