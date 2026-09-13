@@ -92,6 +92,19 @@ const buildPendingAppMenu = () => {
   pendingAppMenu = menu;
 };
 
+// A pre-warmed menu captures settings at build time: its preload reads chromeExtensionsPreview
+// synchronously to decide whether to offer the Chrome Web Store entry. A menu built before a
+// settings save would therefore show stale state the next time it is opened. appMenuClose only
+// rebuilds when the menu happened to be open, and settings can be saved with it closed - from the
+// tab-bar context menu, or on first run - so the save path has to refresh it explicitly.
+const refreshPendingAppMenu = () => {
+  if (pendingAppMenu) {
+    pendingAppMenu.webContents.destroy();
+    pendingAppMenu = null;
+  }
+  buildPendingAppMenu();
+};
+
 const resetMainWindow = () => {
   eventBus.emit(APP_EVENTS.findInPageClose);
   destroyAppMenu();
@@ -322,6 +335,7 @@ const saveSettings = (_event, settings) => {
   mainWindow.setTitle(appNameOrDefault(settings.applicationTitle));
   closeDialog();
   appMenuClose();
+  refreshPendingAppMenu();
   // findInPageClose is curried (mainWindow => () => ...), so calling it here would only build a
   // closure and throw it away. The registered listener is the one bound to the window.
   eventBus.emit(APP_EVENTS.findInPageClose);
