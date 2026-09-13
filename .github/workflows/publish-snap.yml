@@ -1,0 +1,57 @@
+#   Copyright 2026 Marc Nuri San Felix
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+name: Publish Snap
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish'
+        required: true
+        default: 'v0.0.0'
+  push:
+    tags:
+    - '*'
+
+jobs:
+  snap:
+    name: Snap Publish
+    runs-on: ubuntu-latest
+    env:
+      SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_LOGIN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          # Empty on tag pushes, which checks out the pushed tag
+          ref: ${{ inputs.version }}
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+      - name: Install
+        run: npm install
+      - name: Version from dispatch inputs
+        if: github.event_name == 'workflow_dispatch'
+        run: echo "WORKFLOW_DISPATCH_GITHUB_REF=refs/tags/${{ inputs.version }}" >> $GITHUB_ENV
+      - name: Change Package version
+        run: ./utils/version-from-tag.js
+      - name: Build Snap
+        run: npx electron-builder --linux snap --publish never
+      - name: Publish
+        run: |
+          sudo apt update && sudo apt-get install snapd
+          sudo chown root:root / # Snapcraft requires '/' to be root owned
+          sudo snap install snapcraft --classic
+          snapcraft upload --release=stable ./dist/electronim-linux-amd64.snap
