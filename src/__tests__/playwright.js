@@ -285,6 +285,29 @@ const spawnElectron = async ({extraArgs = [], settings} = {}) => {
       });
     },
     /**
+     * Check if the app menu is currently ATTACHED to the main window.
+     *
+     * Distinct from "an app-menu window exists": the menu is built ahead of the click and lives as
+     * an unattached view until it is opened, so a renderer with the app-menu URL can be present
+     * while the menu is closed. Only attachment says it was actually opened.
+     *
+     * Note this still cannot say the menu is VISIBLE - an attached view can composite nothing while
+     * its renderer stays healthy. See the comment in app-menu.test.e2e.js.
+     */
+    isAppMenuOpen: async () => {
+      return await electronApp.evaluate(async ({BaseWindow}) => {
+        const window = BaseWindow.getAllWindows()[0];
+        if (!window) {
+          return false;
+        }
+        const contentView = window.contentView;
+        if (!contentView?.children) {
+          return false;
+        }
+        return contentView.children.some(child => child.isAppMenu === true);
+      });
+    },
+    /**
      * Wait for a condition to be true with polling
      * @param {Function} conditionFn - Async function that returns a truthy value when condition is met
      * @param {Object} options - Options for waiting

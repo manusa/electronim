@@ -28,6 +28,10 @@ const {spawnElectron, createTestServer, expect} = require('./');
 // this closes. It catches a broken scrim handler, a bad guard in appMenuOpen, or a menu that fails
 // to be rebuilt for the next open.
 //
+// It asserts the menu is ATTACHED to the window, not merely that a window with the app-menu URL
+// exists - the menu is built ahead of the click, so that window is present even while the menu is
+// closed, and waiting only on it would pass against a menu that was never opened.
+//
 // It does NOT prove the reopened menu is visible to the user, and must never be read as if it did.
 // A WebContentsView can be attached, visible, correctly bounded and backed by a perfectly healthy
 // renderer while compositing nothing - which is exactly what happens on Linux when a view is
@@ -46,9 +50,14 @@ describe('E2E :: App menu reopen test suite', () => {
   let chromeTabsView;
   let testServer;
 
+  // Waits for ATTACHMENT, not just for a window with the app-menu URL to exist. The menu is built
+  // ahead of the click, so that window is present even while the menu is closed - waiting only on
+  // it would make these tests pass against a menu that was never opened.
   const openAppMenu = async () => {
     await chromeTabsView.locator('.menu__button').click();
-    return electron.waitForWindow(({url}) => url.includes('app-menu/index.html'));
+    const appMenuWindow = await electron.waitForWindow(({url}) => url.includes('app-menu/index.html'));
+    await expect.poll(() => electron.isAppMenuOpen()).toBe(true);
+    return appMenuWindow;
   };
 
   beforeAll(async () => {
@@ -85,6 +94,13 @@ describe('E2E :: App menu reopen test suite', () => {
 
     test('releases the app menu renderer', async () => {
       await expect.poll(() => firstAppMenu.isClosed()).toBe(true);
+      // Re-asserted synchronously on the settled state: expect.poll alone reads as "no assertion".
+      expect(firstAppMenu.isClosed()).toBe(true);
+    });
+
+    test('detaches the app menu from the window', async () => {
+      const attached = await electron.isAppMenuOpen();
+      expect(attached).toBe(false);
     });
   });
 
@@ -97,6 +113,11 @@ describe('E2E :: App menu reopen test suite', () => {
 
     test('opens an app menu again', () => {
       expect(reopenedAppMenu).toBeDefined();
+    });
+
+    test('attaches it to the window', async () => {
+      const attached = await electron.isAppMenuOpen();
+      expect(attached).toBe(true);
     });
 
     test('serves it from a live renderer, not the released one', () => {
