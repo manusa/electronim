@@ -26,7 +26,14 @@ BuildRequires: git-core
 BuildRequires: make
 BuildRequires: libglvnd-devel
 BuildRequires: libxcrypt-compat
-ExclusiveArch: x86_64
+ExclusiveArch: x86_64 aarch64
+
+# electron-builder only suffixes the unpacked directory for non-x64 architectures
+%ifarch aarch64
+%global unpacked_dir dist/linux-arm64-unpacked
+%else
+%global unpacked_dir dist/linux-unpacked
+%endif
 
 %description
 Electron based multi IM (Instant Messaging) client - Improve your productivity by combining all your instant messaging
@@ -40,15 +47,17 @@ applications (or whatever you want) into a single browser (Electron) window.
 npm install
 #TODO automate or remove GITHUB_REF workaround
 GITHUB_REF=refs/tags/v%{version} node ./utils/version-from-tag.js
-npm run build:linux
+node webpack.js
+# Only the unpacked application is packaged, the AppImage, snap and tar.gz targets aren't needed
+npx electron-builder --linux dir --publish never
 
 # Remove bin files that might collision with local system binaries
-rm -f dist/linux-unpacked/resources/app.asar.unpacked/node_modules/nodehun/build/node_gyp_bins/python3
+rm -f %{unpacked_dir}/resources/app.asar.unpacked/node_modules/nodehun/build/node_gyp_bins/python3
 
 %install
 # install everything to /opt/%%{pkg_name}
 install -dp %{buildroot}%{_optpkgdir}
-cp -Rp dist/linux-unpacked/* %{buildroot}%{_optpkgdir}
+cp -Rp %{unpacked_dir}/* %{buildroot}%{_optpkgdir}
 install -d %{buildroot}%{_optpkgdir}/assets
 cp -Rp src/assets/* %{buildroot}%{_optpkgdir}/assets
 install -m0755 -d %{buildroot}%{_bindir}
