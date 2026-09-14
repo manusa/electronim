@@ -20,6 +20,7 @@ describe('Browser Spell Check test suite', () => {
   let settings;
   let browserSpellCheck;
   let idleCallbacks;
+  let idleCallbackOptions;
   const runIdleCallbacks = () => {
     for (const idleCallback of idleCallbacks.splice(0)) {
       idleCallback();
@@ -30,7 +31,11 @@ describe('Browser Spell Check test suite', () => {
     globalThis.APP_EVENTS = require('../../constants').APP_EVENTS;
     // jsdom has no requestIdleCallback: queue the callbacks so each test decides when the renderer is idle
     idleCallbacks = [];
-    globalThis.requestIdleCallback = idleCallback => idleCallbacks.push(idleCallback);
+    idleCallbackOptions = [];
+    globalThis.requestIdleCallback = (idleCallback, options) => {
+      idleCallbacks.push(idleCallback);
+      idleCallbackOptions.push(options);
+    };
     electron = require('../../__tests__').testElectron();
     settings = await require('../../__tests__').testSettings();
     electron.ipcMain.on('settingsLoad', settings.loadSettings);
@@ -96,6 +101,11 @@ describe('Browser Spell Check test suite', () => {
       });
       test('does not answer before the renderer is idle', () => {
         expect(callback).not.toHaveBeenCalled();
+      });
+      // A timed-out idle callback runs as a regular task, which could beat Electron's hand-over of a
+      // newer request and answer a superseded one
+      test('waits for the renderer to be idle without a timeout', () => {
+        expect(idleCallbackOptions[0]?.timeout).toBeUndefined();
       });
       test('answers with the misspelled words once the renderer is idle', () => {
         runIdleCallbacks();

@@ -25,7 +25,8 @@ const {ipcRenderer, webFrame} = require('electron');
 // So only the most recent request is ever answered, exactly once, and only when the renderer is idle.
 // Electron hands a request over to this function from a task it posts, so Blink may have issued a
 // request that hasn't reached it yet. That task has normal priority and always runs before an idle
-// callback, which then finds its own request superseded.
+// callback, which then finds its own request superseded. No timeout: a timed-out idle callback runs as
+// a regular task and could beat Electron's hand-over.
 let pendingRequest = null;
 
 const spellCheckFunction = (words, callback) => {
