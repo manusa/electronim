@@ -22,9 +22,16 @@ jobs:
   linux:
     name: Linux Artifact
     runs-on: ubuntu-latest
+    # Native modules (nodehun) link against the glibc and libstdc++ of the build system, build them on
+    # the oldest supported Ubuntu LTS so that the AppImage and tar.gz load them there too
+    container: ubuntu:22.04
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - name: Build requirements
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends binutils ca-certificates g++ git make python3
       - name: Checkout
         uses: actions/checkout@v6
       - name: Setup Node
@@ -38,6 +45,12 @@ jobs:
       - name: Build Linux
         # The snap is built and published by publish-snap.yml
         run: npm run build:linux -- AppImage tar.gz
+      - name: Extract AppImage
+        # Check what the AppImage ships, it adds the runtime libraries of the electron-builder toolset to
+        # the application directory
+        run: ./dist/electronim-linux-x86_64.AppImage --appimage-extract
+      - name: Check glibc requirements
+        run: ./utils/check-glibc.sh squashfs-root
       - name: Upload tar.gz
         run: ./utils/upload-artifact.js electronim-linux-x64.tar.gz application/tar+gzip
       - name: Upload AppImage

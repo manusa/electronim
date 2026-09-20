@@ -17,8 +17,8 @@
     "bundles",
     "docs",
     "src",
-    "!src/**/__tests__",
-    "utils"
+    "utils",
+    "!**/__tests__"
   ],
   "scripts": {
     "pretest": "eslint -c eslint.config.mjs . && node webpack.js",
@@ -118,6 +118,16 @@
         }
       },
       "icon": "icon_1024x1024.png",
+      "extraFiles": [
+        {
+          "from": "build-config/com.marcnuri.electronim.appdata.xml",
+          "to": "usr/share/metainfo/com.marcnuri.electronim.appdata.xml"
+        },
+        {
+          "from": "build-config/electronim.desktop",
+          "to": "usr/share/applications/electronim.desktop"
+        }
+      ],
       "target": [
         "AppImage",
         "snap",
