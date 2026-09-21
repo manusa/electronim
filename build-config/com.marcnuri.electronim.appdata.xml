@@ -13,7 +13,7 @@
   </developer>
   <description>
     <p>ElectronIM brings the web versions of your messaging services, such as WhatsApp, Telegram or Slack, together in one window with a tab for each, so you can keep up with every conversation without juggling browser tabs.</p>
-    <p>You don't need an ElectronIM account, and ElectronIM itself has no telemetry, analytics or tracking of any kind.</p>
+    <p>ElectronIM is free/libre software that you can use, study, share and improve. You don't need an account to use it, and it has no telemetry, analytics or tracking of any kind.</p>
     <ul>
       <li>Any website or web messaging service as a tab</li>
       <li>Several accounts of the same service, each in its own isolated tab</li>
