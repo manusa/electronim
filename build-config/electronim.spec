@@ -77,22 +77,23 @@ install -Dp -m0755 build-config/electronim.desktop %{buildroot}%{_datadir}/appli
 
 # install AppStream metainfo, so that software centers list the application. The build:linux script
 # also copies it (and a desktop file of its own) into the unpacked application, where nothing reads
-# them. Older tags have neither, hence the guard.
+# them. Copr builds older tags, which have neither, with this same spec, so %%files takes the
+# metainfo from a list only written when it exists. rpm rejects an empty list, hence the binary.
+echo "%{_bindir}/electronim" > packaged.files
 if [ -f build-config/com.marcnuri.electronim.appdata.xml ]; then
   install -Dp -m0644 build-config/com.marcnuri.electronim.appdata.xml \
     %{buildroot}%{_metainfodir}/com.marcnuri.electronim.appdata.xml
+  echo "%{_metainfodir}/com.marcnuri.electronim.appdata.xml" >> packaged.files
 fi
 rm -rf %{buildroot}%{_optpkgdir}/usr
 
 
 #-- FILES ---------------------------------------------------------------------#
-%files
+%files -f packaged.files
 %license LICENSE
 %doc CONTRIBUTING.md README.md
 %{_optpkgdir}/*
 %dir %{_datadir}/applications
 %{_datadir}/applications/%{name}.desktop
-%{_metainfodir}/com.marcnuri.electronim.appdata.xml
-%{_bindir}/electronim
 
 
