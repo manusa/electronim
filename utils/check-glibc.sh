@@ -21,7 +21,10 @@
 # Usage: ./utils/check-glibc.sh squashfs-root [path...]
 set -euo pipefail
 
-# Newest versions Ubuntu 22.04 provides (libc6 2.35, libstdc++6 and libgcc-s1 from GCC 12)
+# The oldest supported Ubuntu LTS. The Linux jobs of publish.yml and tests.yml build in its container,
+# and a test fails when they drift apart.
+UBUNTU=22.04
+# Newest versions it provides (libc6 2.35, libstdc++6 and libgcc-s1 from GCC 12)
 MAX_GLIBC=2.35
 MAX_GLIBCXX=3.4.30
 MAX_CXXABI=1.3.13
@@ -64,7 +67,9 @@ while IFS= read -r -d '' file; do
   fi
   [ "$magic" = '177ELF' ] || continue
   binaries=$((binaries + 1))
-  if ! symbols=$(readelf --version-info --wide "$file"); then
+  # Without no-follow-links, readelf chases the split debug info libvulkan.so.1 links to and floods
+  # the log with a warning per missing .dwo file. Real failures still make it exit non-zero.
+  if ! symbols=$(readelf --version-info --wide --debug-dump=no-follow-links "$file"); then
     echo "$file symbol versions could not be read" >&2
     failures=$((failures + 1))
     continue
@@ -96,9 +101,9 @@ if [ "$binaries" -eq 0 ]; then
   exit 1
 fi
 if [ "$failures" -gt 0 ]; then
-  echo "$failures of $binaries native binaries need more than Ubuntu 22.04 provides" >&2
+  echo "$failures of $binaries native binaries need more than Ubuntu $UBUNTU provides" >&2
   exit 1
 fi
 echo "All $binaries native binaries load with GLIBC_$MAX_GLIBC, GLIBCXX_$MAX_GLIBCXX," \
-  "CXXABI_$MAX_CXXABI and GCC_$MAX_GCC (Ubuntu 22.04)"
+  "CXXABI_$MAX_CXXABI and GCC_$MAX_GCC (Ubuntu $UBUNTU)"
 }

@@ -180,6 +180,19 @@ describe('check-glibc.sh test suite', () => {
       expect(result.status).not.toBe(0);
     });
   });
+  describe('baseline', () => {
+    // The limits only mean something if the packages are built on the release they were measured on
+    let baseline;
+    beforeEach(() => {
+      baseline = fs.readFileSync(script, 'utf8').match(/^UBUNTU=(\S+)$/m)[1];
+    });
+    test.each(['publish.yml', 'tests.yml'])('is the system %s builds the Linux packages on', workflow => {
+      const containers = fs.readFileSync(path.resolve(__dirname, '..', '..', '.github', 'workflows', workflow), 'utf8')
+        .match(/^ +container: \S+$/gm)
+        .map(line => line.trim());
+      expect(containers).toEqual([`container: ubuntu:${baseline}`]);
+    });
+  });
   describe('without a path', () => {
     beforeEach(() => {
       result = childProcess.spawnSync('bash', [script], {encoding: 'utf8'});

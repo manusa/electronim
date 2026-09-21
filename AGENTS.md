@@ -34,7 +34,7 @@ npm install  # Install dependencies - takes ~55 seconds
 - `npm run build:win` - Builds and bundles the application for Windows systems
 
 ### Testing
-- `npm test` - Run full test suite - takes ~10 seconds, runs 1219 tests (64 test suites). NEVER CANCEL - Set timeout to 30+ minutes.
+- `npm test` - Run full test suite - takes ~10 seconds, runs 1221 tests (64 test suites). NEVER CANCEL - Set timeout to 30+ minutes.
 - `npm run test:e2e` - Run end-to-end tests to verify application startup - takes ~10-15 seconds
 - The project uses Jest with ECMAScript modules requiring the experimental VM modules flag for Node.js
 
@@ -54,7 +54,7 @@ npm install  # Install dependencies - takes ~55 seconds
 - `npm run build:win` - Build Windows packages (zip, portable exe)
 - `npm run build:linux -- dir` - Build only the given electron-builder targets (e.g. `dir`, `snap`, `AppImage tar.gz`). The platform flag is the last argument of each `build:*` script so extra arguments become its targets; the `prebuild:*` hook still bundles with webpack first. Never call `electron-builder` directly, it skips that hook.
 - Bundling happens only in `pretest`, `pretest:e2e`, `prestart`, `prepack` and the `prebuild:*` hooks, not on `npm install`.
-- The Linux release artifacts (AppImage, tar.gz) are built in an `ubuntu:22.04` container, both in `publish.yml` and in the `Linux Build` job of `tests.yml`. nodehun is compiled on the build system and links against its glibc and libstdc++, so a build on a newer system ships a spell checker that doesn't load on older distributions. `./utils/check-glibc.sh` fails the build when a native binary needs more than Ubuntu 22.04 provides (it reads the symbol versions with `readelf`, from binutils). `tests.yml` extracts the AppImage and checks all of it, `publish.yml` checks `dist` only, because that job holds a token that can publish releases and shouldn't run the artifact it is about to upload.
+- The Linux release artifacts (AppImage, tar.gz) are built in an `ubuntu:22.04` container, both in `publish.yml` and in the `Linux Build` job of `tests.yml`. nodehun is compiled on the build system and links against its glibc and libstdc++, so a build on a newer system ships a spell checker that doesn't load on older distributions. `./utils/check-glibc.sh` fails the build when a native binary needs more than Ubuntu 22.04 provides (it reads the symbol versions with `readelf`, from binutils). `tests.yml` extracts the AppImage and checks all of it, `publish.yml` checks `dist` only, because that job holds a token that can publish releases and shouldn't run the artifact it is about to upload. That token only reaches the upload steps, never `npm install`. `UBUNTU` in `utils/check-glibc.sh` names the release both jobs build on, and a test fails when the workflows' `container:` drifts from it.
 - `build.linux.extraFiles` applies to every Linux target. The snap template brings its own `usr/`, so in the snap these files end up in an unused `usr_1/`, and the Copr RPM gets a copy under `/opt/electronim/usr`; both are harmless. The tar.gz is the one artifact whose `usr/share` tree a user can install, which is why the entry it ships is `build-config/electronim.package.desktop` (relative `Exec`/`Icon`) and not the RPM's `/opt/electronim` one.
 - **IMPORTANT**: Build commands fail in environments with network restrictions due to Electron header downloads (node-gyp attempting to download from https://www.electronjs.org/headers). Document this limitation if builds fail with "network connectivity" errors.
 
@@ -291,7 +291,7 @@ The project provides several utilities in `src/__tests__/` to facilitate testing
 
 - **npm install**: ~55 seconds
 - **Linting and bundling** (`npm run pretest`): ~2 seconds
-- **Test suite** (`npm test`): ~10 seconds (1219 tests, 64 test suites)
+- **Test suite** (`npm test`): ~10 seconds (1221 tests, 64 test suites)
 - **Application startup**: ~3-5 seconds
 - **Platform builds**: 10-20 minutes (network dependent)
 
@@ -342,7 +342,7 @@ added 825 packages, and audited 826 packages in 55s
 ### Sample Test Output
 ```
 Test Suites: 64 passed, 64 total
-Tests:       1219 passed, 1219 total
+Tests:       1221 passed, 1221 total
 Snapshots:   0 total
 Time:        12.653 s
 Coverage:    Lines: ~91% | Functions: ~74% | Branches: ~46% | Statements: ~79%
