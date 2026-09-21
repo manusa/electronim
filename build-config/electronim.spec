@@ -6,7 +6,7 @@
 Name: electronim
 Version: 0.0.0
 Release: 0%{?dist}
-Summary: Electron based multi IM (Instant Messaging) client
+Summary: Combine chat services in one window
 License: Apache-2.0
 Url: https://github.com/manusa/electronim
 # Tag sources
@@ -75,6 +75,15 @@ ln -sf %{_optpkgdir}/electronim %{buildroot}%{_bindir}/electronim
 install -dp %{buildroot}%{_datadir}/applications
 install -Dp -m0755 build-config/electronim.desktop %{buildroot}%{_datadir}/applications
 
+# install AppStream metainfo, so that software centers list the application. The build:linux script
+# also copies it (and a desktop file of its own) into the unpacked application, where nothing reads
+# them. Older tags have neither, hence the guard.
+if [ -f build-config/com.marcnuri.electronim.appdata.xml ]; then
+  install -Dp -m0644 build-config/com.marcnuri.electronim.appdata.xml \
+    %{buildroot}%{_metainfodir}/com.marcnuri.electronim.appdata.xml
+fi
+rm -rf %{buildroot}%{_optpkgdir}/usr
+
 
 #-- FILES ---------------------------------------------------------------------#
 %files
@@ -83,6 +92,7 @@ install -Dp -m0755 build-config/electronim.desktop %{buildroot}%{_datadir}/appli
 %{_optpkgdir}/*
 %dir %{_datadir}/applications
 %{_datadir}/applications/%{name}.desktop
+%{_metainfodir}/com.marcnuri.electronim.appdata.xml
 %{_bindir}/electronim
 
 

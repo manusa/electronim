@@ -24,6 +24,17 @@ const extractVersionFromTag = () => {
   return null;
 };
 
+// Stamps the release of an AppStream metainfo document, which software centers show as the version
+// and the date of the application. The version is only known when the tag is pushed.
+const withRelease = (metainfo, version, date) => {
+  const releases = `  <releases>\n    <release version="${version}" date="${date}"/>\n  </releases>\n`;
+  if (metainfo.includes('<releases>')) {
+    return metainfo.replace(/ *<releases>[\s\S]*?<\/releases>\n/, releases);
+  }
+  return metainfo.replace('</component>', `${releases}</component>`);
+};
+
 module.exports = {
-  extractVersionFromTag
+  extractVersionFromTag,
+  withRelease
 };

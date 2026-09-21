@@ -18,6 +18,10 @@ on:
     tags:
     - '*'
 
+# Uploading the release assets is all the token is for
+permissions:
+  contents: write
+
 jobs:
   linux:
     name: Linux Artifact
@@ -31,9 +35,12 @@ jobs:
       - name: Build requirements
         run: |
           apt-get update
-          apt-get install -y --no-install-recommends binutils ca-certificates g++ git make python3
+          apt-get install -y --no-install-recommends appstream binutils ca-certificates g++ git make python3
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # Nothing here pushes to the repository, the uploads use the token from the environment
+          persist-credentials: false
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -45,12 +52,14 @@ jobs:
       - name: Build Linux
         # The snap is built and published by publish-snap.yml
         run: npm run build:linux -- AppImage tar.gz
-      - name: Extract AppImage
-        # Check what the AppImage ships, it adds the runtime libraries of the electron-builder toolset to
-        # the application directory
-        run: ./dist/electronim-linux-x86_64.AppImage --appimage-extract
       - name: Check glibc requirements
-        run: ./utils/check-glibc.sh squashfs-root
+        # dist covers the application directory and the runtime of the AppImage, which is the first
+        # binary that has to run. This job holds a token that can publish releases, so it doesn't run
+        # the artifact it is about to upload: the Linux Build job of tests.yml extracts and checks the
+        # rest of the AppImage on every pull request
+        run: ./utils/check-glibc.sh dist
+      - name: Validate AppStream metainfo
+        run: appstreamcli validate-tree --no-net dist/linux-unpacked
       - name: Upload tar.gz
         run: ./utils/upload-artifact.js electronim-linux-x64.tar.gz application/tar+gzip
       - name: Upload AppImage
@@ -63,6 +72,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # Nothing here pushes to the repository, the uploads use the token from the environment
+          persist-credentials: false
       - name: Setup Node
         uses: actions/setup-node@v6
         with:

@@ -34,7 +34,7 @@ npm install  # Install dependencies - takes ~55 seconds
 - `npm run build:win` - Builds and bundles the application for Windows systems
 
 ### Testing
-- `npm test` - Run full test suite - takes ~10 seconds, runs 1199 tests (62 test suites). NEVER CANCEL - Set timeout to 30+ minutes.
+- `npm test` - Run full test suite - takes ~10 seconds, runs 1219 tests (64 test suites). NEVER CANCEL - Set timeout to 30+ minutes.
 - `npm run test:e2e` - Run end-to-end tests to verify application startup - takes ~10-15 seconds
 - The project uses Jest with ECMAScript modules requiring the experimental VM modules flag for Node.js
 
@@ -54,8 +54,8 @@ npm install  # Install dependencies - takes ~55 seconds
 - `npm run build:win` - Build Windows packages (zip, portable exe)
 - `npm run build:linux -- dir` - Build only the given electron-builder targets (e.g. `dir`, `snap`, `AppImage tar.gz`). The platform flag is the last argument of each `build:*` script so extra arguments become its targets; the `prebuild:*` hook still bundles with webpack first. Never call `electron-builder` directly, it skips that hook.
 - Bundling happens only in `pretest`, `pretest:e2e`, `prestart`, `prepack` and the `prebuild:*` hooks, not on `npm install`.
-- The Linux release artifacts (AppImage, tar.gz) are built in an `ubuntu:22.04` container, both in `publish.yml` and in the `Linux Build` job of `tests.yml`. nodehun is compiled on the build system and links against its glibc and libstdc++, so a build on a newer system ships a spell checker that doesn't load on older distributions. Both workflows extract the AppImage and run `./utils/check-glibc.sh squashfs-root`, which fails the build when a native binary needs more than Ubuntu 22.04 provides (it reads the symbol versions with `readelf`, from binutils).
-- `build.linux.extraFiles` applies to every Linux target. The snap template brings its own `usr/`, so in the snap these files end up in an unused `usr_1/`, and the Copr RPM gets a copy under `/opt/electronim/usr`. Both are harmless.
+- The Linux release artifacts (AppImage, tar.gz) are built in an `ubuntu:22.04` container, both in `publish.yml` and in the `Linux Build` job of `tests.yml`. nodehun is compiled on the build system and links against its glibc and libstdc++, so a build on a newer system ships a spell checker that doesn't load on older distributions. `./utils/check-glibc.sh` fails the build when a native binary needs more than Ubuntu 22.04 provides (it reads the symbol versions with `readelf`, from binutils). `tests.yml` extracts the AppImage and checks all of it, `publish.yml` checks `dist` only, because that job holds a token that can publish releases and shouldn't run the artifact it is about to upload.
+- `build.linux.extraFiles` applies to every Linux target. The snap template brings its own `usr/`, so in the snap these files end up in an unused `usr_1/`, and the Copr RPM gets a copy under `/opt/electronim/usr`; both are harmless. The tar.gz is the one artifact whose `usr/share` tree a user can install, which is why the entry it ships is `build-config/electronim.package.desktop` (relative `Exec`/`Icon`) and not the RPM's `/opt/electronim` one.
 - **IMPORTANT**: Build commands fail in environments with network restrictions due to Electron header downloads (node-gyp attempting to download from https://www.electronjs.org/headers). Document this limitation if builds fail with "network connectivity" errors.
 
 ## Validation
@@ -151,8 +151,9 @@ they catch things the unit suite cannot: **always run them when changing anythin
 - `build-config/` - Platform-specific build configurations
   - `chocolateyInstall.ps1` - [PowerShell](https://blog.marcnuri.com/tag/powershell) installation script for [Chocolatey](https://chocolatey.org/) (Windows)
   - `chocolateyUninstall.ps1` - [PowerShell](https://blog.marcnuri.com/tag/powershell) installation script for [Chocolatey](https://chocolatey.org/) (Windows)
-  - `com.marcnuri.electronim.appdata.xml` - [AppStream](https://www.freedesktop.org/software/appstream/docs/) metainfo, installed in `usr/share/metainfo` of the Linux packages. The [AppImage catalog](https://appimage.github.io/) reads it, so update it whenever the README.md features change. Validate it with `appstreamcli validate` (Linux)
-  - `electronim.desktop` - Desktop entry configuration of the RPM, also installed in `usr/share/applications` of the Linux packages because the AppStream metainfo launches it (Linux)
+  - `com.marcnuri.electronim.appdata.xml` - [AppStream](https://www.freedesktop.org/software/appstream/docs/) metainfo, installed in `usr/share/metainfo` of the Linux packages. The [AppImage catalog](https://appimage.github.io/) reads it, so update it whenever the README.md features change. Validate it with `appstreamcli validate-tree <application directory>`, which also checks that the desktop file it launches is installed; plain `appstreamcli validate` cannot. `utils/version-from-tag.js` stamps its `<releases>` at release time, since the version is only known then, and the RPM installs it in `%{_metainfodir}` (Linux)
+  - `electronim.desktop` - Desktop entry configuration of the [Fedora COPR package](https://copr.fedorainfracloud.org/coprs/manusa/electronim), which installs to `/opt/electronim` (Linux)
+  - `electronim.package.desktop` - Desktop entry installed in `usr/share/applications` of the AppImage, tar.gz and snap, because the AppStream metainfo launches it. Keep it in sync with `build.linux` of package.json, there are tests for that (Linux)
   - `electronim.nuspec` - [Chocolatey](https://chocolatey.org/) Nuspec information file (should be updated whenever the README.md is updated) (Windows)
   - `electronim.spec` - Spec file to build the [Fedora COPR package](https://copr.fedorainfracloud.org/coprs/manusa/electronim) (Linux)
   - `entitlements.mac.plist` Contains the MacOS entitlements for the application (Mac)
@@ -172,6 +173,15 @@ they catch things the unit suite cannot: **always run them when changing anythin
 - `bin.js` - CLI entry point for npm global installation
 
 ## Common Tasks
+
+### The one-liner that describes the application
+
+The same sentence is the `<summary>` of the AppStream metainfo, the `description` of package.json
+(which electron-builder turns into the `Comment` of the desktop entry it generates), the
+`build.snap.summary`, the `build.linux.synopsis`, the `Summary:` of `build-config/electronim.spec`
+and the `Comment` of both desktop entries in `build-config`. Change them together, or stores show a
+different sentence for each package. Keep it short: software centers cut it off, and Flathub asks
+for 35 characters or fewer.
 
 ### Adding Dependencies
 - Production dependencies: `npm install --save-exact <package>` 
@@ -281,7 +291,7 @@ The project provides several utilities in `src/__tests__/` to facilitate testing
 
 - **npm install**: ~55 seconds
 - **Linting and bundling** (`npm run pretest`): ~2 seconds
-- **Test suite** (`npm test`): ~10 seconds (1199 tests, 62 test suites)
+- **Test suite** (`npm test`): ~10 seconds (1219 tests, 64 test suites)
 - **Application startup**: ~3-5 seconds
 - **Platform builds**: 10-20 minutes (network dependent)
 
@@ -331,8 +341,8 @@ added 825 packages, and audited 826 packages in 55s
 
 ### Sample Test Output
 ```
-Test Suites: 62 passed, 62 total
-Tests:       1199 passed, 1199 total
+Test Suites: 64 passed, 64 total
+Tests:       1219 passed, 1219 total
 Snapshots:   0 total
 Time:        12.653 s
 Coverage:    Lines: ~91% | Functions: ~74% | Branches: ~46% | Statements: ~79%

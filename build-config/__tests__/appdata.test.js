@@ -57,7 +57,7 @@ describe('AppStream metainfo test suite', () => {
     // electron-builder adds its desktop file to the root of the AppImage only, appstreamcli validate-tree
     // (run by the catalog's appdir-lint.sh) looks for the launchable in usr/share/applications
     expect(packageJson.build.linux.extraFiles).toContainEqual({
-      from: 'build-config/electronim.desktop',
+      from: 'build-config/electronim.package.desktop',
       to: `usr/share/applications/${metainfo.querySelector('launchable[type="desktop-id"]').textContent}`
     });
   });

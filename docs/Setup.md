@@ -36,7 +36,7 @@ There are 3 options for installing and running ElectronIM in Linux:
 
 ```
 $ wget https://github.com/manusa/electronim/releases/latest/download/electronim-linux-x64.tar.gz
-$ tar xz electronim-linux-x64.tar.gz
+$ tar xzf electronim-linux-x64.tar.gz
 $ cd electronim-linux-x64
 $ ./electronim
 ```
