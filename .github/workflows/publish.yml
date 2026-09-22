@@ -18,15 +18,29 @@ on:
     tags:
     - '*'
 
+# Uploading the release assets is all the token is for
+permissions:
+  contents: write
+
 jobs:
   linux:
     name: Linux Artifact
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # Native modules (nodehun) link against the glibc and libstdc++ of the build system, build them on
+    # the oldest supported Ubuntu LTS so that the AppImage and tar.gz load them there too
+    container: ubuntu:22.04
+    # The token is only given to the upload steps, npm install runs the install scripts of hundreds of
+    # packages and none of them needs it
     steps:
+      - name: Build requirements
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends appstream binutils ca-certificates g++ git make python3
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # Nothing here pushes to the repository, the uploads use the token from the environment
+          persist-credentials: false
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -38,18 +52,36 @@ jobs:
       - name: Build Linux
         # The snap is built and published by publish-snap.yml
         run: npm run build:linux -- AppImage tar.gz
+      - name: Check the spell checker is in the application
+        # The whole point of the glibc check is the native module of the spell checker, it is only
+        # scanned while electron-builder keeps unpacking it from the asar
+        run: test -f dist/linux-unpacked/resources/app.asar.unpacked/node_modules/nodehun/build/Release/Nodehun.node
+      - name: Check glibc requirements
+        # dist covers the application directory and the runtime of the AppImage, which is the first
+        # binary that has to run. This job holds a token that can publish releases, so it doesn't run
+        # the artifact it is about to upload: the Linux Build job of tests.yml extracts and checks the
+        # rest of the AppImage on every pull request
+        run: ./utils/check-glibc.sh dist
+      - name: Validate AppStream metainfo
+        run: appstreamcli validate-tree --no-net dist/linux-unpacked
       - name: Upload tar.gz
         run: ./utils/upload-artifact.js electronim-linux-x64.tar.gz application/tar+gzip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload AppImage
         run: ./utils/upload-artifact.js electronim-linux-x86_64.AppImage application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   macOS:
     name: macOS Artifact
     runs-on: macos-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # The token is only given to the upload steps, see the linux job
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # Nothing here pushes to the repository, the uploads use the token from the environment
+          persist-credentials: false
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -67,9 +99,17 @@ jobs:
         run: npm run build:mac
       - name: Upload arm64-dmg
         run: ./utils/upload-artifact.js electronim-mac-arm64.dmg application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload arm64-tar.gz
         run: ./utils/upload-artifact.js electronim-mac-arm64.tar.gz application/tar+gzip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload x64-dmg
         run: ./utils/upload-artifact.js electronim-mac-x64.dmg application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload x64-tar.gz
         run: ./utils/upload-artifact.js electronim-mac-x64.tar.gz application/tar+gzip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

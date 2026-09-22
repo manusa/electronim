@@ -1,0 +1,12 @@
+# Desktop entry installed in usr/share/applications of the Linux packages, where AppStream tools
+# look for the file the metainfo launches. electron-builder generates its own entry for the root of
+# the AppImage, and build-config/electronim.desktop is the one the RPM installs from /opt.
+[Desktop Entry]
+Name=ElectronIM
+Exec=electronim %U
+Terminal=false
+Type=Application
+Icon=electronim
+StartupWMClass=ElectronIM
+Categories=Network;InstantMessaging;
+Comment=Combine chat services in one window

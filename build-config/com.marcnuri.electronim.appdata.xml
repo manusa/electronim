@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2026 Marc Nuri San Felix -->
+<component type="desktop-application">
+  <id>com.marcnuri.electronim</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>Apache-2.0</project_license>
+  <name>ElectronIM</name>
+  <summary>Combine chat services in one window</summary>
+  <!-- Software centers that predate AppStream 1.0 only know developer_name -->
+  <developer_name>Marc Nuri</developer_name>
+  <developer id="com.marcnuri">
+    <name>Marc Nuri</name>
+  </developer>
+  <description>
+    <p>ElectronIM brings the web versions of your messaging services, such as WhatsApp, Telegram or Slack, together in one window with a tab for each, so you can keep up with every conversation without juggling browser tabs.</p>
+    <p>ElectronIM is free/libre software that you can use, study, share and improve. You don't need an account to use it, and it has no telemetry, analytics or tracking of any kind.</p>
+    <ul>
+      <li>Any website or web messaging service as a tab</li>
+      <li>Several accounts of the same service, each in its own isolated tab</li>
+      <li>Native desktop notifications that you can turn off per service or globally</li>
+      <li>Spell checking in many languages</li>
+      <li>Screen sharing with services that support it</li>
+      <li>Light and dark themes that follow the system by default</li>
+      <li>Keyboard shortcuts, drag-and-drop tab reordering and find in page</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">electronim.desktop</launchable>
+  <url type="homepage">https://github.com/manusa/electronim</url>
+  <url type="bugtracker">https://github.com/manusa/electronim/issues</url>
+  <url type="help">https://github.com/manusa/electronim/blob/main/docs/Setup.md</url>
+  <keywords>
+    <keyword>instant messaging</keyword>
+    <keyword>IM</keyword>
+    <keyword>chat</keyword>
+    <keyword>messenger</keyword>
+    <keyword>WhatsApp</keyword>
+    <keyword>Telegram</keyword>
+    <keyword>Slack</keyword>
+    <keyword>tabs</keyword>
+  </keywords>
+  <content_rating type="oars-1.1">
+    <content_attribute id="social-chat">intense</content_attribute>
+    <content_attribute id="social-audio">intense</content_attribute>
+    <content_attribute id="social-contacts">intense</content_attribute>
+    <content_attribute id="social-info">mild</content_attribute>
+  </content_rating>
+</component>

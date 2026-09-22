@@ -1,7 +1,7 @@
 {
   "name": "electronim",
   "version": "0.0.0",
-  "description": "Free/Libre open source Electron based multi instant messaging (IM) client.",
+  "description": "Combine chat services in one window",
   "author": {
     "name": "Marc Nuri",
     "email": "electronim@marcnuri.com",
@@ -17,8 +17,8 @@
     "bundles",
     "docs",
     "src",
-    "!src/**/__tests__",
-    "utils"
+    "utils",
+    "!**/__tests__"
   ],
   "scripts": {
     "pretest": "eslint -c eslint.config.mjs . && node webpack.js",
@@ -70,7 +70,8 @@
     "copyright": "Copyright 2019 Marc Nuri",
     "files": [
       "**/*",
-      "!**/__tests__"
+      "!**/__tests__",
+      "!squashfs-root"
     ],
     "directories": {
       "output": "dist",
@@ -80,7 +81,7 @@
       "assets/*"
     ],
     "snap": {
-      "summary": "Free/Libre open source Electron based multi instant messaging (IM) client.",
+      "summary": "Combine chat services in one window",
       "plugs": [
         "alsa",
         "browser-support",
@@ -109,7 +110,7 @@
       "artifactName": "electronim-linux-${arch}.${ext}",
       "executableName": "electronim",
       "category": "Network;InstantMessaging;",
-      "synopsis": "Free/Libre open source Electron based multi instant messaging (IM) client.",
+      "synopsis": "Combine chat services in one window",
       "desktop": {
         "entry": {
           "Terminal": "false",
@@ -118,6 +119,16 @@
         }
       },
       "icon": "icon_1024x1024.png",
+      "extraFiles": [
+        {
+          "from": "build-config/com.marcnuri.electronim.appdata.xml",
+          "to": "usr/share/metainfo/com.marcnuri.electronim.appdata.xml"
+        },
+        {
+          "from": "build-config/electronim.package.desktop",
+          "to": "usr/share/applications/electronim.desktop"
+        }
+      ],
       "target": [
         "AppImage",
         "snap",

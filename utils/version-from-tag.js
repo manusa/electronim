@@ -19,7 +19,7 @@ const childProcess = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const errorHandler = require('./error-handler');
-const {extractVersionFromTag} = require('./common');
+const {extractVersionFromTag, withRelease} = require('./common');
 
 const versionFromTag = () => {
   const version = extractVersionFromTag();
@@ -37,6 +37,11 @@ const versionFromTag = () => {
   fs.writeFileSync(electronimSpec, fs.readFileSync(electronimSpec).toString()
     .replaceAll(/Version.+$/gm, `Version: ${version}`)
   );
+  console.log(`Setting AppStream release to ${version}`);
+  const metainfo = path.resolve(__dirname, '..', 'build-config', 'com.marcnuri.electronim.appdata.xml');
+  fs.writeFileSync(metainfo, withRelease(
+    fs.readFileSync(metainfo).toString(), version, new Date().toISOString().slice(0, 10)
+  ));
   process.exit(0);
 };
 

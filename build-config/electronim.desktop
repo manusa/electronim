@@ -6,4 +6,4 @@ Type=Application
 Icon=/opt/electronim/assets/icon_1024x1024.png
 StartupWMClass=ElectronIM
 Categories=Network;InstantMessaging;
-Comment=Free/Libre open source Electron based multi instant messaging (IM) client.
+Comment=Combine chat services in one window

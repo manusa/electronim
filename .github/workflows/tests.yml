@@ -61,6 +61,48 @@ jobs:
   linux-build:
     name: Linux Build
     runs-on: ubuntu-latest
+    # Same build system as the Linux Artifact job of publish.yml, see why there
+    container: ubuntu:22.04
+    steps:
+      - name: Build requirements
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends appstream binutils ca-certificates g++ git make python3
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+      - name: Install
+        run: npm install
+      - name: Build
+        # The snap is built by the snap-build job, as in the publish workflows
+        run: npm run build:linux -- AppImage tar.gz
+      - name: Extract AppImage
+        # Check what the AppImage ships, it adds the runtime libraries of the electron-builder toolset to
+        # the application directory
+        run: ./dist/electronim-linux-x86_64.AppImage --appimage-extract
+      - name: Check the spell checker is in the AppImage
+        # The whole point of the glibc check is the native module of the spell checker, it is only
+        # scanned while electron-builder keeps unpacking it from the asar
+        run: test -f squashfs-root/resources/app.asar.unpacked/node_modules/nodehun/build/Release/Nodehun.node
+      - name: Check glibc requirements
+        # squashfs-root is the application directory and the libraries the AppImage bundles, dist adds
+        # the runtime of the AppImage itself, which is the first binary that has to run
+        run: ./utils/check-glibc.sh squashfs-root dist
+      - name: Validate AppStream metainfo
+        # The tree validation also checks that the desktop file the metainfo launches is installed, as the
+        # appdir-lint.sh check of the AppImage catalog does
+        run: appstreamcli validate-tree --no-net squashfs-root
+      - name: CI Artifact for AppImage
+        uses: actions/upload-artifact@v5
+        with:
+          name: electronim-linux-x86_64.AppImage
+          path: dist/electronim-linux-x86_64.AppImage
+  snap-build:
+    name: Snap Build
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -77,12 +119,7 @@ jobs:
       - name: Install
         run: npm install
       - name: Build
-        run: npm run build:linux
-      - name: CI Artifact for AppImage
-        uses: actions/upload-artifact@v5
-        with:
-          name: electronim-linux-x86_64.AppImage
-          path: dist/electronim-linux-x86_64.AppImage
+        run: npm run build:linux -- snap
   macos-build:
     name: macOS Build
     runs-on: macos-latest
