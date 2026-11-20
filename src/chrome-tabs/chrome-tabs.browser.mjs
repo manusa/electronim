@@ -22,6 +22,8 @@ import {
 } from './chrome-tabs.reducer.browser.mjs';
 
 const shouldUseDarkColors = () => globalThis?.matchMedia?.('(prefers-color-scheme: dark)').matches;
+const query = () => new URLSearchParams(globalThis.location.search);
+const isVertical = () => query().get('tabPosition') === 'left';
 const getTabContainer = () => document.querySelector('.tab-container');
 const getChromeTabs = () => getTabContainer().querySelector('.chrome-tabs');
 
@@ -59,11 +61,36 @@ const isInVisibleArea = event =>
   event.clientX > 0 && event.clientY > 0 &&
   event.clientX <= globalThis.innerWidth && event.clientY <= globalThis.innerHeight;
 
-const Favicon = ({favicon = ''}) => {
+// Icon candidates in order of preference: the custom icon set in the settings, then the favicon reported by the
+// service. Each one that fails to load is skipped. Favicons need crossorigin (CORP headers, #454), custom icons are
+// plain image requests so that hosts without CORS headers work too.
+const useIcon = ({customIcon, favicon}) => {
+  const [failed, setFailed] = useState([]);
+  const [icon] = [
+    {src: customIcon, crossOrigin: null},
+    {src: favicon, crossOrigin: 'anonymous'}
+  ].filter(({src}) => src && !failed.includes(src));
+  return icon && {...icon, onError: () => setFailed(previous => [...previous, icon.src])};
+};
+
+// Most services prefix their title with the unread count, e.g. "(3) WhatsApp"
+const UNREAD_COUNT_REGEX = /^\((\d+)\)/;
+const MAX_UNREAD_COUNT = 99;
+const unreadCount = (title = '') => {
+  const count = Number(UNREAD_COUNT_REGEX.exec(title)?.[1] ?? 0);
+  if (count <= 0) {
+    return '';
+  }
+  return count > MAX_UNREAD_COUNT ? `${MAX_UNREAD_COUNT}+` : `${count}`;
+};
+
+const Favicon = ({customIcon, favicon}) => {
+  const icon = useIcon({customIcon, favicon});
   let img = html``;
-  if (favicon) {
+  if (icon) {
     img = html`
-      <img class="chrome-tab-favicon-icon" crossorigin="anonymous" src="${favicon}" alt="" role="presentation"/>
+      <img class="chrome-tab-favicon-icon" crossorigin=${icon.crossOrigin} src="${icon.src}" alt="" role="presentation"
+        onError=${icon.onError}/>
     `;
   }
   return html`
@@ -96,13 +123,15 @@ const BackgroundSvg = () => html`
     </svg>
 `;
 
+const clickTab = ({dispatch, id, active}) => () => {
+  if (active !== true) {
+    sendActivateService({id, restoreWindow: true});
+    activateService({dispatch})(null, {tabId: id});
+  }
+};
+
 const Tab = ({dispatch, numberOfTabs, idx, id, active, offsetX = 0, title, url, customName, width, ...rest}) => {
-  const tabClick = () => {
-    if (active !== true) {
-      sendActivateService({id, restoreWindow: true});
-      activateService({dispatch})(null, {tabId: id});
-    }
-  };
+  const tabClick = clickTab({dispatch, id, active});
   const [draggedId, setDraggedId] = useState(id);
   const [originX, setOriginX] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(idx);
@@ -175,6 +204,98 @@ const ChromeTabs = ({dispatch, state: {tabs}}) => {
   `;
 };
 
+const hostname = url => {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return url;
+  }
+};
+
+const VerticalTabIcon = ({customIcon, favicon, name}) => {
+  const icon = useIcon({customIcon, favicon});
+  if (icon) {
+    return html`
+      <img class="vertical-tab__icon" crossorigin=${icon.crossOrigin} src="${icon.src}" alt="" role="presentation"
+        onError=${icon.onError}/>
+    `;
+  }
+  const initial = name.match(/[\p{L}\p{N}]/u)?.[0] ?? '';
+  return html`<div class="vertical-tab__icon vertical-tab__icon--placeholder">${initial}</div>`;
+};
+
+const REORDER_KEYS = {ArrowUp: -1, ArrowDown: 1};
+
+const focusVerticalTab = id => document
+  .querySelector(`.vertical-tab[data-tab-id=${JSON.stringify(String(id))}]`)?.focus();
+
+const VerticalTab = ({
+  dispatch, idx, numberOfTabs, draggedId, setDraggedId,
+  id, active, title, url, customName, disableNotifications = false, ...rest
+}) => {
+  const displayTitle = customName || title || url || '';
+  const name = customName || title?.replace(UNREAD_COUNT_REGEX, '') || hostname(url ?? '');
+  const badge = unreadCount(title);
+  const label = [displayTitle, badge && `${badge} unread`, disableNotifications && 'notifications off']
+    .filter(Boolean).join(', ');
+  const props = {
+    'data-tab-id': id,
+    title: displayTitle,
+    'aria-label': label,
+    onClick: clickTab({dispatch, id, active}),
+    draggable: true,
+    onDragStart: event => {
+      event.dataTransfer.effectAllowed = 'move';
+      setDraggedId(id);
+    },
+    onDragEnd: () => setDraggedId(null),
+    // The dragged service takes the place of the one under the pointer (moveTab persists the new order)
+    onDragOver: event => {
+      if (draggedId === null) {
+        return;
+      }
+      event.preventDefault();
+      if (draggedId !== id) {
+        moveTab({dispatch})({id: draggedId, idx, offsetX: 0});
+      }
+    },
+    onDrop: event => event.preventDefault(),
+    // Keyboard alternative to drag and drop: Alt+ArrowUp / Alt+ArrowDown
+    onKeyDown: event => {
+      const newIdx = idx + (REORDER_KEYS[event.key] ?? 0);
+      if (event.altKey && newIdx !== idx && newIdx >= 0 && newIdx < numberOfTabs) {
+        event.preventDefault();
+        moveTab({dispatch})({id, idx: newIdx, offsetX: 0});
+        // Moving the button in the DOM loses its focus
+        setTimeout(() => focusVerticalTab(id));
+      }
+    }
+  };
+  if (active === true) {
+    props['aria-current'] = 'page';
+  }
+  const className = ['vertical-tab', active === true && 'vertical-tab--active', draggedId === id && 'vertical-tab--dragging']
+    .filter(Boolean).join(' ');
+  return html`
+    <button type="button" class=${className} ...${props}>
+      <${VerticalTabIcon} ...${rest} name=${name} />
+      ${badge && html`<span class="vertical-tab__badge">${badge}</span>`}
+      ${disableNotifications && html`
+        <${Icon} className='vertical-tab__notifications-mute'>${Icon.notificationsOff}</${Icon}>`}
+    </button>
+  `;
+};
+
+const VerticalTabs = ({dispatch, state: {tabs}}) => {
+  const [draggedId, setDraggedId] = useState(null);
+  const tabProps = (tab, idx) => ({...tab, dispatch, idx, numberOfTabs: tabs.length, draggedId, setDraggedId});
+  return html`
+    <div class="vertical-tabs" onDragOver=${event => draggedId !== null && event.preventDefault()}>
+      ${tabs.map((tab, idx) => html`<${VerticalTab} key=${tab.id} ...${tabProps(tab, idx)}/>`)}
+    </div>
+  `;
+};
+
 const Menu = ({state: {newVersionAvailable}}) => {
   const icon = newVersionAvailable ? Icon.arrowCircleUp : Icon.moreVert;
   return html`
@@ -198,10 +319,18 @@ const TabContainer = () => {
     globalThis.electron.onSetServiceTitle(data => setServiceTitle({dispatch})(null, data));
     sendServicesReady();
   }, []);
+  const Tabs = isVertical() ? VerticalTabs : ChromeTabs;
   return html`
-      <${ChromeTabs} state=${state} dispatch=${dispatch}/>
+      <${Tabs} state=${state} dispatch=${dispatch}/>
           <${Menu} state=${state}/>
   `;
 };
 
+if (isVertical()) {
+  getTabContainer().classList.add('tab-container--vertical');
+  const iconSize = Number(query().get('tabIconSize'));
+  if (iconSize > 0) {
+    getTabContainer().style.setProperty('--vertical-tab-icon-size', `${iconSize}px`);
+  }
+}
 render(html`<${TabContainer} />`, getTabContainer());

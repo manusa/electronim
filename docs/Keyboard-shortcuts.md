@@ -11,6 +11,7 @@
 | `Ctrl+Tab`                                                 | Jump to the next open tab.     |
 | `Ctrl+Shift+Tab`                                           | Jump to the previous open tab. |
 | `Ctrl+[1-9]` `Cmd+[1-9]`                                   | Jump to the tab at position #. |
+| `Alt+Up` `Alt+Down`                                        | (tabs on the left, focused service) Move the service up or down. |
 | `Esc`                                                      | (in dialog) Close.             |
 
 ## Customizing Tab Shortcuts

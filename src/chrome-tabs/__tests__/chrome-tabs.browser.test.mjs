@@ -105,6 +105,30 @@ describe('ChromeTabs in Browser test suite', () => {
         $chromeTabs.querySelector('.chrome-tab[data-tab-id="13373"] .chrome-tab-favicon-icon').getAttribute('src'))
         .toBe('https://13373.png');
     });
+    test('addServices with customIcon, should display customIcon instead of favicon', async () => {
+      // When
+      electron.ipcRenderer.emit('addServices', {}, [
+        {id: 1, favicon: 'https://1/favicon.png', customIcon: 'data:image/png;base64,AAAA', url: 'https://1.com'}
+      ]);
+      // Then
+      await waitFor(() => expect(
+        $chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-favicon-icon').getAttribute('src'))
+        .toBe('data:image/png;base64,AAAA'));
+    });
+    test('addServices with customIcon that fails to load, should display favicon', async () => {
+      // Given
+      electron.ipcRenderer.emit('addServices', {}, [
+        {id: 1, favicon: 'https://1/favicon.png', customIcon: 'https://broken/icon.png', url: 'https://1.com'}
+      ]);
+      const iconSelector = '.chrome-tab[data-tab-id="1"] .chrome-tab-favicon-icon';
+      await waitFor(() => expect($chromeTabs.querySelector(iconSelector)).not.toBeNull());
+      // When
+      fireEvent.error($chromeTabs.querySelector(iconSelector));
+      // Then
+      await waitFor(() => expect(
+        $chromeTabs.querySelector('.chrome-tab[data-tab-id="1"] .chrome-tab-favicon-icon').getAttribute('src'))
+        .toBe('https://1/favicon.png'));
+    });
     test('setServiceTitle, should change title of specified tab', async () => {
       // Given
       electron.ipcRenderer.emit('addServices', {}, tabs);

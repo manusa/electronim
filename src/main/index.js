@@ -22,7 +22,7 @@ const {openAboutDialog} = require('../about');
 const {newAppMenu, isNotAppMenu} = require('../app-menu');
 const {findDialog, initKeyboardEvents} = require('../base-window');
 const {openChromeWebStore, isChromeExtensionsEnabled} = require('../chrome-extensions');
-const {TABS_CONTAINER_HEIGHT, newTabContainer, isNotTabContainer} = require('../chrome-tabs');
+const {newTabContainer, isNotTabContainer, tabContainerLayout} = require('../chrome-tabs');
 const {
   FIND_IN_PAGE_HEIGHT, FIND_IN_PAGE_WIDTH, isFindInPage, isNotFindInPage, findInPage, findInPageOpen, findInPageClose
 } = require('../find-in-page');
@@ -120,11 +120,11 @@ const resetMainWindow = () => {
 const activateService = ({tabId, restoreWindow = true}) => {
   const activeService = serviceManager.getService(tabId);
   if (activeService) {
-    const {width, height} = mainWindow.getContentBounds();
+    const layout = tabContainerLayout(tabContainer, mainWindow.getContentBounds());
     resetMainWindow();
     mainWindow.contentView.addChildView(activeService);
-    tabContainer.setBounds({x: 0, y: 0, width, height: TABS_CONTAINER_HEIGHT});
-    activeService.setBounds({x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT});
+    tabContainer.setBounds(layout.tabContainer);
+    activeService.setBounds(layout.service);
     serviceManager.setActiveService(tabId);
     if (restoreWindow) {
       activeService.webContents.focus();
@@ -146,19 +146,15 @@ const handleMainWindowResize = () => {
         x: contentWidth - FIND_IN_PAGE_WIDTH, y: 0, width: FIND_IN_PAGE_WIDTH, height: FIND_IN_PAGE_HEIGHT
       });
     }
-    let totalHeight = 0;
     const filteredViews = mainWindow.contentView.children
       .filter(isNotAppMenu)
       .filter(isNotFindInPage);
-    const isLast = idx => idx === filteredViews.length - 1;
-    for (const [idx, bv] of filteredViews.entries()) {
-      const {x: currentX, y: currentY, height: currentHeight} = bv.getBounds();
-      let newHeight = currentHeight;
-      if (isLast(idx)) {
-        newHeight = contentHeight - totalHeight;
-      }
-      bv.setBounds({x: currentX, y: currentY, width: contentWidth, height: newHeight});
-      totalHeight += currentHeight;
+    // The tab container is created once the browser versions are resolved, the window can resize before that
+    const fullWindow = {x: 0, y: 0, width: contentWidth, height: contentHeight};
+    const layout = tabContainer && filteredViews.includes(tabContainer) ?
+      tabContainerLayout(tabContainer, fullWindow) : {service: fullWindow};
+    for (const bv of filteredViews) {
+      bv.setBounds(bv === tabContainer ? layout.tabContainer : layout.service);
     }
     const dialogView = findDialog(mainWindow);
     if (dialogView) {

@@ -17,7 +17,9 @@ const {WebContentsView, dialog, shell, ipcMain: eventBus} = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
 const HOME_DIR = require('node:os').homedir();
-const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, KEYBOARD_SHORTCUTS} = require('../constants');
+const {
+  APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, DEFAULT_TAB_ICON_SIZE, KEYBOARD_SHORTCUTS, TAB_POSITIONS, tabIconSizeOrDefault
+} = require('../constants');
 const {showDialog} = require('../base-window');
 
 const APP_DIR = '.electronim';
@@ -28,6 +30,8 @@ const DEFAULT_SETTINGS = {
   useNativeSpellChecker: false,
   enabledDictionaries: ['en'],
   theme: 'system',
+  tabPosition: TAB_POSITIONS.top,
+  tabIconSize: DEFAULT_TAB_ICON_SIZE,
   trayEnabled: false,
   startMinimized: false,
   alwaysOnTop: false,
@@ -110,6 +114,8 @@ const ensureDefaultValues = settings => {
 };
 
 const migrate = settings => {
+  // Icon sizes that are no longer offered (or edited by hand) fall back to the default
+  settings.tabIconSize = tabIconSizeOrDefault(settings.tabIconSize);
   // en-us dictionary key is now en
   if (settings.enabledDictionaries.includes('en-US')) {
     settings.enabledDictionaries = settings.enabledDictionaries

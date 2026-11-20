@@ -28,6 +28,9 @@ describe('App Menu in Browser test suite', () => {
     await import('../../../bundles/app-menu.preload');
     await loadDOM({meta: import.meta, path: ['..', 'index.html']});
   });
+  test('with tabs on top, renders the default menu position', () => {
+    expect(document.querySelector('.app-menu').classList).not.toContain('app-menu--tabs-left');
+  });
   test('wrapper, click should close menu (WebContentsView)', () => {
     // Given
     const appMenuClose = jest.fn();
@@ -65,5 +68,21 @@ describe('App Menu in Browser test suite', () => {
       expect(listener).toHaveBeenCalledTimes(1);
     });
   });
+  describe('with tabs on the left', () => {
+    beforeEach(async () => {
+      jest.resetModules();
+      globalThis.history.replaceState(null, '', '?tabPosition=left&tabContainerWidth=88');
+      await import('../../../bundles/app-menu.preload');
+      await loadDOM({meta: import.meta, path: ['..', 'index.html']});
+    });
+    afterEach(() => {
+      globalThis.history.replaceState(null, '', '/');
+    });
+    test('opens the menu next to the rail', () => {
+      expect(document.querySelector('.app-menu').classList).toContain('app-menu--tabs-left');
+    });
+    test('leaves the rail uncovered', () => {
+      expect(document.querySelector('.app-menu').style.getPropertyValue('--tab-container-width')).toBe('88px');
+    });
+  });
 });
-

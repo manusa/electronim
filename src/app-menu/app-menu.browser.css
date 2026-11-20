@@ -53,3 +53,13 @@ html.electronim,
   right: 0;
   user-select: none;
 }
+/* Tabs on the left: keep the rail visible and open the menu next to its button (bottom of the rail) */
+.electronim .app-menu.app-menu--tabs-left .scrim {
+  top: 0;
+  left: var(--tab-container-width);
+}
+.electronim .app-menu.app-menu--tabs-left .menu {
+  left: 0;
+  right: auto;
+  bottom: 0;
+}

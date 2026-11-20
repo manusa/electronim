@@ -82,6 +82,18 @@ const APP_EVENTS = {
   zoomReset: 'zoomReset'
 };
 
+const TAB_POSITIONS = Object.freeze({
+  top: 'top',
+  left: 'left'
+});
+
+// Icon size (px) of the services in the vertical tab layout
+const TAB_ICON_SIZES = Object.freeze([16, 24, 32, 48, 64]);
+const DEFAULT_TAB_ICON_SIZE = 24;
+const tabIconSizeOrDefault = size => (TAB_ICON_SIZES.includes(Number(size)) ? Number(size) : DEFAULT_TAB_ICON_SIZE);
+// Each icon is drawn in a button with 8px padding, the rail adds another 8px on each side
+const verticalTabsWidth = iconSize => tabIconSizeOrDefault(iconSize) + 32;
+
 const CLOSE_BUTTON_BEHAVIORS = Object.freeze({
   minimize: 'minimize',
   quit: 'quit'
@@ -102,5 +114,6 @@ const appNameOrDefault = appName => {
 };
 
 module.exports = {
-  APP_EVENTS, appNameOrDefault, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, KEYBOARD_SHORTCUTS
+  APP_EVENTS, appNameOrDefault, CLOSE_BUTTON_BEHAVIORS, DEFAULT_TAB_ICON_SIZE, ELECTRONIM_VERSION, KEYBOARD_SHORTCUTS,
+  TAB_ICON_SIZES, TAB_POSITIONS, tabIconSizeOrDefault, verticalTabsWidth
 };

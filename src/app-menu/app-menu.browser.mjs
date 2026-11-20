@@ -20,6 +20,8 @@ const {
 } = globalThis.electron;
 
 const getAppMenu = () => document.querySelector('.app-menu');
+const query = new URLSearchParams(globalThis.location.search);
+const tabsOnTheLeft = () => query.get('tabPosition') === 'left';
 
 const AppMenu = () => {
   const noBubbling = func => e => {
@@ -50,4 +52,8 @@ const AppMenu = () => {
   `);
 };
 
+if (tabsOnTheLeft()) {
+  getAppMenu().classList.add('app-menu--tabs-left');
+  getAppMenu().style.setProperty('--tab-container-width', `${Number(query.get('tabContainerWidth'))}px`);
+}
 render(html`<${AppMenu} />`, getAppMenu());

@@ -15,6 +15,8 @@
  */
 const path = require('node:path');
 const {WebContentsView} = require('electron');
+const {TAB_POSITIONS, verticalTabsWidth} = require('../constants');
+const {loadSettings} = require('../settings');
 
 const webPreferences = {
   transparent: true,
@@ -31,7 +33,10 @@ const webPreferences = {
 const newAppMenu = () => {
   const appMenu = new WebContentsView({webPreferences});
   appMenu.isAppMenu = true;
-  appMenu.webContents.loadURL(`file://${__dirname}/index.html`);
+  const {tabPosition, tabIconSize} = loadSettings();
+  const query = tabPosition === TAB_POSITIONS.left ?
+    `tabPosition=left&tabContainerWidth=${verticalTabsWidth(tabIconSize)}` : 'tabPosition=top';
+  appMenu.webContents.loadURL(`file://${__dirname}/index.html?${query}`);
   return appMenu;
 };
 

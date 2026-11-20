@@ -15,7 +15,7 @@
  */
 const {WebContentsView, Menu, MenuItem, ipcMain: eventBus} = require('electron');
 const path = require('node:path');
-const {APP_EVENTS} = require('../constants');
+const {APP_EVENTS, TAB_POSITIONS, tabIconSizeOrDefault, verticalTabsWidth} = require('../constants');
 const {loadSettings} = require('../settings');
 
 const TABS_CONTAINER_HEIGHT = 46;
@@ -35,7 +35,7 @@ const handleContextMenu = viewOrWindow => async (event, params) => {
   const serviceId = await viewOrWindow.webContents.executeJavaScript(`
     (function() {
       const element = document.elementFromPoint(${params.x}, ${params.y});
-      const tabElement = element?.closest('.chrome-tab');
+      const tabElement = element?.closest('[data-tab-id]');
       return tabElement?.getAttribute('data-tab-id') || null;
     })();
   `).catch(() => null);
@@ -92,7 +92,11 @@ const handleContextMenu = viewOrWindow => async (event, params) => {
 const newTabContainer = () => {
   const tabContainer = new WebContentsView({webPreferences});
   tabContainer.isTabContainer = true;
-  tabContainer.webContents.loadURL(`file://${__dirname}/index.html`,
+  const {tabPosition, tabIconSize} = loadSettings();
+  tabContainer.tabPosition = tabPosition === TAB_POSITIONS.left ? TAB_POSITIONS.left : TAB_POSITIONS.top;
+  tabContainer.tabIconSize = tabIconSizeOrDefault(tabIconSize);
+  tabContainer.webContents.loadURL(
+    `file://${__dirname}/index.html?tabPosition=${tabContainer.tabPosition}&tabIconSize=${tabContainer.tabIconSize}`,
     {extraHeaders: 'pragma: no-cache\nCache-control: no-cache'});
   tabContainer.webContents.on('context-menu', handleContextMenu(tabContainer));
   return tabContainer;
@@ -100,6 +104,26 @@ const newTabContainer = () => {
 
 const isNotTabContainer = bv => bv.isTabContainer !== true;
 
+/**
+ * Computes the bounds of the tab container and of the active service for the given content size.
+ * @param {Electron.WebContentsView} tabContainer the tab container (its tabPosition sets the layout).
+ * @param {{width: number, height: number}} contentBounds the content bounds of the main window.
+ * @returns {{tabContainer: Electron.Rectangle, service: Electron.Rectangle}}
+ */
+const tabContainerLayout = (tabContainer, {width, height}) => {
+  if (tabContainer.tabPosition === TAB_POSITIONS.left) {
+    const tabsWidth = verticalTabsWidth(tabContainer.tabIconSize);
+    return {
+      tabContainer: {x: 0, y: 0, width: tabsWidth, height},
+      service: {x: tabsWidth, y: 0, width: width - tabsWidth, height}
+    };
+  }
+  return {
+    tabContainer: {x: 0, y: 0, width, height: TABS_CONTAINER_HEIGHT},
+    service: {x: 0, y: TABS_CONTAINER_HEIGHT, width, height: height - TABS_CONTAINER_HEIGHT}
+  };
+};
+
 module.exports = {
-  TABS_CONTAINER_HEIGHT, newTabContainer, isNotTabContainer
+  newTabContainer, isNotTabContainer, tabContainerLayout
 };

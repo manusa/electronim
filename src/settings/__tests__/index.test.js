@@ -96,6 +96,18 @@ describe('Settings module test suite', () => {
       expect(result.enabledDictionaries).toEqual(expected);
     });
     test.each([
+      {tabIconSize: 48, expected: 48},
+      {tabIconSize: 128, expected: 24},
+      {tabIconSize: 'big', expected: 24}
+    ])('settings with tabIconSize $tabIconSize, should load $expected', ({tabIconSize, expected}) => {
+      // Given
+      fs.writeFileSync(settingsPath, JSON.stringify({tabIconSize}));
+      // When
+      const result = settings.loadSettings();
+      // Then
+      expect(result.tabIconSize).toBe(expected);
+    });
+    test.each([
       {key: 'theme', value: '"light"', expected: 'light'},
       {key: 'activeTab', value: 42, expected: 42},
       {key: 'useNativeSpellChecker', value: true, expected: true},
@@ -122,6 +134,8 @@ describe('Settings module test suite', () => {
         useNativeSpellChecker: false,
         enabledDictionaries: ['en'],
         theme: 'system',
+        tabPosition: 'top',
+        tabIconSize: 24,
         trayEnabled: false,
         startMinimized: false,
         alwaysOnTop: false,
@@ -145,6 +159,8 @@ describe('Settings module test suite', () => {
         useNativeSpellChecker: false,
         enabledDictionaries: ['en'],
         theme: 'system',
+        tabPosition: 'top',
+        tabIconSize: 24,
         trayEnabled: false,
         startMinimized: false,
         alwaysOnTop: false,
@@ -170,6 +186,8 @@ describe('Settings module test suite', () => {
         useNativeSpellChecker: false,
         enabledDictionaries: ['en'],
         theme: 'system',
+        tabPosition: 'top',
+        tabIconSize: 24,
         trayEnabled: false,
         startMinimized: false,
         alwaysOnTop: false,

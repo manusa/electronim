@@ -196,26 +196,60 @@ describe('Main :: Main window listeners test suite', () => {
         // Then
         expect(singleView.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 34});
       });
-      test('multiple views, should set last View to fit window and store new size in configuration file', async () => {
-        // Given
-        const topBar = {
-          getBounds: jest.fn(() => ({x: 0, y: 0, width: 1, height: 1})),
-          setBounds: jest.fn()
-        };
-        const content = {
-          getBounds: jest.fn(() => ({x: 1337, y: 1337, width: 1, height: 1}))
-        };
-        const setBoundsPromise = new Promise(resolve => {
-          content.setBounds = jest.fn(resolve);
+      describe('tab container and service', () => {
+        let tabContainer;
+        let content;
+        let setBoundsPromise;
+        beforeEach(() => {
+          tabContainer = electron.WebContentsView.mock.results
+            .find(r => r.value.isTabContainer === true).value;
+          tabContainer.setBounds = jest.fn();
+          content = {};
+          setBoundsPromise = new Promise(resolve => {
+            content.setBounds = jest.fn(resolve);
+          });
+          views.push(tabContainer, content);
+          baseWindowGetContentBounds = Promise.resolve();
+          baseWindow.getContentBounds = jest.fn(() => ({x: 0, y: 0, width: 100, height: 340}));
         });
-        views.push(topBar, content);
-        // When
-        baseWindow.emit('resize', {sender: baseWindow});
-        await setBoundsPromise;
-        // Then
-        expect(settings.loadSettings()).toEqual(expect.objectContaining({width: 13, height: 37}));
-        expect(topBar.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 1});
-        expect(content.setBounds).toHaveBeenCalledWith({x: 1337, y: 1337, width: 10, height: 33});
+        test('should store new size in configuration file', async () => {
+          // When
+          baseWindow.emit('resize', {sender: baseWindow});
+          await setBoundsPromise;
+          // Then
+          expect(settings.loadSettings()).toEqual(expect.objectContaining({width: 13, height: 37}));
+        });
+        describe('with tabs on top', () => {
+          beforeEach(async () => {
+            baseWindow.emit('resize', {sender: baseWindow});
+            await setBoundsPromise;
+          });
+          test('should place tab container at the top', () => {
+            expect(tabContainer.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 100, height: 46});
+          });
+          test('should place service below tab container', () => {
+            expect(content.setBounds).toHaveBeenCalledWith({x: 0, y: 46, width: 100, height: 294});
+          });
+        });
+        describe('with tabs on the left', () => {
+          beforeEach(async () => {
+            // Saving the settings recreates the tab container with the new tab position
+            views.length = 0;
+            electron.ipcMain.emit('settingsSave', {}, {...settings.loadSettings(), tabPosition: 'left'});
+            tabContainer = electron.WebContentsView.mock.results
+              .findLast(r => r.value.isTabContainer === true).value;
+            tabContainer.setBounds = jest.fn();
+            views.splice(0, views.length, tabContainer, content);
+            baseWindow.emit('resize', {sender: baseWindow});
+            await setBoundsPromise;
+          });
+          test('should place tab container on the left', () => {
+            expect(tabContainer.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 56, height: 340});
+          });
+          test('should place service to the right of tab container', () => {
+            expect(content.setBounds).toHaveBeenCalledWith({x: 56, y: 0, width: 44, height: 340});
+          });
+        });
       });
     });
   });
