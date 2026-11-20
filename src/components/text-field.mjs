@@ -23,6 +23,7 @@ import {html, useState} from './index.mjs';
  * @param placeholder the text to be displayed as a hint when the text field is empty.
  * @param onInput the function to be called when the text field value changes.
  * @param onKeyDown the function to be called when a key is pressed.
+ * @param onBlur the function to be called when the text field loses the focus.
  * @param value the text field value.
  * @param hasError whether the text field has an error.
  */
@@ -32,6 +33,7 @@ export const TextField = ({
   placeholder,
   onInput,
   onKeyDown,
+  onBlur: onBlurCallback = () => {},
   value,
   inputProps = {},
   hasError = false
@@ -40,7 +42,10 @@ export const TextField = ({
 }) => {
   const [focused, setFocused] = useState(false);
   const onFocus = () => setFocused(true);
-  const onBlur = () => setFocused(false);
+  const onBlur = event => {
+    setFocused(false);
+    onBlurCallback(event);
+  };
   let textFieldClass = `material3 text-field ${type}`;
   if (focused) {
     textFieldClass += ' focused';

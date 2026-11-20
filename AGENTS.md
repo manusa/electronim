@@ -107,6 +107,7 @@ The project includes E2E tests to verify the complete Electron application stack
 - **Keyboard Shortcuts E2E Tests** (`src/__tests__/keyboard-shortcuts.test.e2e.js`) - Tests keyboard shortcuts functionality
 - **Task Manager E2E Tests** (`src/__tests__/task-manager.test.e2e.js`) - Tests task manager functionality
 - **Screen Sharing E2E Tests** (`src/__tests__/screen-sharing.test.e2e.js`) - Tests screen-sharing source selection
+- **Settings Custom Icon E2E Tests** (`src/__tests__/settings-custom-icon.test.e2e.js`) - Tests that a large local service icon is downscaled before it is stored
 
 `npm run test:e2e` runs 131 tests across these 7 suites. They drive the real application, so
 they catch things the unit suite cannot: **always run them when changing anything under

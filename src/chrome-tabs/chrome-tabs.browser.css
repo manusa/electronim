@@ -105,3 +105,130 @@ body {
   margin: 0 12px 0 8px;
   z-index: 2;
 }
+
+/* Vertical tab layout (tabPosition: left), its width is set by the main process (verticalTabsWidth) */
+.tab-container.tab-container--vertical {
+  --vertical-tab-icon-size: 24px;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+  padding: 8px 0;
+  gap: 8px;
+}
+
+.tab-container .vertical-tabs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.tab-container .vertical-tab {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--vertical-tab-icon-size) + 16px);
+  height: calc(var(--vertical-tab-icon-size) + 16px);
+  padding: 0;
+  border: none;
+  border-radius: calc(var(--vertical-tab-icon-size) / 4 + 6px);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color var(--material3-transition-duration) ease-out;
+}
+
+.tab-container .vertical-tab:hover {
+  background: #F4F5F6;
+}
+
+.tab-container .vertical-tab--active,
+.tab-container .vertical-tab--active:hover {
+  background: #FFF;
+}
+
+/* Active indicator on the rail edge */
+.tab-container .vertical-tab--active::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--md-sys-color-primary);
+}
+
+.tab-container .vertical-tab--dragging {
+  opacity: 0.4;
+}
+
+.tab-container .vertical-tab:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 1px;
+}
+
+.tab-container .vertical-tab__icon {
+  width: var(--vertical-tab-icon-size);
+  height: var(--vertical-tab-icon-size);
+  border-radius: calc(var(--vertical-tab-icon-size) / 6);
+  object-fit: contain;
+}
+
+.tab-container .vertical-tab__icon--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  font-size: calc(var(--vertical-tab-icon-size) * 0.6);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.tab-container .vertical-tab__badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  --badge-size: max(16px, calc(var(--vertical-tab-icon-size) / 4));
+  min-width: var(--badge-size);
+  height: var(--badge-size);
+  padding: 0 calc(var(--badge-size) / 4);
+  box-sizing: border-box;
+  border-radius: calc(var(--badge-size) / 2);
+  background: var(--md-sys-color-error);
+  color: var(--md-sys-color-on-error);
+  font-size: calc(var(--badge-size) * 0.625);
+  font-weight: 500;
+  line-height: var(--badge-size);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.tab-container .vertical-tab__notifications-mute.material3.icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: max(14px, calc(var(--vertical-tab-icon-size) / 4));
+  color: var(--md-sys-color-on-surface);
+}
+
+.tab-container.tab-container--vertical .menu__button.material3.icon-button {
+  margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .tab-container .vertical-tab:hover {
+    background: #292B2E;
+  }
+  .tab-container .vertical-tab--active,
+  .tab-container .vertical-tab--active:hover {
+    background: #323639;
+  }
+}

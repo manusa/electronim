@@ -19,7 +19,7 @@ const path = require('node:path');
 const fsp = require('node:fs/promises');
 const fs = require('node:fs');
 
-const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION} = require('./src/constants');
+const {APP_EVENTS, CLOSE_BUTTON_BEHAVIORS, ELECTRONIM_VERSION, TAB_ICON_SIZES} = require('./src/constants');
 
 const BUNDLES_DIR = 'bundles';
 
@@ -155,7 +155,8 @@ const esmBundle = webpack({
     new webpack.DefinePlugin({
       APP_EVENTS_TO_BE_REPLACED: JSON.stringify(APP_EVENTS),
       CLOSE_BUTTON_BEHAVIORS_TO_BE_REPLACED: JSON.stringify(CLOSE_BUTTON_BEHAVIORS),
-      ELECTRONIM_VERSION_TO_BE_REPLACED: JSON.stringify(ELECTRONIM_VERSION)
+      ELECTRONIM_VERSION_TO_BE_REPLACED: JSON.stringify(ELECTRONIM_VERSION),
+      TAB_ICON_SIZES_TO_BE_REPLACED: JSON.stringify(TAB_ICON_SIZES)
     })
   ]
 });

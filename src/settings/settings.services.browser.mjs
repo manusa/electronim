@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import {html, Card, Icon, IconButton, TextField} from '../components/index.mjs';
+import {createRef, html, useState, Card, Icon, IconButton, TextField} from '../components/index.mjs';
 import {SettingsOption, SettingsRow} from './settings.common.browser.mjs';
 import {ACTIONS, addTab, isPaneActive, setTabProperty, toggleTabProperty} from './settings.reducer.browser.mjs';
 
@@ -33,8 +33,123 @@ const ExpandButton = ({dispatch, id, expanded = false}) => {
   `;
 };
 
+// Local images are stored inline (data: URL) in the settings file, which is read often: keep them small.
+// Small files (e.g. SVG) are stored as they are, larger ones are downscaled to twice the largest icon size
+// (sharp on HiDPI screens) and stored as WebP.
+const CUSTOM_ICON_MAX_INLINE_SIZE = 32 * 1024;
+const CUSTOM_ICON_MAX_FILE_SIZE = 5 * 1024 * 1024;
+const CUSTOM_ICON_SIZE = 128;
+const isDataUrl = value => value.startsWith('data:');
+const isValidIcon = value => /^https?:\/\/.+/.test(value) || value.startsWith('data:image/');
+
+const readAsDataUrl = file => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = () => reject(reader.error);
+  reader.readAsDataURL(file);
+});
+
+const downscale = dataUrl => new Promise((resolve, reject) => {
+  const image = new Image();
+  image.onload = () => {
+    // An SVG without width/height has no natural size, draw it at the icon size
+    const width = image.naturalWidth || CUSTOM_ICON_SIZE;
+    const height = image.naturalHeight || CUSTOM_ICON_SIZE;
+    const scale = Math.min(1, CUSTOM_ICON_SIZE / Math.max(width, height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(width * scale));
+    canvas.height = Math.max(1, Math.round(height * scale));
+    canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+    resolve(canvas.toDataURL('image/webp', 0.9));
+  };
+  image.onerror = reject;
+  image.src = dataUrl;
+});
+
+const CustomIcon = ({dispatch, id, customIcon}) => {
+  const icon = customIcon ?? '';
+  // The typed URL is only stored (and previewed) once it's complete: on blur or Enter, and only if it's valid
+  const [draft, setDraft] = useState(isDataUrl(icon) ? '' : icon);
+  const [error, setError] = useState('');
+  const [failedPreview, setFailedPreview] = useState(null);
+  const fileInput = createRef();
+  const setCustomIcon = value => {
+    setError('');
+    setDraft(isDataUrl(value) ? '' : value);
+    setTabProperty({dispatch, property: 'customIcon', value, id});
+  };
+  const onDraftInput = ({target: {value}}) => {
+    setError('');
+    setDraft(value);
+  };
+  const commitDraft = () => {
+    const value = draft.trim();
+    if (value === icon || (value === '' && isDataUrl(icon))) {
+      return;
+    }
+    if (value === '' || isValidIcon(value)) {
+      setCustomIcon(value);
+    } else {
+      setError('Enter an image URL starting with http(s)://');
+    }
+  };
+  const onFileChange = async ({target}) => {
+    const [file] = target.files;
+    target.value = '';
+    if (!file) {
+      return;
+    }
+    if (!file.type.startsWith('image/')) {
+      setError('The selected file is not an image');
+      return;
+    }
+    if (file.size > CUSTOM_ICON_MAX_FILE_SIZE) {
+      setError(`The selected image is larger than ${CUSTOM_ICON_MAX_FILE_SIZE / 1024 / 1024} MB`);
+      return;
+    }
+    try {
+      const dataUrl = await readAsDataUrl(file);
+      setCustomIcon(file.size > CUSTOM_ICON_MAX_INLINE_SIZE ? await downscale(dataUrl) : dataUrl);
+    } catch {
+      setError('The selected image could not be read');
+    }
+  };
+  let errorMessage = error;
+  if (!errorMessage && icon && failedPreview === icon) {
+    errorMessage = 'The image could not be loaded';
+  }
+  const hasError = errorMessage.length > 0;
+  const message = errorMessage || (isDataUrl(icon) ? 'Using the selected local image' : '');
+  return html`
+    <${SettingsRow} data-testid='settings-services-custom-icon'>
+      ${isValidIcon(icon) && html`
+        <img class='settings__custom-icon-preview' src=${icon} alt='' onError=${() => setFailedPreview(icon)} />`}
+      <${TextField}
+        label='Custom icon'
+        placeholder='Image URL, leave empty to use the site icon'
+        hasError=${hasError}
+        value=${draft}
+        onInput=${onDraftInput}
+        onKeyDown=${({key}) => key === 'Enter' && commitDraft()}
+        onBlur=${commitDraft}
+      />
+      <input type='file' accept='image/*' hidden ref=${fileInput} onChange=${onFileChange}
+        data-testid='settings-services-custom-icon-file' />
+      <${IconButton} icon=${Icon.fileOpen} title='Select a local image' data-testid='button-custom-icon-file'
+        onClick=${() => fileInput.current.click()}
+      />
+      <${IconButton} icon=${Icon.close} title='Remove custom icon' data-testid='button-custom-icon-clear'
+        disabled=${!icon} onClick=${() => setCustomIcon('')}
+      />
+      ${message && html`
+        <div class=${`settings__custom-icon-message${hasError ? ' settings__custom-icon-message--error' : ''}`}
+          role=${hasError ? 'alert' : 'status'} data-testid='settings-services-custom-icon-message'>${message}</div>`}
+    </${SettingsRow}>
+  `;
+};
+
 const TabAdvancedSettings = (
-  {dispatch, id, sandboxed = false, openUrlsInApp = false, customName = ''}
+  {dispatch, id, sandboxed = false, openUrlsInApp = false, customName = '', customIcon}
 ) => html`
   <div class='settings__tab-advanced'>
     <${SettingsRow} data-testid='settings-services-custom-tab-name'>
@@ -45,6 +160,7 @@ const TabAdvancedSettings = (
         onInput=${({target: {value}}) => setTabProperty({dispatch, property: 'customName', value, id})}
       />
     </${SettingsRow}>
+    <${CustomIcon} dispatch=${dispatch} id=${id} customIcon=${customIcon} />
     <${SettingsOption}
       onClick=${toggleTabProperty(dispatch, 'sandboxed', id)}
       checked=${sandboxed}

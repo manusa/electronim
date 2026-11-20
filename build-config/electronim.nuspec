@@ -38,6 +38,8 @@ Improve your productivity by combining all your instant messaging applications (
 - 🎨 Appearance customization:
   - 🌗 Light and Dark themes with system override.
   - 🏷️ Custom application title to personalize your ElectronIM window.
+  - 🧭 Tabs on top, or as a vertical icon bar on the left with unread counters.
+  - 🖼️ Custom icon for each service.
 - 🗕 System Tray.
 - 📌 Always on top: Keep ElectronIM window on top of other applications.
 - 🔎 Find in page.

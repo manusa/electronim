@@ -183,6 +183,48 @@ describe('Chrome Tabs Module module test suite', () => {
         webPreferences: expect.objectContaining({sandbox: true, nodeIntegration: false})
       });
     });
+    describe.each([
+      {description: 'default settings', expected: 'tabPosition=top&tabIconSize=24'},
+      {description: 'tabPosition top', settings: {tabPosition: 'top'}, expected: 'tabPosition=top&tabIconSize=24'},
+      {description: 'tabPosition left', settings: {tabPosition: 'left'}, expected: 'tabPosition=left&tabIconSize=24'},
+      {description: 'invalid tabPosition', settings: {tabPosition: 'bottom'}, expected: 'tabPosition=top&tabIconSize=24'},
+      {description: 'tabIconSize 64', settings: {tabPosition: 'left', tabIconSize: 64},
+        expected: 'tabPosition=left&tabIconSize=64'},
+      {description: 'invalid tabIconSize', settings: {tabPosition: 'left', tabIconSize: 128},
+        expected: 'tabPosition=left&tabIconSize=24'}
+    ])('with $description', ({settings: updatedSettings, expected}) => {
+      let tabContainer;
+      beforeEach(() => {
+        if (updatedSettings) {
+          settings.updateSettings(updatedSettings);
+        }
+        tabContainer = chromeTabs.newTabContainer();
+      });
+      test(`loads index.html?${expected}`, () => {
+        expect(tabContainer.webContents.loadURL)
+          .toHaveBeenCalledWith(expect.stringMatching(new RegExp(`index\\.html\\?${expected}$`)), expect.anything());
+      });
+    });
+  });
+  describe('tabContainerLayout', () => {
+    test('tabs on top, places tab container above the service', () => {
+      expect(chromeTabs.tabContainerLayout({tabPosition: 'top'}, {width: 800, height: 600})).toEqual({
+        tabContainer: {x: 0, y: 0, width: 800, height: 46},
+        service: {x: 0, y: 46, width: 800, height: 554}
+      });
+    });
+    test('tabs on the left with 64px icons, widens the tab container', () => {
+      expect(chromeTabs.tabContainerLayout({tabPosition: 'left', tabIconSize: 64}, {width: 800, height: 600})).toEqual({
+        tabContainer: {x: 0, y: 0, width: 96, height: 600},
+        service: {x: 96, y: 0, width: 704, height: 600}
+      });
+    });
+    test('tabs on the left, places tab container next to the service', () => {
+      expect(chromeTabs.tabContainerLayout({tabPosition: 'left'}, {width: 800, height: 600})).toEqual({
+        tabContainer: {x: 0, y: 0, width: 56, height: 600},
+        service: {x: 56, y: 0, width: 744, height: 600}
+      });
+    });
   });
   describe('context menu', () => {
     let tabContainer;

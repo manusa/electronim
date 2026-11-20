@@ -68,6 +68,8 @@ describe('Settings in Browser test suite', () => {
           enabledDictionaries: ['en'],
           disableNotificationsGlobally: false,
           theme: 'dark',
+          tabPosition: 'top',
+          tabIconSize: 24,
           trayEnabled: true,
           startMinimized: false,
           alwaysOnTop: false,
@@ -582,6 +584,169 @@ describe('Settings in Browser test suite', () => {
             // Then
             const savedSettings = settings.loadSettings();
             expect(savedSettings.tabs[0].customName).toBe('Custom Name for Alex');
+          });
+        });
+        describe('with custom icon', () => {
+          let $settingsTab;
+          let $customIcon;
+          let $customIconInput;
+          const save = () => fireEvent.click(document.querySelector('.settings__submit'));
+          const $message = () => $customIcon.querySelector('[data-testid="settings-services-custom-icon-message"]');
+          const $preview = () => $customIcon.querySelector('.settings__custom-icon-preview');
+          const selectFile = file => fireEvent.change(
+            $customIcon.querySelector('input[type="file"]'), {target: {files: [file]}});
+          const typeUrl = async value => {
+            fireEvent.input($customIconInput, {target: {value}});
+            await waitFor(() => expect($customIconInput.value).toBe(value));
+          };
+          const enterUrl = async value => {
+            await typeUrl(value);
+            fireEvent.blur($customIconInput);
+          };
+          beforeEach(async () => {
+            $settingsTab = document.querySelector('.settings__tab[data-id="1"]');
+            const $toggleIcon = $settingsTab.querySelector('.expand-button');
+            if ($toggleIcon.title.startsWith('Expand')) {
+              fireEvent.click($toggleIcon);
+              await waitFor(() => expect($toggleIcon.title).toEqual('Collapse'));
+            }
+            $customIcon = await findByTestId($settingsTab, 'settings-services-custom-icon');
+            $customIconInput = $customIcon.querySelector('input[type="text"]');
+          });
+          test('custom icon input should be visible when expanded', () => {
+            expect($customIconInput).not.toBeNull();
+          });
+          test('clear button should be disabled when no custom icon is set', () => {
+            expect(getByTestId($customIcon, 'button-custom-icon-clear').classList).toContain('disabled');
+          });
+          test('without custom icon, shows no message', () => {
+            expect($message()).toBeNull();
+          });
+          describe('while typing an image URL', () => {
+            beforeEach(async () => {
+              await typeUrl('https://example.com/icon.png');
+            });
+            test('should not show a preview yet', () => {
+              expect($preview()).toBeNull();
+            });
+            test('should not store the URL yet', () => {
+              // When
+              save();
+              // Then
+              expect(settings.loadSettings().tabs[0].customIcon).toBeUndefined();
+            });
+            test('Enter should store the URL', async () => {
+              // Given
+              fireEvent.keyDown($customIconInput, {key: 'Enter'});
+              await waitFor(() => expect($preview()).not.toBeNull());
+              // When
+              save();
+              // Then
+              expect(settings.loadSettings().tabs[0].customIcon).toBe('https://example.com/icon.png');
+            });
+          });
+          describe('entering an image URL (field loses the focus)', () => {
+            beforeEach(async () => {
+              await enterUrl('https://example.com/icon.png');
+              await waitFor(() => expect($preview()).not.toBeNull());
+            });
+            test('should show a preview', () => {
+              expect($preview().getAttribute('src')).toBe('https://example.com/icon.png');
+            });
+            test('should be saved with tab settings', () => {
+              // When
+              save();
+              // Then
+              expect(settings.loadSettings().tabs[0].customIcon).toBe('https://example.com/icon.png');
+            });
+            test('that fails to load, should show an error', async () => {
+              // When
+              fireEvent.error($preview());
+              // Then
+              await waitFor(() => expect($message().textContent).toBe('The image could not be loaded'));
+            });
+            test('clear button should remove it', async () => {
+              // Given
+              fireEvent.click(getByTestId($customIcon, 'button-custom-icon-clear'));
+              await waitFor(() => expect($customIconInput.value).toBe(''));
+              // When
+              save();
+              // Then
+              expect(settings.loadSettings().tabs[0].customIcon).toBe('');
+            });
+          });
+          describe('entering a value that is not an image URL', () => {
+            beforeEach(async () => {
+              await enterUrl('example.com/icon.png');
+              await waitFor(() => expect($message()).not.toBeNull());
+            });
+            test('should show an error', () => {
+              expect($message().textContent).toBe('Enter an image URL starting with http(s)://');
+            });
+            test('should keep the typed value so it can be corrected', () => {
+              expect($customIconInput.value).toBe('example.com/icon.png');
+            });
+            test('should not be saved', () => {
+              // When
+              save();
+              // Then
+              expect(settings.loadSettings().tabs[0].customIcon).toBeUndefined();
+            });
+            test('editing the value should clear the error', async () => {
+              // When
+              await typeUrl('https://example.com/icon.png');
+              // Then
+              expect($message()).toBeNull();
+            });
+            test('should mark the field as errored', () => {
+              expect($customIcon.querySelector('.material3.text-field').classList).toContain('errored');
+            });
+            test('should not show a preview', () => {
+              expect($preview()).toBeNull();
+            });
+          });
+          describe('selecting a small local image', () => {
+            beforeEach(async () => {
+              selectFile(new File(['<svg/>'], 'icon.svg', {type: 'image/svg+xml'}));
+              await waitFor(() => expect($preview()).not.toBeNull());
+            });
+            test('should store the image inline as a data URL', () => {
+              // When
+              save();
+              // Then
+              expect(settings.loadSettings().tabs[0].customIcon).toBe('data:image/svg+xml;base64,PHN2Zy8+');
+            });
+            test('should not show the data URL in the text field', () => {
+              expect($customIconInput.value).toBe('');
+            });
+            test('should show that a local image is used', () => {
+              expect($message().textContent).toBe('Using the selected local image');
+            });
+            test('should not mark the field as errored', () => {
+              expect($customIcon.querySelector('.material3.text-field').classList).not.toContain('errored');
+            });
+          });
+          describe.each([
+            ['not an image', new File(['text'], 'notes.txt', {type: 'text/plain'}), 'The selected file is not an image'],
+            ['too large', new File([new Uint8Array((5 * 1024 * 1024) + 1)], 'big.png', {type: 'image/png'}),
+              'The selected image is larger than 5 MB']
+          ])('selecting a file that is %s', (_description, file, error) => {
+            beforeEach(async () => {
+              selectFile(file);
+              await waitFor(() => expect($message()).not.toBeNull());
+            });
+            test('should show an error', () => {
+              expect($message().textContent).toBe(error);
+            });
+            test('should mark the field as errored', () => {
+              expect($customIcon.querySelector('.material3.text-field').classList).toContain('errored');
+            });
+            test('should not set the icon', () => {
+              // When
+              save();
+              // Then
+              expect(settings.loadSettings().tabs[0].customIcon).toBeUndefined();
+            });
           });
         });
       });

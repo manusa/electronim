@@ -55,6 +55,44 @@ describe('Settings (Appearance) in Browser test suite', () => {
       }));
     });
   });
+  describe('Tab position selection', () => {
+    let $tabPositionContainer;
+    beforeEach(async () => {
+      $tabPositionContainer = await findByTestId(document, 'settings-tab-position-select');
+    });
+    test('Select shows the current (default) tab position', () => {
+      expect($tabPositionContainer.querySelector('select').value).toBe('top');
+    });
+    test('Icon size is hidden with tabs on top', () => {
+      expect(document.querySelector('[data-testid="settings-tab-icon-size-select"]')).toBeNull();
+    });
+    describe('with tabs on the left', () => {
+      let $iconSizeContainer;
+      beforeEach(async () => {
+        await user.selectOptions($tabPositionContainer.querySelector('select'), 'left');
+        $iconSizeContainer = await findByTestId(document, 'settings-tab-icon-size-select');
+      });
+      test('Icon size shows the current (default) size', () => {
+        expect($iconSizeContainer.querySelector('select').value).toBe('24');
+      });
+      test('Icon size can be selected and saved as a number', async () => {
+        // When
+        await user.selectOptions($iconSizeContainer.querySelector('select'), '48');
+        await user.click(document.querySelector('.settings__submit'));
+        // Then
+        expect(settings.loadSettings()).toEqual(expect.objectContaining({tabIconSize: 48}));
+      });
+    });
+    test('Left tab position can be selected and saved', async () => {
+      // When
+      await user.selectOptions($tabPositionContainer.querySelector('select'), 'left');
+      await user.click(document.querySelector('.settings__submit'));
+      // Then
+      expect(settings.loadSettings()).toEqual(expect.objectContaining({
+        tabPosition: 'left'
+      }));
+    });
+  });
   describe('Application Title', () => {
     let $applicationTitleContainer;
     let $input;

@@ -80,6 +80,31 @@ describe('Main :: Tab listeners test suite', () => {
         .not.toHaveBeenCalledWith(expect.stringMatching(/settings\/index.html$/));
     });
   });
+  describe('resize before the tab container is created (browser versions still loading)', () => {
+    let view;
+    let tabContainerExisted;
+    beforeEach(async () => {
+      const trayInitPromise = new Promise(resolve => electron.ipcMain.on('trayInit', resolve));
+      main.init();
+      const baseWindow = electron.BaseWindow.getAllWindows()[0];
+      baseWindow.getSize = jest.fn(() => ([10, 20]));
+      baseWindow.getContentBounds = jest.fn(() => ({x: 0, y: 0, width: 10, height: 20}));
+      const setBoundsPromise = new Promise(resolve => {
+        view = {setBounds: jest.fn(resolve)};
+      });
+      baseWindow.contentView.children = [view];
+      baseWindow.emit('resize', {sender: baseWindow});
+      await setBoundsPromise;
+      tabContainerExisted = electron.WebContentsView.mock.results.some(r => r.value.isTabContainer === true);
+      await trayInitPromise;
+    });
+    test('runs before the tab container exists', () => {
+      expect(tabContainerExisted).toBe(false);
+    });
+    test('fits the view to the window', () => {
+      expect(view.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 10, height: 20});
+    });
+  });
   describe('activateService', () => {
     let activeService;
     beforeEach(() => {
@@ -120,6 +145,23 @@ describe('Main :: Tab listeners test suite', () => {
       mockIpc.emit('activateService', {}, {id: 'validId'});
       // Then
       expect(baseWindow.contentView.addChildView).toHaveBeenCalledBefore(activeService.setBounds);
+    });
+    describe('with tabs on the left', () => {
+      let tabContainer;
+      beforeEach(async () => {
+        settings.updateSettings({tabPosition: 'left'});
+        await waitForTrayInit(() => main.init());
+        const baseWindow = electron.BaseWindow.getAllWindows()[0];
+        baseWindow.getContentBounds = jest.fn(() => ({width: 130, height: 83}));
+        tabContainer = electron.WebContentsView.mock.results.find(r => r.value.isTabContainer === true).value;
+        mockIpc.emit('activateService', {}, {id: 'validId'});
+      });
+      test('should place tab container on the left', () => {
+        expect(tabContainer.setBounds).toHaveBeenCalledWith({x: 0, y: 0, width: 56, height: 83});
+      });
+      test('should place service to the right of the tab container', () => {
+        expect(activeService.setBounds).toHaveBeenCalledWith({x: 56, y: 0, width: 74, height: 83});
+      });
     });
   });
   test('canNotify, should call to the canNotify method of the serviceManager', () => {
